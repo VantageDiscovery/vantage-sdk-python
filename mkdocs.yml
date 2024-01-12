@@ -1,7 +1,7 @@
 site_name: Vantage SDK Python
-site_url: https://github.com/narezina/vantage-sdk-python
-repo_url: https://github.com/narezina/vantage-sdk-python
-repo_name: narezina/vantage-sdk-python
+site_url: https://github.com/VantageDiscovery/vantage-sdk-python
+repo_url: https://github.com/VantageDiscovery/vantage-sdk-python
+repo_name: VantageDiscovery/vantage-sdk-python
 #strict: true
 nav:
   - Home: index.md
@@ -36,8 +36,8 @@ theme:
     - navigation.tabs.sticky
 markdown_extensions:
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.mark
@@ -65,4 +65,4 @@ plugins:
       lang: en
 
 watch:
-  - vantage_sdk_python
+  - vantage

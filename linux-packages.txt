@@ -1,3 +1,0 @@
-# Add any dependecies below
-make
-git

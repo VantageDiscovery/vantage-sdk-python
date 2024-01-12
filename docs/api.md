@@ -1,1 +1,1 @@
-::: vantage_sdk_python
+::: vantage_sdk

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Tests for `vantage_sdk_python` package."""
+"""Tests for `vantage` package."""
 
 
 def test_template():

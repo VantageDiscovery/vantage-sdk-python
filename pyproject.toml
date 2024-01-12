@@ -12,7 +12,7 @@ classifiers=[
     'Programming Language :: Python :: 3.10',
 ]
 packages = [
-    { include = "vantage_sdk_python" },
+    { include = "vantage" },
     { include = "tests", format = "sdist" },
 ]
 
@@ -33,14 +33,9 @@ twine  = { version = "^4.0.2", optional = true}
 pre-commit = {version = "^3.3.0", optional = true}
 toml = {version = "^0.10.2", optional = true}
 bump2version = {version = "^1.0.1", optional = true}
-mkdocs = {version = "^1.4.2", optional = true}
+mkdocs = {version = "^1.5.3", optional = true}
+mkdocs-material = {version = "^9.5.3", optional = true}
 mkdocs-include-markdown-plugin = {version = "^4.0.0", optional = true}
-mkdocs-material = {version = "^8.5.11", optional = true}
-mkdocstrings = {version = "^0.19.0", extras = ["python"], optional = true}
-mkdocs-material-extensions = {version = "^1.1.1", optional = true}
-mkdocs-autorefs = {version = "^0.4.1", optional = true}
-pymdown-extensions = {version = "^9.9", optional = true}
-mkdocs-pymdownx-material-extras = {version = "^2.3.1", optional = true}
 
 [tool.poetry.extras]
 test = [
@@ -57,13 +52,8 @@ test = [
 dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version"]
 doc = [
     "mkdocs",
-    "mkdocs-include-markdown-plugin",
     "mkdocs-material",
-    "mkdocstrings",
-    "mkdocs-material-extension",
-    "mkdocs-autorefs",
-    "pymdown-extensions",
-    "mkdocs-pymdownx-material-extras"
+    "mkdocs-include-markdown-plugin"
     ]
 
 

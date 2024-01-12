@@ -1,1 +1,1 @@
-"""Unit test package for vantage-sdk-python."""
+"""Unit test package for vantage-sdk."""

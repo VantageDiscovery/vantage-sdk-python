@@ -1,4 +1,4 @@
-sources = vantage_sdk_python
+sources = vantage
 
 .PHONY: test format lint unittest coverage pre-commit clean
 test: format lint unittest
@@ -25,8 +25,3 @@ clean:
 	rm -rf *.egg-info
 	rm -rf .tox dist site
 	rm -rf coverage.xml .coverage
-
-docker-validate:
-	@docker build -t test-build --build-arg ENV=TEST $(CURDIR)
-	@docker run --rm --entrypoint /usr/bin/make test-build:latest test
-	@docker image rm test-build
