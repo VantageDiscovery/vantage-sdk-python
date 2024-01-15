@@ -502,6 +502,23 @@ flake8 = ">=3"
 pydocstyle = ">=2.1"
 
 [[package]]
+name = "flake8-pyproject"
+version = "1.2.3"
+description = "Flake8 plug-in loading the configuration from pyproject.toml"
+optional = true
+python-versions = ">= 3.6"
+files = [
+    {file = "flake8_pyproject-1.2.3-py3-none-any.whl", hash = "sha256:6249fe53545205af5e76837644dc80b4c10037e73a0e5db87ff562d75fb5bd4a"},
+]
+
+[package.dependencies]
+Flake8 = ">=5"
+TOMLi = {version = "*", markers = "python_version < \"3.11\""}
+
+[package.extras]
+dev = ["pyTest", "pyTest-cov"]
+
+[[package]]
 name = "ghp-import"
 version = "2.1.0"
 description = "Copy your docs directly to the gh-pages branch."
@@ -1786,9 +1803,9 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [extras]
 dev = ["bump2version", "pip", "pre-commit", "toml", "tox", "twine", "virtualenv"]
 doc = ["mkdocs", "mkdocs-include-markdown-plugin", "mkdocs-material"]
-test = ["black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "pytest-cov"]
+test = ["black", "flake8", "flake8-docstrings", "flake8-pyproject", "isort", "mypy", "pytest", "pytest-cov"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "76ad73a0b5225612066f6a8c7b2a179d2df4222a13367e1ab5b30bd3b24ba3c8"
+content-hash = "7dc14cea35eb3cb0a738ea013e12492ef3ff67dd98374366e0f112fc59ef32ad"

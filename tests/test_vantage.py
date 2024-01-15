@@ -3,4 +3,5 @@
 
 
 def test_template():
+    """Test template."""
     pass
