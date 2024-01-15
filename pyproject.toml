@@ -1,0 +1,82 @@
+[tool]
+[tool.poetry]
+name = "vantage-sdk-python"
+version = "0.0.1"
+description = "Vantage Python SDK."
+authors = ["Vantage <none@vantage.com>"]
+readme = "README.md"
+classifiers=[
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+]
+packages = [
+    { include = "vantage" },
+    { include = "tests", format = "sdist" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.12"
+
+black  = { version = "^23.0", optional = true}
+isort  = { version = "^5.8.0", optional = true}
+flake8  = { version = "^5.0.1", optional = true}
+flake8-docstrings = { version = "^1.6.0", optional = true }
+mypy = {version = "^1.5", optional = true}
+pytest  = { version = "^7.2.0", optional = true}
+pytest-cov  = { version = "^4.0.0", optional = true}
+tox  = { version = "^4.0.0", optional = true}
+virtualenv  = { version = "^20.2.2", optional = true}
+pip  = { version = "*", optional = true}
+twine  = { version = "^4.0.2", optional = true}
+pre-commit = {version = "^3.3.0", optional = true}
+toml = {version = "^0.10.2", optional = true}
+bump2version = {version = "^1.0.1", optional = true}
+mkdocs = {version = "^1.5.3", optional = true}
+mkdocs-material = {version = "^9.5.3", optional = true}
+mkdocs-include-markdown-plugin = {version = "^4.0.0", optional = true}
+
+[tool.poetry.extras]
+test = [
+    "pytest",
+    "black",
+    "isort",
+    "mypy",
+    "flake8",
+    "flake8-docstrings",
+    "pytest-cov"
+    ]
+
+
+dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version"]
+doc = [
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocs-include-markdown-plugin"
+    ]
+
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+target-version = ['py38', 'py39', 'py310']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
