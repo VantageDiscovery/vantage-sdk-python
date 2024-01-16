@@ -12,7 +12,7 @@ class Vantage:
     def __init__(
         self,
         vantage_api_key: str,
-        host: Optional[str],
+        host: Optional[str] = None,
         management_api: Optional[ManagementAPI] = None,
         search_api: Optional[SearchAPI] = None,
     ) -> None:
@@ -28,6 +28,6 @@ class Vantage:
         else:
             self.search_api = SearchAPI(self.vantage_api_key, host)
 
-    def account_info(self, account_id: str) -> Account:
+    def logged_in_user(self) -> Account:
         # TODO: docstring
-        return self.management_api.account_api.account_info(account_id)
+        return self.management_api.account_api.logged_in_user()
