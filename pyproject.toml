@@ -18,6 +18,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
+pydantic = "^1.10.5, <2"
 
 black  = { version = "^23.0", optional = true}
 isort  = { version = "^5.8.0", optional = true}
