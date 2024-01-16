@@ -1,11 +1,13 @@
+from pydantic import StrictStr  # type: ignore
+
+from vantage.core.base import BaseAPI
 from vantage.core.http.api.external_api_keys_api import ExternalAPIKeysApi
 from vantage.core.http.models import (
     ExternalAPIKey,
     ExternalAPIKeyModifiable,
     ExternalAPIKeysResult,
 )
-from vantage.core.base import BaseAPI
-from pydantic import StrictStr
+
 
 __all__ = ["ExternalAPIKeysAPI"]
 

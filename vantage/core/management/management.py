@@ -1,3 +1,5 @@
+from typing import Optional
+
 from vantage.core.base import BaseAPI
 from vantage.core.management.apis import (
     AccountAPI,
@@ -6,13 +8,18 @@ from vantage.core.management.apis import (
     VantageAPIKeysAPI,
 )
 
+
 __all__ = ["ManagementAPI"]
 
 
 class ManagementAPI(BaseAPI):
-    def __init__(self, host: str, api_key: str):
-        super().__init__(host, api_key)
-        self.account_api = AccountAPI(host, api_key)
-        self.collection_api = CollectionAPI(host, api_key)
-        self.external_api_keys_api = ExternalAPIKeysAPI(host, api_key)
-        self.vantage_api_keys = VantageAPIKeysAPI(host, api_key)
+    def __init__(
+        self,
+        api_key: str,
+        host: Optional[str],
+    ):
+        super().__init__(api_key, host)
+        self.account_api = AccountAPI(api_key, host)
+        self.collection_api = CollectionAPI(api_key, host)
+        self.external_api_keys_api = ExternalAPIKeysAPI(api_key, host)
+        self.vantage_api_keys = VantageAPIKeysAPI(api_key, host)

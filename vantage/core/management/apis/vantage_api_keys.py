@@ -1,10 +1,9 @@
-from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
-from vantage.core.http.models import (
-    VantageAPIKey,
-    VantageAPIKeysResult,
-)
+from pydantic import StrictStr  # type: ignore
+
 from vantage.core.base import BaseAPI
-from pydantic import StrictStr
+from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage.core.http.models import VantageAPIKey, VantageAPIKeysResult
+
 
 __all__ = ["VantageAPIKeysAPI"]
 

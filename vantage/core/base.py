@@ -6,6 +6,5 @@ class BaseAPI:
 
     def __init__(self, api_key: str, host: Optional[str]):
         self.api_key = api_key
-        self.host = (
-            host if host else "default"
-        )  # TODO: add config and default values
+        # TODO: add config and default values
+        self.host = host if host else "default"

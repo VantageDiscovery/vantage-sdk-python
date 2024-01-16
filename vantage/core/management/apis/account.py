@@ -1,3 +1,6 @@
+from pydantic import StrictStr  # type: ignore
+
+from vantage.core.base import BaseAPI
 from vantage.core.http.api.account_management_api import AccountManagementApi
 from vantage.core.http.models import (
     Account,
@@ -6,8 +9,7 @@ from vantage.core.http.models import (
     UserModifiable,
     UserRegistrationFields,
 )
-from vantage.core.base import BaseAPI
-from pydantic import StrictStr
+
 
 __all__ = ["AccountAPI"]
 

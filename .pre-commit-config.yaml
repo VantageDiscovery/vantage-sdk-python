@@ -27,8 +27,9 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies: [ flake8-typing-imports==1.10.0 ]
+        exclude: vantage/core/http/
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.5.0
     hooks:
       - id: mypy
-        exclude: tests/
+        exclude: vantage/

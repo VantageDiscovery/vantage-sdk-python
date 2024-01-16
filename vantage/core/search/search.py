@@ -1,10 +1,11 @@
+from vantage.core.base import BaseAPI
 from vantage.core.http.api.search_api import SearchApi
 from vantage.core.http.models import (
-    SemanticSearchQueryFull,
-    SearchResult,
     EmbeddingSearchQueryFull,
+    SearchResult,
+    SemanticSearchQueryFull,
 )
-from vantage.core.base import BaseAPI
+
 
 __all__ = ["SearchAPI"]
 

@@ -81,6 +81,13 @@ exclude = '''
 
 [tool.flake8]
 exclude = "vantage/core/http"
+extend-ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D104",
+    "D107"
+]
 
 [tool.mypy]
 exclude = "vantage/core/http"
