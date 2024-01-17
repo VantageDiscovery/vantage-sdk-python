@@ -17,16 +17,15 @@ class Vantage:
         search_api: Optional[SearchAPI] = None,
     ) -> None:
         self.vantage_api_key = vantage_api_key
+        self.host = host
+        self.management_api = management_api
+        self.search_api = search_api
 
-        if management_api:
-            self.management_api = management_api
-        else:
-            self.management_api = ManagementAPI(self.vantage_api_key, host)
-
-        if search_api:
-            self.search_api = search_api
-        else:
-            self.search_api = SearchAPI(self.vantage_api_key, host)
+    @classmethod
+    def from_defaults(cls, vantage_api_key: str, host: Optional[str] = None):
+        management_api = ManagementAPI.from_defaults(vantage_api_key, host)
+        search_api = SearchAPI(vantage_api_key, host)
+        return cls(vantage_api_key, host, management_api, search_api)
 
     def logged_in_user(self) -> Account:
         # TODO: docstring

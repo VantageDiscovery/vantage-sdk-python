@@ -13,12 +13,16 @@ __all__ = ["ExternalAPIKeysAPI"]
 
 
 class ExternalAPIKeysAPI(BaseAPI):
+    def __init__(self, api_key: str, host: str | None):
+        super().__init__(api_key, host)
+        self.api = ExternalAPIKeysApi()
+
     def get_external_api_keys(
         self,
         account_id: StrictStr,
     ) -> ExternalAPIKeysResult:
         # TODO: docstring
-        return ExternalAPIKeysApi.get_external_api_keys(account_id)
+        return self.api.get_external_api_keys(account_id)
 
     def get_external_api_key(
         self,
@@ -26,9 +30,7 @@ class ExternalAPIKeysAPI(BaseAPI):
         external_key_id: StrictStr,
     ) -> ExternalAPIKey:
         # TODO: docstring
-        return ExternalAPIKeysApi.get_external_api_key(
-            account_id, external_key_id
-        )
+        return self.api.get_external_api_key(account_id, external_key_id)
 
     def update_external_api_key(
         self,
@@ -37,7 +39,7 @@ class ExternalAPIKeysAPI(BaseAPI):
         external_api_key_modifiable: ExternalAPIKeyModifiable,
     ) -> ExternalAPIKey:
         # TODO: docstring
-        return ExternalAPIKeysApi.update_external_api_key(
+        return self.api.update_external_api_key(
             account_id, external_key_id, external_api_key_modifiable
         )
 
@@ -47,6 +49,4 @@ class ExternalAPIKeysAPI(BaseAPI):
         external_key_id: StrictStr,
     ) -> None:
         # TODO: docstring
-        return ExternalAPIKeysApi.delete_external_api_key(
-            account_id, external_key_id
-        )
+        return self.api.delete_external_api_key(account_id, external_key_id)

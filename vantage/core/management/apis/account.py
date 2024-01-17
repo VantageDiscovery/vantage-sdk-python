@@ -1,4 +1,5 @@
-from typing import Optional
+import os
+
 from pydantic import StrictStr  # type: ignore
 
 from vantage.core.base import BaseAPI
@@ -11,7 +12,6 @@ from vantage.core.http.models import (
     UserRegistrationFields,
 )
 
-import os
 
 __all__ = ["AccountAPI"]
 
