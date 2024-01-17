@@ -1,10 +1,10 @@
 from vantage.core.management.apis.account import AccountAPI  # noqa: F403 F401
-from vantage.core.management.apis.collection import (
+from vantage.core.management.apis.collection import (  # noqa: F403 F401
     CollectionAPI,
-)  # noqa: F403 F401
-from vantage.core.management.apis.external_api_keys import (
+)
+from vantage.core.management.apis.external_api_keys import (  # noqa: F403 F401
     ExternalAPIKeysAPI,
-)  # noqa: F403 F401
-from vantage.core.management.apis.vantage_api_keys import (
+)
+from vantage.core.management.apis.vantage_api_keys import (  # noqa: F403 F401
     VantageAPIKeysAPI,
-)  # noqa: F403 F401
+)

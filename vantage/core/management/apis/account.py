@@ -1,5 +1,3 @@
-import os
-
 from pydantic import StrictStr  # type: ignore
 
 from vantage.core.base import BaseAPI
@@ -17,9 +15,11 @@ __all__ = ["AccountAPI"]
 
 
 class AccountAPI(BaseAPI):
-    def __init__(self, api_key: str, host: str | None):
-        super().__init__(api_key, host)
-        self.api = AccountManagementApi()
+    def __init__(
+        self, api_key: str, host: str | None, pool_threads: int | None = 1
+    ):
+        super().__init__(api_key, host, pool_threads)
+        self.api = AccountManagementApi(api_client=self.api_client)
 
     def account_info(self, account_id: StrictStr) -> Account:
         # TODO: docstring
@@ -33,9 +33,7 @@ class AccountAPI(BaseAPI):
 
     def logged_in_user(self) -> User:
         # TODO: docstring
-        return self.api.user_me(
-            _headers={"authorization": f"Bearer {os.environ['VANTAGE_TOKEN']}"}
-        )
+        return self.api.user_me()
 
     def user_info(self, user_id: StrictStr) -> User:
         # TODO: docstring

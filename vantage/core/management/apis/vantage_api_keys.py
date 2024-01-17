@@ -9,9 +9,11 @@ __all__ = ["VantageAPIKeysAPI"]
 
 
 class VantageAPIKeysAPI(BaseAPI):
-    def __init__(self, api_key: str, host: str | None):
-        super().__init__(api_key, host)
-        self.api = VantageAPIKeysApi()
+    def __init__(
+        self, api_key: str, host: str | None, pool_threads: int | None = 1
+    ):
+        super().__init__(api_key, host, pool_threads)
+        self.api = VantageAPIKeysApi(api_client=self.api_client)
 
     def get_vantage_api_keys(
         self, account_id: StrictStr
