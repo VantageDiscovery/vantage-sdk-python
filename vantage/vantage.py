@@ -12,20 +12,20 @@ class Vantage:
     def __init__(
         self,
         vantage_api_key: str,
+        management_api: ManagementAPI,
+        search_api: SearchAPI,
         host: Optional[str] = None,
-        management_api: Optional[ManagementAPI] = None,
-        search_api: Optional[SearchAPI] = None,
     ) -> None:
         self.vantage_api_key = vantage_api_key
-        self.host = host
         self.management_api = management_api
         self.search_api = search_api
+        self.host = host
 
     @classmethod
     def from_defaults(cls, vantage_api_key: str, host: Optional[str] = None):
         management_api = ManagementAPI.from_defaults(vantage_api_key, host)
         search_api = SearchAPI(vantage_api_key, host)
-        return cls(vantage_api_key, host, management_api, search_api)
+        return cls(vantage_api_key, management_api, search_api, host)
 
     def logged_in_user(self) -> Account:
         # TODO: docstring

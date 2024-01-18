@@ -15,7 +15,7 @@ class BaseAPI:
     def __init__(
         self,
         api_key: str,
-        host: Optional[str],
+        host: Optional[str] = None,
         pool_threads: Optional[int] = 1,
     ):
         self.api_key = api_key
