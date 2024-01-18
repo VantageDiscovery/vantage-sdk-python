@@ -1,1 +1,1 @@
-from vantage.core.search.search import SearchAPI  # noqa: F403 F401
+from vantage.core.search.search import SearchAPI  # noqa: F401
