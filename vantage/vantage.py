@@ -29,4 +29,4 @@ class Vantage:
 
     def logged_in_user(self) -> Account:
         # TODO: docstring
-        return self.management_api.account_api.logged_in_user()  # type: ignore
+        return self.management_api.account_api.api.user_me()  # type: ignore
