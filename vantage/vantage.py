@@ -9,6 +9,10 @@ from vantage.core.http.models import (
     User,
     UserModifiable,
     UserRegistrationFields,
+    Collection,
+    CollectionsResult,
+    CreateCollectionRequest,
+    CollectionModifiable,
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
@@ -102,3 +106,92 @@ class Vantage:
         return self.management_api.account_api.api.update_account(
             account_id, data
         )
+
+    # region Collections
+
+    def list_collections(self, account_id: str) -> CollectionsResult:
+        # TODO: docstring
+
+        # TODO: check error -> expected dict not list in CollectionsResult
+
+        return self.management_api.collection_api.api.list_collections(
+            account_id
+        )
+
+    def create_collection(
+        self,
+        account_id: str,
+        collection_id: str,
+        collection_name: str,
+        embeddings_dimension: int,
+        user_provided_embeddings: Optional[bool] = False,
+        llm_provider: Optional[str] = None,
+        llm_model: Optional[str] = None,
+        external_key_id: Optional[str] = None,
+    ) -> Collection:
+        # TODO: docstring
+
+        # Note: Only scenario for user provided embeddings is covered
+        # TODO: check if collection exists
+        # TODO: two cases -> user provided embeddings or not
+
+        create_collection_request = CreateCollectionRequest(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=int(embeddings_dimension),
+            user_provided_embeddings=bool(user_provided_embeddings),
+        )
+
+        return self.management_api.collection_api.api.create_collection(
+            account_id, create_collection_request
+        )
+
+    def get_collection(
+        self,
+        collection_id: str,
+        account_id: str,
+    ) -> Collection:
+        # TODO: docstring
+
+        # TODO: check if exists
+
+        return self.management_api.collection_api.api.get_collection(
+            collection_id=collection_id, account_id=account_id
+        )
+
+    def update_collection(
+        self,
+        collection_id: str,
+        account_id: str,
+        collection_name: Optional[str] = None,
+        external_key_id: Optional[str] = None,
+        collection_preview_url_pattern: Optional[str] = None,
+    ) -> Collection:
+        # TODO: docstring
+
+        # TODO: check if exists
+
+        collection_modifiable = CollectionModifiable(
+            collection_name=collection_name,
+        )
+
+        return self.management_api.collection_api.api.update_collection(
+            collection_id=collection_id,
+            account_id=account_id,
+            collection_modifiable=collection_modifiable,
+        )
+
+    def delete_collection(
+        self,
+        collection_id: str,
+        account_id: str,
+    ) -> Collection:
+        # TODO: docstring
+
+        # TODO: check if exists (Note: if not -> 503 -> inform)
+
+        return self.management_api.collection_api.api.delete_collection(
+            collection_id=collection_id, account_id=account_id
+        )
+
+    # endregion
