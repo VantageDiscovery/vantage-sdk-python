@@ -2,9 +2,6 @@ from vantage.core.base import BaseAPI
 from vantage.core.http.api.account_management_api import AccountManagementApi
 
 
-__all__ = ["AccountAPI"]
-
-
 class AccountAPI(BaseAPI):
     def __init__(
         self, api_key: str, host: str | None, pool_threads: int | None = 1

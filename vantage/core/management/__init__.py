@@ -1,1 +1,4 @@
-from vantage.core.management.management import ManagementAPI  # noqa: F401
+from vantage.core.management.management import ManagementAPI
+
+
+__all__ = ["ManagementAPI"]

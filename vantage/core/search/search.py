@@ -2,9 +2,6 @@ from vantage.core.base import BaseAPI
 from vantage.core.http.api.search_api import SearchApi
 
 
-__all__ = ["SearchAPI"]
-
-
 class SearchAPI(BaseAPI):
     def __init__(self, api_key: str, host: str | None):
         super().__init__(api_key, host)
