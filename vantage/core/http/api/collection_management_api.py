@@ -241,7 +241,7 @@ class CollectionManagementApi:
         )
 
     @validate_arguments
-    def deactive_collection(
+    def delete_collection(
         self,
         collection_id: Annotated[
             StrictStr,
@@ -265,7 +265,7 @@ class CollectionManagementApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.deactive_collection(collection_id, account_id, async_req=True)
+        >>> thread = api.delete_collection(collection_id, account_id, async_req=True)
         >>> result = thread.get()
 
         :param collection_id: The collection id to deactivate {collection_id} (required)
@@ -285,14 +285,14 @@ class CollectionManagementApi:
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the deactive_collection_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the delete_collection_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.deactive_collection_with_http_info(
+        return self.delete_collection_with_http_info(
             collection_id, account_id, **kwargs
         )  # noqa: E501
 
     @validate_arguments
-    def deactive_collection_with_http_info(
+    def delete_collection_with_http_info(
         self,
         collection_id: Annotated[
             StrictStr,
@@ -316,7 +316,7 @@ class CollectionManagementApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.deactive_collection_with_http_info(collection_id, account_id, async_req=True)
+        >>> thread = api.delete_collection_with_http_info(collection_id, account_id, async_req=True)
         >>> result = thread.get()
 
         :param collection_id: The collection id to deactivate {collection_id} (required)
@@ -368,7 +368,7 @@ class CollectionManagementApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method deactive_collection" % _key
+                    " to method delete_collection" % _key
                 )
             _params[_key] = _val
         del _params['kwargs']
@@ -827,20 +827,20 @@ class CollectionManagementApi:
         )
 
     @validate_arguments
-    def list_collection(
+    def list_collections(
         self,
         account_id: Annotated[
             StrictStr, Field(..., description="The account id")
         ],
         **kwargs,
     ) -> CollectionsResult:  # noqa: E501
-        """Get Collections  # noqa: E501
+        """List Collections  # noqa: E501
 
         List the collections in account_id  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.list_collection(account_id, async_req=True)
+        >>> thread = api.list_collections(account_id, async_req=True)
         >>> result = thread.get()
 
         :param account_id: The account id (required)
@@ -858,27 +858,27 @@ class CollectionManagementApi:
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the list_collection_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the list_collections_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.list_collection_with_http_info(
+        return self.list_collections_with_http_info(
             account_id, **kwargs
         )  # noqa: E501
 
     @validate_arguments
-    def list_collection_with_http_info(
+    def list_collections_with_http_info(
         self,
         account_id: Annotated[
             StrictStr, Field(..., description="The account id")
         ],
         **kwargs,
     ) -> ApiResponse:  # noqa: E501
-        """Get Collections  # noqa: E501
+        """List Collections  # noqa: E501
 
         List the collections in account_id  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.list_collection_with_http_info(account_id, async_req=True)
+        >>> thread = api.list_collections_with_http_info(account_id, async_req=True)
         >>> result = thread.get()
 
         :param account_id: The account id (required)
@@ -928,7 +928,7 @@ class CollectionManagementApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method list_collection" % _key
+                    " to method list_collections" % _key
                 )
             _params[_key] = _val
         del _params['kwargs']
