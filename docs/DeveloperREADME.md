@@ -88,3 +88,5 @@ res = vantage_instance.logged_in_user()
 
 pprint(res)
 ```
+
+Feel free to check `/examples` directory for some more detailed examples.
