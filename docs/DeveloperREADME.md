@@ -68,7 +68,7 @@ Now that the Vantage library is installed, you're almost ready to use it. All yo
 ```sh
 export VANTAGE_API_KEY=<YOUR_VANTAGE_API_KEY>
 export VANTAGE_API_CLIENT_ID=<YOUR_VANTAGE_CLIENT_ID>
-export VANTAGE_API_CLIENT_ID=<YOUR_VANTAGE_CLIENT_SECRET>
+export VANTAGE_API_CLIENT_SECRET=<YOUR_VANTAGE_CLIENT_SECRET>
 ```
 
 Once that's done, you can run the following script to get started:
