@@ -26,12 +26,12 @@ from pydantic import BaseModel, Field, StrictStr, ValidationError, validator
 from vantage.core.http.models.collection import Collection
 
 
-COLLECTIONSRESULTCOLLECTIONSINNER_ONE_OF_SCHEMAS = ["Collection"]
+COLLECTIONSRESULTINNER_ONE_OF_SCHEMAS = ["Collection"]
 
 
-class CollectionsResultCollectionsInner(BaseModel):
+class CollectionsResultInner(BaseModel):
     """
-    CollectionsResultCollectionsInner
+    CollectionsResultInner
     """
 
     # data type: Collection
@@ -41,7 +41,7 @@ class CollectionsResultCollectionsInner(BaseModel):
     else:
         actual_instance: Any
     one_of_schemas: List[str] = Field(
-        COLLECTIONSRESULTCOLLECTIONSINNER_ONE_OF_SCHEMAS, const=True
+        COLLECTIONSRESULTINNER_ONE_OF_SCHEMAS, const=True
     )
 
     class Config:
@@ -63,7 +63,7 @@ class CollectionsResultCollectionsInner(BaseModel):
 
     @validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = CollectionsResultCollectionsInner.construct()
+        instance = CollectionsResultInner.construct()
         error_messages = []
         match = 0
         # validate data type: Collection
@@ -76,26 +76,26 @@ class CollectionsResultCollectionsInner(BaseModel):
         if match > 1:
             # more than 1 match
             raise ValueError(
-                "Multiple matches found when setting `actual_instance` in CollectionsResultCollectionsInner with oneOf schemas: Collection. Details: "
+                "Multiple matches found when setting `actual_instance` in CollectionsResultInner with oneOf schemas: Collection. Details: "
                 + ", ".join(error_messages)
             )
         elif match == 0:
             # no match
             raise ValueError(
-                "No match found when setting `actual_instance` in CollectionsResultCollectionsInner with oneOf schemas: Collection. Details: "
+                "No match found when setting `actual_instance` in CollectionsResultInner with oneOf schemas: Collection. Details: "
                 + ", ".join(error_messages)
             )
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: dict) -> CollectionsResultCollectionsInner:
+    def from_dict(cls, obj: dict) -> CollectionsResultInner:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: str) -> CollectionsResultCollectionsInner:
+    def from_json(cls, json_str: str) -> CollectionsResultInner:
         """Returns the object represented by the json string"""
-        instance = CollectionsResultCollectionsInner.construct()
+        instance = CollectionsResultInner.construct()
         error_messages = []
         match = 0
 
@@ -109,13 +109,13 @@ class CollectionsResultCollectionsInner(BaseModel):
         if match > 1:
             # more than 1 match
             raise ValueError(
-                "Multiple matches found when deserializing the JSON string into CollectionsResultCollectionsInner with oneOf schemas: Collection. Details: "
+                "Multiple matches found when deserializing the JSON string into CollectionsResultInner with oneOf schemas: Collection. Details: "
                 + ", ".join(error_messages)
             )
         elif match == 0:
             # no match
             raise ValueError(
-                "No match found when deserializing the JSON string into CollectionsResultCollectionsInner with oneOf schemas: Collection. Details: "
+                "No match found when deserializing the JSON string into CollectionsResultInner with oneOf schemas: Collection. Details: "
                 + ", ".join(error_messages)
             )
         else:

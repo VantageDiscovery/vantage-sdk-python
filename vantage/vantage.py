@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import List, Optional
 
 from vantage.core.base import AuthorizationClient
 from vantage.core.http.models import (
@@ -8,7 +8,7 @@ from vantage.core.http.models import (
     AccountModifiable,
     Collection,
     CollectionModifiable,
-    CollectionsResult,
+    CollectionsResultInner,
     CreateCollectionRequest,
     User,
     UserModifiable,
@@ -16,6 +16,7 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
+from vantage.exceptions import VantageNotFoundException, VantageValueError
 
 
 class Vantage:
@@ -109,14 +110,18 @@ class Vantage:
 
     # region Collections
 
-    def list_collections(self, account_id: str) -> CollectionsResult:
+    def list_collections(
+        self, account_id: str
+    ) -> List[CollectionsResultInner]:
         # TODO: docstring
-
-        # TODO: check error -> expected dict not list in CollectionsResult
 
         return self.management_api.collection_api.api.list_collections(
             account_id
         )
+
+    def _existing_collection_ids(self, account_id: str) -> List[str]:
+        collections = self.list_collections(account_id)
+        return [col.to_dict()["collection_id"] for col in collections]
 
     def create_collection(
         self,
@@ -133,8 +138,13 @@ class Vantage:
         # TODO: docstring
 
         # Note: Only scenario for user provided embeddings is covered
-        # TODO: check if collection exists
         # TODO: two cases -> user provided embeddings or not
+
+        if collection_id in self._existing_collection_ids(account_id):
+            raise VantageValueError(
+                f"Collection with provided collection id\
+                      [{collection_id}] already exists."
+            )
 
         create_collection_request = CreateCollectionRequest(
             external_key_id=external_key_id,
@@ -156,7 +166,11 @@ class Vantage:
     ) -> Collection:
         # TODO: docstring
 
-        # TODO: check if exists
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id\
+                      [{collection_id}] does not exist."
+            )
 
         return self.management_api.collection_api.api.get_collection(
             collection_id=collection_id, account_id=account_id
@@ -172,7 +186,11 @@ class Vantage:
     ) -> Collection:
         # TODO: docstring
 
-        # TODO: check if exists
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id\
+                      [{collection_id}] does not exist."
+            )
 
         collection_modifiable = CollectionModifiable(
             external_key_id=external_key_id,
@@ -193,7 +211,11 @@ class Vantage:
     ) -> Collection:
         # TODO: docstring
 
-        # TODO: check if exists (Note: if not -> 503 -> inform)
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id\
+                      [{collection_id}] does not exist."
+            )
 
         return self.management_api.collection_api.api.delete_collection(
             collection_id=collection_id, account_id=account_id

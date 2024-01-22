@@ -49,9 +49,8 @@ from vantage.core.http.models.collection_immutable import CollectionImmutable
 from vantage.core.http.models.collection_modifiable import CollectionModifiable
 from vantage.core.http.models.collection_read_only import CollectionReadOnly
 from vantage.core.http.models.collection_upload_url import CollectionUploadURL
-from vantage.core.http.models.collections_result import CollectionsResult
-from vantage.core.http.models.collections_result_collections_inner import (
-    CollectionsResultCollectionsInner,
+from vantage.core.http.models.collections_result_inner import (
+    CollectionsResultInner,
 )
 from vantage.core.http.models.create_collection_request import (
     CreateCollectionRequest,
