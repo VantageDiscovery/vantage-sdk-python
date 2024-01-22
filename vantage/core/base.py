@@ -1,9 +1,9 @@
 import datetime
 import json
-from typing import Optional
 from urllib import request
 
 from vantage.core.http import ApiClient
+from vantage.core.http.exceptions import UnauthorizedException
 
 
 # TODO: This client is a quick temporary solution,
@@ -71,14 +71,7 @@ class AuthorizationClient:
         }
 
     @property
-    def jwt_token(self, force: bool = False) -> str:
-        if force:
-            self._get_new_token()
-            if self._jwt_token is None:
-                raise ValueError("Authentication failed.")
-            else:
-                return self._jwt_token["token"]
-
+    def jwt_token(self) -> str:
         if self._jwt_token is None or self._has_expired():
             self._get_new_token()
 
@@ -87,22 +80,79 @@ class AuthorizationClient:
 
         return self._jwt_token["token"]
 
+    def authenticate(self):
+        self._get_new_token()
+        if self._jwt_token is None:
+            raise ValueError("Authentication failed.")
 
-class BaseAPI:
-    """Base class for HTTP API calls."""
 
+class AuthorizedApiClient(ApiClient):
     def __init__(
         self,
-        api_key: str,
-        host: Optional[str] = None,
-        pool_threads: Optional[int] = 1,
+        authorization_client,
+        configuration=None,
+        header_name=None,
+        header_value=None,
+        cookie=None,
+        pool_threads=1,
+    ) -> None:
+        super().__init__(
+            configuration=configuration,
+            header_name=header_name,
+            header_value=header_value,
+            cookie=cookie,
+            pool_threads=pool_threads,
+        )
+        self.authorization_client = authorization_client
+
+    def call_api(
+        self,
+        resource_path,
+        method,
+        path_params=None,
+        query_params=None,
+        header_params=None,
+        body=None,
+        post_params=None,
+        files=None,
+        response_types_map=None,
+        auth_settings=None,
+        async_req=None,
+        _return_http_data_only=None,
+        collection_formats=None,
+        _preload_content=True,
+        _request_timeout=None,
+        _host=None,
+        _request_auth=None,
     ):
-        self.api_key = api_key
-        # TODO: add config and default values
-        self.host = (
-            host if host else "https://api.dev-a.dev.vantagediscovery.com/"
+        args = (
+            resource_path,
+            method,
+            path_params,
+            query_params,
+            header_params,
+            body,
+            post_params,
+            files,
+            response_types_map,
+            auth_settings,
+            async_req,
+            _return_http_data_only,
+            collection_formats,
+            _preload_content,
+            _request_timeout,
+            _host,
+            _request_auth,
         )
-        self.api_client = ApiClient(pool_threads=pool_threads)
-        self.api_client.set_default_header(
-            "authorization", f"Bearer {api_key}"
-        )
+
+        try:
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
+            return super().call_api(*args)
+        except UnauthorizedException:
+            self.authorization_client.authenticate()
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
+            self.call_api(args)
