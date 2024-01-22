@@ -46,6 +46,8 @@ class Vantage:
         api_client = AuthorizedApiClient(
             pool_threads=1, authorization_client=auth_client
         )
+        if host is not None:
+            api_client.configuration.host = host
         vantage_api_key = auth_client.jwt_token
         management_api = ManagementAPI.from_defaults(api_client)
         search_api = SearchAPI(api_client)
