@@ -6,13 +6,13 @@ from vantage.core.base import AuthorizationClient
 from vantage.core.http.models import (
     Account,
     AccountModifiable,
+    Collection,
+    CollectionModifiable,
+    CollectionsResult,
+    CreateCollectionRequest,
     User,
     UserModifiable,
     UserRegistrationFields,
-    Collection,
-    CollectionsResult,
-    CreateCollectionRequest,
-    CollectionModifiable,
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
@@ -128,6 +128,7 @@ class Vantage:
         llm_provider: Optional[str] = None,
         llm_model: Optional[str] = None,
         external_key_id: Optional[str] = None,
+        collection_preview_url_pattern: Optional[str] = None,
     ) -> Collection:
         # TODO: docstring
 
@@ -136,10 +137,12 @@ class Vantage:
         # TODO: two cases -> user provided embeddings or not
 
         create_collection_request = CreateCollectionRequest(
+            external_key_id=external_key_id,
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=int(embeddings_dimension),
             user_provided_embeddings=bool(user_provided_embeddings),
+            collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
         return self.management_api.collection_api.api.create_collection(
@@ -172,6 +175,8 @@ class Vantage:
         # TODO: check if exists
 
         collection_modifiable = CollectionModifiable(
+            external_key_id=external_key_id,
+            collection_preview_url_pattern=collection_preview_url_pattern,
             collection_name=collection_name,
         )
 

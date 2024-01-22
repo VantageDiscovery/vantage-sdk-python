@@ -1,15 +1,9 @@
 import datetime
 import json
-import os
-from typing import Dict, Optional
+from typing import Optional
 from urllib import request
 
 from vantage.core.http import ApiClient
-
-
-DEFAULT_HEADERS: Dict[str, str] = {
-    "authorization": f"Bearer {os.environ['VANTAGE_TOKEN']}"
-}  # TODO: move to config
 
 
 # TODO: This client is a quick temporary solution,
@@ -109,5 +103,6 @@ class BaseAPI:
             host if host else "https://api.dev-a.dev.vantagediscovery.com/"
         )
         self.api_client = ApiClient(pool_threads=pool_threads)
-        for k, v in DEFAULT_HEADERS.items():
-            self.api_client.set_default_header(k, v)
+        self.api_client.set_default_header(
+            "authorization", f"Bearer {api_key}"
+        )

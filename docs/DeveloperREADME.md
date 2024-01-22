@@ -81,7 +81,7 @@ from vantage import Vantage
 
 vantage_instance = Vantage.from_defaults(
     vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
-    vantage_client_secret=os.environ["VANTAGE_API_CLIENT_ID"],
+    vantage_client_secret=os.environ["YOUR_VANTAGE_CLIENT_SECRET"],
 )
 
 res = vantage_instance.logged_in_user()
