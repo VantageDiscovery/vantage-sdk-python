@@ -16,7 +16,7 @@
 import io
 import re  # noqa: F401
 import warnings
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import Field, StrictStr, ValidationError, validate_arguments
 from typing_extensions import Annotated
@@ -30,7 +30,9 @@ from vantage.core.http.exceptions import (  # noqa: F401
 from vantage.core.http.models.collection import Collection
 from vantage.core.http.models.collection_modifiable import CollectionModifiable
 from vantage.core.http.models.collection_upload_url import CollectionUploadURL
-from vantage.core.http.models.collections_result import CollectionsResult
+from vantage.core.http.models.collections_result_inner import (
+    CollectionsResultInner,
+)
 from vantage.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
@@ -833,7 +835,7 @@ class CollectionManagementApi:
             StrictStr, Field(..., description="The account id")
         ],
         **kwargs,
-    ) -> CollectionsResult:  # noqa: E501
+    ) -> List[CollectionsResultInner]:  # noqa: E501
         """List Collections  # noqa: E501
 
         List the collections in account_id  # noqa: E501
@@ -854,7 +856,7 @@ class CollectionManagementApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: CollectionsResult
+        :rtype: List[CollectionsResultInner]
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -905,7 +907,7 @@ class CollectionManagementApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(CollectionsResult, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(List[CollectionsResultInner], status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -958,7 +960,7 @@ class CollectionManagementApi:
         _auth_settings = ['BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "CollectionsResult",
+            '200': "List[CollectionsResultInner]",
             '405': None,
         }
 
