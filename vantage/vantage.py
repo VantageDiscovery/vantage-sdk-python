@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from vantage.core.base import AuthorizationClient
+from vantage.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage.core.http.models import (
     Account,
     AccountModifiable,
@@ -43,9 +43,16 @@ class Vantage:
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
         )
+        auth_client.authenticate()
+        api_client = AuthorizedApiClient(
+            pool_threads=1, authorization_client=auth_client
+        )
+        if host is not None:
+            api_client.configuration.host = host
         vantage_api_key = auth_client.jwt_token
-        management_api = ManagementAPI.from_defaults(vantage_api_key, host)
-        search_api = SearchAPI(vantage_api_key, host)
+        management_api = ManagementAPI.from_defaults(api_client)
+        search_api = SearchAPI(api_client)
+
         return cls(vantage_api_key, management_api, search_api, host)
 
     def logged_in_user(self) -> User:
