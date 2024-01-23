@@ -1,11 +1,11 @@
 """
 [WIP]
-Initial example of the Vantage Python SDK Usage. 
+Initial example of the Vantage Python SDK Usage.
 Please set your ACCOUNT_ID and environment variables accordingly.
 """
 
-from argparse import ArgumentParser
 import os
+from argparse import ArgumentParser
 from pprint import pprint
 
 from vantage import Vantage
@@ -26,6 +26,11 @@ def main(task: str, collection_id: str) -> None:
     if task == "user":
         user = vantage_instance.logged_in_user()
         res = user.to_dict()
+
+    if task == "vantage_keys":
+        keys = vantage_instance.get_vantage_api_keys(ACCOUNT_ID)
+        res = [key.to_dict() for key in keys]
+        print(f"Vantage API keys for account [{ACCOUNT_ID}]:\n")
 
     elif task == "list":
         collections = vantage_instance.list_collections(ACCOUNT_ID)
@@ -80,7 +85,15 @@ def main(task: str, collection_id: str) -> None:
 if __name__ == "__main__":
     parser = ArgumentParser()
 
-    tasks = ["user", "list", "create", "update", "get", "delete"]
+    tasks = [
+        "user",
+        "vantage_keys",
+        "list",
+        "create",
+        "update",
+        "get",
+        "delete",
+    ]
 
     parser.add_argument("-t", "--task", default="user", choices=tasks)
     parser.add_argument(
