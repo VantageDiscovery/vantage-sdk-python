@@ -10,6 +10,11 @@ from vantage.core.http.models import (
     CollectionModifiable,
     CollectionsResultInner,
     CreateCollectionRequest,
+    EmbeddingSearchQueryFull,
+    EmbeddingSearchQueryFullAllOfCollection,
+    SearchResult,
+    SemanticSearchQueryFull,
+    SemanticSearchQueryFullAllOfCollection,
     User,
     UserModifiable,
     UserRegistrationFields,
@@ -180,8 +185,7 @@ class Vantage:
 
         if collection_id in self._existing_collection_ids(account_id):
             raise VantageValueError(
-                f"Collection with provided collection id\
-                      [{collection_id}] already exists."
+                f"Collection with provided collection id [{collection_id}] already exists."  # noqa: E501
             )
 
         create_collection_request = CreateCollectionRequest(
@@ -206,8 +210,7 @@ class Vantage:
 
         if collection_id not in self._existing_collection_ids(account_id):
             raise VantageNotFoundException(
-                f"Collection with provided collection id\
-                      [{collection_id}] does not exist."
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
         return self.management_api.collection_api.api.get_collection(
@@ -226,8 +229,7 @@ class Vantage:
 
         if collection_id not in self._existing_collection_ids(account_id):
             raise VantageNotFoundException(
-                f"Collection with provided collection id\
-                      [{collection_id}] does not exist."
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
         collection_modifiable = CollectionModifiable(
@@ -251,12 +253,83 @@ class Vantage:
 
         if collection_id not in self._existing_collection_ids(account_id):
             raise VantageNotFoundException(
-                f"Collection with provided collection id\
-                      [{collection_id}] does not exist."
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
         return self.management_api.collection_api.api.delete_collection(
             collection_id=collection_id, account_id=account_id
+        )
+
+    # endregion
+
+    # region Search
+
+    def embedding_search(
+        self,
+        embedding: str,
+        collection_id: str,
+        account_id: str,
+        accuracy: float = 0.3,
+    ) -> SearchResult:
+        # TODO: docstring
+
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+            )
+
+        collection = EmbeddingSearchQueryFullAllOfCollection(
+            account_id=account_id,
+            collection_id=collection_id,
+            accuracy=accuracy,
+        )
+        query = EmbeddingSearchQueryFull(
+            embedding=embedding,
+            collection=collection,
+            filter=None,
+            pagination=None,
+        )
+
+        # TODO: get Vantage API key from API
+        vantage_api_key = ""
+
+        return self.search_api.api.embedding_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+    def semantic_search(
+        self,
+        text: str,
+        collection_id: str,
+        account_id: str,
+        accuracy: float = 0.3,
+    ) -> SearchResult:
+        # TODO: docstring
+
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+            )
+
+        collection = SemanticSearchQueryFullAllOfCollection(
+            account_id=account_id,
+            collection_id=collection_id,
+            accuracy=accuracy,
+        )
+        query = SemanticSearchQueryFull(
+            text=text,
+            collection=collection,
+            filter=None,
+            pagination=None,
+        )
+
+        # TODO: get Vantage API key from API
+        vantage_api_key = ""
+
+        return self.search_api.api.semantic_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
     # endregion
