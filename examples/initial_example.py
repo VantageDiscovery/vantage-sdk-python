@@ -79,6 +79,15 @@ def main(task: str, collection_id: str) -> None:
             f"Deleted collection with id: {collection.collection_id}. Details:\n"
         )
 
+    elif task == "semantic_search":
+        result = vantage_instance.semantic_search(
+            text="bogus",
+            collection_id=collection_id,
+            account_id=ACCOUNT_ID,
+        )
+        res = result.to_dict()
+        print(f"Semanic search results:\n")
+
     pprint(res)
 
 
@@ -93,6 +102,7 @@ if __name__ == "__main__":
         "update",
         "get",
         "delete",
+        "semantic_search",
     ]
 
     parser.add_argument("-t", "--task", default="user", choices=tasks)
