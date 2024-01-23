@@ -13,6 +13,8 @@ from vantage.core.http.models import (
     User,
     UserModifiable,
     UserRegistrationFields,
+    VantageAPIKey,
+    VantageAPIKeysResultInner,
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
@@ -114,6 +116,35 @@ class Vantage:
         return self.management_api.account_api.api.update_account(
             account_id, data
         )
+
+    # region Vantage API keys
+
+    def get_vantage_api_keys(
+        self, account_id: str
+    ) -> List[VantageAPIKeysResultInner]:
+        # TODO: docstring
+
+        return (
+            self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
+                account_id=account_id,
+            )
+        )
+
+    def get_vantage_api_key(
+        self,
+        account_id: str,
+        vantage_api_key_id: str,
+    ) -> VantageAPIKey:
+        # TODO: docstring
+
+        return (
+            self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
+                account_id=account_id,
+                vantage_api_key_id=vantage_api_key_id,
+            )
+        )
+
+    # endregion
 
     # region Collections
 

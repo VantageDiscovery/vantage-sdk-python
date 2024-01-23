@@ -107,9 +107,6 @@ from vantage.core.http.models.user_registration_fields import (
     UserRegistrationFields,
 )
 from vantage.core.http.models.vantage_api_key import VantageAPIKey
-from vantage.core.http.models.vantage_api_keys_result import (
-    VantageAPIKeysResult,
-)
-from vantage.core.http.models.vantage_api_keys_result_collections_inner import (
-    VantageAPIKeysResultCollectionsInner,
+from vantage.core.http.models.vantage_api_keys_result_inner import (
+    VantageAPIKeysResultInner,
 )

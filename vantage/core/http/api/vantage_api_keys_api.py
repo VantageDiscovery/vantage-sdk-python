@@ -16,6 +16,7 @@
 import io
 import re  # noqa: F401
 import warnings
+from typing import List
 
 from pydantic import Field, StrictStr, ValidationError, validate_arguments
 from typing_extensions import Annotated
@@ -27,8 +28,8 @@ from vantage.core.http.exceptions import (  # noqa: F401
     ApiValueError,
 )
 from vantage.core.http.models.vantage_api_key import VantageAPIKey
-from vantage.core.http.models.vantage_api_keys_result import (
-    VantageAPIKeysResult,
+from vantage.core.http.models.vantage_api_keys_result_inner import (
+    VantageAPIKeysResultInner,
 )
 
 
@@ -224,7 +225,7 @@ class VantageAPIKeysApi:
             Field(..., description="The account these keys are within"),
         ],
         **kwargs,
-    ) -> VantageAPIKeysResult:  # noqa: E501
+    ) -> List[VantageAPIKeysResultInner]:  # noqa: E501
         """Get Vantage API keys  # noqa: E501
 
         Get Vantage API keys  # noqa: E501
@@ -245,7 +246,7 @@ class VantageAPIKeysApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: VantageAPIKeysResult
+        :rtype: List[VantageAPIKeysResultInner]
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -297,7 +298,7 @@ class VantageAPIKeysApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(VantageAPIKeysResult, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(List[VantageAPIKeysResultInner], status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -350,7 +351,7 @@ class VantageAPIKeysApi:
         _auth_settings = ['BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "VantageAPIKeysResult",
+            '200': "List[VantageAPIKeysResultInner]",
             '405': None,
         }
 
