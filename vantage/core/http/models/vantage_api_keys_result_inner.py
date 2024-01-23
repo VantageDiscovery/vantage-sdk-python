@@ -14,17 +14,16 @@
 
 
 from __future__ import annotations
-
+from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
-from inspect import getfullargspec
-from typing import TYPE_CHECKING, Any, List, Optional, Union
 
+from typing import Any, List, Optional
 from pydantic import BaseModel, Field, StrictStr, ValidationError, validator
-
 from vantage.core.http.models.vantage_api_key import VantageAPIKey
-
+from typing import Union, Any, List, TYPE_CHECKING
+from pydantic import StrictStr, Field
 
 VANTAGEAPIKEYSRESULTINNER_ONE_OF_SCHEMAS = ["VantageAPIKey"]
 
