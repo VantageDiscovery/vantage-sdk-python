@@ -44,23 +44,27 @@ class Vantage:
         cls,
         vantage_client_id: str,
         vantage_client_secret: str,
-        host: Optional[str] = None,
+        api_host: str = "https://api.vanta.ge",
+        auth_host: str = "https://auth.vanta.ge",
     ) -> Vantage:
+        api_url = api_host + "/v1"
         auth_client = AuthorizationClient(
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
+            sso_endpoint_url=auth_host + "/oauth/token",
+            vantage_audience_url=api_host,
         )
         auth_client.authenticate()
         api_client = AuthorizedApiClient(
             pool_threads=1, authorization_client=auth_client
         )
-        if host is not None:
-            api_client.configuration.host = host
+        if api_url is not None:
+            api_client.configuration.host = api_url
         vantage_api_key = auth_client.jwt_token
         management_api = ManagementAPI.from_defaults(api_client)
         search_api = SearchAPI(api_client)
 
-        return cls(vantage_api_key, management_api, search_api, host)
+        return cls(vantage_api_key, management_api, search_api, api_url)
 
     def logged_in_user(self) -> User:
         # TODO: docstring
