@@ -144,6 +144,8 @@ class AuthorizedApiClient(ApiClient):
             _host,
             _request_auth,
         )
+        if "authorization" in header_params:
+            return super().call_api(*args)
 
         try:
             header_params[
@@ -155,4 +157,4 @@ class AuthorizedApiClient(ApiClient):
             header_params[
                 "authorization"
             ] = f"Bearer {self.authorization_client.jwt_token}"
-            self.call_api(args)
+            return super().call_api(*args)
