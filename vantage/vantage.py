@@ -290,7 +290,15 @@ class Vantage:
             pagination=None,
         )
 
-        return self.search_api.api.embedding_search(query)
+        # TODO: get Vantage API key from API
+        vantage_api_key = (
+            "$2a$10$XfTOpSD3lsb0PU.in7cDLuxQwcIajJcVuFJhVT6VCjXs0CXYfso.y"
+        )
+
+        return self.search_api.api.embedding_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
     def semantic_search(
         self,
@@ -318,6 +326,14 @@ class Vantage:
             pagination=None,
         )
 
-        return self.search_api.api.semantic_search(query)
+        # TODO: get Vantage API key from API
+        vantage_api_key = (
+            "$2a$10$XfTOpSD3lsb0PU.in7cDLuxQwcIajJcVuFJhVT6VCjXs0CXYfso.y"
+        )
+
+        return self.search_api.api.semantic_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
     # endregion
