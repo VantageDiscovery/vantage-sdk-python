@@ -21,6 +21,8 @@ def main(task: str, collection_id: str) -> None:
     vantage_instance = Vantage.from_defaults(
         vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
         vantage_client_secret=os.environ["VANTAGE_API_CLIENT_SECRET"],
+        api_host="https://api.dev-a.dev.vantagediscovery.com",
+        auth_host="https://vantage-dev.us.auth0.com",
     )
 
     if task == "user":
@@ -86,7 +88,7 @@ def main(task: str, collection_id: str) -> None:
             account_id=ACCOUNT_ID,
         )
         res = result.to_dict()
-        print(f"Semanic search results:\n")
+        print("Semanic search results:\n")
 
     pprint(res)
 
