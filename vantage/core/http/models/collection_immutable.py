@@ -20,14 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Optional
 
-from pydantic import (
-    BaseModel,
-    Field,
-    StrictBool,
-    StrictInt,
-    StrictStr,
-    validator,
-)
+from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
 
 
 class CollectionImmutable(BaseModel):
@@ -43,8 +36,7 @@ class CollectionImmutable(BaseModel):
         False,
         description="Ignore llm_ fields will provide own embeddings for both ingest and search",
     )
-    llm_provider: Optional[StrictStr] = None
-    llm_model: Optional[StrictStr] = None
+    llm: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = Field(
         None,
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
@@ -52,22 +44,9 @@ class CollectionImmutable(BaseModel):
     __properties = [
         "collection_id",
         "user_provided_embeddings",
-        "llm_provider",
-        "llm_model",
+        "llm",
         "embeddings_dimension",
     ]
-
-    @validator('llm_provider')
-    def llm_provider_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('OpenAI', 'HuggingFace'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'HuggingFace')"
-            )
-        return value
 
     class Config:
         """Pydantic configuration"""
@@ -108,8 +87,7 @@ class CollectionImmutable(BaseModel):
                 "user_provided_embeddings": obj.get("user_provided_embeddings")
                 if obj.get("user_provided_embeddings") is not None
                 else False,
-                "llm_provider": obj.get("llm_provider"),
-                "llm_model": obj.get("llm_model"),
+                "llm": obj.get("llm"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
             }
         )

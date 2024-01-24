@@ -34,6 +34,11 @@ def main(task: str, collection_id: str) -> None:
         res = [key.to_dict() for key in keys]
         print(f"Vantage API keys for account [{ACCOUNT_ID}]:\n")
 
+    if task == "external_keys":
+        keys = vantage_instance.get_external_api_keys(ACCOUNT_ID)
+        res = [key.to_dict() for key in keys]
+        print(f"External API keys for account [{ACCOUNT_ID}]:\n")
+
     elif task == "list":
         collections = vantage_instance.list_collections(ACCOUNT_ID)
         res = [col.to_dict() for col in collections]
@@ -99,6 +104,7 @@ if __name__ == "__main__":
     tasks = [
         "user",
         "vantage_keys",
+        "external_keys",
         "list",
         "create",
         "update",

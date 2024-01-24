@@ -14,35 +14,30 @@
 
 
 from __future__ import annotations
-
+from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
-from inspect import getfullargspec
-from typing import TYPE_CHECKING, Any, List, Optional, Union
 
+from typing import Any, List, Optional
 from pydantic import BaseModel, Field, StrictStr, ValidationError, validator
-
 from vantage.core.http.models.external_api_key import ExternalAPIKey
+from typing import Union, Any, List, TYPE_CHECKING
+from pydantic import StrictStr, Field
 
+EXTERNALAPIKEYSRESULTINNER_ONE_OF_SCHEMAS = ["ExternalAPIKey"]
 
-EXTERNALAPIKEYSRESULTCOLLECTIONSINNER_ONE_OF_SCHEMAS = ["ExternalAPIKey"]
-
-
-class ExternalAPIKeysResultCollectionsInner(BaseModel):
+class ExternalAPIKeysResultInner(BaseModel):
     """
-    ExternalAPIKeysResultCollectionsInner
+    ExternalAPIKeysResultInner
     """
-
     # data type: ExternalAPIKey
     oneof_schema_1_validator: Optional[ExternalAPIKey] = None
     if TYPE_CHECKING:
         actual_instance: Union[ExternalAPIKey]
     else:
         actual_instance: Any
-    one_of_schemas: List[str] = Field(
-        EXTERNALAPIKEYSRESULTCOLLECTIONSINNER_ONE_OF_SCHEMAS, const=True
-    )
+    one_of_schemas: List[str] = Field(EXTERNALAPIKEYSRESULTINNER_ONE_OF_SCHEMAS, const=True)
 
     class Config:
         validate_assignment = True
@@ -50,52 +45,40 @@ class ExternalAPIKeysResultCollectionsInner(BaseModel):
     def __init__(self, *args, **kwargs) -> None:
         if args:
             if len(args) > 1:
-                raise ValueError(
-                    "If a position argument is used, only 1 is allowed to set `actual_instance`"
-                )
+                raise ValueError("If a position argument is used, only 1 is allowed to set `actual_instance`")
             if kwargs:
-                raise ValueError(
-                    "If a position argument is used, keyword arguments cannot be used."
-                )
+                raise ValueError("If a position argument is used, keyword arguments cannot be used.")
             super().__init__(actual_instance=args[0])
         else:
             super().__init__(**kwargs)
 
     @validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = ExternalAPIKeysResultCollectionsInner.construct()
+        instance = ExternalAPIKeysResultInner.construct()
         error_messages = []
         match = 0
         # validate data type: ExternalAPIKey
         if not isinstance(v, ExternalAPIKey):
-            error_messages.append(
-                f"Error! Input type `{type(v)}` is not `ExternalAPIKey`"
-            )
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ExternalAPIKey`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError(
-                "Multiple matches found when setting `actual_instance` in ExternalAPIKeysResultCollectionsInner with oneOf schemas: ExternalAPIKey. Details: "
-                + ", ".join(error_messages)
-            )
+            raise ValueError("Multiple matches found when setting `actual_instance` in ExternalAPIKeysResultInner with oneOf schemas: ExternalAPIKey. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError(
-                "No match found when setting `actual_instance` in ExternalAPIKeysResultCollectionsInner with oneOf schemas: ExternalAPIKey. Details: "
-                + ", ".join(error_messages)
-            )
+            raise ValueError("No match found when setting `actual_instance` in ExternalAPIKeysResultInner with oneOf schemas: ExternalAPIKey. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: dict) -> ExternalAPIKeysResultCollectionsInner:
+    def from_dict(cls, obj: dict) -> ExternalAPIKeysResultInner:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: str) -> ExternalAPIKeysResultCollectionsInner:
+    def from_json(cls, json_str: str) -> ExternalAPIKeysResultInner:
         """Returns the object represented by the json string"""
-        instance = ExternalAPIKeysResultCollectionsInner.construct()
+        instance = ExternalAPIKeysResultInner.construct()
         error_messages = []
         match = 0
 
@@ -108,16 +91,10 @@ class ExternalAPIKeysResultCollectionsInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError(
-                "Multiple matches found when deserializing the JSON string into ExternalAPIKeysResultCollectionsInner with oneOf schemas: ExternalAPIKey. Details: "
-                + ", ".join(error_messages)
-            )
+            raise ValueError("Multiple matches found when deserializing the JSON string into ExternalAPIKeysResultInner with oneOf schemas: ExternalAPIKey. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError(
-                "No match found when deserializing the JSON string into ExternalAPIKeysResultCollectionsInner with oneOf schemas: ExternalAPIKey. Details: "
-                + ", ".join(error_messages)
-            )
+            raise ValueError("No match found when deserializing the JSON string into ExternalAPIKeysResultInner with oneOf schemas: ExternalAPIKey. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -147,3 +124,5 @@ class ExternalAPIKeysResultCollectionsInner(BaseModel):
     def to_str(self) -> str:
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.dict())
+
+

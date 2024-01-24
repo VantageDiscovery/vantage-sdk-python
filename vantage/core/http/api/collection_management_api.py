@@ -18,7 +18,13 @@ import re  # noqa: F401
 import warnings
 from typing import List, Optional
 
-from pydantic import Field, StrictStr, ValidationError, validate_arguments
+from pydantic import (
+    Field,
+    StrictInt,
+    StrictStr,
+    ValidationError,
+    validate_arguments,
+)
 from typing_extensions import Annotated
 
 from vantage.core.http.api_client import ApiClient
@@ -445,6 +451,9 @@ class CollectionManagementApi:
                 description="The account id this collection id is located in",
             ),
         ],
+        file_size: Annotated[
+            StrictInt, Field(..., description="The file size in bytes")
+        ],
         customer_batch_identifier: Annotated[
             Optional[StrictStr],
             Field(
@@ -459,13 +468,15 @@ class CollectionManagementApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_browser_upload_url(collection_id, account_id, customer_batch_identifier, async_req=True)
+        >>> thread = api.get_browser_upload_url(collection_id, account_id, file_size, customer_batch_identifier, async_req=True)
         >>> result = thread.get()
 
         :param collection_id: The collection id to get an upload link for for {collection_id} (required)
         :type collection_id: str
         :param account_id: The account id this collection id is located in (required)
         :type account_id: str
+        :param file_size: The file size in bytes (required)
+        :type file_size: int
         :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
@@ -484,7 +495,11 @@ class CollectionManagementApi:
             message = "Error! Please call the get_browser_upload_url_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
         return self.get_browser_upload_url_with_http_info(
-            collection_id, account_id, customer_batch_identifier, **kwargs
+            collection_id,
+            account_id,
+            file_size,
+            customer_batch_identifier,
+            **kwargs,
         )  # noqa: E501
 
     @validate_arguments
@@ -504,6 +519,9 @@ class CollectionManagementApi:
                 description="The account id this collection id is located in",
             ),
         ],
+        file_size: Annotated[
+            StrictInt, Field(..., description="The file size in bytes")
+        ],
         customer_batch_identifier: Annotated[
             Optional[StrictStr],
             Field(
@@ -518,13 +536,15 @@ class CollectionManagementApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_browser_upload_url_with_http_info(collection_id, account_id, customer_batch_identifier, async_req=True)
+        >>> thread = api.get_browser_upload_url_with_http_info(collection_id, account_id, file_size, customer_batch_identifier, async_req=True)
         >>> result = thread.get()
 
         :param collection_id: The collection id to get an upload link for for {collection_id} (required)
         :type collection_id: str
         :param account_id: The account id this collection id is located in (required)
         :type account_id: str
+        :param file_size: The file size in bytes (required)
+        :type file_size: int
         :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
@@ -557,6 +577,7 @@ class CollectionManagementApi:
         _all_params = [
             'collection_id',
             'account_id',
+            'file_size',
             'customer_batch_identifier',
         ]
         _all_params.extend(
@@ -593,6 +614,9 @@ class CollectionManagementApi:
 
         # process the query parameters
         _query_params = []
+        if _params.get('file_size') is not None:  # noqa: E501
+            _query_params.append(('file_size', _params['file_size']))
+
         if _params.get('customer_batch_identifier') is not None:  # noqa: E501
             _query_params.append(
                 (

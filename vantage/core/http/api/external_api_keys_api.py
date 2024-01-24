@@ -16,6 +16,7 @@
 import io
 import re  # noqa: F401
 import warnings
+from typing import List
 
 from pydantic import Field, StrictStr, ValidationError, validate_arguments
 from typing_extensions import Annotated
@@ -30,8 +31,8 @@ from vantage.core.http.models.external_api_key import ExternalAPIKey
 from vantage.core.http.models.external_api_key_modifiable import (
     ExternalAPIKeyModifiable,
 )
-from vantage.core.http.models.external_api_keys_result import (
-    ExternalAPIKeysResult,
+from vantage.core.http.models.external_api_keys_result_inner import (
+    ExternalAPIKeysResultInner,
 )
 
 
@@ -391,7 +392,7 @@ class ExternalAPIKeysApi:
             Field(..., description="The account these keys are within"),
         ],
         **kwargs,
-    ) -> ExternalAPIKeysResult:  # noqa: E501
+    ) -> List[ExternalAPIKeysResultInner]:  # noqa: E501
         """Get external API keys  # noqa: E501
 
         Get external API keys  # noqa: E501
@@ -412,7 +413,7 @@ class ExternalAPIKeysApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: ExternalAPIKeysResult
+        :rtype: List[ExternalAPIKeysResultInner]
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -464,7 +465,7 @@ class ExternalAPIKeysApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(ExternalAPIKeysResult, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(List[ExternalAPIKeysResultInner], status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -517,7 +518,7 @@ class ExternalAPIKeysApi:
         _auth_settings = ['BearerAuth']  # noqa: E501
 
         _response_types_map = {
-            '200': "ExternalAPIKeysResult",
+            '200': "List[ExternalAPIKeysResultInner]",
             '405': None,
         }
 
