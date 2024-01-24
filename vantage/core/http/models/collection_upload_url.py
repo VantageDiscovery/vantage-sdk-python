@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Optional
 
-from pydantic import BaseModel, StrictStr, validator
+from pydantic import BaseModel, StrictInt, StrictStr, validator
 
 
 class CollectionUploadURL(BaseModel):
@@ -29,11 +29,13 @@ class CollectionUploadURL(BaseModel):
     """
 
     collection_id: Optional[StrictStr] = None
+    file_size: Optional[StrictInt] = None
     customer_batch_identifier: Optional[StrictStr] = None
     upload_url_type: Optional[StrictStr] = None
     upload_url: Optional[StrictStr] = None
     __properties = [
         "collection_id",
+        "file_size",
         "customer_batch_identifier",
         "upload_url_type",
         "upload_url",
@@ -91,6 +93,7 @@ class CollectionUploadURL(BaseModel):
         _obj = CollectionUploadURL.parse_obj(
             {
                 "collection_id": obj.get("collection_id"),
+                "file_size": obj.get("file_size"),
                 "customer_batch_identifier": obj.get(
                     "customer_batch_identifier"
                 ),

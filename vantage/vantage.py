@@ -12,6 +12,9 @@ from vantage.core.http.models import (
     CreateCollectionRequest,
     EmbeddingSearchQueryFull,
     EmbeddingSearchQueryFullAllOfCollection,
+    ExternalAPIKey,
+    ExternalAPIKeyModifiable,
+    ExternalAPIKeysResultInner,
     SearchResult,
     SemanticSearchQueryFull,
     SemanticSearchQueryFullAllOfCollection,
@@ -151,6 +154,65 @@ class Vantage:
                 account_id=account_id,
                 vantage_api_key_id=vantage_api_key_id,
             )
+        )
+
+    # endregion
+
+    # region External API keys
+
+    def get_external_api_keys(
+        self, account_id: str
+    ) -> List[ExternalAPIKeysResultInner]:
+        # TODO: docstring
+
+        return self.management_api.external_api_keys_api.api.get_external_api_keys(
+            account_id=account_id,
+        )
+
+    def get_external_api_key(
+        self,
+        account_id: str,
+        external_key_id: str,
+    ) -> ExternalAPIKey:
+        # TODO: docstring
+
+        return (
+            self.management_api.external_api_keys_api.api.get_external_api_key(
+                account_id=account_id,
+                external_key_id=external_key_id,
+            )
+        )
+
+    def update_external_api_key(
+        self,
+        account_id: str,
+        external_key_id: str,
+        url: str,
+        llm_provider: str,
+        llm_secret: str,
+    ) -> ExternalAPIKey:
+        # TODO: docstring
+
+        external_api_key_modifiable = ExternalAPIKeyModifiable(
+            url=url, llm_provider=llm_provider, llm_secret=llm_secret
+        )
+
+        return self.management_api.external_api_keys_api.api.update_external_api_key(
+            account_id=account_id,
+            external_key_id=external_key_id,
+            external_api_key_modifiable=external_api_key_modifiable,
+        )
+
+    def delete_external_api_key(
+        self,
+        account_id: str,
+        external_key_id: str,
+    ) -> ExternalAPIKey:
+        # TODO: docstring
+
+        return self.management_api.external_api_keys_api.api.delete_external_api_key(
+            account_id=account_id,
+            external_key_id=external_key_id,
         )
 
     # endregion

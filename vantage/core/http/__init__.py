@@ -77,11 +77,8 @@ from vantage.core.http.models.external_api_key_modifiable import (
 from vantage.core.http.models.external_api_key_read_only import (
     ExternalAPIKeyReadOnly,
 )
-from vantage.core.http.models.external_api_keys_result import (
-    ExternalAPIKeysResult,
-)
-from vantage.core.http.models.external_api_keys_result_collections_inner import (
-    ExternalAPIKeysResultCollectionsInner,
+from vantage.core.http.models.external_api_keys_result_inner import (
+    ExternalAPIKeysResultInner,
 )
 from vantage.core.http.models.search_result import SearchResult
 from vantage.core.http.models.search_result_results_inner import (
