@@ -1,5 +1,6 @@
 import datetime
 import json
+from typing import Optional
 from urllib import request
 
 from vantage.core.http import ApiClient
@@ -15,7 +16,7 @@ class AuthorizationClient:
         vantage_client_secret: str,
         # TODO: change vantage_audience_url
         #       and sso_endpoint_url to production values
-        vantage_audience_url: str = (
+        vantage_audience_url: Optional[str] = (
             "https://api.dev-a.dev.vantagediscovery.com"
         ),
         sso_endpoint_url: str = (
@@ -89,7 +90,7 @@ class AuthorizationClient:
 class AuthorizedApiClient(ApiClient):
     def __init__(
         self,
-        authorization_client,
+        authorization_client: AuthorizationClient,
         configuration=None,
         header_name=None,
         header_value=None,
