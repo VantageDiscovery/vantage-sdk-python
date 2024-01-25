@@ -13,6 +13,7 @@ from vantage import Vantage
 
 ACCOUNT_ID = "<YOUR_ACCOUNT_ID>"
 EXTERNAL_KEY_ID = "<YOUR_EXTERNAL_KEY_ID>"  # OpenAI or HuggingFace Key
+VANTAGE_API_KEY = "<YOUR_VANTAGE_API_KEY>"
 
 DEFAULT_TASK = "user"
 DEFAULT_COLLECTION_ID = "test-sdk"
@@ -31,6 +32,7 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     vantage_instance = Vantage.from_defaults(
         vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
         vantage_client_secret=os.environ["VANTAGE_API_CLIENT_SECRET"],
+        account_id=ACCOUNT_ID,
         api_host=DEFAULT_API_HOST,
         auth_host=DEFAULT_AUTH_HOST,
     )
@@ -40,23 +42,22 @@ def main(task: str, collection_id: str, query_text: str) -> None:
         res = user.to_dict()
 
     if task == "vantage_keys":
-        keys = vantage_instance.get_vantage_api_keys(ACCOUNT_ID)
+        keys = vantage_instance.get_vantage_api_keys()
         res = [key.to_dict() for key in keys]
         print(f"Vantage API keys for account [{ACCOUNT_ID}]:\n")
 
     if task == "external_keys":
-        keys = vantage_instance.get_external_api_keys(ACCOUNT_ID)
+        keys = vantage_instance.get_external_api_keys()
         res = [key.to_dict() for key in keys]
         print(f"External API keys for account [{ACCOUNT_ID}]:\n")
 
     elif task == "list_collections":
-        collections = vantage_instance.list_collections(ACCOUNT_ID)
+        collections = vantage_instance.list_collections()
         res = [col.to_dict() for col in collections]
         print(f"Collections created for account [{ACCOUNT_ID}]:\n")
 
     elif task == "create_collection":
         collection = vantage_instance.create_collection(
-            account_id=ACCOUNT_ID,
             collection_id=collection_id,
             collection_name=DEFAULT_COLLECTION_NAME,
             user_provided_embeddings=True,
@@ -70,7 +71,6 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     elif task == "update_collection":
         collection = vantage_instance.update_collection(
             collection_id=collection_id,
-            account_id=ACCOUNT_ID,
             collection_name=DEFAULT_UPDATE_COLLECTION_NAME,
         )
         res = collection.to_dict()
@@ -81,7 +81,6 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     elif task == "get_collection":
         collection = vantage_instance.get_collection(
             collection_id,
-            ACCOUNT_ID,
         )
         res = collection.to_dict()
         print(f"Collection with id: {collection.collection_id}. Details:\n")
@@ -89,7 +88,6 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     elif task == "browser_url":
         upload_url = vantage_instance.get_browser_upload_url(
             collection_id=collection_id,
-            account_id=ACCOUNT_ID,
             file_size=3000,
         )
         res = upload_url.to_dict()
@@ -100,7 +98,6 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     elif task == "delete_collection":
         collection = vantage_instance.delete_collection(
             collection_id,
-            ACCOUNT_ID,
         )
         res = collection.to_dict()
         print(
@@ -111,7 +108,7 @@ def main(task: str, collection_id: str, query_text: str) -> None:
         result = vantage_instance.semantic_search(
             text=query_text,
             collection_id=collection_id,
-            account_id=ACCOUNT_ID,
+            vantage_api_key=VANTAGE_API_KEY,
         )
         res = result.to_dict()
         print("Semantic search results:\n")
