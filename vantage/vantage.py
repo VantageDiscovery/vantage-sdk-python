@@ -9,6 +9,7 @@ from vantage.core.http.models import (
     Collection,
     CollectionModifiable,
     CollectionsResultInner,
+    CollectionUploadURL,
     CreateCollectionRequest,
     EmbeddingSearchQueryFull,
     EmbeddingSearchQueryFullAllOfCollection,
@@ -239,15 +240,11 @@ class Vantage:
         collection_name: str,
         embeddings_dimension: int,
         user_provided_embeddings: Optional[bool] = False,
-        llm_provider: Optional[str] = None,
-        llm_model: Optional[str] = None,
+        llm: Optional[str] = None,
         external_key_id: Optional[str] = None,
         collection_preview_url_pattern: Optional[str] = None,
     ) -> Collection:
         # TODO: docstring
-
-        # Note: Only scenario for user provided embeddings is covered
-        # TODO: two cases -> user provided embeddings or not
 
         if collection_id in self._existing_collection_ids(account_id):
             raise VantageValueError(
@@ -255,11 +252,14 @@ class Vantage:
             )
 
         create_collection_request = CreateCollectionRequest(
-            external_key_id=external_key_id,
+            external_key_id=external_key_id
+            if not user_provided_embeddings
+            else None,
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=int(embeddings_dimension),
             user_provided_embeddings=bool(user_provided_embeddings),
+            llm=llm if not user_provided_embeddings else None,
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
@@ -308,6 +308,27 @@ class Vantage:
             collection_id=collection_id,
             account_id=account_id,
             collection_modifiable=collection_modifiable,
+        )
+
+    def get_browser_upload_url(
+        self,
+        collection_id: str,
+        account_id: str,
+        file_size: int,
+        customer_batch_identifier: Optional[str] = None,
+    ) -> CollectionUploadURL:
+        # TODO: docstring
+
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+            )
+
+        return self.management_api.collection_api.api.get_browser_upload_url(
+            collection_id=collection_id,
+            account_id=account_id,
+            file_size=file_size,
+            customer_batch_identifier=customer_batch_identifier,
         )
 
     def delete_collection(
