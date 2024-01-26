@@ -81,58 +81,6 @@ class Vantage:
             host,
         )
 
-    # region User
-
-    def logged_in_user(self) -> User:
-        # TODO: docstring
-        return self.management_api.account_api.api.user_me()
-
-    # TODO: Check what fields are mandatory
-    def register_user(
-        self,
-        user_given_name: Optional[str] = None,
-        user_family_name: Optional[str] = None,
-        user_email: Optional[str] = None,
-        user_last_login_date: Optional[str] = None,
-        info_regform_company_name: Optional[str] = None,
-        info_regform_company_industry: Optional[str] = None,
-        info_regform_company_use_case: Optional[str] = None,
-        info_signed_jwt_from_provider: Optional[str] = None,
-    ) -> User:
-        data = UserRegistrationFields(
-            user_given_name=user_given_name,
-            user_family_name=user_family_name,
-            user_email=user_email,
-            user_last_login_date=user_last_login_date,
-            info_regform_company_name=info_regform_company_name,
-            info_regform_company_industry=info_regform_company_industry,
-            info_regform_company_use_case=info_regform_company_use_case,
-            info_signed_jwt_from_provider=info_signed_jwt_from_provider,
-        )
-        return self.management_api.account_api.api.register_user(data)
-
-    def get_user(self, user_id: str) -> User:
-        return self.management_api.account_api.api.get_user(user_id)
-
-    # TODO: Check what fields are mandatory
-    def update_user(
-        self,
-        user_id: str,
-        user_given_name: Optional[str] = None,
-        user_family_name: Optional[str] = None,
-        user_email: Optional[str] = None,
-        user_last_login_date: Optional[str] = None,
-    ) -> User:
-        data = UserModifiable(
-            user_given_name=user_given_name,
-            user_family_name=user_family_name,
-            user_email=user_email,
-            user_last_login_date=user_last_login_date,
-        )
-        return self.management_api.account_api.api.update_user(user_id, data)
-
-    # endregion
-
     # region Account
 
     def get_account(
