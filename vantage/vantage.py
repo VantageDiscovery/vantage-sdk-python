@@ -19,9 +19,6 @@ from vantage.core.http.models import (
     SearchResult,
     SemanticSearchQueryFull,
     SemanticSearchQueryFullAllOfCollection,
-    User,
-    UserModifiable,
-    UserRegistrationFields,
     VantageAPIKey,
     VantageAPIKeysResultInner,
 )
