@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 import json
+from typing import Optional
 from urllib import request
 
 from vantage.core.http import ApiClient
@@ -17,11 +18,17 @@ class AuthorizationClient:
         self,
         vantage_audience_url: str,
         sso_endpoint_url: str,
-        vantage_client_id: str = None,
-        vantage_client_secret: str = None,
-        vantage_jwt_token: str = None,
+        vantage_client_id: Optional[str] = None,
+        vantage_client_secret: Optional[str] = None,
+        vantage_jwt_token: Optional[str] = None,
         encoding: str = "utf-8",
     ) -> None:
+        self._check_credentials(
+            vantage_client_id=vantage_client_id,
+            vantage_client_secret=vantage_client_secret,
+            vantage_jwt_token=vantage_jwt_token,
+        )
+
         if vantage_jwt_token:
             if (
                 vantage_client_id is not None
@@ -30,8 +37,6 @@ class AuthorizationClient:
                 raise ValueError(
                     "Use either client id and secret, or JWT token, not both."
                 )
-
-        if vantage_jwt_token:
             now = datetime.datetime.now().timestamp() * 1000
             self._jwt_token = {
                 "token": vantage_jwt_token,
@@ -49,6 +54,41 @@ class AuthorizationClient:
         self._vantage_audience_url = vantage_audience_url
         self._sso_endpoint_url = sso_endpoint_url
         self._encoding = encoding
+
+    def _check_credentials(
+        self,
+        vantage_client_id: Optional[str] = None,
+        vantage_client_secret: Optional[str] = None,
+        vantage_jwt_token: Optional[str] = None,
+    ):
+        if all(
+            arg is None
+            for arg in (
+                vantage_jwt_token,
+                vantage_client_id,
+                vantage_client_secret,
+            )
+        ):
+            raise ValueError(
+                (
+                    "You must specify either JWT token, "
+                    "or both client id and secret."
+                )
+            )
+
+        if vantage_jwt_token and vantage_client_id and vantage_client_secret:
+            raise ValueError(
+                "You must specify either client id and secret, or JWT token."
+            )
+
+        if not vantage_jwt_token:
+            if not (vantage_client_id and vantage_client_secret):
+                raise ValueError(
+                    (
+                        "If not using JWT token, "
+                        "both client id and secret must be specified."
+                    )
+                )
 
     def _authenticate(self) -> dict:
         if self._user_provided_token:
