@@ -15,7 +15,7 @@ ACCOUNT_ID = "<YOUR_ACCOUNT_ID>"
 EXTERNAL_KEY_ID = "<YOUR_EXTERNAL_KEY_ID>"  # OpenAI or HuggingFace Key
 VANTAGE_API_KEY = "<YOUR_VANTAGE_API_KEY>"
 
-DEFAULT_TASK = "user"
+DEFAULT_TASK = "list_collections"
 DEFAULT_COLLECTION_ID = "test-sdk"
 DEFAULT_COLLECTION_NAME = "Test SDK"
 DEFAULT_UPDATE_COLLECTION_NAME = (
@@ -37,16 +37,12 @@ def main(task: str, collection_id: str, query_text: str) -> None:
         auth_host=DEFAULT_AUTH_HOST,
     )
 
-    if task == "user":
-        user = vantage_instance.logged_in_user()
-        res = user.to_dict()
-
     if task == "vantage_keys":
         keys = vantage_instance.get_vantage_api_keys()
         res = [key.to_dict() for key in keys]
         print(f"Vantage API keys for account [{ACCOUNT_ID}]:\n")
 
-    if task == "external_keys":
+    elif task == "external_keys":
         keys = vantage_instance.get_external_api_keys()
         res = [key.to_dict() for key in keys]
         print(f"External API keys for account [{ACCOUNT_ID}]:\n")
@@ -120,7 +116,6 @@ if __name__ == "__main__":
     parser = ArgumentParser()
 
     tasks = [
-        "user",
         "vantage_keys",
         "external_keys",
         "list_collections",

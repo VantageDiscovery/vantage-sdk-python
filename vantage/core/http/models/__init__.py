@@ -71,12 +71,6 @@ from vantage.core.http.models.semantic_search_query_full_all_of_collection impor
 from vantage.core.http.models.semantic_search_query_pagination import (
     SemanticSearchQueryPagination,
 )
-from vantage.core.http.models.user import User
-from vantage.core.http.models.user_modifiable import UserModifiable
-from vantage.core.http.models.user_read_only import UserReadOnly
-from vantage.core.http.models.user_registration_fields import (
-    UserRegistrationFields,
-)
 from vantage.core.http.models.vantage_api_key import VantageAPIKey
 from vantage.core.http.models.vantage_api_keys_result_inner import (
     VantageAPIKeysResultInner,
