@@ -23,19 +23,29 @@ DEFAULT_UPDATE_COLLECTION_NAME = (
 )
 DEFAULT_LLM = "text-embedding-ada-002"
 DEFAULT_QUERY_TEXT = "some query"
+DEFAULT_JWT_TOKEN = None
 
 DEFAULT_API_HOST = "https://api.dev-a.dev.vantagediscovery.com"
 DEFAULT_AUTH_HOST = "https://vantage-dev.us.auth0.com"
 
 
 def main(task: str, collection_id: str, query_text: str) -> None:
-    vantage_instance = Vantage.from_defaults(
-        vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
-        vantage_client_secret=os.environ["VANTAGE_API_CLIENT_SECRET"],
-        account_id=ACCOUNT_ID,
-        api_host=DEFAULT_API_HOST,
-        auth_host=DEFAULT_AUTH_HOST,
-    )
+    jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
+    if jwt_token is None:
+        vantage_instance = Vantage.using_client_credentials(
+            vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
+            vantage_client_secret=os.environ["VANTAGE_API_CLIENT_SECRET"],
+            account_id=ACCOUNT_ID,
+            api_host=DEFAULT_API_HOST,
+            auth_host=DEFAULT_AUTH_HOST,
+        )
+    else:
+        vantage_instance = Vantage.using_jwt_token(
+            vantage_api_jwt_token=jwt_token,
+            account_id=ACCOUNT_ID,
+            api_host=DEFAULT_API_HOST,
+            auth_host=DEFAULT_AUTH_HOST,
+        )
 
     if task == "vantage_keys":
         keys = vantage_instance.get_vantage_api_keys()
