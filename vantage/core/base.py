@@ -30,13 +30,6 @@ class AuthorizationClient:
         )
 
         if vantage_jwt_token:
-            if (
-                vantage_client_id is not None
-                or vantage_client_secret is not None
-            ):
-                raise ValueError(
-                    "Use either client id and secret, or JWT token, not both."
-                )
             now = datetime.datetime.now().timestamp() * 1000
             self._jwt_token = {
                 "token": vantage_jwt_token,
@@ -61,21 +54,6 @@ class AuthorizationClient:
         vantage_client_secret: Optional[str] = None,
         vantage_jwt_token: Optional[str] = None,
     ):
-        if all(
-            arg is None
-            for arg in (
-                vantage_jwt_token,
-                vantage_client_id,
-                vantage_client_secret,
-            )
-        ):
-            raise ValueError(
-                (
-                    "You must specify either JWT token, "
-                    "or both client id and secret."
-                )
-            )
-
         if vantage_jwt_token and vantage_client_id and vantage_client_secret:
             raise ValueError(
                 "You must specify either client id and secret, or JWT token."
