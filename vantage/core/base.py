@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import datetime
 import json
 from typing import Optional
@@ -10,28 +12,66 @@ from vantage.core.http.exceptions import UnauthorizedException
 # TODO: This client is a quick temporary solution,
 #       it needs to be revised for production usage.
 class AuthorizationClient:
+    _DAY_IN_SECONDS = 86400
+
     def __init__(
         self,
-        vantage_client_id: str,
-        vantage_client_secret: str,
-        # TODO: change vantage_audience_url
-        #       and sso_endpoint_url to production values
-        vantage_audience_url: Optional[str] = (
-            "https://api.dev-a.dev.vantagediscovery.com"
-        ),
-        sso_endpoint_url: str = (
-            "https://vantage-dev.us.auth0.com/oauth/token"
-        ),
+        vantage_audience_url: str,
+        sso_endpoint_url: str,
+        vantage_client_id: Optional[str] = None,
+        vantage_client_secret: Optional[str] = None,
+        vantage_jwt_token: Optional[str] = None,
         encoding: str = "utf-8",
     ) -> None:
-        self._vantage_client_id = vantage_client_id
-        self._vantage_client_secret = vantage_client_secret
+        self._check_credentials(
+            vantage_client_id=vantage_client_id,
+            vantage_client_secret=vantage_client_secret,
+            vantage_jwt_token=vantage_jwt_token,
+        )
+
+        if vantage_jwt_token:
+            now = datetime.datetime.now().timestamp() * 1000
+            self._jwt_token = {
+                "token": vantage_jwt_token,
+                "valid_until": now + AuthorizationClient._DAY_IN_SECONDS,
+            }
+            self._user_provided_token = True
+            self._vantage_client_id = None
+            self._vantage_client_secret = None
+        else:
+            self._user_provided_token = False
+            self._vantage_client_id = vantage_client_id
+            self._vantage_client_secret = vantage_client_secret
+            self._jwt_token = None
+
         self._vantage_audience_url = vantage_audience_url
         self._sso_endpoint_url = sso_endpoint_url
         self._encoding = encoding
-        self._jwt_token = None
+
+    def _check_credentials(
+        self,
+        vantage_client_id: Optional[str] = None,
+        vantage_client_secret: Optional[str] = None,
+        vantage_jwt_token: Optional[str] = None,
+    ):
+        if vantage_jwt_token and vantage_client_id and vantage_client_secret:
+            raise ValueError(
+                "You must specify either client id and secret, or JWT token."
+            )
+
+        if not vantage_jwt_token:
+            if not (vantage_client_id and vantage_client_secret):
+                raise ValueError(
+                    (
+                        "If not using JWT token, "
+                        "both client id and secret must be specified."
+                    )
+                )
 
     def _authenticate(self) -> dict:
+        if self._user_provided_token:
+            return
+
         headers = {"content-type": "application/json"}
         body = {
             "client_id": self._vantage_client_id,
@@ -46,6 +86,7 @@ class AuthorizationClient:
             headers=headers,
             method="POST",
         )
+
         with request.urlopen(get_token_request) as response:
             response_body = response.read().decode(self._encoding)
             return json.loads(response_body)
@@ -64,6 +105,8 @@ class AuthorizationClient:
         return (valid_until - 5000) - now >= 0
 
     def _get_new_token(self):
+        if self._user_provided_token:
+            return
         authentication = self._authenticate()
         now = datetime.datetime.now().timestamp() * 1000
         self._jwt_token = {
@@ -73,6 +116,9 @@ class AuthorizationClient:
 
     @property
     def jwt_token(self) -> str:
+        if self._user_provided_token:
+            return self._jwt_token["token"]
+
         if self._jwt_token is None or self._has_expired():
             self._get_new_token()
 
@@ -82,9 +128,43 @@ class AuthorizationClient:
         return self._jwt_token["token"]
 
     def authenticate(self):
+        if self._user_provided_token:
+            return
+
         self._get_new_token()
         if self._jwt_token is None:
             raise ValueError("Authentication failed.")
+
+    @classmethod
+    def automatic_token_management(
+        cls,
+        vantage_client_id: str,
+        vantage_client_secret: str,
+        vantage_audience_url: str,
+        sso_endpoint_url: str,
+    ) -> AuthorizationClient:
+        return cls(
+            vantage_client_id=vantage_client_id,
+            vantage_client_secret=vantage_client_secret,
+            vantage_jwt_token=None,
+            vantage_audience_url=vantage_audience_url,
+            sso_endpoint_url=sso_endpoint_url,
+        )
+
+    @classmethod
+    def using_provided_token(
+        cls,
+        vantage_jwt_token: str,
+        vantage_audience_url: str,
+        sso_endpoint_url: str,
+    ):
+        return cls(
+            vantage_client_id=None,
+            vantage_client_secret=None,
+            vantage_jwt_token=vantage_jwt_token,
+            vantage_audience_url=vantage_audience_url,
+            sso_endpoint_url=sso_endpoint_url,
+        )
 
 
 class AuthorizedApiClient(ApiClient):

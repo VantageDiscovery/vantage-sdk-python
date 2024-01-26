@@ -43,7 +43,42 @@ class Vantage:
         self.host = host
 
     @classmethod
-    def from_defaults(
+    def using_jwt_token(
+        cls,
+        vantage_api_jwt_token: str,
+        account_id: str,
+        vantage_api_key: Optional[str] = None,
+        api_host: Optional[str] = "https://api.vanta.ge",
+        auth_host: Optional[str] = "https://auth.vanta.ge",
+    ) -> Vantage:
+        host = f"{api_host}/v1"
+        auth_endpoint = f"{auth_host}/oauth/token"
+        auth_client = AuthorizationClient.using_provided_token(
+            vantage_jwt_token=vantage_api_jwt_token,
+            sso_endpoint_url=auth_endpoint,
+            vantage_audience_url=api_host,
+        )
+
+        api_client = AuthorizedApiClient(
+            pool_threads=1, authorization_client=auth_client
+        )
+
+        if host is not None:
+            api_client.configuration.host = host
+
+        management_api = ManagementAPI.from_defaults(api_client)
+        search_api = SearchAPI(api_client)
+
+        return cls(
+            management_api,
+            search_api,
+            account_id,
+            vantage_api_key,
+            host,
+        )
+
+    @classmethod
+    def using_client_credentials(
         cls,
         vantage_client_id: str,
         vantage_client_secret: str,
@@ -53,12 +88,14 @@ class Vantage:
         auth_host: Optional[str] = "https://auth.vanta.ge",
     ) -> Vantage:
         host = f"{api_host}/v1"
-        auth_client = AuthorizationClient(
+        auth_endpoint = f"{auth_host}/oauth/token"
+        auth_client = AuthorizationClient.automatic_token_management(
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
-            sso_endpoint_url=f"{auth_host}/oauth/token",
+            sso_endpoint_url=auth_endpoint,
             vantage_audience_url=api_host,
         )
+
         auth_client.authenticate()
         api_client = AuthorizedApiClient(
             pool_threads=1, authorization_client=auth_client
