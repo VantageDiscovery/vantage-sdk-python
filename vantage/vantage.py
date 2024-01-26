@@ -49,14 +49,10 @@ class Vantage:
         account_id: str,
         vantage_api_key: Optional[str] = None,
         api_host: Optional[str] = "https://api.vanta.ge",
-        auth_host: Optional[str] = "https://auth.vanta.ge",
     ) -> Vantage:
         host = f"{api_host}/v1"
-        auth_endpoint = f"{auth_host}/oauth/token"
         auth_client = AuthorizationClient.using_provided_token(
-            vantage_jwt_token=vantage_api_jwt_token,
-            sso_endpoint_url=auth_endpoint,
-            vantage_audience_url=api_host,
+            vantage_jwt_token=vantage_api_jwt_token
         )
 
         api_client = AuthorizedApiClient(
