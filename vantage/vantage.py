@@ -388,7 +388,7 @@ class Vantage:
 
     def embedding_search(
         self,
-        embedding: str,
+        embedding: List[int],
         collection_id: str,
         accuracy: float = 0.3,
         vantage_api_key: Optional[str] = None,
