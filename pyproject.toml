@@ -14,6 +14,8 @@ classifiers=[
 packages = [
     { include = "vantage" },
     { include = "tests", format = "sdist" },
+    { include = "examples", format = "sdist" },
+    { include = "docs", format = "sdist" },
 ]
 
 [tool.poetry.dependencies]
@@ -39,6 +41,7 @@ mkdocs = {version = "^1.5.3", optional = true}
 mkdocs-material = {version = "^9.5.3", optional = true}
 mkdocs-include-markdown-plugin = {version = "^4.0.0", optional = true}
 python-dotenv = ">=1.0.1"
+bumpver = {version = ">=2023.1129"}
 
 [tool.poetry.extras]
 test = [
@@ -54,7 +57,19 @@ test = [
     ]
 
 
-dev = ["tox", "pre-commit", "virtualenv", "pip", "twine", "toml", "bump2version", "python-dotenv"]
+dev = [
+    "tox",
+    "pre-commit",
+    "virtualenv",
+    "pip",
+    "twine",
+    "toml",
+    "bump2version",
+    "python-dotenv",
+    "bumpver"
+    ]
+
+
 doc = [
     "mkdocs",
     "mkdocs-material",
