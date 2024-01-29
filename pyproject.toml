@@ -14,8 +14,11 @@ classifiers=[
 packages = [
     { include = "vantage" },
     { include = "tests", format = "sdist" },
-    { include = "examples", format = "sdist" },
-    { include = "docs", format = "sdist" },
+]
+
+include = [
+    { path = "examples", format = "sdist" },
+    { path = "docs", format = "sdist" },
 ]
 
 [tool.poetry.dependencies]
