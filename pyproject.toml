@@ -45,6 +45,7 @@ mkdocs-material = {version = "^9.5.3", optional = true}
 mkdocs-include-markdown-plugin = {version = "^4.0.0", optional = true}
 python-dotenv = ">=1.0.1"
 bumpver = {version = ">=2023.1129"}
+pip-tools = {version = ">=7.3.0"}
 
 [tool.poetry.extras]
 test = [
@@ -69,7 +70,8 @@ dev = [
     "toml",
     "bump2version",
     "python-dotenv",
-    "bumpver"
+    "bumpver",
+    "pip-tools",
     ]
 
 
