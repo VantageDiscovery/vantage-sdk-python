@@ -2009,11 +2009,11 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy (>=0.9.1)", "pytest-ruff"]
 
 [extras]
-dev = ["bump2version", "bumpver", "pip", "pre-commit", "python-dotenv", "toml", "tox", "twine", "virtualenv"]
+dev = ["bump2version", "bumpver", "pip", "pip-tools", "pre-commit", "python-dotenv", "toml", "tox", "twine", "virtualenv"]
 doc = ["mkdocs", "mkdocs-include-markdown-plugin", "mkdocs-material"]
 test = ["black", "flake8", "flake8-docstrings", "flake8-pyproject", "isort", "mypy", "pytest", "pytest-cov", "pytest-env"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.12"
-content-hash = "b0870f46aecce21d0b930589cf23298b388212ba0c903eeaa0289984bb752999"
+content-hash = "2b78d5356e7c0f556faf108966a3cb2a5ccbebd5e6ee1e9420446369adda707c"
