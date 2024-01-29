@@ -44,9 +44,8 @@ def main(task: str, collection_id: str, query_text: str) -> None:
     else:
         vantage_instance = Vantage.using_jwt_token(
             vantage_api_jwt_token=jwt_token,
-            account_id=ACCOUNT_ID,
             api_host=DEFAULT_API_HOST,
-            auth_host=DEFAULT_AUTH_HOST,
+            account_id=ACCOUNT_ID,
         )
 
     if task == "vantage_keys":

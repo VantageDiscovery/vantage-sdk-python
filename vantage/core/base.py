@@ -13,11 +13,13 @@ from vantage.core.http.exceptions import UnauthorizedException
 #       it needs to be revised for production usage.
 class AuthorizationClient:
     _DAY_IN_SECONDS = 86400
+    _DEFAULT_API_HOST = "https://api.vanta.ge"
+    _DEFAULT_AUTH_ENDPOINT = "https://auth.vanta.ge/oauth/token"
 
     def __init__(
         self,
-        vantage_audience_url: str,
-        sso_endpoint_url: str,
+        vantage_audience_url: str = _DEFAULT_API_HOST,
+        sso_endpoint_url: str = _DEFAULT_AUTH_ENDPOINT,
         vantage_client_id: Optional[str] = None,
         vantage_client_secret: Optional[str] = None,
         vantage_jwt_token: Optional[str] = None,
@@ -152,19 +154,8 @@ class AuthorizationClient:
         )
 
     @classmethod
-    def using_provided_token(
-        cls,
-        vantage_jwt_token: str,
-        vantage_audience_url: str,
-        sso_endpoint_url: str,
-    ):
-        return cls(
-            vantage_client_id=None,
-            vantage_client_secret=None,
-            vantage_jwt_token=vantage_jwt_token,
-            vantage_audience_url=vantage_audience_url,
-            sso_endpoint_url=sso_endpoint_url,
-        )
+    def using_provided_token(cls, vantage_jwt_token: str):
+        return cls(vantage_jwt_token=vantage_jwt_token)
 
 
 class AuthorizedApiClient(ApiClient):
