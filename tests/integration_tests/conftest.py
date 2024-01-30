@@ -1,6 +1,7 @@
 import os
 import random
 import string
+from typing import Callable
 
 import pytest
 
@@ -37,12 +38,27 @@ _configuration = {
     "collection": {},
 }
 
-_client = Vantage.from_defaults(
-    vantage_client_id=_configuration["api"]["client_id"],
-    vantage_client_secret=_configuration["api"]["client_secret"],
-    api_host=_configuration["api"]["api_host"],
-    auth_host=_configuration["api"]["auth_host"],
-)
+jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
+
+if jwt_token:
+    _client = Vantage.using_jwt_token(
+        vantage_api_jwt_token=jwt_token,
+        account_id=_configuration["account"]["id"],
+        api_host=_configuration["api"]["api_host"],
+    )
+else:
+    _client = Vantage.using_client_credentials(
+        vantage_client_id=_configuration["api"]["client_id"],
+        vantage_client_secret=_configuration["api"]["client_secret"],
+        api_host=_configuration["api"]["api_host"],
+        auth_host=_configuration["api"]["auth_host"],
+        account_id=_configuration["account"]["id"],
+    )
+
+
+def _random_string(length: int):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
 
 
 @pytest.fixture(scope="module")
@@ -67,6 +83,9 @@ def client() -> Vantage:
 
 @pytest.fixture(scope="module")
 def random_string() -> str:
-    length = 12
-    letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length))
+    return _random_string(12)
+
+
+@pytest.fixture(scope="module")
+def random_string_generator() -> Callable:
+    return _random_string
