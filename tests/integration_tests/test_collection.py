@@ -396,7 +396,7 @@ class TestCollections:
 
         listed_deleted_collection = list(
             filter(
-                lambda col: col.collection_id == collection_id,
+                lambda col: col.actual_instance.collection_id == collection_id,
                 client.list_collections(),
             )
         )
