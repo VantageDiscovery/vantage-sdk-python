@@ -31,7 +31,9 @@ DEFAULT_API_HOST = "https://api.dev-a.dev.vantagediscovery.com"
 DEFAULT_AUTH_HOST = "https://vantage-dev.us.auth0.com"
 
 
-def main(task: str, collection_id: str, query_text: str) -> None:
+def main(
+    task: str, collection_id: str, file_path: str, query_text: str
+) -> None:
     jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
     if jwt_token is None:
         vantage_instance = Vantage.using_client_credentials(
@@ -104,6 +106,12 @@ def main(task: str, collection_id: str, query_text: str) -> None:
             f"Upload browser URL for collection with id: {collection_id}. Details:\n"
         )
 
+    elif task == "upload_file":
+        res = vantage_instance.upload_embedding_by_path(
+            collection_id=collection_id, file_path=file_path
+        )
+        print("Uploading file returned status:")
+
     elif task == "delete_collection":
         collection = vantage_instance.delete_collection(
             collection_id,
@@ -139,6 +147,7 @@ if __name__ == "__main__":
         "semantic_search",
         "browser_url",
         "delete_collection",
+        "upload_file",
     ]
 
     parser.add_argument(
@@ -146,6 +155,11 @@ if __name__ == "__main__":
         "--task",
         default=DEFAULT_TASK,
         choices=tasks,
+    )
+    parser.add_argument(
+        "-f",
+        "--file_path",
+        type=str,
     )
     parser.add_argument(
         "-cid",
@@ -161,4 +175,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    main(args.task, args.collection_id, args.query_text)
+    main(args.task, args.collection_id, args.file_path, args.query_text)

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from os.path import exists
+from pathlib import Path
 from typing import List, Optional
 
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
@@ -357,6 +359,46 @@ class Vantage:
             file_size=file_size,
             customer_batch_identifier=customer_batch_identifier,
             account_id=account_id if account_id else self.account_id,
+        )
+
+    def upload_embedding(
+        self,
+        collection_id: str,
+        content: bytes,
+        file_size: int,
+        customer_batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> int:
+        browser_upload_url = self.get_browser_upload_url(
+            collection_id=collection_id,
+            file_size=file_size,
+            customer_batch_identifier=customer_batch_identifier,
+            account_id=account_id,
+        )
+        return self.management_api.collection_api.upload_embedding(
+            upload_url=browser_upload_url.upload_url,
+            upload_content=content,
+        )
+
+    def upload_embedding_by_path(
+        self,
+        collection_id: str,
+        file_path: str,
+        customer_batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> int:
+        if not exists(file_path):
+            raise FileNotFoundError(f"File \"{file_path}\" not found.")
+
+        file_size = Path(file_path).stat().st_size
+        file = open(file_path, "rb")
+        file_content = file.read()
+        return self.upload_embedding(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            customer_batch_identifier=customer_batch_identifier,
+            account_id=account_id,
         )
 
     def delete_collection(
