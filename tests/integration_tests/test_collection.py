@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
+from pathlib import Path
 from typing import Callable
 
 import pytest
 
-from vantage.exceptions import VantageNotFoundException
+from vantage.exceptions import (
+    VantageFileUploadException,
+    VantageNotFoundException,
+)
 from vantage.vantage import Vantage
 
 
@@ -99,6 +103,87 @@ class TestCollections:
 
         # Then
         assert status == 200
+
+    def test_upload_user_embeddings_to_a_non_existing_collection(
+        self,
+        client: Vantage,
+        account_params: dict,
+        collection_params: dict,
+        random_string_generator: Callable,
+        test_parquet_file_path: str,
+    ) -> None:
+        # Given
+        collection_id = random_string_generator(10)
+
+        with pytest.raises(VantageNotFoundException) as exception:
+            client.upload_embedding_by_path(
+                collection_id=collection_id,
+                file_path=test_parquet_file_path,
+                customer_batch_identifier="automated-tests",
+                account_id=account_params["id"],
+            )
+
+        # Then
+        assert exception.type is VantageNotFoundException
+
+    def test_upload_non_existing_user_embeddings(
+        self,
+        client: Vantage,
+        account_params: dict,
+        collection_params: dict,
+        random_string_generator: Callable,
+        test_parquet_file_path: str,
+    ) -> None:
+        # Given
+        collection_id = random_string_generator(10)
+        non_existing_file_path = random_string_generator(10)
+
+        with pytest.raises(FileNotFoundError) as exception:
+            client.upload_embedding_by_path(
+                collection_id=collection_id,
+                file_path=non_existing_file_path,
+                customer_batch_identifier="automated-tests",
+                account_id=account_params["id"],
+            )
+
+        # Then
+        assert exception.type is FileNotFoundError
+
+    def test_upload_user_embeddings_with_wrong_file_size(
+        self,
+        client: Vantage,
+        account_params: dict,
+        collection_params: dict,
+        random_string_generator: Callable,
+        test_parquet_file_path: str,
+    ):
+        # Given
+        file_size = Path(test_parquet_file_path).stat().st_size + 1
+        file = open(test_parquet_file_path, "rb")
+        file_content = file.read()
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
+        client.create_collection(
+            account_id=account_params["id"],
+            collection_id=collection_id,
+            collection_name=collection_name,
+            user_provided_embeddings=True,
+            embeddings_dimension=1536,
+        )
+
+        # When
+        with pytest.raises(VantageFileUploadException) as exception:
+            client.upload_embedding(
+                collection_id=collection_id,
+                content=file_content,
+                file_size=file_size,
+                customer_batch_identifier="test-batch",
+                account_id=account_params["id"],
+            )
+
+        # Then
+        assert exception.type is VantageFileUploadException
+        assert exception.value.args == ("Forbidden", 403)
 
     """
     Tests creating an empty collection with vantage managed
