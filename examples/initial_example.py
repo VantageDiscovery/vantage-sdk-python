@@ -97,7 +97,7 @@ def main(
         print(f"Collection with id: {collection.collection_id}. Details:\n")
 
     elif task == "browser_url":
-        upload_url = vantage_instance.get_browser_upload_url(
+        upload_url = vantage_instance._get_browser_upload_url(
             collection_id=collection_id,
             file_size=3000,
         )

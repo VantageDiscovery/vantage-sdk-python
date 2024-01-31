@@ -338,7 +338,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-    def get_browser_upload_url(
+    def _get_browser_upload_url(
         self,
         collection_id: str,
         file_size: int,
@@ -369,7 +369,7 @@ class Vantage:
         customer_batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> int:
-        browser_upload_url = self.get_browser_upload_url(
+        browser_upload_url = self._get_browser_upload_url(
             collection_id=collection_id,
             file_size=file_size,
             customer_batch_identifier=customer_batch_identifier,
