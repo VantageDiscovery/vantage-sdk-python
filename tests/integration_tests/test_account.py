@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from typing import Callable
+
 import pytest
 
 from vantage.core.http.exceptions import ForbiddenException
@@ -43,10 +45,13 @@ class TestAccount:
     """
 
     def test_get_non_existing_account(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        non_existing_account_id = random_string
+        non_existing_account_id = random_string_generator(10)
 
         # When
         with pytest.raises(ForbiddenException) as exception:
@@ -60,11 +65,14 @@ class TestAccount:
     """
 
     def test_update_account(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
         test_account_id = account_params["id"]
-        updated_test_account_name = random_string
+        updated_test_account_name = random_string_generator(10)
 
         # When
         client.update_account(
@@ -80,11 +88,14 @@ class TestAccount:
     """
 
     def test_update_non_existing_account(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        non_existing_account_id = random_string
-        non_existing_account_name = random_string
+        non_existing_account_id = random_string_generator(10)
+        non_existing_account_name = random_string_generator(10)
 
         # When
         with pytest.raises(ForbiddenException) as exception:
