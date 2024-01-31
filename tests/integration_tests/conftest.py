@@ -82,10 +82,10 @@ def client() -> Vantage:
 
 
 @pytest.fixture(scope="module")
-def random_string() -> str:
-    return _random_string(12)
+def random_string_generator() -> Callable:
+    return _random_string
 
 
 @pytest.fixture(scope="module")
-def random_string_generator() -> Callable:
-    return _random_string
+def test_parquet_file_path() -> str:
+    return "tests/data/hello_world.parquet"

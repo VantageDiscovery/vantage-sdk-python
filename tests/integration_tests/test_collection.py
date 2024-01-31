@@ -37,19 +37,19 @@ class TestCollections:
             pass
 
     """
-    Tests creating an empty collection in given user account.
+    Tests creating an empty collection with user embeddings in given account.
     """
 
-    def test_create_collection(
+    def test_create_collection_with_user_embeddings(
         self,
         client: Vantage,
         account_params: dict,
         collection_params: dict,
-        random_string: str,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        collection_id = random_string
-        collection_name = random_string
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
 
         # When
         collection = client.create_collection(
@@ -65,6 +65,55 @@ class TestCollections:
         assert collection.collection_name == collection_name
         assert collection.collection_status == "Pending"
         assert collection.collection_state == "Active"
+
+    """
+    Tests uploading user embeddings to a collection.
+    """
+
+    def test_upload_user_embeddings_to_a_collection(
+        self,
+        client: Vantage,
+        account_params: dict,
+        collection_params: dict,
+        random_string_generator: Callable,
+        test_parquet_file_path: str,
+    ) -> None:
+        # Given
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
+        client.create_collection(
+            account_id=account_params["id"],
+            collection_id=collection_id,
+            collection_name=collection_name,
+            user_provided_embeddings=True,
+            embeddings_dimension=1536,
+        )
+
+        # When
+        status = client.upload_embedding_by_path(
+            collection_id=collection_id,
+            file_path=test_parquet_file_path,
+            customer_batch_identifier="automated-tests",
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert status == 200
+
+    """
+    Tests creating an empty collection with vantage managed
+    embeddings in given account.
+    """
+
+    def test_create_vantage_managed_embeddings_collection(
+        self,
+        client: Vantage,
+        account_params: dict,
+        collection_params: dict,
+        random_string_generator: Callable,
+    ) -> None:
+        # TODO: Needs external model API key
+        ...
 
     """
     Tests listing collections.
@@ -98,27 +147,35 @@ class TestCollections:
         # Then
         created_collections = list(
             filter(
-                lambda collection: collection.collection_name
+                lambda collection: collection.actual_instance.collection_name
                 in collection_names,
                 collections,
             )
         )
         assert len(created_collections) == collections_count
         for collection in created_collections:
-            assert collection.collection_name == collection.collection_id
-            assert collection.collection_id in collection_names
-            assert collection.collection_name in collection_names
+            assert (
+                collection.actual_instance.collection_name
+                == collection.actual_instance.collection_id
+            )
+            assert collection.actual_instance.collection_id in collection_names
+            assert (
+                collection.actual_instance.collection_name in collection_names
+            )
 
     """
     Tests if it can retrieve a single collection.
     """
 
     def test_get_collection(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        collection_id = random_string
-        collection_name = random_string
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
         client.create_collection(
             account_id=account_params["id"],
             collection_id=collection_id,
@@ -143,10 +200,13 @@ class TestCollections:
     """
 
     def test_get_non_existing_collection(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        collection_id = random_string
+        collection_id = random_string_generator(10)
 
         # When
         with pytest.raises(VantageNotFoundException) as exception:
@@ -224,11 +284,11 @@ class TestCollections:
         client: Vantage,
         account_params: dict,
         collection_params: dict,
-        random_string: str,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        collection_id = random_string
-        collection_name = random_string
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
         client.create_collection(
             account_id=account_params["id"],
             collection_id=collection_id,
@@ -243,12 +303,12 @@ class TestCollections:
         )
 
         # Then
-        assert (
+        with pytest.raises(VantageNotFoundException) as exception:
             client.get_collection(
                 collection_id=collection_id, account_id=account_params["id"]
             )
-            is None
-        )
+        assert exception.type is VantageNotFoundException
+
         listed_deleted_collection = list(
             filter(
                 lambda col: col.collection_id == collection_id,
@@ -262,10 +322,13 @@ class TestCollections:
     """
 
     def test_delete_non_existing_collection(
-        self, client: Vantage, account_params: dict, random_string: str
+        self,
+        client: Vantage,
+        account_params: dict,
+        random_string_generator: Callable,
     ) -> None:
         # Given
-        collection_id = random_string
+        collection_id = random_string_generator(10)
 
         # When
         with pytest.raises(VantageNotFoundException) as exception:
