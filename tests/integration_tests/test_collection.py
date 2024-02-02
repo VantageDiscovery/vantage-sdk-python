@@ -17,30 +17,6 @@ from vantage.vantage import Vantage
 
 class TestCollections:
     """
-    Takes care of setting up and tearing down test conditions.
-    """
-
-    @pytest.fixture(autouse=True)
-    def setup_and_teardown(
-        self, client: Vantage, account_params: dict, collection_params: dict
-    ) -> None:
-        # Setup
-        yield
-        # Teardown
-        try:
-            collections = client.list_collections(
-                account_id=account_params["id"]
-            )
-            for collection in collections:
-                client.delete_collection(
-                    collection_id=collection.actual_instance.collection_id,
-                    account_id=account_params["id"],
-                )
-        except VantageNotFoundException:
-            # Do nothing
-            pass
-
-    """
     Tests creating an empty collection with user embeddings in given account.
     """
 
