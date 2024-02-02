@@ -13,6 +13,7 @@ from vantage.vantage import Vantage
 class TestAccount:
     """
     Takes care of setting up and tearing down test conditions.
+    Runs before and after each test.
     """
 
     @pytest.fixture(autouse=True)

@@ -5,6 +5,7 @@ from typing import Callable
 
 import pytest
 
+from vantage.exceptions import VantageNotFoundException
 from vantage.vantage import Vantage
 
 
@@ -35,7 +36,18 @@ _configuration = {
         "id": os.getenv("TEST_ACCOUNT_ID"),
         "name": os.getenv("TEST_ACCOUNT_NAME"),
     },
-    "collection": {},
+    "collection": {
+        "embedding_search_test_collection_id": os.getenv(
+            "VANTAGE_EMBEDDING_SEARCH_TEST_COLLECTION_ID"
+        ),
+        "semantic_search_test_collection_id": os.getenv(
+            "VANTAGE_SEMANTIC_SEARCH_TEST_COLLECTION_ID"
+        ),
+    },
+    "keys": {
+        "vantage_api_key": os.getenv("VANTAGE_API_KEY"),
+        "open_api_key": os.getenv("OPEN_API_KEY"),
+    },
 }
 
 jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
@@ -54,6 +66,39 @@ else:
         auth_host=_configuration["api"]["auth_host"],
         account_id=_configuration["account"]["id"],
     )
+
+_protected_collections = []
+
+embedding_collection_id = _configuration["collection"][
+    "embedding_search_test_collection_id"
+]
+semantic_colection_id = _configuration["collection"][
+    "semantic_search_test_collection_id"
+]
+if embedding_collection_id:
+    _protected_collections.append(embedding_collection_id)
+if semantic_colection_id:
+    _protected_collections.append(semantic_colection_id)
+
+
+# Runs after all tests have finished
+def pytest_sessionfinish(session, exitstatus):
+    account_id = _configuration["account"]["id"]
+    try:
+        collections = _client.list_collections(account_id=account_id)
+        for collection in collections:
+            collection_id = collection.actual_instance.collection_id
+
+            if collection_id in _protected_collections:
+                continue
+
+            _client.delete_collection(
+                collection_id=collection_id,
+                account_id=account_id,
+            )
+    except VantageNotFoundException:
+        # Do nothing
+        pass
 
 
 def _random_string(length: int):
@@ -77,6 +122,24 @@ def collection_params() -> dict:
 
 
 @pytest.fixture(scope="module")
+def vantage_api_key() -> dict:
+    vantage_api_key = _configuration["keys"]["vantage_api_key"]
+    if vantage_api_key is None:
+        pytest.skip("No Vantage API key key available.")
+
+    return vantage_api_key
+
+
+@pytest.fixture(scope="module")
+def open_api_key() -> str:
+    open_api_key = _configuration["keys"]["open_api_key"]
+    if open_api_key is None:
+        pytest.skip("No OpenAPI key available.")
+
+    return open_api_key
+
+
+@pytest.fixture(scope="module")
 def client() -> Vantage:
     return _client
 
@@ -89,3 +152,37 @@ def random_string_generator() -> Callable:
 @pytest.fixture(scope="module")
 def test_parquet_file_path() -> str:
     return "tests/data/hello_world.parquet"
+
+
+@pytest.fixture(scope="module")
+def embedding_search_test_collection_id() -> str:
+    embedding_search_test_collection_id = _configuration["collection"][
+        "embedding_search_test_collection_id"
+    ]
+
+    if embedding_search_test_collection_id is None:
+        pytest.skip("No embedding search test collection available.")
+
+    return embedding_search_test_collection_id
+
+
+@pytest.fixture(scope="module")
+def semantic_search_test_collection_id() -> str:
+    semantic_search_test_collection_id = _configuration["collection"][
+        "semantic_search_test_collection_id"
+    ]
+
+    if semantic_search_test_collection_id is None:
+        pytest.skip("No semantic search test collection available.")
+
+    return semantic_search_test_collection_id
+
+
+@pytest.fixture(scope="module")
+def embedding_search_test_collection_id_for_setup() -> str:
+    return _configuration["collection"]["embedding_search_test_collection_id"]
+
+
+@pytest.fixture(scope="module")
+def semantic_search_test_collection_id_for_setup() -> str:
+    return _configuration["collection"]["semantic_search_test_collection_id"]
