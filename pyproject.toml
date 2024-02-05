@@ -1,6 +1,6 @@
 [tool]
 [tool.poetry]
-name = "vantage-sdk-python"
+name = "vantage-sdk"
 version = "0.0.1"
 description = "Vantage Python SDK."
 authors = ["Vantage <none@vantage.com>"]
