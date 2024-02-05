@@ -20,6 +20,9 @@ class TestSearch:
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
     ):
+        """
+        Tests if embedding search will return correct result.
+        """
         # Given
         collection_id = embedding_search_test_collection_id
         search_embedding = [1 for col in range(1536)]
@@ -46,6 +49,9 @@ class TestSearch:
         vantage_api_key: str,
         random_string_generator: Callable,
     ):
+        """
+        Tests if searching a non-existing collection will raise an exception.
+        """
         # Given
         collection_id = random_string_generator(10)
         search_embedding = [1 for col in range(1536)]
@@ -71,6 +77,9 @@ class TestSearch:
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
     ):
+        """
+        Tests if searching using an empty embedding will raise an exception.
+        """
         # Given
         collection_id = embedding_search_test_collection_id
         search_embedding = []
@@ -96,6 +105,10 @@ class TestSearch:
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
     ):
+        """
+        Tests if searching using invalid accuracy parameter
+        will raise an exception.
+        """
         # Given
         collection_id = embedding_search_test_collection_id
         search_embedding = [1 for col in range(1536)]
@@ -121,6 +134,9 @@ class TestSearch:
         vantage_api_key: str,
         semantic_search_test_collection_id: str,
     ):
+        """
+        Tests if semantic search will return correct result.
+        """
         # Given
         collection_id = semantic_search_test_collection_id
         accuracy = 0.5
@@ -147,6 +163,10 @@ class TestSearch:
         vantage_api_key: str,
         random_string_generator: Callable,
     ):
+        """
+        Tests if performing a semantic search on an non-existing collection
+        will raise an exception.
+        """
         # Given
         collection_id = random_string_generator(10)
         search_text = "Test search"
@@ -172,6 +192,11 @@ class TestSearch:
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
     ):
+        """
+        Tests if performing a semantic search with an invalid
+        accuracy parameter will raise an exception.
+        """
+
         # Given
         collection_id = embedding_search_test_collection_id
         search_text = "Test search"

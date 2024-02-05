@@ -12,6 +12,9 @@ from vantage.vantage import Vantage
 
 class TestApiKeys:
     def test_get_vantage_api_keys(self, client: Vantage, account_params: dict):
+        """
+        Tests fetching all vantage API keys present on a user account.
+        """
         # When
         keys = client.get_vantage_api_keys(account_id=account_params["id"])
 
@@ -39,6 +42,9 @@ class TestApiKeys:
         account_params: dict,
         vantage_api_key_id: str,
     ):
+        """
+        Tests fetching single vantage API key present on a user account.
+        """
         # When
         api_key = client.get_vantage_api_key(
             vantage_api_key_id=vantage_api_key_id,
@@ -56,6 +62,9 @@ class TestApiKeys:
         vantage_api_key_id: str,
         random_string_generator: Callable,
     ):
+        """
+        Tests fetching a single Vantage API key using non-existing account ID.
+        """
         # When
         with pytest.raises(ForbiddenException) as exception:
             client.get_vantage_api_key(
@@ -73,6 +82,9 @@ class TestApiKeys:
         vantage_api_key_id: str,
         random_uuid: str,
     ):
+        """
+        Tests fetching a non-existing Vantage API key from a user account.
+        """
         # When
         with pytest.raises(ServiceException) as exception:
             client.get_vantage_api_key(vantage_api_key_id=random_uuid)
@@ -88,6 +100,9 @@ class TestApiKeys:
         external_api_key_id: str,
         external_api_key_provider: str,
     ):
+        """
+        Tests fetching all external API keys from a users' account.
+        """
         # When
         keys = client.get_external_api_keys(account_id=account_params["id"])
 
@@ -109,6 +124,9 @@ class TestApiKeys:
         external_api_key_id: str,
         external_api_key_provider: str,
     ):
+        """
+        Tests fetching a single external API key from a users' account.
+        """
         # When
         api_key = client.get_external_api_key(
             account_id=account_params["id"],
@@ -127,6 +145,9 @@ class TestApiKeys:
         account_params: dict,
         random_uuid: str,
     ):
+        """
+        Tests fetching a non-existing external API key from a users' account.
+        """
         # When
         with pytest.raises(ServiceException) as exception:
             client.get_external_api_key(
@@ -150,6 +171,9 @@ class TestApiKeys:
         external_api_key_id: str,
         random_string_generator: str,
     ):
+        """
+        Tests updating an external API key present on a users' account.
+        """
         # Given
         url = f"http://{random_string_generator(10)}"
         llm_provider = "Hugging"
@@ -204,6 +228,10 @@ class TestApiKeys:
         random_uuid: str,
         random_string_generator: Callable,
     ):
+        """
+        Tests updating a non-existing external API key
+        on a users' account.
+        """
         # When
         with pytest.raises(ServiceException) as exception:
             client.update_external_api_key(
@@ -226,6 +254,9 @@ class TestApiKeys:
         account_params: dict,
         external_api_key_id: str,
     ):
+        """
+        Tests deleting an existing external API key on users' account.
+        """
         # When
         api_key = client.delete_external_api_key(
             external_key_id=external_api_key_id,
@@ -247,6 +278,9 @@ class TestApiKeys:
         account_params: dict,
         random_uuid: str,
     ):
+        """
+        Tests deleting a non-existing external API key on users' account.
+        """
         # When
         with pytest.raises(ServiceException) as exception:
             client.delete_external_api_key(
