@@ -1,6 +1,7 @@
 import os
 import random
 import string
+import uuid
 from typing import Callable
 
 import pytest
@@ -48,6 +49,10 @@ _configuration = {
         "vantage_api_key": os.getenv("VANTAGE_API_KEY"),
         "vantage_api_key_id": os.getenv("VANTAGE_API_KEY_ID"),
         "open_api_key": os.getenv("OPEN_API_KEY"),
+        "open_api_key_id": os.getenv("OPEN_API_KEY_ID"),
+        "external_api_key": os.getenv("EXTERNAL_API_KEY"),
+        "external_api_key_id": os.getenv("EXTERNAL_API_KEY_ID"),
+        "external_api_key_provider": os.getenv("EXTERNAL_API_KEY_PROVIDER"),
     },
 }
 
@@ -80,6 +85,16 @@ if embedding_collection_id:
     _protected_collections.append(embedding_collection_id)
 if semantic_colection_id:
     _protected_collections.append(semantic_colection_id)
+
+
+def skip_delete_external_api_key_test() -> bool:
+    """
+    Used to determine if TestApiKeys::test_delete_external_api_key test
+    should run.
+    """
+    value = os.getenv("ENABLE_DELETE_KEY_TEST")
+
+    return value is None or value.lower() not in ['true']
 
 
 # Runs after all tests have finished
@@ -150,6 +165,35 @@ def open_api_key() -> str:
 
 
 @pytest.fixture(scope="module")
+def external_api_key() -> str:
+    external_api_key = _configuration["keys"]["external_api_key"]
+    if external_api_key is None:
+        pytest.skip("No external API key available.")
+
+    return external_api_key
+
+
+@pytest.fixture(scope="module")
+def external_api_key_id() -> str:
+    external_api_key_id = _configuration["keys"]["external_api_key_id"]
+    if external_api_key_id is None:
+        pytest.skip("No external API key ID available.")
+
+    return external_api_key_id
+
+
+@pytest.fixture(scope="module")
+def external_api_key_provider() -> str:
+    external_api_key_provider = _configuration["keys"][
+        "external_api_key_provider"
+    ]
+    if external_api_key_provider is None:
+        pytest.skip("No external API key provider available.")
+
+    return external_api_key_provider
+
+
+@pytest.fixture(scope="module")
 def client() -> Vantage:
     return _client
 
@@ -196,3 +240,8 @@ def embedding_search_test_collection_id_for_setup() -> str:
 @pytest.fixture(scope="module")
 def semantic_search_test_collection_id_for_setup() -> str:
     return _configuration["collection"]["semantic_search_test_collection_id"]
+
+
+@pytest.fixture(scope="module")
+def random_uuid() -> str:
+    return str(uuid.uuid4())
