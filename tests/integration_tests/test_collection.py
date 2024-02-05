@@ -12,13 +12,8 @@ from vantage.exceptions import (
 from vantage.vantage import Vantage
 
 
-"""Integration tests for collection endpoints."""
-
-
 class TestCollections:
-    """
-    Tests creating an empty collection with user embeddings in given account.
-    """
+    """Integration tests for collection endpoints."""
 
     def test_create_collection_with_user_embeddings(
         self,
@@ -27,6 +22,9 @@ class TestCollections:
         collection_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests creating an empty collection with user embeddings in given account.
+        """
         # Given
         collection_id = random_string_generator(10)
         collection_name = random_string_generator(10)
@@ -46,10 +44,6 @@ class TestCollections:
         assert collection.collection_status == "Pending"
         assert collection.collection_state == "Active"
 
-    """
-    Tests uploading user embeddings to a collection.
-    """
-
     def test_upload_user_embeddings_to_a_collection(
         self,
         client: Vantage,
@@ -58,6 +52,10 @@ class TestCollections:
         random_string_generator: Callable,
         test_parquet_file_path: str,
     ) -> None:
+        """
+        Tests uploading user embeddings to a collection.
+        """
+
         # Given
         collection_id = random_string_generator(10)
         collection_name = random_string_generator(10)
@@ -88,6 +86,9 @@ class TestCollections:
         random_string_generator: Callable,
         test_parquet_file_path: str,
     ) -> None:
+        """
+        Tests uploading user embeddings to a non-existing collection.
+        """
         # Given
         collection_id = random_string_generator(10)
 
@@ -110,6 +111,9 @@ class TestCollections:
         random_string_generator: Callable,
         test_parquet_file_path: str,
     ) -> None:
+        """
+        Tests uploading non existing user embeddings file.
+        """
         # Given
         collection_id = random_string_generator(10)
         non_existing_file_path = random_string_generator(10)
@@ -133,6 +137,9 @@ class TestCollections:
         random_string_generator: Callable,
         test_parquet_file_path: str,
     ):
+        """
+        Tests uploading user embeddings with wrong file size specified.
+        """
         # Given
         file_size = Path(test_parquet_file_path).stat().st_size + 1
         file = open(test_parquet_file_path, "rb")
@@ -161,11 +168,6 @@ class TestCollections:
         assert exception.type is VantageFileUploadException
         assert exception.value.args == ("Forbidden", 403)
 
-    """
-    Tests creating an empty collection with vantage managed
-    embeddings in given account.
-    """
-
     def test_create_vantage_managed_embeddings_collection(
         self,
         client: Vantage,
@@ -173,14 +175,12 @@ class TestCollections:
         collection_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests creating an empty collection with vantage managed
+        embeddings in given account.
+        """
         # TODO: Needs external model API key
         ...
-
-    """
-    Tests listing collections.
-    This test will first create a number of collections,
-    and then test if created collections are among listed collections.
-    """
 
     def test_list_collections(
         self,
@@ -188,6 +188,11 @@ class TestCollections:
         random_string_generator: Callable,
         account_params: dict,
     ) -> None:
+        """
+        Tests listing collections.
+        This test will first create a number of collections,
+        and then test if created collections are among listed collections.
+        """
         # Given
         collections_count = 5
         collection_names = [
@@ -224,16 +229,15 @@ class TestCollections:
                 collection.actual_instance.collection_name in collection_names
             )
 
-    """
-    Tests if it can retrieve a single collection.
-    """
-
     def test_get_collection(
         self,
         client: Vantage,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if it can retrieve a single collection.
+        """
         # Given
         collection_id = random_string_generator(10)
         collection_name = random_string_generator(10)
@@ -256,16 +260,15 @@ class TestCollections:
         assert collection.collection_status == "Pending"
         assert collection.collection_state == "Active"
 
-    """
-    Tests if fetching a non-existing collection will raise an exception.
-    """
-
     def test_get_non_existing_collection(
         self,
         client: Vantage,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if fetching a non-existing collection will raise an exception.
+        """
         # Given
         collection_id = random_string_generator(10)
 
@@ -278,16 +281,15 @@ class TestCollections:
         # Then
         assert exception.type is VantageNotFoundException
 
-    """
-    Tests if an existing collection can be updated.
-    """
-
     def test_update_collection(
         self,
         client: Vantage,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if an existing collection can be updated.
+        """
         # Given
         collection_id = random_string_generator(10)
         collection_name = collection_id
@@ -313,16 +315,15 @@ class TestCollections:
         assert collection.collection_name == updated_collection_name
         assert collection.collection_preview_url_pattern == updated_url_pattern
 
-    """
-    Tests if updating a non-existing collection will raise an exception.
-    """
-
     def test_update_non_existing_collection(
         self,
         client: Vantage,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if updating a non-existing collection will raise an exception.
+        """
         # When
         with pytest.raises(VantageNotFoundException) as exception:
             client.update_collection(
@@ -336,10 +337,6 @@ class TestCollections:
         # Then
         assert exception.type is VantageNotFoundException
 
-    """
-    Tests if an existing collection can be deleted.
-    """
-
     def test_delete_collection(
         self,
         client: Vantage,
@@ -347,6 +344,9 @@ class TestCollections:
         collection_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if an existing collection can be deleted.
+        """
         # Given
         collection_id = random_string_generator(10)
         collection_name = random_string_generator(10)
@@ -378,16 +378,15 @@ class TestCollections:
         )
         assert len(listed_deleted_collection) == 0
 
-    """
-    Tests if deleting a non-existing collection will raise an exception.
-    """
-
     def test_delete_non_existing_collection(
         self,
         client: Vantage,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
+        """
+        Tests if deleting a non-existing collection will raise an exception.
+        """
         # Given
         collection_id = random_string_generator(10)
 
