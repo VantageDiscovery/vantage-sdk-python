@@ -46,6 +46,7 @@ _configuration = {
     },
     "keys": {
         "vantage_api_key": os.getenv("VANTAGE_API_KEY"),
+        "vantage_api_key_id": os.getenv("VANTAGE_API_KEY_ID"),
         "open_api_key": os.getenv("OPEN_API_KEY"),
     },
 }
@@ -125,9 +126,18 @@ def collection_params() -> dict:
 def vantage_api_key() -> dict:
     vantage_api_key = _configuration["keys"]["vantage_api_key"]
     if vantage_api_key is None:
-        pytest.skip("No Vantage API key key available.")
+        pytest.skip("No Vantage API key available.")
 
     return vantage_api_key
+
+
+@pytest.fixture(scope="module")
+def vantage_api_key_id() -> dict:
+    vantage_api_key_id = _configuration["keys"]["vantage_api_key_id"]
+    if vantage_api_key_id is None:
+        pytest.skip("No Vantage API key ID available.")
+
+    return vantage_api_key_id
 
 
 @pytest.fixture(scope="module")
