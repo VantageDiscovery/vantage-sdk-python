@@ -39,9 +39,9 @@ class ExternalAPIKeyModifiable(BaseModel):
         if value is None:
             return value
 
-        if value not in ('OpenAI', 'HuggingFace'):
+        if value not in ('OpenAI', 'Hugging'):
             raise ValueError(
-                "must be one of enum values ('OpenAI', 'HuggingFace')"
+                "must be one of enum values ('OpenAI', 'Hugging')"
             )
         return value
 

@@ -14,31 +14,47 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, StrictInt, conlist
-from vantage.core.http.models.global_search_properties_collection import GlobalSearchPropertiesCollection
-from vantage.core.http.models.global_search_properties_filter import GlobalSearchPropertiesFilter
-from vantage.core.http.models.global_search_properties_pagination import GlobalSearchPropertiesPagination
+
+from vantage.core.http.models.global_search_properties_collection import (
+    GlobalSearchPropertiesCollection,
+)
+from vantage.core.http.models.global_search_properties_filter import (
+    GlobalSearchPropertiesFilter,
+)
+from vantage.core.http.models.global_search_properties_pagination import (
+    GlobalSearchPropertiesPagination,
+)
 from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
+
 
 class MoreLikeTheseQuery(BaseModel):
     """
     MoreLikeTheseQuery
     """
+
     these: Optional[conlist(MLTheseTheseInner)] = None
     collection: Optional[GlobalSearchPropertiesCollection] = None
     request_id: Optional[StrictInt] = None
     filter: Optional[GlobalSearchPropertiesFilter] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
-    __properties = ["these", "collection", "request_id", "filter", "pagination"]
+    __properties = [
+        "these",
+        "collection",
+        "request_id",
+        "filter",
+        "pagination",
+    ]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -57,10 +73,7 @@ class MoreLikeTheseQuery(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in these (list)
         _items = []
         if self.these:
@@ -88,13 +101,30 @@ class MoreLikeTheseQuery(BaseModel):
         if not isinstance(obj, dict):
             return MoreLikeTheseQuery.parse_obj(obj)
 
-        _obj = MoreLikeTheseQuery.parse_obj({
-            "these": [MLTheseTheseInner.from_dict(_item) for _item in obj.get("these")] if obj.get("these") is not None else None,
-            "collection": GlobalSearchPropertiesCollection.from_dict(obj.get("collection")) if obj.get("collection") is not None else None,
-            "request_id": obj.get("request_id"),
-            "filter": GlobalSearchPropertiesFilter.from_dict(obj.get("filter")) if obj.get("filter") is not None else None,
-            "pagination": GlobalSearchPropertiesPagination.from_dict(obj.get("pagination")) if obj.get("pagination") is not None else None
-        })
+        _obj = MoreLikeTheseQuery.parse_obj(
+            {
+                "these": [
+                    MLTheseTheseInner.from_dict(_item)
+                    for _item in obj.get("these")
+                ]
+                if obj.get("these") is not None
+                else None,
+                "collection": GlobalSearchPropertiesCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
+                "request_id": obj.get("request_id"),
+                "filter": GlobalSearchPropertiesFilter.from_dict(
+                    obj.get("filter")
+                )
+                if obj.get("filter") is not None
+                else None,
+                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
+            }
+        )
         return _obj
-
-

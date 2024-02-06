@@ -14,23 +14,26 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import BaseModel, StrictStr
+
 
 class GlobalSearchPropertiesFilter(BaseModel):
     """
     GlobalSearchPropertiesFilter
     """
+
     boolean_filter: Optional[StrictStr] = None
     __properties = ["boolean_filter"]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -49,10 +52,7 @@ class GlobalSearchPropertiesFilter(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -64,9 +64,7 @@ class GlobalSearchPropertiesFilter(BaseModel):
         if not isinstance(obj, dict):
             return GlobalSearchPropertiesFilter.parse_obj(obj)
 
-        _obj = GlobalSearchPropertiesFilter.parse_obj({
-            "boolean_filter": obj.get("boolean_filter")
-        })
+        _obj = GlobalSearchPropertiesFilter.parse_obj(
+            {"boolean_filter": obj.get("boolean_filter")}
+        )
         return _obj
-
-

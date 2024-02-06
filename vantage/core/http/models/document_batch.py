@@ -14,23 +14,29 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import BaseModel, Field, StrictStr
+
 
 class DocumentBatch(BaseModel):
     """
     DocumentBatch
     """
-    customer_batch_identifier: Optional[StrictStr] = Field(None, description="The customer provided batch or group identifier.  Could be a file identifier if uploaded via Vantage console")
+
+    customer_batch_identifier: Optional[StrictStr] = Field(
+        None,
+        description="The customer provided batch or group identifier.  Could be a file identifier if uploaded via Vantage console",
+    )
     __properties = ["customer_batch_identifier"]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -49,10 +55,7 @@ class DocumentBatch(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -64,9 +67,7 @@ class DocumentBatch(BaseModel):
         if not isinstance(obj, dict):
             return DocumentBatch.parse_obj(obj)
 
-        _obj = DocumentBatch.parse_obj({
-            "customer_batch_identifier": obj.get("customer_batch_identifier")
-        })
+        _obj = DocumentBatch.parse_obj(
+            {"customer_batch_identifier": obj.get("customer_batch_identifier")}
+        )
         return _obj
-
-

@@ -14,30 +14,46 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import BaseModel, StrictInt, StrictStr
-from vantage.core.http.models.global_search_properties_collection import GlobalSearchPropertiesCollection
-from vantage.core.http.models.global_search_properties_filter import GlobalSearchPropertiesFilter
-from vantage.core.http.models.global_search_properties_pagination import GlobalSearchPropertiesPagination
+
+from vantage.core.http.models.global_search_properties_collection import (
+    GlobalSearchPropertiesCollection,
+)
+from vantage.core.http.models.global_search_properties_filter import (
+    GlobalSearchPropertiesFilter,
+)
+from vantage.core.http.models.global_search_properties_pagination import (
+    GlobalSearchPropertiesPagination,
+)
+
 
 class MoreLikeThisQuery(BaseModel):
     """
     MoreLikeThisQuery
     """
+
     collection: Optional[GlobalSearchPropertiesCollection] = None
     request_id: Optional[StrictInt] = None
     filter: Optional[GlobalSearchPropertiesFilter] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
     document_id: Optional[StrictStr] = None
-    __properties = ["collection", "request_id", "filter", "pagination", "document_id"]
+    __properties = [
+        "collection",
+        "request_id",
+        "filter",
+        "pagination",
+        "document_id",
+    ]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -56,10 +72,7 @@ class MoreLikeThisQuery(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of collection
         if self.collection:
             _dict['collection'] = self.collection.to_dict()
@@ -80,13 +93,25 @@ class MoreLikeThisQuery(BaseModel):
         if not isinstance(obj, dict):
             return MoreLikeThisQuery.parse_obj(obj)
 
-        _obj = MoreLikeThisQuery.parse_obj({
-            "collection": GlobalSearchPropertiesCollection.from_dict(obj.get("collection")) if obj.get("collection") is not None else None,
-            "request_id": obj.get("request_id"),
-            "filter": GlobalSearchPropertiesFilter.from_dict(obj.get("filter")) if obj.get("filter") is not None else None,
-            "pagination": GlobalSearchPropertiesPagination.from_dict(obj.get("pagination")) if obj.get("pagination") is not None else None,
-            "document_id": obj.get("document_id")
-        })
+        _obj = MoreLikeThisQuery.parse_obj(
+            {
+                "collection": GlobalSearchPropertiesCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
+                "request_id": obj.get("request_id"),
+                "filter": GlobalSearchPropertiesFilter.from_dict(
+                    obj.get("filter")
+                )
+                if obj.get("filter") is not None
+                else None,
+                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
+                "document_id": obj.get("document_id"),
+            }
+        )
         return _obj
-
-

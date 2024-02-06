@@ -14,24 +14,28 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import List, Optional
+
 from pydantic import BaseModel, conlist
+
 from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
+
 
 class MLThese(BaseModel):
     """
     MLThese
     """
+
     these: Optional[conlist(MLTheseTheseInner)] = None
     __properties = ["these"]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -50,10 +54,7 @@ class MLThese(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         # override the default output from pydantic by calling `to_dict()` of each item in these (list)
         _items = []
         if self.these:
@@ -72,9 +73,14 @@ class MLThese(BaseModel):
         if not isinstance(obj, dict):
             return MLThese.parse_obj(obj)
 
-        _obj = MLThese.parse_obj({
-            "these": [MLTheseTheseInner.from_dict(_item) for _item in obj.get("these")] if obj.get("these") is not None else None
-        })
+        _obj = MLThese.parse_obj(
+            {
+                "these": [
+                    MLTheseTheseInner.from_dict(_item)
+                    for _item in obj.get("these")
+                ]
+                if obj.get("these") is not None
+                else None
+            }
+        )
         return _obj
-
-

@@ -14,18 +14,20 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional, Union
+
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+
 
 class GlobalSearchPropertiesCollection(BaseModel):
     """
     GlobalSearchPropertiesCollection
     """
+
     account_id: Optional[StrictStr] = None
     collection_id: Optional[StrictStr] = None
     accuracy: Optional[Union[StrictFloat, StrictInt]] = None
@@ -33,6 +35,7 @@ class GlobalSearchPropertiesCollection(BaseModel):
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -51,10 +54,7 @@ class GlobalSearchPropertiesCollection(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -66,11 +66,11 @@ class GlobalSearchPropertiesCollection(BaseModel):
         if not isinstance(obj, dict):
             return GlobalSearchPropertiesCollection.parse_obj(obj)
 
-        _obj = GlobalSearchPropertiesCollection.parse_obj({
-            "account_id": obj.get("account_id"),
-            "collection_id": obj.get("collection_id"),
-            "accuracy": obj.get("accuracy")
-        })
+        _obj = GlobalSearchPropertiesCollection.parse_obj(
+            {
+                "account_id": obj.get("account_id"),
+                "collection_id": obj.get("collection_id"),
+                "accuracy": obj.get("accuracy"),
+            }
+        )
         return _obj
-
-
