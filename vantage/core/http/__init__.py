@@ -22,8 +22,8 @@ from vantage.core.http.api.account_management_api import AccountManagementApi
 from vantage.core.http.api.collection_management_api import (
     CollectionManagementApi,
 )
+from vantage.core.http.api.documents_api import DocumentsApi
 from vantage.core.http.api.external_api_keys_api import ExternalAPIKeysApi
-from vantage.core.http.api.external_keys_api import ExternalKeysApi
 from vantage.core.http.api.search_api import SearchApi
 from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
 from vantage.core.http.api_client import ApiClient
@@ -55,20 +55,9 @@ from vantage.core.http.models.collections_result_inner import (
 from vantage.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
+from vantage.core.http.models.document_batch import DocumentBatch
 from vantage.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
-)
-from vantage.core.http.models.embedding_search_query_filter import (
-    EmbeddingSearchQueryFilter,
-)
-from vantage.core.http.models.embedding_search_query_full import (
-    EmbeddingSearchQueryFull,
-)
-from vantage.core.http.models.embedding_search_query_full_all_of_collection import (
-    EmbeddingSearchQueryFullAllOfCollection,
-)
-from vantage.core.http.models.embedding_search_query_pagination import (
-    EmbeddingSearchQueryPagination,
 )
 from vantage.core.http.models.external_api_key import ExternalAPIKey
 from vantage.core.http.models.external_api_key_modifiable import (
@@ -80,23 +69,27 @@ from vantage.core.http.models.external_api_key_read_only import (
 from vantage.core.http.models.external_api_keys_result_inner import (
     ExternalAPIKeysResultInner,
 )
+from vantage.core.http.models.global_search_properties import (
+    GlobalSearchProperties,
+)
+from vantage.core.http.models.global_search_properties_collection import (
+    GlobalSearchPropertiesCollection,
+)
+from vantage.core.http.models.global_search_properties_filter import (
+    GlobalSearchPropertiesFilter,
+)
+from vantage.core.http.models.global_search_properties_pagination import (
+    GlobalSearchPropertiesPagination,
+)
+from vantage.core.http.models.ml_these import MLThese
+from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
+from vantage.core.http.models.more_like_these_query import MoreLikeTheseQuery
+from vantage.core.http.models.more_like_this_query import MoreLikeThisQuery
 from vantage.core.http.models.search_result import SearchResult
 from vantage.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
 )
 from vantage.core.http.models.semantic_search_query import SemanticSearchQuery
-from vantage.core.http.models.semantic_search_query_filter import (
-    SemanticSearchQueryFilter,
-)
-from vantage.core.http.models.semantic_search_query_full import (
-    SemanticSearchQueryFull,
-)
-from vantage.core.http.models.semantic_search_query_full_all_of_collection import (
-    SemanticSearchQueryFullAllOfCollection,
-)
-from vantage.core.http.models.semantic_search_query_pagination import (
-    SemanticSearchQueryPagination,
-)
 from vantage.core.http.models.vantage_api_key import VantageAPIKey
 from vantage.core.http.models.vantage_api_keys_result_inner import (
     VantageAPIKeysResultInner,

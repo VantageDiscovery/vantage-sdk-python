@@ -14,28 +14,24 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional, Union
-
-from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+import json
 
 
-class SemanticSearchQueryFullAllOfCollection(BaseModel):
+from typing import Optional
+from pydantic import BaseModel, StrictInt
+
+class GlobalSearchPropertiesPagination(BaseModel):
     """
-    SemanticSearchQueryFullAllOfCollection
+    GlobalSearchPropertiesPagination
     """
-
-    account_id: Optional[StrictStr] = None
-    collection_id: Optional[StrictStr] = None
-    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties = ["account_id", "collection_id", "accuracy"]
+    page: Optional[StrictInt] = None
+    count: Optional[StrictInt] = None
+    __properties = ["page", "count"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -48,31 +44,31 @@ class SemanticSearchQueryFullAllOfCollection(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(
-        cls, json_str: str
-    ) -> SemanticSearchQueryFullAllOfCollection:
-        """Create an instance of SemanticSearchQueryFullAllOfCollection from a JSON string"""
+    def from_json(cls, json_str: str) -> GlobalSearchPropertiesPagination:
+        """Create an instance of GlobalSearchPropertiesPagination from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> SemanticSearchQueryFullAllOfCollection:
-        """Create an instance of SemanticSearchQueryFullAllOfCollection from a dict"""
+    def from_dict(cls, obj: dict) -> GlobalSearchPropertiesPagination:
+        """Create an instance of GlobalSearchPropertiesPagination from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return SemanticSearchQueryFullAllOfCollection.parse_obj(obj)
+            return GlobalSearchPropertiesPagination.parse_obj(obj)
 
-        _obj = SemanticSearchQueryFullAllOfCollection.parse_obj(
-            {
-                "account_id": obj.get("account_id"),
-                "collection_id": obj.get("collection_id"),
-                "accuracy": obj.get("accuracy"),
-            }
-        )
+        _obj = GlobalSearchPropertiesPagination.parse_obj({
+            "page": obj.get("page"),
+            "count": obj.get("count")
+        })
         return _obj
+
+

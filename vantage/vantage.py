@@ -13,14 +13,13 @@ from vantage.core.http.models import (
     CollectionsResultInner,
     CollectionUploadURL,
     CreateCollectionRequest,
-    EmbeddingSearchQueryFull,
-    EmbeddingSearchQueryFullAllOfCollection,
+    EmbeddingSearchQuery,
     ExternalAPIKey,
     ExternalAPIKeyModifiable,
     ExternalAPIKeysResultInner,
+    GlobalSearchPropertiesCollection,
     SearchResult,
-    SemanticSearchQueryFull,
-    SemanticSearchQueryFullAllOfCollection,
+    SemanticSearchQuery,
     VantageAPIKey,
     VantageAPIKeysResultInner,
 )
@@ -441,13 +440,13 @@ class Vantage:
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        collection = EmbeddingSearchQueryFullAllOfCollection(
+        collection = GlobalSearchPropertiesCollection(
             collection_id=collection_id,
             accuracy=accuracy,
             account_id=account_id if account_id else self.account_id,
         )
 
-        query = EmbeddingSearchQueryFull(
+        query = EmbeddingSearchQuery(
             embedding=embedding,
             collection=collection,
             filter=None,
@@ -483,13 +482,13 @@ class Vantage:
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        collection = SemanticSearchQueryFullAllOfCollection(
+        collection = GlobalSearchPropertiesCollection(
             collection_id=collection_id,
             accuracy=accuracy,
             account_id=account_id if account_id else self.account_id,
         )
 
-        query = SemanticSearchQueryFull(
+        query = SemanticSearchQuery(
             text=text,
             collection=collection,
             filter=None,

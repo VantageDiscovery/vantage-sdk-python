@@ -14,27 +14,27 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
-
-from pydantic import BaseModel, StrictInt
+import json
 
 
-class EmbeddingSearchQueryPagination(BaseModel):
+from typing import Any, Dict, List, Optional, Union
+from pydantic import BaseModel, Field, StrictFloat, StrictInt, StrictStr, conlist
+
+class MLTheseTheseInner(BaseModel):
     """
-    EmbeddingSearchQueryPagination
+    MLTheseTheseInner
     """
-
-    page: Optional[StrictInt] = None
-    count: Optional[StrictInt] = None
-    __properties = ["page", "count"]
+    weight: Union[StrictFloat, StrictInt] = Field(...)
+    query_text: Optional[StrictStr] = None
+    query_document_id: Optional[StrictStr] = None
+    embedding: Optional[conlist(Union[StrictFloat, StrictInt])] = None
+    these: Optional[conlist(Dict[str, Any])] = None
+    __properties = ["weight", "query_text", "query_document_id", "embedding", "these"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -47,25 +47,34 @@ class EmbeddingSearchQueryPagination(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> EmbeddingSearchQueryPagination:
-        """Create an instance of EmbeddingSearchQueryPagination from a JSON string"""
+    def from_json(cls, json_str: str) -> MLTheseTheseInner:
+        """Create an instance of MLTheseTheseInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> EmbeddingSearchQueryPagination:
-        """Create an instance of EmbeddingSearchQueryPagination from a dict"""
+    def from_dict(cls, obj: dict) -> MLTheseTheseInner:
+        """Create an instance of MLTheseTheseInner from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return EmbeddingSearchQueryPagination.parse_obj(obj)
+            return MLTheseTheseInner.parse_obj(obj)
 
-        _obj = EmbeddingSearchQueryPagination.parse_obj(
-            {"page": obj.get("page"), "count": obj.get("count")}
-        )
+        _obj = MLTheseTheseInner.parse_obj({
+            "weight": obj.get("weight"),
+            "query_text": obj.get("query_text"),
+            "query_document_id": obj.get("query_document_id"),
+            "embedding": obj.get("embedding"),
+            "these": obj.get("these")
+        })
         return _obj
+
+

@@ -14,26 +14,23 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
+import json
 
+
+from typing import Optional
 from pydantic import BaseModel, StrictStr
 
-
-class EmbeddingSearchQueryFilter(BaseModel):
+class GlobalSearchPropertiesFilter(BaseModel):
     """
-    EmbeddingSearchQueryFilter
+    GlobalSearchPropertiesFilter
     """
-
     boolean_filter: Optional[StrictStr] = None
     __properties = ["boolean_filter"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -46,25 +43,30 @@ class EmbeddingSearchQueryFilter(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> EmbeddingSearchQueryFilter:
-        """Create an instance of EmbeddingSearchQueryFilter from a JSON string"""
+    def from_json(cls, json_str: str) -> GlobalSearchPropertiesFilter:
+        """Create an instance of GlobalSearchPropertiesFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> EmbeddingSearchQueryFilter:
-        """Create an instance of EmbeddingSearchQueryFilter from a dict"""
+    def from_dict(cls, obj: dict) -> GlobalSearchPropertiesFilter:
+        """Create an instance of GlobalSearchPropertiesFilter from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return EmbeddingSearchQueryFilter.parse_obj(obj)
+            return GlobalSearchPropertiesFilter.parse_obj(obj)
 
-        _obj = EmbeddingSearchQueryFilter.parse_obj(
-            {"boolean_filter": obj.get("boolean_filter")}
-        )
+        _obj = GlobalSearchPropertiesFilter.parse_obj({
+            "boolean_filter": obj.get("boolean_filter")
+        })
         return _obj
+
+
