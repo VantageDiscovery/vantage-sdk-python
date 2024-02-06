@@ -14,24 +14,27 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Optional
+
 from pydantic import BaseModel, StrictInt
+
 
 class GlobalSearchPropertiesPagination(BaseModel):
     """
     GlobalSearchPropertiesPagination
     """
+
     page: Optional[StrictInt] = None
     count: Optional[StrictInt] = None
     __properties = ["page", "count"]
 
     class Config:
         """Pydantic configuration"""
+
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -50,10 +53,7 @@ class GlobalSearchPropertiesPagination(BaseModel):
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True,
-                          exclude={
-                          },
-                          exclude_none=True)
+        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
         return _dict
 
     @classmethod
@@ -65,10 +65,7 @@ class GlobalSearchPropertiesPagination(BaseModel):
         if not isinstance(obj, dict):
             return GlobalSearchPropertiesPagination.parse_obj(obj)
 
-        _obj = GlobalSearchPropertiesPagination.parse_obj({
-            "page": obj.get("page"),
-            "count": obj.get("count")
-        })
+        _obj = GlobalSearchPropertiesPagination.parse_obj(
+            {"page": obj.get("page"), "count": obj.get("count")}
+        )
         return _obj
-
-

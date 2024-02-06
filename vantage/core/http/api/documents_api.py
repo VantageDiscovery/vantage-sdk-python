@@ -13,25 +13,21 @@
 """  # noqa: E501
 
 
-import re  # noqa: F401
 import io
+import re  # noqa: F401
 import warnings
-
-from pydantic import validate_arguments, ValidationError
-
-from typing_extensions import Annotated
-from pydantic import Field, StrictStr
-
 from typing import Optional
 
-from vantage.core.http.models.document_batch import DocumentBatch
+from pydantic import Field, StrictStr, ValidationError, validate_arguments
+from typing_extensions import Annotated
 
 from vantage.core.http.api_client import ApiClient
 from vantage.core.http.api_response import ApiResponse
 from vantage.core.http.exceptions import (  # noqa: F401
     ApiTypeError,
-    ApiValueError
+    ApiValueError,
 )
+from vantage.core.http.models.document_batch import DocumentBatch
 
 
 class DocumentsApi:
@@ -47,7 +43,26 @@ class DocumentsApi:
         self.api_client = api_client
 
     @validate_arguments
-    def upload_documents(self, account_id : Annotated[StrictStr, Field(..., description="The account id")], collection_id : Annotated[StrictStr, Field(..., description="The collection to upload these documents into")], customer_batch_identifier : Annotated[Optional[StrictStr], Field(description="If you have an identifier for this group of records in your system.")] = None, **kwargs) -> DocumentBatch:  # noqa: E501
+    def upload_documents(
+        self,
+        account_id: Annotated[
+            StrictStr, Field(..., description="The account id")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                ...,
+                description="The collection to upload these documents into",
+            ),
+        ],
+        customer_batch_identifier: Annotated[
+            Optional[StrictStr],
+            Field(
+                description="If you have an identifier for this group of records in your system."
+            ),
+        ] = None,
+        **kwargs,
+    ) -> DocumentBatch:  # noqa: E501
         """Upload Documents  # noqa: E501
 
         Upload documents to a collection for indexing  # noqa: E501
@@ -78,10 +93,31 @@ class DocumentsApi:
         if '_preload_content' in kwargs:
             message = "Error! Please call the upload_documents_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.upload_documents_with_http_info(account_id, collection_id, customer_batch_identifier, **kwargs)  # noqa: E501
+        return self.upload_documents_with_http_info(
+            account_id, collection_id, customer_batch_identifier, **kwargs
+        )  # noqa: E501
 
     @validate_arguments
-    def upload_documents_with_http_info(self, account_id : Annotated[StrictStr, Field(..., description="The account id")], collection_id : Annotated[StrictStr, Field(..., description="The collection to upload these documents into")], customer_batch_identifier : Annotated[Optional[StrictStr], Field(description="If you have an identifier for this group of records in your system.")] = None, **kwargs) -> ApiResponse:  # noqa: E501
+    def upload_documents_with_http_info(
+        self,
+        account_id: Annotated[
+            StrictStr, Field(..., description="The account id")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                ...,
+                description="The collection to upload these documents into",
+            ),
+        ],
+        customer_batch_identifier: Annotated[
+            Optional[StrictStr],
+            Field(
+                description="If you have an identifier for this group of records in your system."
+            ),
+        ] = None,
+        **kwargs,
+    ) -> ApiResponse:  # noqa: E501
         """Upload Documents  # noqa: E501
 
         Upload documents to a collection for indexing  # noqa: E501
@@ -127,7 +163,7 @@ class DocumentsApi:
         _all_params = [
             'account_id',
             'collection_id',
-            'customer_batch_identifier'
+            'customer_batch_identifier',
         ]
         _all_params.extend(
             [
@@ -137,7 +173,7 @@ class DocumentsApi:
                 '_request_timeout',
                 '_request_auth',
                 '_content_type',
-                '_headers'
+                '_headers',
             ]
         )
 
@@ -161,11 +197,15 @@ class DocumentsApi:
         if _params['collection_id'] is not None:
             _path_params['collection_id'] = _params['collection_id']
 
-
         # process the query parameters
         _query_params = []
         if _params.get('customer_batch_identifier') is not None:  # noqa: E501
-            _query_params.append(('customer_batch_identifier', _params['customer_batch_identifier']))
+            _query_params.append(
+                (
+                    'customer_batch_identifier',
+                    _params['customer_batch_identifier'],
+                )
+            )
 
         # process the header parameters
         _header_params = dict(_params.get('_headers', {}))
@@ -176,14 +216,16 @@ class DocumentsApi:
         _body_params = None
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+            ['application/json']
+        )  # noqa: E501
 
         # set the HTTP header `Content-Type`
-        _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
+        _content_types_list = _params.get(
+            '_content_type',
+            self.api_client.select_header_content_type(['application/json']),
+        )
         if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
+            _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
         _auth_settings = ['BearerAuth']  # noqa: E501
@@ -194,7 +236,8 @@ class DocumentsApi:
         }
 
         return self.api_client.call_api(
-            '/account/{account_id}/collection/{collection_id}/documents', 'POST',
+            '/account/{account_id}/collection/{collection_id}/documents',
+            'POST',
             _path_params,
             _query_params,
             _header_params,
@@ -204,8 +247,11 @@ class DocumentsApi:
             response_types_map=_response_types_map,
             auth_settings=_auth_settings,
             async_req=_params.get('async_req'),
-            _return_http_data_only=_params.get('_return_http_data_only'),  # noqa: E501
+            _return_http_data_only=_params.get(
+                '_return_http_data_only'
+            ),  # noqa: E501
             _preload_content=_params.get('_preload_content', True),
             _request_timeout=_params.get('_request_timeout'),
             collection_formats=_collection_formats,
-            _request_auth=_params.get('_request_auth'))
+            _request_auth=_params.get('_request_auth'),
+        )
