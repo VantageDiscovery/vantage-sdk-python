@@ -34,7 +34,7 @@ class CreateCollectionRequest(BaseModel):
     )
     user_provided_embeddings: Optional[StrictBool] = Field(
         False,
-        description="Ignore llm_ fields will provide own embeddings for both ingest and search",
+        description="Ignore llm field will provide own embeddings for both ingest and search",
     )
     llm: Optional[StrictStr] = None
     embeddings_dimension: StrictInt = Field(

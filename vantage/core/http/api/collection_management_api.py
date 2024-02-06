@@ -452,12 +452,16 @@ class CollectionManagementApi:
             ),
         ],
         file_size: Annotated[
-            StrictInt, Field(..., description="The file size in bytes")
+            StrictInt,
+            Field(
+                ...,
+                description="The size of the file, in bytes, to be uploaded at url generated.",
+            ),
         ],
         customer_batch_identifier: Annotated[
             Optional[StrictStr],
             Field(
-                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated."
+                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl."
             ),
         ] = None,
         **kwargs,
@@ -475,9 +479,9 @@ class CollectionManagementApi:
         :type collection_id: str
         :param account_id: The account id this collection id is located in (required)
         :type account_id: str
-        :param file_size: The file size in bytes (required)
+        :param file_size: The size of the file, in bytes, to be uploaded at url generated. (required)
         :type file_size: int
-        :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.
+        :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
@@ -520,12 +524,16 @@ class CollectionManagementApi:
             ),
         ],
         file_size: Annotated[
-            StrictInt, Field(..., description="The file size in bytes")
+            StrictInt,
+            Field(
+                ...,
+                description="The size of the file, in bytes, to be uploaded at url generated.",
+            ),
         ],
         customer_batch_identifier: Annotated[
             Optional[StrictStr],
             Field(
-                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated."
+                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl."
             ),
         ] = None,
         **kwargs,
@@ -543,9 +551,9 @@ class CollectionManagementApi:
         :type collection_id: str
         :param account_id: The account id this collection id is located in (required)
         :type account_id: str
-        :param file_size: The file size in bytes (required)
+        :param file_size: The size of the file, in bytes, to be uploaded at url generated. (required)
         :type file_size: int
-        :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.
+        :param customer_batch_identifier: The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional

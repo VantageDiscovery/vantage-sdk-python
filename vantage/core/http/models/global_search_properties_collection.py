@@ -14,26 +14,25 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
-
-from pydantic import BaseModel, StrictStr
+import json
 
 
-class SemanticSearchQueryFilter(BaseModel):
+from typing import Optional, Union
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+
+class GlobalSearchPropertiesCollection(BaseModel):
     """
-    SemanticSearchQueryFilter
+    GlobalSearchPropertiesCollection
     """
-
-    boolean_filter: Optional[StrictStr] = None
-    __properties = ["boolean_filter"]
+    account_id: Optional[StrictStr] = None
+    collection_id: Optional[StrictStr] = None
+    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties = ["account_id", "collection_id", "accuracy"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -46,25 +45,32 @@ class SemanticSearchQueryFilter(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> SemanticSearchQueryFilter:
-        """Create an instance of SemanticSearchQueryFilter from a JSON string"""
+    def from_json(cls, json_str: str) -> GlobalSearchPropertiesCollection:
+        """Create an instance of GlobalSearchPropertiesCollection from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> SemanticSearchQueryFilter:
-        """Create an instance of SemanticSearchQueryFilter from a dict"""
+    def from_dict(cls, obj: dict) -> GlobalSearchPropertiesCollection:
+        """Create an instance of GlobalSearchPropertiesCollection from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return SemanticSearchQueryFilter.parse_obj(obj)
+            return GlobalSearchPropertiesCollection.parse_obj(obj)
 
-        _obj = SemanticSearchQueryFilter.parse_obj(
-            {"boolean_filter": obj.get("boolean_filter")}
-        )
+        _obj = GlobalSearchPropertiesCollection.parse_obj({
+            "account_id": obj.get("account_id"),
+            "collection_id": obj.get("collection_id"),
+            "accuracy": obj.get("accuracy")
+        })
         return _obj
+
+

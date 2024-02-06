@@ -83,11 +83,7 @@ class Configuration:
         ssl_ca_cert=None,
     ) -> None:
         """Constructor"""
-        self._base_path = (
-            "https://api.dev-a.dev.vantagediscovery.com/v1"
-            if host is None
-            else host
-        )
+        self._base_path = "https://api.vanta.ge/v1" if host is None else host
         """Default Base url
         """
         self.server_index = (
@@ -412,15 +408,15 @@ class Configuration:
         """
         return [
             {
-                'url': "https://api.dev-a.dev.vantagediscovery.com/v1",
-                'description': "No description provided",
-            },
-            {
                 'url': "https://api.vanta.ge/v1",
                 'description': "No description provided",
             },
             {
-                'url': "https://api.dev-a.dev.vantagediscovery.com/api",
+                'url': "https://api.dev-a.dev.vantagediscovery.com/v1",
+                'description': "No description provided",
+            },
+            {
+                'url': "https://api.demo-b.vantagediscovery.com/v1",
                 'description': "No description provided",
             },
         ]

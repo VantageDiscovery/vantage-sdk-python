@@ -22,11 +22,14 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, conlist
 
-from vantage.core.http.models.embedding_search_query_filter import (
-    EmbeddingSearchQueryFilter,
+from vantage.core.http.models.global_search_properties_collection import (
+    GlobalSearchPropertiesCollection,
 )
-from vantage.core.http.models.embedding_search_query_pagination import (
-    EmbeddingSearchQueryPagination,
+from vantage.core.http.models.global_search_properties_filter import (
+    GlobalSearchPropertiesFilter,
+)
+from vantage.core.http.models.global_search_properties_pagination import (
+    GlobalSearchPropertiesPagination,
 )
 
 
@@ -35,11 +38,18 @@ class EmbeddingSearchQuery(BaseModel):
     EmbeddingSearchQuery
     """
 
+    collection: Optional[GlobalSearchPropertiesCollection] = None
     request_id: Optional[StrictInt] = None
-    filter: Optional[EmbeddingSearchQueryFilter] = None
-    pagination: Optional[EmbeddingSearchQueryPagination] = None
+    filter: Optional[GlobalSearchPropertiesFilter] = None
+    pagination: Optional[GlobalSearchPropertiesPagination] = None
     embedding: Optional[conlist(Union[StrictFloat, StrictInt])] = None
-    __properties = ["request_id", "filter", "pagination", "embedding"]
+    __properties = [
+        "collection",
+        "request_id",
+        "filter",
+        "pagination",
+        "embedding",
+    ]
 
     class Config:
         """Pydantic configuration"""
@@ -63,6 +73,9 @@ class EmbeddingSearchQuery(BaseModel):
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
         _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        # override the default output from pydantic by calling `to_dict()` of collection
+        if self.collection:
+            _dict['collection'] = self.collection.to_dict()
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
@@ -82,13 +95,18 @@ class EmbeddingSearchQuery(BaseModel):
 
         _obj = EmbeddingSearchQuery.parse_obj(
             {
+                "collection": GlobalSearchPropertiesCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
                 "request_id": obj.get("request_id"),
-                "filter": EmbeddingSearchQueryFilter.from_dict(
+                "filter": GlobalSearchPropertiesFilter.from_dict(
                     obj.get("filter")
                 )
                 if obj.get("filter") is not None
                 else None,
-                "pagination": EmbeddingSearchQueryPagination.from_dict(
+                "pagination": GlobalSearchPropertiesPagination.from_dict(
                     obj.get("pagination")
                 )
                 if obj.get("pagination") is not None

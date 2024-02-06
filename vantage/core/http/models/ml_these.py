@@ -14,27 +14,24 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
-
-from pydantic import BaseModel, StrictInt
+import json
 
 
-class SemanticSearchQueryPagination(BaseModel):
+from typing import List, Optional
+from pydantic import BaseModel, conlist
+from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
+
+class MLThese(BaseModel):
     """
-    SemanticSearchQueryPagination
+    MLThese
     """
-
-    page: Optional[StrictInt] = None
-    count: Optional[StrictInt] = None
-    __properties = ["page", "count"]
+    these: Optional[conlist(MLTheseTheseInner)] = None
+    __properties = ["these"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -47,25 +44,37 @@ class SemanticSearchQueryPagination(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> SemanticSearchQueryPagination:
-        """Create an instance of SemanticSearchQueryPagination from a JSON string"""
+    def from_json(cls, json_str: str) -> MLThese:
+        """Create an instance of MLThese from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
+        # override the default output from pydantic by calling `to_dict()` of each item in these (list)
+        _items = []
+        if self.these:
+            for _item in self.these:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['these'] = _items
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> SemanticSearchQueryPagination:
-        """Create an instance of SemanticSearchQueryPagination from a dict"""
+    def from_dict(cls, obj: dict) -> MLThese:
+        """Create an instance of MLThese from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return SemanticSearchQueryPagination.parse_obj(obj)
+            return MLThese.parse_obj(obj)
 
-        _obj = SemanticSearchQueryPagination.parse_obj(
-            {"page": obj.get("page"), "count": obj.get("count")}
-        )
+        _obj = MLThese.parse_obj({
+            "these": [MLTheseTheseInner.from_dict(_item) for _item in obj.get("these")] if obj.get("these") is not None else None
+        })
         return _obj
+
+

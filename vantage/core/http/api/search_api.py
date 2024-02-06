@@ -26,13 +26,13 @@ from vantage.core.http.exceptions import (  # noqa: F401
     ApiTypeError,
     ApiValueError,
 )
-from vantage.core.http.models.embedding_search_query_full import (
-    EmbeddingSearchQueryFull,
+from vantage.core.http.models.embedding_search_query import (
+    EmbeddingSearchQuery,
 )
+from vantage.core.http.models.more_like_these_query import MoreLikeTheseQuery
+from vantage.core.http.models.more_like_this_query import MoreLikeThisQuery
 from vantage.core.http.models.search_result import SearchResult
-from vantage.core.http.models.semantic_search_query_full import (
-    SemanticSearchQueryFull,
-)
+from vantage.core.http.models.semantic_search_query import SemanticSearchQuery
 
 
 class SearchApi:
@@ -50,8 +50,8 @@ class SearchApi:
     @validate_arguments
     def embedding_search(
         self,
-        embedding_search_query_full: Annotated[
-            EmbeddingSearchQueryFull,
+        embedding_search_query: Annotated[
+            EmbeddingSearchQuery,
             Field(
                 ...,
                 description="The JSON that describes how Vantage should search embeddings",
@@ -65,11 +65,11 @@ class SearchApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.embedding_search(embedding_search_query_full, async_req=True)
+        >>> thread = api.embedding_search(embedding_search_query, async_req=True)
         >>> result = thread.get()
 
-        :param embedding_search_query_full: The JSON that describes how Vantage should search embeddings (required)
-        :type embedding_search_query_full: EmbeddingSearchQueryFull
+        :param embedding_search_query: The JSON that describes how Vantage should search embeddings (required)
+        :type embedding_search_query: EmbeddingSearchQuery
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
@@ -86,14 +86,14 @@ class SearchApi:
             message = "Error! Please call the embedding_search_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
         return self.embedding_search_with_http_info(
-            embedding_search_query_full, **kwargs
+            embedding_search_query, **kwargs
         )  # noqa: E501
 
     @validate_arguments
     def embedding_search_with_http_info(
         self,
-        embedding_search_query_full: Annotated[
-            EmbeddingSearchQueryFull,
+        embedding_search_query: Annotated[
+            EmbeddingSearchQuery,
             Field(
                 ...,
                 description="The JSON that describes how Vantage should search embeddings",
@@ -107,11 +107,11 @@ class SearchApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.embedding_search_with_http_info(embedding_search_query_full, async_req=True)
+        >>> thread = api.embedding_search_with_http_info(embedding_search_query, async_req=True)
         >>> result = thread.get()
 
-        :param embedding_search_query_full: The JSON that describes how Vantage should search embeddings (required)
-        :type embedding_search_query_full: EmbeddingSearchQueryFull
+        :param embedding_search_query: The JSON that describes how Vantage should search embeddings (required)
+        :type embedding_search_query: EmbeddingSearchQuery
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
@@ -139,7 +139,7 @@ class SearchApi:
 
         _params = locals()
 
-        _all_params = ['embedding_search_query_full']
+        _all_params = ['embedding_search_query']
         _all_params.extend(
             [
                 'async_req',
@@ -176,8 +176,8 @@ class SearchApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        if _params['embedding_search_query_full'] is not None:
-            _body_params = _params['embedding_search_query_full']
+        if _params['embedding_search_query'] is not None:
+            _body_params = _params['embedding_search_query']
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -222,28 +222,28 @@ class SearchApi:
         )
 
     @validate_arguments
-    def semantic_search(
+    def more_like_these_search(
         self,
-        semantic_search_query_full: Annotated[
-            SemanticSearchQueryFull,
+        more_like_these_query: Annotated[
+            MoreLikeTheseQuery,
             Field(
                 ...,
-                description="The JSON that describes how Vantage should search a collection",
+                description="An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these.",
             ),
         ],
         **kwargs,
     ) -> SearchResult:  # noqa: E501
-        """Search by text  # noqa: E501
+        """More-Like-These(tm)  # noqa: E501
 
-        Search by text  # noqa: E501
+        Search for similar items, blending docs, text, and embeddings  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.semantic_search(semantic_search_query_full, async_req=True)
+        >>> thread = api.more_like_these_search(more_like_these_query, async_req=True)
         >>> result = thread.get()
 
-        :param semantic_search_query_full: The JSON that describes how Vantage should search a collection (required)
-        :type semantic_search_query_full: SemanticSearchQueryFull
+        :param more_like_these_query: An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these. (required)
+        :type more_like_these_query: MoreLikeTheseQuery
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
@@ -257,35 +257,35 @@ class SearchApi:
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the semantic_search_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the more_like_these_search_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.semantic_search_with_http_info(
-            semantic_search_query_full, **kwargs
+        return self.more_like_these_search_with_http_info(
+            more_like_these_query, **kwargs
         )  # noqa: E501
 
     @validate_arguments
-    def semantic_search_with_http_info(
+    def more_like_these_search_with_http_info(
         self,
-        semantic_search_query_full: Annotated[
-            SemanticSearchQueryFull,
+        more_like_these_query: Annotated[
+            MoreLikeTheseQuery,
             Field(
                 ...,
-                description="The JSON that describes how Vantage should search a collection",
+                description="An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these.",
             ),
         ],
         **kwargs,
     ) -> ApiResponse:  # noqa: E501
-        """Search by text  # noqa: E501
+        """More-Like-These(tm)  # noqa: E501
 
-        Search by text  # noqa: E501
+        Search for similar items, blending docs, text, and embeddings  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.semantic_search_with_http_info(semantic_search_query_full, async_req=True)
+        >>> thread = api.more_like_these_search_with_http_info(more_like_these_query, async_req=True)
         >>> result = thread.get()
 
-        :param semantic_search_query_full: The JSON that describes how Vantage should search a collection (required)
-        :type semantic_search_query_full: SemanticSearchQueryFull
+        :param more_like_these_query: An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these. (required)
+        :type more_like_these_query: MoreLikeTheseQuery
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
@@ -313,7 +313,355 @@ class SearchApi:
 
         _params = locals()
 
-        _all_params = ['semantic_search_query_full']
+        _all_params = ['more_like_these_query']
+        _all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout',
+                '_request_auth',
+                '_content_type',
+                '_headers',
+            ]
+        )
+
+        # validate the arguments
+        for _key, _val in _params['kwargs'].items():
+            if _key not in _all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method more_like_these_search" % _key
+                )
+            _params[_key] = _val
+        del _params['kwargs']
+
+        _collection_formats = {}
+
+        # process the path parameters
+        _path_params = {}
+
+        # process the query parameters
+        _query_params = []
+        # process the header parameters
+        _header_params = dict(_params.get('_headers', {}))
+        # process the form parameters
+        _form_params = []
+        _files = {}
+        # process the body parameter
+        _body_params = None
+        if _params['more_like_these_query'] is not None:
+            _body_params = _params['more_like_these_query']
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )  # noqa: E501
+
+        # set the HTTP header `Content-Type`
+        _content_types_list = _params.get(
+            '_content_type',
+            self.api_client.select_header_content_type(['application/json']),
+        )
+        if _content_types_list:
+            _header_params['Content-Type'] = _content_types_list
+
+        # authentication setting
+        _auth_settings = ['BearerAuth']  # noqa: E501
+
+        _response_types_map = {
+            '200': "SearchResult",
+            '405': None,
+        }
+
+        return self.api_client.call_api(
+            '/search/morelikethese',
+            'POST',
+            _path_params,
+            _query_params,
+            _header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            response_types_map=_response_types_map,
+            auth_settings=_auth_settings,
+            async_req=_params.get('async_req'),
+            _return_http_data_only=_params.get(
+                '_return_http_data_only'
+            ),  # noqa: E501
+            _preload_content=_params.get('_preload_content', True),
+            _request_timeout=_params.get('_request_timeout'),
+            collection_formats=_collection_formats,
+            _request_auth=_params.get('_request_auth'),
+        )
+
+    @validate_arguments
+    def more_like_this_search(
+        self,
+        more_like_this_query: Annotated[
+            MoreLikeThisQuery,
+            Field(
+                ...,
+                description="The JSON that describes how Vantage should search a collection",
+            ),
+        ],
+        **kwargs,
+    ) -> SearchResult:  # noqa: E501
+        """More-Like-This  # noqa: E501
+
+        Search for similar items, based on existing item id  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.more_like_this_search(more_like_this_query, async_req=True)
+        >>> result = thread.get()
+
+        :param more_like_this_query: The JSON that describes how Vantage should search a collection (required)
+        :type more_like_this_query: MoreLikeThisQuery
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _request_timeout: timeout setting for this request.
+               If one number provided, it will be total request
+               timeout. It can also be a pair (tuple) of
+               (connection, read) timeouts.
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: SearchResult
+        """
+        kwargs['_return_http_data_only'] = True
+        if '_preload_content' in kwargs:
+            message = "Error! Please call the more_like_this_search_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            raise ValueError(message)
+        return self.more_like_this_search_with_http_info(
+            more_like_this_query, **kwargs
+        )  # noqa: E501
+
+    @validate_arguments
+    def more_like_this_search_with_http_info(
+        self,
+        more_like_this_query: Annotated[
+            MoreLikeThisQuery,
+            Field(
+                ...,
+                description="The JSON that describes how Vantage should search a collection",
+            ),
+        ],
+        **kwargs,
+    ) -> ApiResponse:  # noqa: E501
+        """More-Like-This  # noqa: E501
+
+        Search for similar items, based on existing item id  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.more_like_this_search_with_http_info(more_like_this_query, async_req=True)
+        >>> result = thread.get()
+
+        :param more_like_this_query: The JSON that describes how Vantage should search a collection (required)
+        :type more_like_this_query: MoreLikeThisQuery
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _preload_content: if False, the ApiResponse.data will
+                                 be set to none and raw_data will store the
+                                 HTTP response body without reading/decoding.
+                                 Default is True.
+        :type _preload_content: bool, optional
+        :param _return_http_data_only: response data instead of ApiResponse
+                                       object with status code, headers, etc
+        :type _return_http_data_only: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :type _content_type: string, optional: force content-type for the request
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: tuple(SearchResult, status_code(int), headers(HTTPHeaderDict))
+        """
+
+        _params = locals()
+
+        _all_params = ['more_like_this_query']
+        _all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout',
+                '_request_auth',
+                '_content_type',
+                '_headers',
+            ]
+        )
+
+        # validate the arguments
+        for _key, _val in _params['kwargs'].items():
+            if _key not in _all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method more_like_this_search" % _key
+                )
+            _params[_key] = _val
+        del _params['kwargs']
+
+        _collection_formats = {}
+
+        # process the path parameters
+        _path_params = {}
+
+        # process the query parameters
+        _query_params = []
+        # process the header parameters
+        _header_params = dict(_params.get('_headers', {}))
+        # process the form parameters
+        _form_params = []
+        _files = {}
+        # process the body parameter
+        _body_params = None
+        if _params['more_like_this_query'] is not None:
+            _body_params = _params['more_like_this_query']
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )  # noqa: E501
+
+        # set the HTTP header `Content-Type`
+        _content_types_list = _params.get(
+            '_content_type',
+            self.api_client.select_header_content_type(['application/json']),
+        )
+        if _content_types_list:
+            _header_params['Content-Type'] = _content_types_list
+
+        # authentication setting
+        _auth_settings = ['BearerAuth']  # noqa: E501
+
+        _response_types_map = {
+            '200': "SearchResult",
+            '405': None,
+        }
+
+        return self.api_client.call_api(
+            '/search/morelikethis',
+            'POST',
+            _path_params,
+            _query_params,
+            _header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            response_types_map=_response_types_map,
+            auth_settings=_auth_settings,
+            async_req=_params.get('async_req'),
+            _return_http_data_only=_params.get(
+                '_return_http_data_only'
+            ),  # noqa: E501
+            _preload_content=_params.get('_preload_content', True),
+            _request_timeout=_params.get('_request_timeout'),
+            collection_formats=_collection_formats,
+            _request_auth=_params.get('_request_auth'),
+        )
+
+    @validate_arguments
+    def semantic_search(
+        self,
+        semantic_search_query: Annotated[
+            SemanticSearchQuery,
+            Field(
+                ...,
+                description="The JSON that describes how Vantage should search a collection",
+            ),
+        ],
+        **kwargs,
+    ) -> SearchResult:  # noqa: E501
+        """Search by text  # noqa: E501
+
+        Search by text  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.semantic_search(semantic_search_query, async_req=True)
+        >>> result = thread.get()
+
+        :param semantic_search_query: The JSON that describes how Vantage should search a collection (required)
+        :type semantic_search_query: SemanticSearchQuery
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _request_timeout: timeout setting for this request.
+               If one number provided, it will be total request
+               timeout. It can also be a pair (tuple) of
+               (connection, read) timeouts.
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: SearchResult
+        """
+        kwargs['_return_http_data_only'] = True
+        if '_preload_content' in kwargs:
+            message = "Error! Please call the semantic_search_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            raise ValueError(message)
+        return self.semantic_search_with_http_info(
+            semantic_search_query, **kwargs
+        )  # noqa: E501
+
+    @validate_arguments
+    def semantic_search_with_http_info(
+        self,
+        semantic_search_query: Annotated[
+            SemanticSearchQuery,
+            Field(
+                ...,
+                description="The JSON that describes how Vantage should search a collection",
+            ),
+        ],
+        **kwargs,
+    ) -> ApiResponse:  # noqa: E501
+        """Search by text  # noqa: E501
+
+        Search by text  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.semantic_search_with_http_info(semantic_search_query, async_req=True)
+        >>> result = thread.get()
+
+        :param semantic_search_query: The JSON that describes how Vantage should search a collection (required)
+        :type semantic_search_query: SemanticSearchQuery
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _preload_content: if False, the ApiResponse.data will
+                                 be set to none and raw_data will store the
+                                 HTTP response body without reading/decoding.
+                                 Default is True.
+        :type _preload_content: bool, optional
+        :param _return_http_data_only: response data instead of ApiResponse
+                                       object with status code, headers, etc
+        :type _return_http_data_only: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :type _content_type: string, optional: force content-type for the request
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: tuple(SearchResult, status_code(int), headers(HTTPHeaderDict))
+        """
+
+        _params = locals()
+
+        _all_params = ['semantic_search_query']
         _all_params.extend(
             [
                 'async_req',
@@ -350,8 +698,8 @@ class SearchApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        if _params['semantic_search_query_full'] is not None:
-            _body_params = _params['semantic_search_query_full']
+        if _params['semantic_search_query'] is not None:
+            _body_params = _params['semantic_search_query']
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(

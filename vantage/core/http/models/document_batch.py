@@ -14,28 +14,23 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Optional, Union
-
-from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+import json
 
 
-class EmbeddingSearchQueryFullAllOfCollection(BaseModel):
+from typing import Optional
+from pydantic import BaseModel, Field, StrictStr
+
+class DocumentBatch(BaseModel):
     """
-    EmbeddingSearchQueryFullAllOfCollection
+    DocumentBatch
     """
-
-    account_id: Optional[StrictStr] = None
-    collection_id: Optional[StrictStr] = None
-    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties = ["account_id", "collection_id", "accuracy"]
+    customer_batch_identifier: Optional[StrictStr] = Field(None, description="The customer provided batch or group identifier.  Could be a file identifier if uploaded via Vantage console")
+    __properties = ["customer_batch_identifier"]
 
     class Config:
         """Pydantic configuration"""
-
         allow_population_by_field_name = True
         validate_assignment = True
 
@@ -48,31 +43,30 @@ class EmbeddingSearchQueryFullAllOfCollection(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(
-        cls, json_str: str
-    ) -> EmbeddingSearchQueryFullAllOfCollection:
-        """Create an instance of EmbeddingSearchQueryFullAllOfCollection from a JSON string"""
+    def from_json(cls, json_str: str) -> DocumentBatch:
+        """Create an instance of DocumentBatch from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
         """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(by_alias=True, exclude={}, exclude_none=True)
+        _dict = self.dict(by_alias=True,
+                          exclude={
+                          },
+                          exclude_none=True)
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> EmbeddingSearchQueryFullAllOfCollection:
-        """Create an instance of EmbeddingSearchQueryFullAllOfCollection from a dict"""
+    def from_dict(cls, obj: dict) -> DocumentBatch:
+        """Create an instance of DocumentBatch from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return EmbeddingSearchQueryFullAllOfCollection.parse_obj(obj)
+            return DocumentBatch.parse_obj(obj)
 
-        _obj = EmbeddingSearchQueryFullAllOfCollection.parse_obj(
-            {
-                "account_id": obj.get("account_id"),
-                "collection_id": obj.get("collection_id"),
-                "accuracy": obj.get("accuracy"),
-            }
-        )
+        _obj = DocumentBatch.parse_obj({
+            "customer_batch_identifier": obj.get("customer_batch_identifier")
+        })
         return _obj
+
+
