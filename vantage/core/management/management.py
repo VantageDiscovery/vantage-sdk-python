@@ -4,6 +4,7 @@ from vantage.core.http.api_client import ApiClient
 from vantage.core.management.apis import (
     AccountAPI,
     CollectionAPI,
+    DocumentsAPI,
     ExternalAPIKeysAPI,
     VantageAPIKeysAPI,
 )
@@ -16,11 +17,13 @@ class ManagementAPI:
         collection_api: CollectionAPI,
         external_api_keys_api: ExternalAPIKeysAPI,
         vantage_api_keys_api: VantageAPIKeysAPI,
+        documents_api: DocumentsAPI,
     ):
         self.account_api = account_api
         self.collection_api = collection_api
         self.external_api_keys_api = external_api_keys_api
         self.vantage_api_keys_api = vantage_api_keys_api
+        self.documents_api = documents_api
 
     @classmethod
     def from_defaults(cls, api_client: ApiClient) -> ManagementAPI:
@@ -28,9 +31,11 @@ class ManagementAPI:
         collection_api = CollectionAPI(api_client)
         external_api_keys_api = ExternalAPIKeysAPI(api_client)
         vantage_api_keys_api = VantageAPIKeysAPI(api_client)
+        documents_api = DocumentsAPI(api_client)
         return cls(
             account_api,
             collection_api,
             external_api_keys_api,
             vantage_api_keys_api,
+            documents_api,
         )

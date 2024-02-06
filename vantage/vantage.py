@@ -269,9 +269,9 @@ class Vantage:
             )
 
         create_collection_request = CreateCollectionRequest(
-            external_key_id=external_key_id
-            if not user_provided_embeddings
-            else None,
+            external_key_id=(
+                external_key_id if not user_provided_embeddings else None
+            ),
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=int(embeddings_dimension),
