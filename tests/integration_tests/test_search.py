@@ -6,6 +6,7 @@ import pytest
 
 from vantage.core.http.exceptions import BadRequestException
 from vantage.exceptions import VantageNotFoundException
+from vantage.model import MoreLikeThese
 from vantage.vantage import Vantage
 
 
@@ -214,3 +215,55 @@ class TestSearch:
 
         # Then
         assert exception.type is BadRequestException
+
+    def test_more_like_this_search(
+        self,
+        client: Vantage,
+        account_params: dict,
+        vantage_api_key: str,
+        more_like_this_test_collection_id: str,
+    ) -> None:
+        result = client.more_like_this_search(
+            collection_id=more_like_this_test_collection_id,
+            accuracy=0.5,
+            document_id="00",
+            page=1,
+            page_count=5,
+            request_id=1,
+            boolean_filter="bread",
+            account_id=account_params["id"],
+            vantage_api_key=vantage_api_key,
+        )
+
+        assert result is not None
+
+    def test_more_like_these_search(
+        self,
+        client: Vantage,
+        account_params: dict,
+        vantage_api_key: str,
+        more_like_this_test_collection_id: str,
+    ) -> None:
+        more_like_these = [
+            MoreLikeThese(
+                weight=0.5,
+                query_text="asdlkj",
+                query_document_id="asdklj",
+                embedding=[1, 2],
+                these=[{"yes": "nope"}],
+            )
+        ]
+
+        result = client.more_like_these_search(
+            collection_id=more_like_this_test_collection_id,
+            accuracy=0.5,
+            page=1,
+            page_count=5,
+            request_id=1,
+            boolean_filter="hello",
+            account_id=account_params["id"],
+            vantage_api_key=vantage_api_key,
+            more_like_these=more_like_these,
+        )
+
+        assert result is not None

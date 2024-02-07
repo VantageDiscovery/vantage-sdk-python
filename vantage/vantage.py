@@ -18,6 +18,11 @@ from vantage.core.http.models import (
     ExternalAPIKeyModifiable,
     ExternalAPIKeysResultInner,
     GlobalSearchPropertiesCollection,
+    GlobalSearchPropertiesFilter,
+    GlobalSearchPropertiesPagination,
+    MLTheseTheseInner,
+    MoreLikeTheseQuery,
+    MoreLikeThisQuery,
     SearchResult,
     SemanticSearchQuery,
     VantageAPIKey,
@@ -26,6 +31,7 @@ from vantage.core.http.models import (
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
 from vantage.exceptions import VantageNotFoundException, VantageValueError
+from vantage.model import MoreLikeThese
 
 
 class Vantage:
@@ -42,6 +48,7 @@ class Vantage:
         self.account_id = account_id
         self.vantage_api_key = vantage_api_key
         self.host = host
+        self._default_encoding = "utf-8"
 
     @classmethod
     def using_jwt_token(
@@ -168,6 +175,24 @@ class Vantage:
     # endregion
 
     # region External API keys
+
+    def create_external_api_key(
+        self,
+        url: str,
+        llm_provider: str,
+        llm_secret: str,
+        account_id: Optional[str] = None,
+    ) -> ExternalAPIKey:
+        # TODO: docstring
+
+        external_api_key_modifiable = ExternalAPIKeyModifiable(
+            url=url, llm_provider=llm_provider, llm_secret=llm_secret
+        )
+
+        return self.management_api.external_api_keys_api.api.create_external_api_key(
+            account_id=account_id if account_id else self.account_id,
+            external_api_key_modifiable=external_api_key_modifiable,
+        )
 
     def get_external_api_keys(
         self,
@@ -503,6 +528,135 @@ class Vantage:
         return self.search_api.api.semantic_search(
             query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+    def more_like_this_search(
+        self,
+        document_id: str,
+        collection_id: Optional[str] = None,
+        accuracy: Optional[int | float] = None,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        request_id: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> SearchResult:
+        if collection_id or accuracy:
+            collection = GlobalSearchPropertiesCollection(
+                account_id=(account_id if account_id else self.account_id),
+                collection_id=collection_id,
+                accuracy=accuracy,
+            )
+        else:
+            collection = None
+
+        if page:
+            pagination = GlobalSearchPropertiesPagination(
+                page=page, count=page_count
+            )
+        else:
+            pagination = None
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
+        else:
+            search_filter = None
+
+        return self.search_api.api.more_like_this_search(
+            more_like_this_query=MoreLikeThisQuery(
+                collection=collection,
+                request_id=request_id,
+                filter=search_filter,
+                pagination=pagination,
+                document_id=document_id,
+            ),
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+    def more_like_these_search(
+        self,
+        more_like_these: list[MoreLikeThese],
+        collection_id: Optional[str] = None,
+        accuracy: Optional[int | float] = None,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        request_id: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> SearchResult:
+        if collection_id or accuracy:
+            collection = GlobalSearchPropertiesCollection(
+                account_id=(account_id if account_id else self.account_id),
+                collection_id=collection_id,
+                accuracy=accuracy,
+            )
+        else:
+            collection = None
+
+        if page:
+            pagination = GlobalSearchPropertiesPagination(
+                page=page, count=page_count
+            )
+        else:
+            pagination = None
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
+        else:
+            search_filter = None
+
+        return self.search_api.api.more_like_these_search(
+            more_like_these_query=MoreLikeTheseQuery(
+                these=[
+                    MLTheseTheseInner.parse_obj(item.to_dict())
+                    for item in more_like_these
+                ],
+                collection=collection,
+                request_id=request_id,
+                filter=search_filter,
+                pagination=pagination,
+            ),
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+    # endregion
+
+    # region Documents
+
+    def upload_documents_from_jsonl(
+        self,
+        collection_id: str,
+        documents: str,
+        encoding: Optional[str] = None,
+        batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> None:
+        aid = account_id if account_id else self.account_id
+        self.management_api.documents_api.api.upload_documents(
+            body=documents,
+            account_id=aid,
+            collection_id=collection_id,
+            customer_batch_identifier=batch_identifier,
+        )
+
+    def upload_documents_from_path(
+        self,
+        collection_id: str,
+        file_path: str,
+        batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> None:
+        if not exists(file_path):
+            raise FileNotFoundError(f"File \"{file_path}\" not found.")
+
+        file = open(file_path, "rb")
+        file_content = file.read().decode(self._default_encoding)
+        self.upload_documents_from_jsonl(
+            collection_id=collection_id,
+            documents=file_content,
+            batch_identifier=batch_identifier,
         )
 
     # endregion
