@@ -27,7 +27,6 @@ from vantage.core.http.exceptions import (  # noqa: F401
     ApiTypeError,
     ApiValueError,
 )
-from vantage.core.http.models.document_batch import DocumentBatch
 
 
 class DocumentsApi:
@@ -62,7 +61,7 @@ class DocumentsApi:
             ),
         ] = None,
         **kwargs,
-    ) -> DocumentBatch:  # noqa: E501
+    ) -> None:  # noqa: E501
         """Upload Documents  # noqa: E501
 
         Upload documents to a collection for indexing  # noqa: E501
@@ -87,7 +86,7 @@ class DocumentsApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: DocumentBatch
+        :rtype: None
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
@@ -155,7 +154,7 @@ class DocumentsApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(DocumentBatch, status_code(int), headers(HTTPHeaderDict))
+        :rtype: None
         """
 
         _params = locals()
@@ -214,15 +213,10 @@ class DocumentsApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json']
-        )  # noqa: E501
-
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get(
             '_content_type',
-            self.api_client.select_header_content_type(['application/json']),
+            self.api_client.select_header_content_type(['application/text']),
         )
         if _content_types_list:
             _header_params['Content-Type'] = _content_types_list
@@ -230,10 +224,7 @@ class DocumentsApi:
         # authentication setting
         _auth_settings = ['BearerAuth']  # noqa: E501
 
-        _response_types_map = {
-            '200': "DocumentBatch",
-            '405': None,
-        }
+        _response_types_map = {}
 
         return self.api_client.call_api(
             '/account/{account_id}/collection/{collection_id}/documents',
