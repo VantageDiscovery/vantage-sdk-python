@@ -27,7 +27,6 @@ from vantage.core.http.exceptions import (  # noqa: F401
     ApiTypeError,
     ApiValueError,
 )
-from vantage.core.http.models.document_batch import DocumentBatch
 
 
 class DocumentsApi:
@@ -55,6 +54,13 @@ class DocumentsApi:
                 description="The collection to upload these documents into",
             ),
         ],
+        body: Annotated[
+            StrictStr,
+            Field(
+                ...,
+                description="JSONL data, in vantage format, to upload to collection",
+            ),
+        ],
         customer_batch_identifier: Annotated[
             Optional[StrictStr],
             Field(
@@ -62,20 +68,22 @@ class DocumentsApi:
             ),
         ] = None,
         **kwargs,
-    ) -> DocumentBatch:  # noqa: E501
+    ) -> None:  # noqa: E501
         """Upload Documents  # noqa: E501
 
         Upload documents to a collection for indexing  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.upload_documents(account_id, collection_id, customer_batch_identifier, async_req=True)
+        >>> thread = api.upload_documents(account_id, collection_id, body, customer_batch_identifier, async_req=True)
         >>> result = thread.get()
 
         :param account_id: The account id (required)
         :type account_id: str
         :param collection_id: The collection to upload these documents into (required)
         :type collection_id: str
+        :param body: JSONL data, in vantage format, to upload to collection (required)
+        :type body: str
         :param customer_batch_identifier: If you have an identifier for this group of records in your system.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
@@ -87,14 +95,18 @@ class DocumentsApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: DocumentBatch
+        :rtype: None
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
             message = "Error! Please call the upload_documents_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
         return self.upload_documents_with_http_info(
-            account_id, collection_id, customer_batch_identifier, **kwargs
+            account_id,
+            collection_id,
+            body,
+            customer_batch_identifier,
+            **kwargs,
         )  # noqa: E501
 
     @validate_arguments
@@ -108,6 +120,13 @@ class DocumentsApi:
             Field(
                 ...,
                 description="The collection to upload these documents into",
+            ),
+        ],
+        body: Annotated[
+            StrictStr,
+            Field(
+                ...,
+                description="JSONL data, in vantage format, to upload to collection",
             ),
         ],
         customer_batch_identifier: Annotated[
@@ -124,13 +143,15 @@ class DocumentsApi:
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.upload_documents_with_http_info(account_id, collection_id, customer_batch_identifier, async_req=True)
+        >>> thread = api.upload_documents_with_http_info(account_id, collection_id, body, customer_batch_identifier, async_req=True)
         >>> result = thread.get()
 
         :param account_id: The account id (required)
         :type account_id: str
         :param collection_id: The collection to upload these documents into (required)
         :type collection_id: str
+        :param body: JSONL data, in vantage format, to upload to collection (required)
+        :type body: str
         :param customer_batch_identifier: If you have an identifier for this group of records in your system.
         :type customer_batch_identifier: str
         :param async_req: Whether to execute the request asynchronously.
@@ -155,7 +176,7 @@ class DocumentsApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(DocumentBatch, status_code(int), headers(HTTPHeaderDict))
+        :rtype: None
         """
 
         _params = locals()
@@ -163,6 +184,7 @@ class DocumentsApi:
         _all_params = [
             'account_id',
             'collection_id',
+            'body',
             'customer_batch_identifier',
         ]
         _all_params.extend(
@@ -214,15 +236,13 @@ class DocumentsApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json']
-        )  # noqa: E501
+        if _params['body'] is not None:
+            _body_params = _params['body']
 
         # set the HTTP header `Content-Type`
         _content_types_list = _params.get(
             '_content_type',
-            self.api_client.select_header_content_type(['application/json']),
+            self.api_client.select_header_content_type(['text/plain']),
         )
         if _content_types_list:
             _header_params['Content-Type'] = _content_types_list
@@ -230,10 +250,7 @@ class DocumentsApi:
         # authentication setting
         _auth_settings = ['BearerAuth']  # noqa: E501
 
-        _response_types_map = {
-            '200': "DocumentBatch",
-            '405': None,
-        }
+        _response_types_map = {}
 
         return self.api_client.call_api(
             '/account/{account_id}/collection/{collection_id}/documents',
