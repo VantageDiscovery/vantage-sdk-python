@@ -223,19 +223,35 @@ class TestSearch:
         vantage_api_key: str,
         more_like_this_test_collection_id: str,
     ) -> None:
-        result = client.more_like_this_search(
+        # Given
+        expected_results = {
+            "en_0982760": {"score": 0.8988204002380371},
+            'en_0581405': {"score": 0.8959484100341797},
+            'en_0970727': {"score": 0.8955060839653015},
+        }
+
+        # When
+        response = client.more_like_this_search(
             collection_id=more_like_this_test_collection_id,
-            accuracy=0.5,
-            document_id="00",
+            accuracy=0.3,
+            document_id="en_0340173",
             page=1,
-            page_count=5,
+            page_count=3,
             request_id=1,
-            boolean_filter="bread",
+            boolean_filter="rock",
             account_id=account_params["id"],
             vantage_api_key=vantage_api_key,
         )
 
-        assert result is not None
+        # Then
+        assert response is not None
+        assert response.status == 200
+        assert response.message == "Success."
+        results = response.results
+        assert len(results) == len(expected_results)
+        for result in results:
+            assert result.id in expected_results.keys()
+            assert expected_results[result.id]["score"] == result.score
 
     def test_more_like_these_search(
         self,
@@ -244,26 +260,42 @@ class TestSearch:
         vantage_api_key: str,
         more_like_this_test_collection_id: str,
     ) -> None:
+        # Given
         more_like_these = [
             MoreLikeThese(
-                weight=0.5,
-                query_text="asdlkj",
-                query_document_id="asdklj",
-                embedding=[1, 2],
-                these=[{"yes": "nope"}],
-            )
+                weight=1.0,
+                query_text="bla",
+            ),
+            MoreLikeThese(
+                weight=1.0,
+                query_text="bla bla",
+            ),
         ]
+        expected_results = {
+            "en_0022659": {"score": 0.8912180066108704},
+            "en_0375881": {"score": 0.891213059425354},
+            "en_0266579": {"score": 0.8911941647529602},
+            "en_0218966": {"score": 0.8909063339233398},
+        }
 
-        result = client.more_like_these_search(
+        response = client.more_like_these_search(
             collection_id=more_like_this_test_collection_id,
-            accuracy=0.5,
+            accuracy=0.3,
             page=1,
             page_count=5,
             request_id=1,
-            boolean_filter="hello",
+            boolean_filter="rock",
             account_id=account_params["id"],
             vantage_api_key=vantage_api_key,
             more_like_these=more_like_these,
         )
 
-        assert result is not None
+        # Then
+        assert response is not None
+        assert response.status == 200
+        assert response.message == "Success."
+        results = response.results
+        assert len(results) == len(expected_results)
+        for result in results:
+            assert result.id in expected_results.keys()
+            assert expected_results[result.id]["score"] == result.score

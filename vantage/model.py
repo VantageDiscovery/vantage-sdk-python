@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 
 
 class MoreLikeThese:
@@ -6,9 +6,9 @@ class MoreLikeThese:
         self,
         weight: int | float,
         query_text: str,
-        query_document_id: str,
-        embedding: list[int | float],
-        these: list[dict[str:Any]],
+        query_document_id: Optional[str] = None,
+        embedding: Optional[list[int | float]] = None,
+        these: Optional[list[dict[str, Any]]] = None,
     ):
         self.weight = weight
         self.query_text = query_text
@@ -17,10 +17,14 @@ class MoreLikeThese:
         self.these = these
 
     def to_dict(self):
-        return {
-            "weight": self.weight,
-            "query_text": self.query_text,
-            "query_document_id": self.query_document_id,
-            "embedding": self.embedding,
-            "these": self.these,
-        }
+        value = {}
+        value["weight"] = self.weight
+        value["query_text"] = self.query_text
+        if self.query_document_id:
+            value["query_document_id"] = self.query_document_id
+        if self.embedding:
+            value["embedding"] = self.embedding
+        if self.these:
+            value["these"] = self.these
+
+        return value
