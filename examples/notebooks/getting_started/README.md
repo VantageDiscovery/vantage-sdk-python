@@ -11,14 +11,14 @@ Whether you're new to vector databases or looking to enhance your skills, this g
 
 Let's dive in and explore the power of Vantage together!
 
-## Vantage Discovery Account
+## <img src="../../../docs/assets/vantage_logo_small.png" title="Vantage Discovery Logo" width="15"/> Vantage Discovery Account
 
 Before diving into the content, ensure you have an account set up on the [Vantage Discovery console UI](https://vantagediscovery.com/).
 
 This step is crucial for accessing all the features and functionalities you'll be learning about.
 
 
-## Notebooks
+## <img src="../../../docs/assets/vantage_logo_small.png" title="Vantage Discovery Logo" width="15"/> Notebooks
 
 The notebooks in this guide are organized into two distinct folders: one dedicated to Management API calls and the other to Search API calls. Each notebook is designed to offer in-depth insights into the various options and functionalities that Vantage offers, allowing you to fully leverage its capabilities.
 
@@ -34,5 +34,5 @@ Starting with the client initialization notebook is a good way to get familiar w
 - **Search API**
     - [Semantic Search](./search_api/semantic_search.ipynb)
     - [Embedding Search](./search_api/embedding_search.ipynb)
-    - [More Like This]
-    - [More Like These]
+    - [More Like This](./search_api/more_like_this_search.ipynb)
+    - [More Like These](./search_api/more_like_these_search.ipynb)
