@@ -18,53 +18,71 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
+from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, Field, StrictStr
+
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 class ExternalAPIKeyReadOnly(BaseModel):
     """
     ExternalAPIKeyReadOnly
-    """
+    """  # noqa: E501
 
     external_key_id: Optional[StrictStr] = Field(
-        None, description="The unique id of the key"
+        default=None, description="The unique id of the key"
     )
     account_id: Optional[StrictStr] = Field(
-        None, description="The account this key is contained within"
+        default=None, description="The account this key is contained within"
     )
     external_key_created_date: Optional[StrictStr] = Field(
-        None, description="date this key was created"
+        default=None, description="date this key was created"
     )
-    __properties = [
+    __properties: ClassVar[List[str]] = [
         "external_key_id",
         "account_id",
         "external_key_created_date",
     ]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> ExternalAPIKeyReadOnly:
+    def from_json(cls, json_str: str) -> Self:
         """Create an instance of ExternalAPIKeyReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self):
-        """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(
+    def to_dict(self) -> Dict[str, Any]:
+        """Return the dictionary representation of the model using alias.
+
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
+
+        * `None` is only added to the output dict for nullable fields that
+          were set at model initialization. Other fields with value `None`
+          are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        """
+        _dict = self.model_dump(
             by_alias=True,
             exclude={
                 "external_key_id",
@@ -76,15 +94,15 @@ class ExternalAPIKeyReadOnly(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> ExternalAPIKeyReadOnly:
+    def from_dict(cls, obj: Dict) -> Self:
         """Create an instance of ExternalAPIKeyReadOnly from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return ExternalAPIKeyReadOnly.parse_obj(obj)
+            return cls.model_validate(obj)
 
-        _obj = ExternalAPIKeyReadOnly.parse_obj(
+        _obj = cls.model_validate(
             {
                 "external_key_id": obj.get("external_key_id"),
                 "account_id": obj.get("account_id"),

@@ -18,42 +18,58 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Optional
+from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictStr
+
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 class Account(BaseModel):
     """
     Account
-    """
+    """  # noqa: E501
 
     account_id: Optional[StrictStr] = None
     account_name: Optional[StrictStr] = None
-    __properties = ["account_id", "account_name"]
+    __properties: ClassVar[List[str]] = ["account_id", "account_name"]
 
-    class Config:
-        """Pydantic configuration"""
-
-        allow_population_by_field_name = True
-        validate_assignment = True
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
-        return pprint.pformat(self.dict(by_alias=True))
+        return pprint.pformat(self.model_dump(by_alias=True))
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Account:
+    def from_json(cls, json_str: str) -> Self:
         """Create an instance of Account from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self):
-        """Returns the dictionary representation of the model using alias"""
-        _dict = self.dict(
+    def to_dict(self) -> Dict[str, Any]:
+        """Return the dictionary representation of the model using alias.
+
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
+
+        * `None` is only added to the output dict for nullable fields that
+          were set at model initialization. Other fields with value `None`
+          are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        """
+        _dict = self.model_dump(
             by_alias=True,
             exclude={
                 "account_id",
@@ -63,15 +79,15 @@ class Account(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> Account:
+    def from_dict(cls, obj: Dict) -> Self:
         """Create an instance of Account from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return Account.parse_obj(obj)
+            return cls.model_validate(obj)
 
-        _obj = Account.parse_obj(
+        _obj = cls.model_validate(
             {
                 "account_id": obj.get("account_id"),
                 "account_name": obj.get("account_name"),
