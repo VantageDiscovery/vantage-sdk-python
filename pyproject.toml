@@ -112,6 +112,18 @@ extend-ignore = [
 [tool.mypy]
 exclude = "vantage/core/http"
 
+[bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+
+[bumpver.file_patterns]
+"pyproject.toml" = [
+    'version = "{version}"',
+]
+"vantage/__init__.py" = [
+    "__version__ = '{version}'",
+]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
