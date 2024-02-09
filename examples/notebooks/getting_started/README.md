@@ -7,13 +7,13 @@ Welcome to the **Getting Started with Vantage** guide. This guide is your introd
 - **Management API** notebooks for account, collection and keys management
 - **Search API** notebooks for discovering different search options
 
-Whether you're new to vector databases or looking to enhance your skills, this guide will help you every step of the way. 
+Whether you're new to vector databases or looking to enhance your skills, this guide will help you every step of the way.
 
 Let's dive in and explore the power of Vantage together!
 
 ## Vantage Discovery Account
 
-Before diving into the content, ensure you have an account set up on the [Vantage Discovery console UI](https://vantagediscovery.com/).  
+Before diving into the content, ensure you have an account set up on the [Vantage Discovery console UI](https://vantagediscovery.com/).
 
 This step is crucial for accessing all the features and functionalities you'll be learning about.
 

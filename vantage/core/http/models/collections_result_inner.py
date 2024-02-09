@@ -19,12 +19,24 @@ import json
 import pprint
 import re  # noqa: F401
 from inspect import getfullargspec
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, StrictStr, ValidationError, validator
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal
 
 from vantage.core.http.models.collection import Collection
 
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 COLLECTIONSRESULTINNER_ONE_OF_SCHEMAS = ["Collection"]
 
@@ -36,16 +48,13 @@ class CollectionsResultInner(BaseModel):
 
     # data type: Collection
     oneof_schema_1_validator: Optional[Collection] = None
-    if TYPE_CHECKING:
-        actual_instance: Union[Collection]
-    else:
-        actual_instance: Any
-    one_of_schemas: List[str] = Field(
-        COLLECTIONSRESULTINNER_ONE_OF_SCHEMAS, const=True
-    )
+    actual_instance: Optional[Union[Collection]] = None
+    one_of_schemas: List[str] = Literal["Collection"]
 
-    class Config:
-        validate_assignment = True
+    model_config = {
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -61,9 +70,9 @@ class CollectionsResultInner(BaseModel):
         else:
             super().__init__(**kwargs)
 
-    @validator('actual_instance')
+    @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = CollectionsResultInner.construct()
+        instance = CollectionsResultInner.model_construct()
         error_messages = []
         match = 0
         # validate data type: Collection
@@ -89,13 +98,13 @@ class CollectionsResultInner(BaseModel):
             return v
 
     @classmethod
-    def from_dict(cls, obj: dict) -> CollectionsResultInner:
+    def from_dict(cls, obj: dict) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: str) -> CollectionsResultInner:
+    def from_json(cls, json_str: str) -> Self:
         """Returns the object represented by the json string"""
-        instance = CollectionsResultInner.construct()
+        instance = cls.model_construct()
         error_messages = []
         match = 0
 
@@ -132,7 +141,7 @@ class CollectionsResultInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -146,4 +155,4 @@ class CollectionsResultInner(BaseModel):
 
     def to_str(self) -> str:
         """Returns the string representation of the actual instance"""
-        return pprint.pformat(self.dict())
+        return pprint.pformat(self.model_dump())

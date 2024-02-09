@@ -20,7 +20,7 @@ import mimetypes
 import os
 import re
 import tempfile
-from multiprocessing.pool import ThreadPool
+from typing import List, Optional, Tuple
 from urllib.parse import quote
 
 from dateutil.parser import parse
@@ -29,7 +29,15 @@ import vantage.core.http.models
 from vantage.core.http import rest
 from vantage.core.http.api_response import ApiResponse
 from vantage.core.http.configuration import Configuration
-from vantage.core.http.exceptions import ApiException, ApiValueError
+from vantage.core.http.exceptions import (
+    ApiException,
+    ApiValueError,
+    BadRequestException,
+    ForbiddenException,
+    NotFoundException,
+    ServiceException,
+    UnauthorizedException,
+)
 
 
 class ApiClient:
@@ -46,8 +54,6 @@ class ApiClient:
         the API.
     :param cookie: a cookie to include in the header when making calls
         to the API
-    :param pool_threads: The number of threads to use for async requests
-        to the API. More threads means more concurrent API requests.
     """
 
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
@@ -69,13 +75,11 @@ class ApiClient:
         header_name=None,
         header_value=None,
         cookie=None,
-        pool_threads=1,
     ) -> None:
         # use default configuration if none is provided
         if configuration is None:
             configuration = Configuration.get_default()
         self.configuration = configuration
-        self.pool_threads = pool_threads
 
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
@@ -90,25 +94,7 @@ class ApiClient:
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
-
-    def close(self):
-        if self._pool:
-            self._pool.close()
-            self._pool.join()
-            self._pool = None
-            if hasattr(atexit, 'unregister'):
-                atexit.unregister(self.close)
-
-    @property
-    def pool(self):
-        """Create thread pool on first request
-        avoids instantiating unused threadpool for blocking clients.
-        """
-        if self._pool is None:
-            atexit.register(self.close)
-            self._pool = ThreadPool(self.pool_threads)
-        return self._pool
+        pass
 
     @property
     def user_agent(self):
@@ -148,25 +134,43 @@ class ApiClient:
         """
         cls._default = default
 
-    def __call_api(
+    def param_serialize(
         self,
-        resource_path,
         method,
+        resource_path,
         path_params=None,
         query_params=None,
         header_params=None,
         body=None,
         post_params=None,
         files=None,
-        response_types_map=None,
         auth_settings=None,
-        _return_http_data_only=None,
         collection_formats=None,
-        _preload_content=True,
-        _request_timeout=None,
         _host=None,
         _request_auth=None,
-    ):
+    ) -> Tuple:
+        """Builds the HTTP request params needed by the request.
+        :param method: Method to call.
+        :param resource_path: Path to method endpoint.
+        :param path_params: Path parameters in the url.
+        :param query_params: Query parameters in the url.
+        :param header_params: Header parameters to be
+            placed in the request header.
+        :param body: Request body.
+        :param post_params dict: Request post form parameters,
+            for `application/x-www-form-urlencoded`, `multipart/form-data`.
+        :param auth_settings list: Auth Settings names for the request.
+        :param files dict: key -> filename, value -> filepath,
+            for `multipart/form-data`.
+        :param collection_formats: dict of collection formats for path, query,
+            header, and post parameters.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :return: tuple of form (path, http_method, query_params, header_params,
+            body, post_params, files)
+        """
+
         config = self.configuration
 
         # header parameters
@@ -232,44 +236,76 @@ class ApiClient:
             )
             url += "?" + url_query
 
+        return method, url, header_params, body, post_params
+
+    def call_api(
+        self,
+        method,
+        url,
+        header_params=None,
+        body=None,
+        post_params=None,
+        _request_timeout=None,
+    ) -> rest.RESTResponse:
+        """Makes the HTTP request (synchronous)
+        :param method: Method to call.
+        :param url: Path to method endpoint.
+        :param header_params: Header parameters to be
+            placed in the request header.
+        :param body: Request body.
+        :param post_params dict: Request post form parameters,
+            for `application/x-www-form-urlencoded`, `multipart/form-data`.
+        :param _request_timeout: timeout setting for this request.
+        :return: RESTResponse
+        """
+
         try:
             # perform request and return response
-            response_data = self.request(
+            response_data = self.rest_client.request(
                 method,
                 url,
-                query_params=query_params,
                 headers=header_params,
-                post_params=post_params,
                 body=body,
-                _preload_content=_preload_content,
+                post_params=post_params,
                 _request_timeout=_request_timeout,
             )
+
         except ApiException as e:
             if e.body:
                 e.body = e.body.decode('utf-8')
             raise e
 
-        self.last_response = response_data
+        return response_data
 
-        return_data = None  # assuming deserialization is not needed
-        # data needs deserialization or returns HTTP data (deserialized) only
-        if _preload_content or _return_http_data_only:
+    def response_deserialize(
+        self, response_data: rest.RESTResponse = None, response_types_map=None
+    ) -> ApiResponse:
+        """Deserializes response into an object.
+        :param response_data: RESTResponse object to be deserialized.
+        :param response_types_map: dict of response types.
+        :return: ApiResponse
+        """
+
+        response_type = response_types_map.get(str(response_data.status), None)
+        if (
+            not response_type
+            and isinstance(response_data.status, int)
+            and 100 <= response_data.status <= 599
+        ):
+            # if not found, look for '1XX', '2XX', etc.
             response_type = response_types_map.get(
-                str(response_data.status), None
+                str(response_data.status)[0] + "XX", None
             )
-            if (
-                not response_type
-                and isinstance(response_data.status, int)
-                and 100 <= response_data.status <= 599
-            ):
-                # if not found, look for '1XX', '2XX', etc.
-                response_type = response_types_map.get(
-                    str(response_data.status)[0] + "XX", None
-                )
 
+        # deserialize response data
+        response_text = None
+        return_data = None
+        try:
             if response_type == "bytearray":
-                response_data.data = response_data.data
-            else:
+                return_data = response_data.data
+            elif response_type == "file":
+                return_data = self.__deserialize_file(response_data)
+            elif response_type is not None:
                 match = None
                 content_type = response_data.getheader('content-type')
                 if content_type is not None:
@@ -277,25 +313,22 @@ class ApiClient:
                         r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type
                     )
                 encoding = match.group(1) if match else "utf-8"
-                response_data.data = response_data.data.decode(encoding)
+                response_text = response_data.data.decode(encoding)
+                return_data = self.deserialize(response_text, response_type)
+        finally:
+            if not 200 <= response_data.status <= 299:
+                raise ApiException.from_response(
+                    http_resp=response_data,
+                    body=response_text,
+                    data=return_data,
+                )
 
-            # deserialize response data
-            if response_type == "bytearray":
-                return_data = response_data.data
-            elif response_type:
-                return_data = self.deserialize(response_data, response_type)
-            else:
-                return_data = None
-
-        if _return_http_data_only:
-            return return_data
-        else:
-            return ApiResponse(
-                status_code=response_data.status,
-                data=return_data,
-                headers=response_data.getheaders(),
-                raw_data=response_data.data,
-            )
+        return ApiResponse(
+            status_code=response_data.status,
+            data=return_data,
+            headers=response_data.getheaders(),
+            raw_data=response_data.data,
+        )
 
     def sanitize_for_serialization(self, obj):
         """Builds a JSON POST object.
@@ -326,7 +359,7 @@ class ApiClient:
         elif isinstance(obj, (datetime.datetime, datetime.date)):
             return obj.isoformat()
 
-        if isinstance(obj, dict):
+        elif isinstance(obj, dict):
             obj_dict = obj
         else:
             # Convert model obj to dict except
@@ -341,7 +374,7 @@ class ApiClient:
             for key, val in obj_dict.items()
         }
 
-    def deserialize(self, response, response_type):
+    def deserialize(self, response_text, response_type):
         """Deserializes response into an object.
 
         :param response: RESTResponse object to be deserialized.
@@ -350,16 +383,12 @@ class ApiClient:
 
         :return: deserialized object.
         """
-        # handle file downloading
-        # save response body into a tmp file and return the instance
-        if response_type == "file":
-            return self.__deserialize_file(response)
 
         # fetch data from response object
         try:
-            data = json.loads(response.data)
+            data = json.loads(response_text)
         except ValueError:
-            data = response.data
+            data = response_text
 
         return self.__deserialize(data, response_type)
 
@@ -404,171 +433,6 @@ class ApiClient:
         else:
             return self.__deserialize_model(data, klass)
 
-    def call_api(
-        self,
-        resource_path,
-        method,
-        path_params=None,
-        query_params=None,
-        header_params=None,
-        body=None,
-        post_params=None,
-        files=None,
-        response_types_map=None,
-        auth_settings=None,
-        async_req=None,
-        _return_http_data_only=None,
-        collection_formats=None,
-        _preload_content=True,
-        _request_timeout=None,
-        _host=None,
-        _request_auth=None,
-    ):
-        """Makes the HTTP request (synchronous) and returns deserialized data.
-
-        To make an async_req request, set the async_req parameter.
-
-        :param resource_path: Path to method endpoint.
-        :param method: Method to call.
-        :param path_params: Path parameters in the url.
-        :param query_params: Query parameters in the url.
-        :param header_params: Header parameters to be
-            placed in the request header.
-        :param body: Request body.
-        :param post_params dict: Request post form parameters,
-            for `application/x-www-form-urlencoded`, `multipart/form-data`.
-        :param auth_settings list: Auth Settings names for the request.
-        :param response: Response data type.
-        :param files dict: key -> filename, value -> filepath,
-            for `multipart/form-data`.
-        :param async_req bool: execute request asynchronously
-        :param _return_http_data_only: response data instead of ApiResponse
-                                       object with status code, headers, etc
-        :param _preload_content: if False, the ApiResponse.data will
-                                 be set to none and raw_data will store the
-                                 HTTP response body without reading/decoding.
-                                 Default is True.
-        :param collection_formats: dict of collection formats for path, query,
-            header, and post parameters.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the authentication
-                              in the spec for a single request.
-        :type _request_token: dict, optional
-        :return:
-            If async_req parameter is True,
-            the request will be called asynchronously.
-            The method will return the request thread.
-            If parameter async_req is False or missing,
-            then the method will return the response directly.
-        """
-        args = (
-            resource_path,
-            method,
-            path_params,
-            query_params,
-            header_params,
-            body,
-            post_params,
-            files,
-            response_types_map,
-            auth_settings,
-            _return_http_data_only,
-            collection_formats,
-            _preload_content,
-            _request_timeout,
-            _host,
-            _request_auth,
-        )
-        if not async_req:
-            return self.__call_api(*args)
-
-        return self.pool.apply_async(self.__call_api, args)
-
-    def request(
-        self,
-        method,
-        url,
-        query_params=None,
-        headers=None,
-        post_params=None,
-        body=None,
-        _preload_content=True,
-        _request_timeout=None,
-    ):
-        """Makes the HTTP request using RESTClient."""
-        if method == "GET":
-            return self.rest_client.get_request(
-                url,
-                query_params=query_params,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                headers=headers,
-            )
-        elif method == "HEAD":
-            return self.rest_client.head_request(
-                url,
-                query_params=query_params,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                headers=headers,
-            )
-        elif method == "OPTIONS":
-            return self.rest_client.options_request(
-                url,
-                query_params=query_params,
-                headers=headers,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-            )
-        elif method == "POST":
-            return self.rest_client.post_request(
-                url,
-                query_params=query_params,
-                headers=headers,
-                post_params=post_params,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                body=body,
-            )
-        elif method == "PUT":
-            return self.rest_client.put_request(
-                url,
-                query_params=query_params,
-                headers=headers,
-                post_params=post_params,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                body=body,
-            )
-        elif method == "PATCH":
-            return self.rest_client.patch_request(
-                url,
-                query_params=query_params,
-                headers=headers,
-                post_params=post_params,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                body=body,
-            )
-        elif method == "DELETE":
-            return self.rest_client.delete_request(
-                url,
-                query_params=query_params,
-                headers=headers,
-                _preload_content=_preload_content,
-                _request_timeout=_request_timeout,
-                body=body,
-            )
-        else:
-            raise ApiValueError(
-                "http method must be `GET`, `HEAD`, `OPTIONS`,"
-                " `POST`, `PATCH`, `PUT` or `DELETE`."
-            )
-
     def parameters_to_tuples(self, params, collection_formats):
         """Get parameters as list of tuples, formatting collections.
 
@@ -579,9 +443,7 @@ class ApiClient:
         new_params = []
         if collection_formats is None:
             collection_formats = {}
-        for k, v in (
-            params.items() if isinstance(params, dict) else params
-        ):  # noqa: E501
+        for k, v in params.items() if isinstance(params, dict) else params:
             if k in collection_formats:
                 collection_format = collection_formats[k]
                 if collection_format == 'multi':
@@ -612,9 +474,7 @@ class ApiClient:
         new_params = []
         if collection_formats is None:
             collection_formats = {}
-        for k, v in (
-            params.items() if isinstance(params, dict) else params
-        ):  # noqa: E501
+        for k, v in params.items() if isinstance(params, dict) else params:
             if isinstance(v, bool):
                 v = str(v).lower()
             if isinstance(v, (int, float)):
@@ -670,14 +530,14 @@ class ApiClient:
 
         return params
 
-    def select_header_accept(self, accepts):
+    def select_header_accept(self, accepts: List[str]) -> Optional[str]:
         """Returns `Accept` based on an array of accepts provided.
 
         :param accepts: List of headers.
         :return: Accept (e.g. application/json).
         """
         if not accepts:
-            return
+            return None
 
         for accept in accepts:
             if re.search('json', accept, re.IGNORECASE):
@@ -709,7 +569,7 @@ class ApiClient:
         method,
         body,
         request_auth=None,
-    ):
+    ) -> None:
         """Updates header and query params based on authentication setting.
 
         :param headers: Header parameters dict to be updated.
@@ -729,18 +589,22 @@ class ApiClient:
             self._apply_auth_params(
                 headers, queries, resource_path, method, body, request_auth
             )
-            return
-
-        for auth in auth_settings:
-            auth_setting = self.configuration.auth_settings().get(auth)
-            if auth_setting:
-                self._apply_auth_params(
-                    headers, queries, resource_path, method, body, auth_setting
-                )
+        else:
+            for auth in auth_settings:
+                auth_setting = self.configuration.auth_settings().get(auth)
+                if auth_setting:
+                    self._apply_auth_params(
+                        headers,
+                        queries,
+                        resource_path,
+                        method,
+                        body,
+                        auth_setting,
+                    )
 
     def _apply_auth_params(
         self, headers, queries, resource_path, method, body, auth_setting
-    ):
+    ) -> None:
         """Updates the request parameters based on a single auth_setting
 
         :param headers: Header parameters dict to be updated.
@@ -768,6 +632,9 @@ class ApiClient:
 
         Saves response body into a file in a temporary folder,
         using the filename from the `Content-Disposition` header if provided.
+
+        handle file downloading
+        save response body into a tmp file and return the instance
 
         :param response:  RESTResponse.
         :return: file path.

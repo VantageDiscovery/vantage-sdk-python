@@ -166,55 +166,31 @@ class AuthorizedApiClient(ApiClient):
         header_name=None,
         header_value=None,
         cookie=None,
-        pool_threads=1,
     ) -> None:
         super().__init__(
             configuration=configuration,
             header_name=header_name,
             header_value=header_value,
             cookie=cookie,
-            pool_threads=pool_threads,
         )
         self.authorization_client = authorization_client
 
     def call_api(
         self,
-        resource_path,
         method,
-        path_params=None,
-        query_params=None,
+        url,
         header_params=None,
         body=None,
         post_params=None,
-        files=None,
-        response_types_map=None,
-        auth_settings=None,
-        async_req=None,
-        _return_http_data_only=None,
-        collection_formats=None,
-        _preload_content=True,
         _request_timeout=None,
-        _host=None,
-        _request_auth=None,
     ):
         args = (
-            resource_path,
             method,
-            path_params,
-            query_params,
+            url,
             header_params,
             body,
             post_params,
-            files,
-            response_types_map,
-            auth_settings,
-            async_req,
-            _return_http_data_only,
-            collection_formats,
-            _preload_content,
             _request_timeout,
-            _host,
-            _request_auth,
         )
         if "authorization" in header_params:
             return super().call_api(*args)

@@ -56,9 +56,7 @@ class Vantage:
             vantage_jwt_token=vantage_api_jwt_token
         )
 
-        api_client = AuthorizedApiClient(
-            pool_threads=1, authorization_client=auth_client
-        )
+        api_client = AuthorizedApiClient(authorization_client=auth_client)
 
         if host is not None:
             api_client.configuration.host = host
@@ -94,9 +92,7 @@ class Vantage:
         )
 
         auth_client.authenticate()
-        api_client = AuthorizedApiClient(
-            pool_threads=1, authorization_client=auth_client
-        )
+        api_client = AuthorizedApiClient(authorization_client=auth_client)
 
         if host is not None:
             api_client.configuration.host = host
