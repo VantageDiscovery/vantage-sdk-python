@@ -542,6 +542,8 @@ class Vantage:
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
+        # TODO: docstring
+
         if collection_id or accuracy:
             collection = GlobalSearchPropertiesCollection(
                 account_id=(account_id if account_id else self.account_id),
@@ -595,6 +597,8 @@ class Vantage:
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
+        # TODO: docstring
+
         if collection_id or accuracy:
             collection = GlobalSearchPropertiesCollection(
                 account_id=(account_id if account_id else self.account_id),
@@ -615,6 +619,15 @@ class Vantage:
             search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
         else:
             search_filter = None
+
+        vantage_api_key = (
+            vantage_api_key if vantage_api_key else self.vantage_api_key
+        )
+
+        if not vantage_api_key:
+            raise VantageValueError(
+                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
+            )
 
         return self.search_api.api.more_like_these_search(
             more_like_these_query=MoreLikeTheseQuery(
@@ -642,6 +655,8 @@ class Vantage:
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
+        # TODO: docstring
+
         aid = account_id if account_id else self.account_id
         self.management_api.documents_api.api.upload_documents(
             body=documents,
