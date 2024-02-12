@@ -6,32 +6,26 @@ from typing import List, Optional
 
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage.core.http.models import (
-    Account,
     AccountModifiable,
-    Collection,
     CollectionModifiable,
-    CollectionsResultInner,
-    CollectionUploadURL,
     CreateCollectionRequest,
     EmbeddingSearchQuery,
-    ExternalAPIKey,
     ExternalAPIKeyModifiable,
-    ExternalAPIKeysResultInner,
     GlobalSearchPropertiesCollection,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
-    SearchResult,
     SemanticSearchQuery,
-    VantageAPIKey,
-    VantageAPIKeysResultInner,
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
 from vantage.exceptions import VantageNotFoundException, VantageValueError
-from vantage.model.search import MoreLikeThese
+from vantage.model.account import Account
+from vantage.model.collection import Collection, CollectionUploadURL
+from vantage.model.keys import ExternalAPIKey, VantageAPIKey
+from vantage.model.search import MoreLikeThese, SearchResult
 
 
 class Vantage:
@@ -123,9 +117,10 @@ class Vantage:
     ) -> Account:
         # TODO: docstring
 
-        return self.management_api.account_api.api.get_account(
+        result = self.management_api.account_api.api.get_account(
             account_id=account_id if account_id else self.account_id
         )
+        return Account.parse_obj(result.model_dump())
 
     # TODO: Check what fields are mandatory
     def update_account(
@@ -149,14 +144,18 @@ class Vantage:
     def get_vantage_api_keys(
         self,
         account_id: Optional[str] = None,
-    ) -> List[VantageAPIKeysResultInner]:
+    ) -> List[VantageAPIKey]:
         # TODO: docstring
 
-        return (
+        keys = (
             self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
                 account_id=account_id if account_id else self.account_id,
             )
         )
+        return [
+            VantageAPIKey.parse_obj(key.actual_instance.model_dump())
+            for key in keys
+        ]
 
     def get_vantage_api_key(
         self,
@@ -165,12 +164,11 @@ class Vantage:
     ) -> VantageAPIKey:
         # TODO: docstring
 
-        return (
-            self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
-                account_id=account_id if account_id else self.account_id,
-                vantage_api_key_id=vantage_api_key_id,
-            )
+        key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
+            account_id=account_id if account_id else self.account_id,
+            vantage_api_key_id=vantage_api_key_id,
         )
+        return VantageAPIKey.parse_obj(key.model_dump())
 
     # endregion
 
@@ -189,20 +187,27 @@ class Vantage:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        return self.management_api.external_api_keys_api.api.create_external_api_key(
+        key = self.management_api.external_api_keys_api.api.create_external_api_key(
             account_id=account_id if account_id else self.account_id,
             external_api_key_modifiable=external_api_key_modifiable,
         )
 
+        return ExternalAPIKey.parse_obj(key.model_dump())
+
     def get_external_api_keys(
         self,
         account_id: Optional[str] = None,
-    ) -> List[ExternalAPIKeysResultInner]:
+    ) -> List[ExternalAPIKey]:
         # TODO: docstring
 
-        return self.management_api.external_api_keys_api.api.get_external_api_keys(
+        keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
             account_id=account_id if account_id else self.account_id,
         )
+
+        return [
+            ExternalAPIKey.parse_obj(key.actual_instance.model_dump())
+            for key in keys
+        ]
 
     def get_external_api_key(
         self,
@@ -211,12 +216,14 @@ class Vantage:
     ) -> ExternalAPIKey:
         # TODO: docstring
 
-        return (
+        key = (
             self.management_api.external_api_keys_api.api.get_external_api_key(
                 account_id=account_id if account_id else self.account_id,
                 external_key_id=external_key_id,
             )
         )
+
+        return ExternalAPIKey.parse_obj(key.model_dump())
 
     def update_external_api_key(
         self,
@@ -232,20 +239,22 @@ class Vantage:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        return self.management_api.external_api_keys_api.api.update_external_api_key(
+        key = self.management_api.external_api_keys_api.api.update_external_api_key(
             account_id=account_id if account_id else self.account_id,
             external_key_id=external_key_id,
             external_api_key_modifiable=external_api_key_modifiable,
         )
 
+        return ExternalAPIKey.parse_obj(key.model_dump())
+
     def delete_external_api_key(
         self,
         external_key_id: str,
         account_id: Optional[str] = None,
-    ) -> ExternalAPIKey:
+    ) -> None:
         # TODO: docstring
 
-        return self.management_api.external_api_keys_api.api.delete_external_api_key(
+        self.management_api.external_api_keys_api.api.delete_external_api_key(
             account_id=account_id if account_id else self.account_id,
             external_key_id=external_key_id,
         )
@@ -257,12 +266,17 @@ class Vantage:
     def list_collections(
         self,
         account_id: Optional[str] = None,
-    ) -> List[CollectionsResultInner]:
+    ) -> List[Collection]:
         # TODO: docstring
 
-        return self.management_api.collection_api.api.list_collections(
+        collections = self.management_api.collection_api.api.list_collections(
             account_id=account_id if account_id else self.account_id
         )
+
+        return [
+            Collection.parse_obj(collection.actual_instance.model_dump())
+            for collection in collections
+        ]
 
     def _existing_collection_ids(
         self,
@@ -271,7 +285,7 @@ class Vantage:
         collections = self.list_collections(
             account_id=account_id if account_id else self.account_id
         )
-        return [col.to_dict()["collection_id"] for col in collections]
+        return [col.model_dump()["collection_id"] for col in collections]
 
     def create_collection(
         self,
@@ -305,10 +319,12 @@ class Vantage:
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
-        return self.management_api.collection_api.api.create_collection(
+        collection = self.management_api.collection_api.api.create_collection(
             create_collection_request=create_collection_request,
             account_id=account_id if account_id else self.account_id,
         )
+
+        return Collection.parse_obj(collection.model_dump())
 
     def get_collection(
         self,
@@ -324,10 +340,12 @@ class Vantage:
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        return self.management_api.collection_api.api.get_collection(
+        collection = self.management_api.collection_api.api.get_collection(
             collection_id=collection_id,
             account_id=account_id if account_id else self.account_id,
         )
+
+        return Collection.parse_obj(collection.model_dump())
 
     def update_collection(
         self,
@@ -352,11 +370,34 @@ class Vantage:
             collection_name=collection_name,
         )
 
-        return self.management_api.collection_api.api.update_collection(
+        collection = self.management_api.collection_api.api.update_collection(
             collection_id=collection_id,
             collection_modifiable=collection_modifiable,
             account_id=account_id if account_id else self.account_id,
         )
+
+        return Collection.parse_obj(collection.model_dump())
+
+    def delete_collection(
+        self,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> Collection:
+        # TODO: docstring
+
+        if collection_id not in self._existing_collection_ids(
+            account_id=account_id
+        ):
+            raise VantageNotFoundException(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+            )
+
+        collection = self.management_api.collection_api.api.delete_collection(
+            collection_id=collection_id,
+            account_id=account_id if account_id else self.account_id,
+        )
+
+        return CollectionUploadURL.parse_obj(collection.model_dump())
 
     def _get_browser_upload_url(
         self,
@@ -374,12 +415,14 @@ class Vantage:
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        return self.management_api.collection_api.api.get_browser_upload_url(
+        url = self.management_api.collection_api.api.get_browser_upload_url(
             collection_id=collection_id,
             file_size=file_size,
             customer_batch_identifier=customer_batch_identifier,
             account_id=account_id if account_id else self.account_id,
         )
+
+        return CollectionUploadURL.parse_obj(url.model_dump())
 
     def upload_embedding(
         self,
@@ -419,25 +462,6 @@ class Vantage:
             file_size=file_size,
             customer_batch_identifier=customer_batch_identifier,
             account_id=account_id,
-        )
-
-    def delete_collection(
-        self,
-        collection_id: str,
-        account_id: Optional[str] = None,
-    ) -> Collection:
-        # TODO: docstring
-
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundException(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
-        return self.management_api.collection_api.api.delete_collection(
-            collection_id=collection_id,
-            account_id=account_id if account_id else self.account_id,
         )
 
     # endregion
@@ -483,10 +507,12 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        return self.search_api.api.embedding_search(
+        result = self.search_api.api.embedding_search(
             query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
+
+        return SearchResult.parse_obj(result.model_dump())
 
     def semantic_search(
         self,
@@ -525,10 +551,12 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        return self.search_api.api.semantic_search(
+        result = self.search_api.api.semantic_search(
             query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
+
+        return SearchResult.parse_obj(result.model_dump())
 
     def more_like_this_search(
         self,
@@ -574,7 +602,7 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        return self.search_api.api.more_like_this_search(
+        result = self.search_api.api.more_like_this_search(
             more_like_this_query=MoreLikeThisQuery(
                 collection=collection,
                 request_id=request_id,
@@ -584,6 +612,8 @@ class Vantage:
             ),
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
+
+        return SearchResult.parse_obj(result.model_dump())
 
     def more_like_these_search(
         self,
@@ -629,7 +659,7 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        return self.search_api.api.more_like_these_search(
+        result = self.search_api.api.more_like_these_search(
             more_like_these_query=MoreLikeTheseQuery(
                 these=[
                     MLTheseTheseInner.parse_obj(item.model_dump())
@@ -642,6 +672,8 @@ class Vantage:
             ),
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
+
+        return SearchResult.parse_obj(result.model_dump())
 
     # endregion
 

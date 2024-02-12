@@ -213,21 +213,16 @@ class TestCollections:
         # Then
         created_collections = list(
             filter(
-                lambda collection: collection.actual_instance.collection_name
+                lambda collection: collection.collection_name
                 in collection_names,
                 collections,
             )
         )
         assert len(created_collections) == collections_count
         for collection in created_collections:
-            assert (
-                collection.actual_instance.collection_name
-                == collection.actual_instance.collection_id
-            )
-            assert collection.actual_instance.collection_id in collection_names
-            assert (
-                collection.actual_instance.collection_name in collection_names
-            )
+            assert collection.collection_name == collection.collection_id
+            assert collection.collection_id in collection_names
+            assert collection.collection_name in collection_names
 
     def test_get_collection(
         self,
@@ -372,7 +367,7 @@ class TestCollections:
 
         listed_deleted_collection = list(
             filter(
-                lambda col: col.actual_instance.collection_id == collection_id,
+                lambda col: col.collection_id == collection_id,
                 client.list_collections(),
             )
         )

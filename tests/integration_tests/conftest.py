@@ -109,7 +109,7 @@ def pytest_sessionfinish(session, exitstatus):
     try:
         collections = _client.list_collections(account_id=account_id)
         for collection in collections:
-            collection_id = collection.actual_instance.collection_id
+            collection_id = collection.collection_id
 
             if collection_id in _protected_collections:
                 continue
