@@ -16,6 +16,9 @@ class TestDocuments:
         random_string_generator: Callable,
         jsonl_documents_path: str,
     ):
+        """
+        TODO: docstring
+        """
         # Given
         collection_id = random_string_generator(10)
         collection_name = random_string_generator(10)

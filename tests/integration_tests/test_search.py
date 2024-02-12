@@ -6,7 +6,7 @@ import pytest
 
 from vantage.core.http.exceptions import BadRequestException
 from vantage.exceptions import VantageNotFoundException
-from vantage.model import MoreLikeThese
+from vantage.model.search import MoreLikeThese
 from vantage.vantage import Vantage
 
 
@@ -223,6 +223,9 @@ class TestSearch:
         vantage_api_key: str,
         more_like_this_test_collection_id: str,
     ) -> None:
+        """
+        TODO: docstring
+        """
         # Given
         expected_results = {
             "en_0982760": {"score": 0.8988204002380371},
@@ -260,6 +263,9 @@ class TestSearch:
         vantage_api_key: str,
         more_like_this_test_collection_id: str,
     ) -> None:
+        """
+        TODO: docstring
+        """
         # Given
         more_like_these = [
             MoreLikeThese(

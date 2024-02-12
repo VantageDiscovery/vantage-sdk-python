@@ -31,7 +31,7 @@ from vantage.core.http.models import (
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
 from vantage.exceptions import VantageNotFoundException, VantageValueError
-from vantage.model import MoreLikeThese
+from vantage.model.search import MoreLikeThese
 
 
 class Vantage:
@@ -562,6 +562,15 @@ class Vantage:
             search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
         else:
             search_filter = None
+
+        vantage_api_key = (
+            vantage_api_key if vantage_api_key else self.vantage_api_key
+        )
+
+        if not vantage_api_key:
+            raise VantageValueError(
+                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
+            )
 
         return self.search_api.api.more_like_this_search(
             more_like_this_query=MoreLikeThisQuery(
