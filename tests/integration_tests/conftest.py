@@ -44,6 +44,9 @@ _configuration = {
         "semantic_search_test_collection_id": os.getenv(
             "VANTAGE_SEMANTIC_SEARCH_TEST_COLLECTION_ID"
         ),
+        "more_like_this_collection": os.getenv(
+            "VANTAGE_MORE_LIKE_THIS_SEARCH_COLLECTION_ID"
+        ),
     },
     "keys": {
         "vantage_api_key": os.getenv("VANTAGE_API_KEY"),
@@ -81,10 +84,13 @@ embedding_collection_id = _configuration["collection"][
 semantic_colection_id = _configuration["collection"][
     "semantic_search_test_collection_id"
 ]
+mlt_collection_id = _configuration["collection"]["more_like_this_collection"]
 if embedding_collection_id:
     _protected_collections.append(embedding_collection_id)
 if semantic_colection_id:
     _protected_collections.append(semantic_colection_id)
+if mlt_collection_id:
+    _protected_collections.append(mlt_collection_id)
 
 
 def skip_delete_external_api_key_test() -> bool:
@@ -233,6 +239,18 @@ def semantic_search_test_collection_id() -> str:
 
 
 @pytest.fixture(scope="module")
+def more_like_this_test_collection_id() -> str:
+    mlt_search_test_collection_id = _configuration["collection"][
+        "more_like_this_collection"
+    ]
+
+    if mlt_search_test_collection_id is None:
+        pytest.skip("No more like this search test collection available.")
+
+    return mlt_search_test_collection_id
+
+
+@pytest.fixture(scope="module")
 def embedding_search_test_collection_id_for_setup() -> str:
     return _configuration["collection"]["embedding_search_test_collection_id"]
 
@@ -245,3 +263,8 @@ def semantic_search_test_collection_id_for_setup() -> str:
 @pytest.fixture(scope="module")
 def random_uuid() -> str:
     return str(uuid.uuid4())
+
+
+@pytest.fixture(scope="module")
+def jsonl_documents_path() -> str:
+    return "tests/data/documents.jsonl"
