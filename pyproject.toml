@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "vantage-sdk"
-version = "0.0.1"
+version = "0.0.2"
 description = "Vantage Python SDK."
 authors = ["Vantage <none@vantage.com>"]
 readme = "README.md"
@@ -116,7 +116,7 @@ extend-ignore = [
 exclude = "vantage/core/http"
 
 [bumpver]
-current_version = "0.0.1"
+current_version = "0.0.2"
 version_pattern = "MAJOR.MINOR.PATCH"
 
 [bumpver.file_patterns]
