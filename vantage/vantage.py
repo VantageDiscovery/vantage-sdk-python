@@ -632,7 +632,7 @@ class Vantage:
         return self.search_api.api.more_like_these_search(
             more_like_these_query=MoreLikeTheseQuery(
                 these=[
-                    MLTheseTheseInner.parse_obj(item.to_dict())
+                    MLTheseTheseInner.parse_obj(item.model_dump())
                     for item in more_like_these
                 ],
                 collection=collection,
