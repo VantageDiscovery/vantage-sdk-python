@@ -397,7 +397,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return CollectionUploadURL.parse_obj(collection.model_dump())
+        return Collection.parse_obj(collection.model_dump())
 
     def _get_browser_upload_url(
         self,
