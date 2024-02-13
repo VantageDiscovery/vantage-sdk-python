@@ -1,6 +1,7 @@
 from .core.exceptions import (
     VantageException,
     VantageFileUploadException,
+    VantageInvalidResponse,
     VantageNotFoundException,
     VantageValueError,
 )
@@ -11,4 +12,5 @@ __all__ = [
     "VantageValueError",
     "VantageNotFoundException",
     "VantageFileUploadException",
+    "VantageInvalidResponse",
 ]

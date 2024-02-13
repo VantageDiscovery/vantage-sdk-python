@@ -17,3 +17,20 @@ class VantageFileUploadException(VantageException):
         super(VantageFileUploadException, self).__init__(
             error_msg, status_code
         )
+
+
+class VantageServiceError(VantageException):
+    def __init__(self, error_msg: str, status_code: int):
+        super(VantageFileUploadException, self).__init__(
+            error_msg, status_code
+        )
+
+
+class VantageInvalidRequest(VantageException):
+    def __init__(self, error_msg: str):
+        super(VantageValueError, self).__init__(error_msg)
+
+
+class VantageInvalidResponse(VantageException):
+    def __init__(self, error_msg: str):
+        super(VantageValueError, self).__init__(error_msg)
