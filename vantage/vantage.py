@@ -120,7 +120,7 @@ class Vantage:
         result = self.management_api.account_api.api.get_account(
             account_id=account_id if account_id else self.account_id
         )
-        return Account.parse_obj(result.model_dump())
+        return Account.model_validate(result.model_dump())
 
     # TODO: Check what fields are mandatory
     def update_account(
@@ -153,7 +153,7 @@ class Vantage:
             )
         )
         return [
-            VantageAPIKey.parse_obj(key.actual_instance.model_dump())
+            VantageAPIKey.model_validate(key.actual_instance.model_dump())
             for key in keys
         ]
 
@@ -168,7 +168,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
             vantage_api_key_id=vantage_api_key_id,
         )
-        return VantageAPIKey.parse_obj(key.model_dump())
+        return VantageAPIKey.model_validate(key.model_dump())
 
     # endregion
 
@@ -192,7 +192,7 @@ class Vantage:
             external_api_key_modifiable=external_api_key_modifiable,
         )
 
-        return ExternalAPIKey.parse_obj(key.model_dump())
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def get_external_api_keys(
         self,
@@ -205,7 +205,7 @@ class Vantage:
         )
 
         return [
-            ExternalAPIKey.parse_obj(key.actual_instance.model_dump())
+            ExternalAPIKey.model_validate(key.actual_instance.model_dump())
             for key in keys
         ]
 
@@ -223,7 +223,7 @@ class Vantage:
             )
         )
 
-        return ExternalAPIKey.parse_obj(key.model_dump())
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def update_external_api_key(
         self,
@@ -245,7 +245,7 @@ class Vantage:
             external_api_key_modifiable=external_api_key_modifiable,
         )
 
-        return ExternalAPIKey.parse_obj(key.model_dump())
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def delete_external_api_key(
         self,
@@ -274,7 +274,7 @@ class Vantage:
         )
 
         return [
-            Collection.parse_obj(collection.actual_instance.model_dump())
+            Collection.model_validate(collection.actual_instance.model_dump())
             for collection in collections
         ]
 
@@ -324,7 +324,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return Collection.parse_obj(collection.model_dump())
+        return Collection.model_validate(collection.model_dump())
 
     def get_collection(
         self,
@@ -345,7 +345,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return Collection.parse_obj(collection.model_dump())
+        return Collection.model_validate(collection.model_dump())
 
     def update_collection(
         self,
@@ -376,7 +376,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return Collection.parse_obj(collection.model_dump())
+        return Collection.model_validate(collection.model_dump())
 
     def delete_collection(
         self,
@@ -397,7 +397,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return Collection.parse_obj(collection.model_dump())
+        return Collection.model_validate(collection.model_dump())
 
     def _get_browser_upload_url(
         self,
@@ -422,7 +422,7 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
-        return CollectionUploadURL.parse_obj(url.model_dump())
+        return CollectionUploadURL.model_validate(url.model_dump())
 
     def upload_embedding(
         self,
@@ -512,7 +512,7 @@ class Vantage:
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
-        return SearchResult.parse_obj(result.model_dump())
+        return SearchResult.model_validate(result.model_dump())
 
     def semantic_search(
         self,
@@ -556,7 +556,7 @@ class Vantage:
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
-        return SearchResult.parse_obj(result.model_dump())
+        return SearchResult.model_validate(result.model_dump())
 
     def more_like_this_search(
         self,
@@ -613,7 +613,7 @@ class Vantage:
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
-        return SearchResult.parse_obj(result.model_dump())
+        return SearchResult.model_validate(result.model_dump())
 
     def more_like_these_search(
         self,
@@ -662,7 +662,7 @@ class Vantage:
         result = self.search_api.api.more_like_these_search(
             more_like_these_query=MoreLikeTheseQuery(
                 these=[
-                    MLTheseTheseInner.parse_obj(item.model_dump())
+                    MLTheseTheseInner.model_validate(item.model_dump())
                     for item in more_like_these
                 ],
                 collection=collection,
@@ -673,7 +673,7 @@ class Vantage:
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
-        return SearchResult.parse_obj(result.model_dump())
+        return SearchResult.model_validate(result.model_dump())
 
     # endregion
 
