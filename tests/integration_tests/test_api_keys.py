@@ -156,12 +156,42 @@ class TestApiKeys:
         # Then
         assert exception.type is ServiceException
 
-    @pytest.mark.skip(
-        reason=(
-            "Generated code for updating external api key"
-            "is not working properly."
+    def test_create_external_api_key(
+        self,
+        client: Vantage,
+        account_params: dict,
+        external_api_key_id: str,
+        random_string_generator: str,
+    ):
+        """
+        Tests creating an external API key on a users' account.
+        """
+        # Given
+        url = f"http://{random_string_generator(10)}"
+        llm_provider = "OpenAI"
+        llm_secret = random_string_generator(10)
+
+        # When
+        response = client.create_external_api_key(
+            url=url,
+            llm_provider=llm_provider,
+            llm_secret=llm_secret,
+            account_id=account_params["id"],
         )
-    )
+
+        # Then
+        assert response is not None
+        assert response.account_id == account_params["id"]
+        assert response.llm_provider == llm_provider
+        assert response.llm_secret == llm_secret
+        assert response.url == url
+
+        # After
+        client.delete_external_api_key(
+            external_key_id=response.external_key_id,
+            account_id=account_params["id"],
+        )
+
     def test_update_external_api_key(
         self,
         client: Vantage,
@@ -213,12 +243,6 @@ class TestApiKeys:
             account_id=account_params["id"],
         )
 
-    @pytest.mark.skip(
-        reason=(
-            "Generated code for updating external api key"
-            "is not working properly."
-        )
-    )
     def test_update_non_existing_external_api_key(
         self,
         client: Vantage,
