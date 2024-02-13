@@ -21,8 +21,8 @@ class TestApiKeys:
         # Then
         assert len(keys) == 1
         api_key = keys[0]
-        assert api_key.actual_instance.vantage_api_key_value is None
-        assert api_key.actual_instance.account_id == account_params["id"]
+        assert api_key.vantage_api_key_value is None
+        assert api_key.account_id == account_params["id"]
 
     def test_get_vantage_api_keys_using_wrong_account(
         self,
@@ -109,12 +109,10 @@ class TestApiKeys:
         # Then
         assert len(keys) == 1
         api_key = keys[0]
-        assert api_key.actual_instance.account_id == account_params["id"]
-        assert api_key.actual_instance.external_key_id == external_api_key_id
-        assert (
-            api_key.actual_instance.llm_provider == external_api_key_provider
-        )
-        assert api_key.actual_instance.llm_secret == external_api_key
+        assert api_key.account_id == account_params["id"]
+        assert api_key.external_key_id == external_api_key_id
+        assert api_key.llm_provider == external_api_key_provider
+        assert api_key.llm_secret == external_api_key
 
     def test_get_external_api_key(
         self,
