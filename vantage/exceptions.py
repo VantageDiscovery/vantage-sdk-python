@@ -1,8 +1,12 @@
 from .core.exceptions import (
     VantageException,
-    VantageFileUploadException,
-    VantageInvalidResponse,
-    VantageNotFoundException,
+    VantageFileUploadError,
+    VantageForbiddenError,
+    VantageInvalidRequestError,
+    VantageInvalidResponseError,
+    VantageNotFoundError,
+    VantageServiceError,
+    VantageUnauthorizedError,
     VantageValueError,
 )
 
@@ -10,7 +14,11 @@ from .core.exceptions import (
 __all__ = [
     "VantageException",
     "VantageValueError",
-    "VantageNotFoundException",
-    "VantageFileUploadException",
-    "VantageInvalidResponse",
+    "VantageNotFoundError",
+    "VantageFileUploadError",
+    "VantageInvalidResponseError",
+    "VantageInvalidRequestError",
+    "VantageUnauthorizedError",
+    "VantageForbiddenError",
+    "VantageServiceError",
 ]

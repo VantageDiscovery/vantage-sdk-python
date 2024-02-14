@@ -4,8 +4,7 @@ from typing import Callable
 
 import pytest
 
-from vantage.core.http.exceptions import BadRequestException
-from vantage.exceptions import VantageNotFoundException
+from vantage.exceptions import VantageInvalidRequestError, VantageNotFoundError
 from vantage.model.search import MoreLikeThese
 from vantage.vantage import Vantage
 
@@ -59,7 +58,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -69,7 +68,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
     def test_embedding_search_with_invalid_embedding(
         self,
@@ -87,7 +86,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(BadRequestException) as exception:
+        with pytest.raises(VantageInvalidRequestError) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -97,7 +96,7 @@ class TestSearch:
             )
         search_embedding = [1 for col in range(1536)]
         # Then
-        assert exception.type is BadRequestException
+        assert exception.type is VantageInvalidRequestError
 
     def test_embedding_search_with_invalid_accuracy(
         self,
@@ -116,7 +115,7 @@ class TestSearch:
         accuracy = 800
 
         # When
-        with pytest.raises(BadRequestException) as exception:
+        with pytest.raises(VantageInvalidRequestError) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -126,7 +125,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is BadRequestException
+        assert exception.type is VantageInvalidRequestError
 
     def test_if_semantic_search_returns_result(
         self,
@@ -174,7 +173,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.semantic_search(
                 text=search_text,
                 collection_id=collection_id,
@@ -184,7 +183,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
     def test_semantic_search_with_invalid_accuracy(
         self,
@@ -204,7 +203,7 @@ class TestSearch:
         accuracy = 800
 
         # When
-        with pytest.raises(BadRequestException) as exception:
+        with pytest.raises(VantageInvalidRequestError) as exception:
             client.semantic_search(
                 text=search_text,
                 collection_id=collection_id,
@@ -214,7 +213,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is BadRequestException
+        assert exception.type is VantageInvalidRequestError
 
     def test_more_like_this_search(
         self,

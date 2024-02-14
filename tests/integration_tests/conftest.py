@@ -6,7 +6,7 @@ from typing import Callable
 
 import pytest
 
-from vantage.exceptions import VantageNotFoundException
+from vantage.exceptions import VantageNotFoundError
 from vantage.vantage import Vantage
 
 
@@ -118,7 +118,15 @@ def pytest_sessionfinish(session, exitstatus):
                 collection_id=collection_id,
                 account_id=account_id,
             )
-    except VantageNotFoundException:
+    except VantageNotFoundError:
+        # Do nothing
+        pass
+
+    try:
+        keys = _client.get_external_api_keys(account_id=account_id)
+        for key in keys:
+            _client.delete_external_api_key(key.external_key_id)
+    except VantageNotFoundError:
         # Do nothing
         pass
 

@@ -7,7 +7,18 @@ from typing import List, Optional
 from pydantic_core._pydantic_core import ValidationError
 
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
-from vantage.core.http.exceptions import OpenApiException
+from vantage.core.http.exceptions import (
+    ApiAttributeError,
+    ApiException,
+    ApiKeyError,
+    ApiValueError,
+    BadRequestException,
+    ForbiddenException,
+    NotFoundException,
+    OpenApiException,
+    ServiceException,
+    UnauthorizedException,
+)
 from vantage.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -25,8 +36,12 @@ from vantage.core.http.models import (
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
 from vantage.exceptions import (
-    VantageException,
-    VantageNotFoundException,
+    VantageForbiddenError,
+    VantageInvalidRequestError,
+    VantageInvalidResponseError,
+    VantageNotFoundError,
+    VantageServiceError,
+    VantageUnauthorizedError,
     VantageValueError,
 )
 from vantage.model.account import Account
@@ -35,14 +50,71 @@ from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import MoreLikeThese, SearchResult
 
 
-def _parse_exception(exception: Exception, response=None) -> VantageException:
+def _parse_exception(exception: Exception, response=None) -> Exception:
+    if isinstance(exception, BadRequestException):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, NotFoundException):
+        return VantageNotFoundError(message=exception.reason)
+
+    if isinstance(exception, UnauthorizedException):
+        return VantageUnauthorizedError("")
+
+    if isinstance(exception, ForbiddenException):
+        return VantageForbiddenError("")
+
+    if isinstance(exception, ServiceException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiValueError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiAttributeError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiKeyError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, OpenApiException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
     if isinstance(exception, ValidationError):
-        return VantageException("Validation error")
+        return VantageInvalidResponseError(
+            error_message=exception.title, validation_error=exception
+        )
 
-    if exception is isinstance(exception, OpenApiException):
-        return VantageException("API error")
-
-    return VantageException("Unknown error")
+    return exception
 
 
 class Vantage:
@@ -392,7 +464,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -419,7 +491,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -452,7 +524,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -480,7 +552,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -559,7 +631,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -606,7 +678,7 @@ class Vantage:
         # TODO: docstring
 
         if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
