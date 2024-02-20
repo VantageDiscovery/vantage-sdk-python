@@ -2,7 +2,7 @@ import requests
 
 from vantage.core.http.api import CollectionManagementApi
 from vantage.core.http.api_client import ApiClient
-from vantage.exceptions import VantageFileUploadException
+from vantage.exceptions import VantageFileUploadError
 
 
 class CollectionAPI:
@@ -16,8 +16,6 @@ class CollectionAPI:
         )
 
         if response.status_code != 200:
-            raise VantageFileUploadException(
-                response.reason, response.status_code
-            )
+            raise VantageFileUploadError(response.reason, response.status_code)
 
         return response.status_code

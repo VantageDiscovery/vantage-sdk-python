@@ -3,11 +3,19 @@ from typing import Callable
 import pytest
 
 from tests.integration_tests.conftest import skip_delete_external_api_key_test
-from vantage.core.http.exceptions import ForbiddenException, ServiceException
+from vantage.exceptions import VantageForbiddenError, VantageServiceError
 from vantage.vantage import Vantage
 
 
 """Integration tests for API keys endpoints."""
+
+
+def _mask_secret(secret: str) -> str:
+    if len(secret) < 5:
+        return secret
+
+    mask_char = "*"
+    return f"{secret[0:5]}{(mask_char * (len(secret) - 5))}"
 
 
 class TestApiKeys:
@@ -30,11 +38,11 @@ class TestApiKeys:
         random_string_generator: Callable,
     ):
         # When
-        with pytest.raises(ForbiddenException) as exception:
+        with pytest.raises(VantageForbiddenError) as exception:
             client.get_vantage_api_keys(account_id=random_string_generator(10))
 
         # Then
-        assert exception.type == ForbiddenException
+        assert exception.type == VantageForbiddenError
 
     def test_get_vantage_api_key(
         self,
@@ -66,14 +74,14 @@ class TestApiKeys:
         Tests fetching a single Vantage API key using non-existing account ID.
         """
         # When
-        with pytest.raises(ForbiddenException) as exception:
+        with pytest.raises(VantageForbiddenError) as exception:
             client.get_vantage_api_key(
                 vantage_api_key_id=vantage_api_key_id,
                 account_id=random_string_generator(10),
             )
 
         # Then
-        assert exception.type == ForbiddenException
+        assert exception.type == VantageForbiddenError
 
     def test_get_non_existing_vantage_api_key(
         self,
@@ -86,56 +94,80 @@ class TestApiKeys:
         Tests fetching a non-existing Vantage API key from a user account.
         """
         # When
-        with pytest.raises(ServiceException) as exception:
+        with pytest.raises(VantageServiceError) as exception:
             client.get_vantage_api_key(vantage_api_key_id=random_uuid)
 
         # Then
-        assert exception.type is ServiceException
+        assert exception.type is VantageServiceError
 
     def test_get_external_api_keys(
         self,
         client: Vantage,
         account_params: dict,
-        external_api_key: str,
-        external_api_key_id: str,
-        external_api_key_provider: str,
+        random_string_generator: Callable,
     ):
         """
         Tests fetching all external API keys from a users' account.
         """
+        # Given
+        url = f"http://{random_string_generator(10)}"
+        llm_provider = "OpenAI"
+        llm_secret = random_string_generator(10)
+        given_key = client.create_external_api_key(
+            url=url,
+            llm_provider=llm_provider,
+            llm_secret=llm_secret,
+            account_id=account_params["id"],
+        )
         # When
         keys = client.get_external_api_keys(account_id=account_params["id"])
 
         # Then
-        assert len(keys) == 1
-        api_key = keys[0]
+        assert len(keys) > 0
+        api_keys = list(
+            filter(
+                lambda key: key.external_key_id == given_key.external_key_id,
+                keys,
+            )
+        )
+        assert len(api_keys) == 1
+        api_key = api_keys[0]
         assert api_key.account_id == account_params["id"]
-        assert api_key.external_key_id == external_api_key_id
-        assert api_key.llm_provider == external_api_key_provider
-        assert api_key.llm_secret == external_api_key
+        assert api_key.external_key_id == given_key.external_key_id
+        assert api_key.llm_provider == given_key.llm_provider
+        assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
     def test_get_external_api_key(
         self,
         client: Vantage,
         account_params: dict,
-        external_api_key: str,
-        external_api_key_id: str,
-        external_api_key_provider: str,
+        random_string_generator: Callable,
     ):
         """
         Tests fetching a single external API key from a users' account.
         """
+        # Given
+        url = f"http://{random_string_generator(10)}"
+        llm_provider = "OpenAI"
+        llm_secret = random_string_generator(10)
+        given_key = client.create_external_api_key(
+            url=url,
+            llm_provider=llm_provider,
+            llm_secret=llm_secret,
+            account_id=account_params["id"],
+        )
+
         # When
         api_key = client.get_external_api_key(
             account_id=account_params["id"],
-            external_key_id=external_api_key_id,
+            external_key_id=given_key.external_key_id,
         )
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.external_key_id == external_api_key_id
-        assert api_key.llm_provider == external_api_key_provider
-        assert api_key.llm_secret == external_api_key
+        assert api_key.external_key_id == given_key.external_key_id
+        assert api_key.llm_provider == given_key.llm_provider
+        assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
     def test_get_non_existing_external_api_key(
         self,
@@ -147,14 +179,14 @@ class TestApiKeys:
         Tests fetching a non-existing external API key from a users' account.
         """
         # When
-        with pytest.raises(ServiceException) as exception:
+        with pytest.raises(VantageServiceError) as exception:
             client.get_external_api_key(
                 account_id=account_params["id"],
                 external_key_id=random_uuid,
             )
 
         # Then
-        assert exception.type is ServiceException
+        assert exception.type is VantageServiceError
 
     def test_create_external_api_key(
         self,
@@ -186,12 +218,6 @@ class TestApiKeys:
         assert response.llm_secret == llm_secret
         assert response.url == url
 
-        # After
-        client.delete_external_api_key(
-            external_key_id=response.external_key_id,
-            account_id=account_params["id"],
-        )
-
     def test_update_external_api_key(
         self,
         client: Vantage,
@@ -204,15 +230,16 @@ class TestApiKeys:
         """
         # Given
         url = f"http://{random_string_generator(10)}"
-        llm_provider = "Hugging"
+        llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
-        api_key = client.get_external_api_key(
-            external_key_id=external_api_key_id,
+
+        # When
+        api_key = client.create_external_api_key(
+            url=url,
+            llm_provider=llm_provider,
+            llm_secret=llm_secret,
             account_id=account_params["id"],
         )
-        given_url = api_key.url
-        given_llm_provider = api_key.llm_provider
-        given_llm_secret = api_key.llm_secret
 
         client.update_external_api_key(
             external_key_id=external_api_key_id,
@@ -231,17 +258,11 @@ class TestApiKeys:
         assert api_key.account_id == account_params["id"]
         assert api_key.external_key_id == external_api_key_id
         assert api_key.llm_provider == llm_provider
-        assert api_key.llm_secret == llm_secret
+        assert api_key.llm_secret == _mask_secret(llm_secret)
         assert api_key.url == url
 
         # After
-        client.update_external_api_key(
-            external_key_id=external_api_key_id,
-            url=given_url,
-            llm_provider=given_llm_provider,
-            llm_secret=given_llm_secret,
-            account_id=account_params["id"],
-        )
+        client.delete_external_api_key(api_key.external_key_id)
 
     def test_update_non_existing_external_api_key(
         self,
@@ -255,17 +276,17 @@ class TestApiKeys:
         on a users' account.
         """
         # When
-        with pytest.raises(ServiceException) as exception:
+        with pytest.raises(VantageServiceError) as exception:
             client.update_external_api_key(
                 external_key_id=random_uuid,
                 url=random_string_generator(10),
-                llm_provider=random_string_generator(10),
+                llm_provider="OpenAI",
                 llm_secret=random_string_generator(10),
                 account_id=account_params["id"],
             )
 
         # Then
-        assert exception.type is ServiceException
+        assert exception.type is VantageServiceError
 
     @pytest.mark.skipif(
         skip_delete_external_api_key_test(), reason="Test disabled by user."
@@ -287,12 +308,12 @@ class TestApiKeys:
 
         # Then
         assert api_key is None
-        with pytest.raises(ServiceException) as exception:
+        with pytest.raises(VantageServiceError) as exception:
             client.get_external_api_key(
                 external_key_id=external_api_key_id,
                 account_id=account_params["id"],
             )
-        assert exception.type is ServiceException
+        assert exception.type is VantageServiceError
 
     def test_delete_non_existing_external_api_key(
         self,
@@ -304,11 +325,11 @@ class TestApiKeys:
         Tests deleting a non-existing external API key on users' account.
         """
         # When
-        with pytest.raises(ServiceException) as exception:
+        with pytest.raises(VantageServiceError) as exception:
             client.delete_external_api_key(
                 external_key_id=random_uuid,
                 account_id=account_params["id"],
             )
 
         # Then
-        assert exception.type is ServiceException
+        assert exception.type is VantageServiceError

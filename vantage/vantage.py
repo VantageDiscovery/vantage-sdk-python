@@ -4,7 +4,21 @@ from os.path import exists
 from pathlib import Path
 from typing import List, Optional
 
+from pydantic_core._pydantic_core import ValidationError
+
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
+from vantage.core.http.exceptions import (
+    ApiAttributeError,
+    ApiException,
+    ApiKeyError,
+    ApiValueError,
+    BadRequestException,
+    ForbiddenException,
+    NotFoundException,
+    OpenApiException,
+    ServiceException,
+    UnauthorizedException,
+)
 from vantage.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -21,11 +35,86 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageNotFoundException, VantageValueError
+from vantage.exceptions import (
+    VantageForbiddenError,
+    VantageInvalidRequestError,
+    VantageInvalidResponseError,
+    VantageNotFoundError,
+    VantageServiceError,
+    VantageUnauthorizedError,
+    VantageValueError,
+)
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import MoreLikeThese, SearchResult
+
+
+def _parse_exception(exception: Exception, response=None) -> Exception:
+    if isinstance(exception, BadRequestException):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, NotFoundException):
+        return VantageNotFoundError(message=exception.reason)
+
+    if isinstance(exception, UnauthorizedException):
+        return VantageUnauthorizedError("")
+
+    if isinstance(exception, ForbiddenException):
+        return VantageForbiddenError("")
+
+    if isinstance(exception, ServiceException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiValueError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiAttributeError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiKeyError):
+        return VantageInvalidRequestError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ApiException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, OpenApiException):
+        return VantageServiceError(
+            reason=exception.reason,
+            status=exception.status,
+            response=exception.body,
+        )
+
+    if isinstance(exception, ValidationError):
+        return VantageInvalidResponseError(
+            error_message=exception.title, validation_error=exception
+        )
+
+    return exception
 
 
 class Vantage:
@@ -117,10 +206,13 @@ class Vantage:
     ) -> Account:
         # TODO: docstring
 
-        result = self.management_api.account_api.api.get_account(
-            account_id=account_id if account_id else self.account_id
-        )
-        return Account.model_validate(result.model_dump())
+        try:
+            result = self.management_api.account_api.api.get_account(
+                account_id=account_id if account_id else self.account_id
+            )
+            return Account.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     # TODO: Check what fields are mandatory
     def update_account(
@@ -132,10 +224,14 @@ class Vantage:
 
         account_modifiable = AccountModifiable(account_name=account_name)
 
-        return self.management_api.account_api.api.update_account(
-            account_id=account_id if account_id else self.account_id,
-            account_modifiable=account_modifiable,
-        )
+        try:
+            result = self.management_api.account_api.api.update_account(
+                account_id=account_id if account_id else self.account_id,
+                account_modifiable=account_modifiable,
+            )
+            return Account.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     # endregion
 
@@ -147,15 +243,17 @@ class Vantage:
     ) -> List[VantageAPIKey]:
         # TODO: docstring
 
-        keys = (
-            self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
+        try:
+            keys = self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
                 account_id=account_id if account_id else self.account_id,
             )
-        )
-        return [
-            VantageAPIKey.model_validate(key.actual_instance.model_dump())
-            for key in keys
-        ]
+
+            return [
+                VantageAPIKey.model_validate(key.actual_instance.model_dump())
+                for key in keys
+            ]
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def get_vantage_api_key(
         self,
@@ -164,11 +262,14 @@ class Vantage:
     ) -> VantageAPIKey:
         # TODO: docstring
 
-        key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
-            account_id=account_id if account_id else self.account_id,
-            vantage_api_key_id=vantage_api_key_id,
-        )
-        return VantageAPIKey.model_validate(key.model_dump())
+        try:
+            key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
+                account_id=account_id if account_id else self.account_id,
+                vantage_api_key_id=vantage_api_key_id,
+            )
+            return VantageAPIKey.model_validate(key.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     # endregion
 
@@ -187,12 +288,15 @@ class Vantage:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = self.management_api.external_api_keys_api.api.create_external_api_key(
-            account_id=account_id if account_id else self.account_id,
-            external_api_key_modifiable=external_api_key_modifiable,
-        )
+        try:
+            key = self.management_api.external_api_keys_api.api.create_external_api_key(
+                account_id=account_id if account_id else self.account_id,
+                external_api_key_modifiable=external_api_key_modifiable,
+            )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+            return ExternalAPIKey.model_validate(key.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def get_external_api_keys(
         self,
@@ -200,14 +304,16 @@ class Vantage:
     ) -> List[ExternalAPIKey]:
         # TODO: docstring
 
-        keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
-            account_id=account_id if account_id else self.account_id,
-        )
-
-        return [
-            ExternalAPIKey.model_validate(key.actual_instance.model_dump())
-            for key in keys
-        ]
+        try:
+            keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
+                account_id=account_id if account_id else self.account_id,
+            )
+            return [
+                ExternalAPIKey.model_validate(key.actual_instance.model_dump())
+                for key in keys
+            ]
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def get_external_api_key(
         self,
@@ -216,14 +322,15 @@ class Vantage:
     ) -> ExternalAPIKey:
         # TODO: docstring
 
-        key = (
-            self.management_api.external_api_keys_api.api.get_external_api_key(
+        try:
+            key = self.management_api.external_api_keys_api.api.get_external_api_key(
                 account_id=account_id if account_id else self.account_id,
                 external_key_id=external_key_id,
             )
-        )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+            return ExternalAPIKey.model_validate(key.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def update_external_api_key(
         self,
@@ -239,13 +346,16 @@ class Vantage:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = self.management_api.external_api_keys_api.api.update_external_api_key(
-            account_id=account_id if account_id else self.account_id,
-            external_key_id=external_key_id,
-            external_api_key_modifiable=external_api_key_modifiable,
-        )
+        try:
+            key = self.management_api.external_api_keys_api.api.update_external_api_key(
+                account_id=account_id if account_id else self.account_id,
+                external_key_id=external_key_id,
+                external_api_key_modifiable=external_api_key_modifiable,
+            )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+            return ExternalAPIKey.model_validate(key.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def delete_external_api_key(
         self,
@@ -254,10 +364,13 @@ class Vantage:
     ) -> None:
         # TODO: docstring
 
-        self.management_api.external_api_keys_api.api.delete_external_api_key(
-            account_id=account_id if account_id else self.account_id,
-            external_key_id=external_key_id,
-        )
+        try:
+            self.management_api.external_api_keys_api.api.delete_external_api_key(
+                account_id=account_id if account_id else self.account_id,
+                external_key_id=external_key_id,
+            )
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     # endregion
 
@@ -269,23 +382,33 @@ class Vantage:
     ) -> List[Collection]:
         # TODO: docstring
 
-        collections = self.management_api.collection_api.api.list_collections(
-            account_id=account_id if account_id else self.account_id
-        )
+        try:
+            collections = (
+                self.management_api.collection_api.api.list_collections(
+                    account_id=account_id if account_id else self.account_id
+                )
+            )
 
-        return [
-            Collection.model_validate(collection.actual_instance.model_dump())
-            for collection in collections
-        ]
+            return [
+                Collection.model_validate(
+                    collection.actual_instance.model_dump()
+                )
+                for collection in collections
+            ]
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def _existing_collection_ids(
         self,
         account_id: Optional[str] = None,
     ) -> List[str]:
-        collections = self.list_collections(
-            account_id=account_id if account_id else self.account_id
-        )
-        return [col.model_dump()["collection_id"] for col in collections]
+        try:
+            collections = self.list_collections(
+                account_id=account_id if account_id else self.account_id
+            )
+            return [col.model_dump()["collection_id"] for col in collections]
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def create_collection(
         self,
@@ -319,12 +442,17 @@ class Vantage:
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
-        collection = self.management_api.collection_api.api.create_collection(
-            create_collection_request=create_collection_request,
-            account_id=account_id if account_id else self.account_id,
-        )
+        try:
+            collection = (
+                self.management_api.collection_api.api.create_collection(
+                    create_collection_request=create_collection_request,
+                    account_id=account_id if account_id else self.account_id,
+                )
+            )
 
-        return Collection.model_validate(collection.model_dump())
+            return Collection.model_validate(collection.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def get_collection(
         self,
@@ -336,16 +464,19 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        collection = self.management_api.collection_api.api.get_collection(
-            collection_id=collection_id,
-            account_id=account_id if account_id else self.account_id,
-        )
+        try:
+            collection = self.management_api.collection_api.api.get_collection(
+                collection_id=collection_id,
+                account_id=account_id if account_id else self.account_id,
+            )
 
-        return Collection.model_validate(collection.model_dump())
+            return Collection.model_validate(collection.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def update_collection(
         self,
@@ -360,7 +491,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -370,13 +501,18 @@ class Vantage:
             collection_name=collection_name,
         )
 
-        collection = self.management_api.collection_api.api.update_collection(
-            collection_id=collection_id,
-            collection_modifiable=collection_modifiable,
-            account_id=account_id if account_id else self.account_id,
-        )
+        try:
+            collection = (
+                self.management_api.collection_api.api.update_collection(
+                    collection_id=collection_id,
+                    collection_modifiable=collection_modifiable,
+                    account_id=account_id if account_id else self.account_id,
+                )
+            )
 
-        return Collection.model_validate(collection.model_dump())
+            return Collection.model_validate(collection.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def delete_collection(
         self,
@@ -388,16 +524,21 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        collection = self.management_api.collection_api.api.delete_collection(
-            collection_id=collection_id,
-            account_id=account_id if account_id else self.account_id,
-        )
+        try:
+            collection = (
+                self.management_api.collection_api.api.delete_collection(
+                    collection_id=collection_id,
+                    account_id=account_id if account_id else self.account_id,
+                )
+            )
 
-        return Collection.model_validate(collection.model_dump())
+            return Collection.model_validate(collection.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def _get_browser_upload_url(
         self,
@@ -411,18 +552,23 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        url = self.management_api.collection_api.api.get_browser_upload_url(
-            collection_id=collection_id,
-            file_size=file_size,
-            customer_batch_identifier=customer_batch_identifier,
-            account_id=account_id if account_id else self.account_id,
-        )
+        try:
+            url = (
+                self.management_api.collection_api.api.get_browser_upload_url(
+                    collection_id=collection_id,
+                    file_size=file_size,
+                    customer_batch_identifier=customer_batch_identifier,
+                    account_id=account_id if account_id else self.account_id,
+                )
+            )
 
-        return CollectionUploadURL.model_validate(url.model_dump())
+            return CollectionUploadURL.model_validate(url.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def upload_embedding(
         self,
@@ -438,10 +584,14 @@ class Vantage:
             customer_batch_identifier=customer_batch_identifier,
             account_id=account_id,
         )
-        return self.management_api.collection_api.upload_embedding(
-            upload_url=browser_upload_url.upload_url,
-            upload_content=content,
-        )
+
+        try:
+            return self.management_api.collection_api.upload_embedding(
+                upload_url=browser_upload_url.upload_url,
+                upload_content=content,
+            )
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def upload_embedding_by_path(
         self,
@@ -481,7 +631,7 @@ class Vantage:
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
         ):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -507,12 +657,15 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        result = self.search_api.api.embedding_search(
-            query,
-            _headers={"authorization": f"Bearer {vantage_api_key}"},
-        )
+        try:
+            result = self.search_api.api.embedding_search(
+                query,
+                _headers={"authorization": f"Bearer {vantage_api_key}"},
+            )
 
-        return SearchResult.model_validate(result.model_dump())
+            return SearchResult.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def semantic_search(
         self,
@@ -525,7 +678,7 @@ class Vantage:
         # TODO: docstring
 
         if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundException(
+            raise VantageNotFoundError(
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
@@ -551,12 +704,15 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        result = self.search_api.api.semantic_search(
-            query,
-            _headers={"authorization": f"Bearer {vantage_api_key}"},
-        )
+        try:
+            result = self.search_api.api.semantic_search(
+                query,
+                _headers={"authorization": f"Bearer {vantage_api_key}"},
+            )
 
-        return SearchResult.model_validate(result.model_dump())
+            return SearchResult.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def more_like_this_search(
         self,
@@ -602,18 +758,21 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        result = self.search_api.api.more_like_this_search(
-            more_like_this_query=MoreLikeThisQuery(
-                collection=collection,
-                request_id=request_id,
-                filter=search_filter,
-                pagination=pagination,
-                document_id=document_id,
-            ),
-            _headers={"authorization": f"Bearer {vantage_api_key}"},
-        )
+        try:
+            result = self.search_api.api.more_like_this_search(
+                more_like_this_query=MoreLikeThisQuery(
+                    collection=collection,
+                    request_id=request_id,
+                    filter=search_filter,
+                    pagination=pagination,
+                    document_id=document_id,
+                ),
+                _headers={"authorization": f"Bearer {vantage_api_key}"},
+            )
 
-        return SearchResult.model_validate(result.model_dump())
+            return SearchResult.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def more_like_these_search(
         self,
@@ -659,21 +818,24 @@ class Vantage:
                 "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
             )
 
-        result = self.search_api.api.more_like_these_search(
-            more_like_these_query=MoreLikeTheseQuery(
-                these=[
-                    MLTheseTheseInner.model_validate(item.model_dump())
-                    for item in more_like_these
-                ],
-                collection=collection,
-                request_id=request_id,
-                filter=search_filter,
-                pagination=pagination,
-            ),
-            _headers={"authorization": f"Bearer {vantage_api_key}"},
-        )
+        try:
+            result = self.search_api.api.more_like_these_search(
+                more_like_these_query=MoreLikeTheseQuery(
+                    these=[
+                        MLTheseTheseInner.model_validate(item.model_dump())
+                        for item in more_like_these
+                    ],
+                    collection=collection,
+                    request_id=request_id,
+                    filter=search_filter,
+                    pagination=pagination,
+                ),
+                _headers={"authorization": f"Bearer {vantage_api_key}"},
+            )
 
-        return SearchResult.model_validate(result.model_dump())
+            return SearchResult.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     # endregion
 
@@ -689,13 +851,15 @@ class Vantage:
     ) -> None:
         # TODO: docstring
 
-        aid = account_id if account_id else self.account_id
-        self.management_api.documents_api.api.upload_documents(
-            body=documents,
-            account_id=aid,
-            collection_id=collection_id,
-            customer_batch_identifier=batch_identifier,
-        )
+        try:
+            self.management_api.documents_api.api.upload_documents(
+                body=documents,
+                account_id=account_id if account_id else self.account_id,
+                collection_id=collection_id,
+                customer_batch_identifier=batch_identifier,
+            )
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def upload_documents_from_path(
         self,

@@ -5,10 +5,7 @@ from typing import Callable
 
 import pytest
 
-from vantage.exceptions import (
-    VantageFileUploadException,
-    VantageNotFoundException,
-)
+from vantage.exceptions import VantageFileUploadError, VantageNotFoundError
 from vantage.vantage import Vantage
 
 
@@ -92,7 +89,7 @@ class TestCollections:
         # Given
         collection_id = random_string_generator(10)
 
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.upload_embedding_by_path(
                 collection_id=collection_id,
                 file_path=test_parquet_file_path,
@@ -101,7 +98,7 @@ class TestCollections:
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
     def test_upload_non_existing_user_embeddings(
         self,
@@ -155,7 +152,7 @@ class TestCollections:
         )
 
         # When
-        with pytest.raises(VantageFileUploadException) as exception:
+        with pytest.raises(VantageFileUploadError) as exception:
             client.upload_embedding(
                 collection_id=collection_id,
                 content=file_content,
@@ -165,7 +162,7 @@ class TestCollections:
             )
 
         # Then
-        assert exception.type is VantageFileUploadException
+        assert exception.type is VantageFileUploadError
         assert exception.value.args == ("Forbidden", 403)
 
     def test_create_vantage_managed_embeddings_collection(
@@ -268,13 +265,13 @@ class TestCollections:
         collection_id = random_string_generator(10)
 
         # When
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.get_collection(
                 collection_id=collection_id, account_id=account_params["id"]
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
     def test_update_collection(
         self,
@@ -320,7 +317,7 @@ class TestCollections:
         Tests if updating a non-existing collection will raise an exception.
         """
         # When
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.update_collection(
                 collection_id=random_string_generator(10),
                 account_id=account_params["id"],
@@ -330,7 +327,7 @@ class TestCollections:
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
     def test_delete_collection(
         self,
@@ -359,11 +356,11 @@ class TestCollections:
         )
 
         # Then
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.get_collection(
                 collection_id=collection_id, account_id=account_params["id"]
             )
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
 
         listed_deleted_collection = list(
             filter(
@@ -386,10 +383,10 @@ class TestCollections:
         collection_id = random_string_generator(10)
 
         # When
-        with pytest.raises(VantageNotFoundException) as exception:
+        with pytest.raises(VantageNotFoundError) as exception:
             client.delete_collection(
                 collection_id=collection_id, account_id=account_params["id"]
             )
 
         # Then
-        assert exception.type is VantageNotFoundException
+        assert exception.type is VantageNotFoundError
