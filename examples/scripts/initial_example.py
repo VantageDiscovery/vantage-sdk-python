@@ -8,13 +8,12 @@ import os
 from argparse import ArgumentParser
 from pprint import pprint
 
-from vantage import Vantage
+from vantage import VantageClient
 
 
 ACCOUNT_ID = "<YOUR_ACCOUNT_ID>"
 EXTERNAL_KEY_ID = "<YOUR_EXTERNAL_KEY_ID>"
 VANTAGE_API_KEY = "<YOUR_VANTAGE_API_KEY>"
-DEFAULT_JWT_TOKEN = None
 
 DEFAULT_TASK = "list_collections"
 DEFAULT_COLLECTION_ID = "test-sdk"
@@ -36,7 +35,7 @@ def main(
 ) -> None:
     jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
     if jwt_token is None:
-        vantage_instance = Vantage.using_client_credentials(
+        vantage_instance = VantageClient.using_client_credentials(
             vantage_client_id=os.environ["VANTAGE_API_CLIENT_ID"],
             vantage_client_secret=os.environ["VANTAGE_API_CLIENT_SECRET"],
             account_id=ACCOUNT_ID,
@@ -44,29 +43,26 @@ def main(
             auth_host=DEFAULT_AUTH_HOST,
         )
     else:
-        vantage_instance = Vantage.using_jwt_token(
+        vantage_instance = VantageClient.using_jwt_token(
             vantage_api_jwt_token=jwt_token,
             api_host=DEFAULT_API_HOST,
             account_id=ACCOUNT_ID,
         )
 
     if task == "vantage_keys":
-        keys = vantage_instance.get_vantage_api_keys()
-        res = [key.actual_instance.dict() for key in keys]
+        res = vantage_instance.get_vantage_api_keys()
         print(f"Vantage API keys for account [{ACCOUNT_ID}]:\n")
 
     elif task == "external_keys":
-        keys = vantage_instance.get_external_api_keys()
-        res = [key.actual_instance.dict() for key in keys]
+        res = vantage_instance.get_external_api_keys()
         print(f"External API keys for account [{ACCOUNT_ID}]:\n")
 
     elif task == "list_collections":
-        collections = vantage_instance.list_collections()
-        res = [col.actual_instance.dict() for col in collections]
+        res = vantage_instance.list_collections()
         print(f"Collections created for account [{ACCOUNT_ID}]:\n")
 
     elif task == "create_collection":
-        collection = vantage_instance.create_collection(
+        res = vantage_instance.create_collection(
             collection_id=collection_id,
             collection_name=DEFAULT_COLLECTION_NAME,
             user_provided_embeddings=USER_PROVIDED_EMBEDDINGS,
@@ -74,34 +70,26 @@ def main(
             llm=DEFAULT_LLM,
             external_key_id=EXTERNAL_KEY_ID,
         )
-        res = collection.dict()
-        print(
-            f"Created collection with id: {collection.collection_id}. Details:\n"
-        )
+        print(f"Created collection with id: {res.collection_id}. Details:\n")
 
     elif task == "update_collection":
-        collection = vantage_instance.update_collection(
+        res = vantage_instance.update_collection(
             collection_id=collection_id,
             collection_name=DEFAULT_UPDATE_COLLECTION_NAME,
         )
-        res = collection.dict()
-        print(
-            f"Updated collection with id: {collection.collection_id}. Details:\n"
-        )
+        print(f"Updated collection with id: {res.collection_id}. Details:\n")
 
     elif task == "get_collection":
-        collection = vantage_instance.get_collection(
+        res = vantage_instance.get_collection(
             collection_id,
         )
-        res = collection.dict()
-        print(f"Collection with id: {collection.collection_id}. Details:\n")
+        print(f"Collection with id: {res.collection_id}. Details:\n")
 
     elif task == "browser_url":
-        upload_url = vantage_instance._get_browser_upload_url(
+        res = vantage_instance._get_browser_upload_url(
             collection_id=collection_id,
             file_size=3000,
         )
-        res = upload_url.dict()
         print(
             f"Upload browser URL for collection with id: {collection_id}. Details:\n"
         )
@@ -113,21 +101,17 @@ def main(
         print("Uploading file returned status:")
 
     elif task == "delete_collection":
-        collection = vantage_instance.delete_collection(
+        res = vantage_instance.delete_collection(
             collection_id,
         )
-        res = collection.dict()
-        print(
-            f"Deleted collection with id: {collection.collection_id}. Details:\n"
-        )
+        print(f"Deleted collection with id: {res.collection_id}. Details:\n")
 
     elif task == "semantic_search":
-        result = vantage_instance.semantic_search(
+        res = vantage_instance.semantic_search(
             text=query_text,
             collection_id=collection_id,
             vantage_api_key=VANTAGE_API_KEY,
         )
-        res = result.dict()
         print("Semantic search results:\n")
 
     pprint(res)

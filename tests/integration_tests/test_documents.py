@@ -2,7 +2,7 @@
 
 from typing import Callable
 
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 """Integration tests for search endpoints"""
@@ -11,7 +11,7 @@ from vantage.vantage import Vantage
 class TestDocuments:
     def test_documents_upload(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
         jsonl_documents_path: str,

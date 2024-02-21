@@ -4,7 +4,7 @@ from typing import Callable
 import pytest
 
 from vantage.core.http.exceptions import ForbiddenException
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 """ Integration tests for account endpoints."""
@@ -13,7 +13,7 @@ from vantage.vantage import Vantage
 class TestAccount:
     @pytest.fixture(autouse=True)
     def setup_and_teardown(
-        self, client: Vantage, account_params: dict
+        self, client: VantageClient, account_params: dict
     ) -> None:
         """
         Takes care of setting up and tearing down test conditions.
@@ -25,7 +25,9 @@ class TestAccount:
         # Teardown
         client.update_account(account_params["id"], account_params["id"])
 
-    def test_get_account(self, client: Vantage, account_params: dict) -> None:
+    def test_get_account(
+        self, client: VantageClient, account_params: dict
+    ) -> None:
         """
         Tests if retrieving user account is working correctly.
         """
@@ -41,7 +43,7 @@ class TestAccount:
 
     def test_get_non_existing_account(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -60,7 +62,7 @@ class TestAccount:
 
     def test_update_account(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -82,7 +84,7 @@ class TestAccount:
 
     def test_update_non_existing_account(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
