@@ -9,7 +9,7 @@ from vantage.model.search import SearchResult, SearchResultItem, MoreLikeThese
 
 __author__ = """Vantage"""
 __email__ = 'none@vantage.com'
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 __all__ = [
     "VantageClient",
     "Collection",
