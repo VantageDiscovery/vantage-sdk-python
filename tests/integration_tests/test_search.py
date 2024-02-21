@@ -6,7 +6,7 @@ import pytest
 
 from vantage.exceptions import VantageInvalidRequestError, VantageNotFoundError
 from vantage.model.search import MoreLikeThese
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 """Integration tests for search endpoints"""
@@ -15,7 +15,7 @@ from vantage.vantage import Vantage
 class TestSearch:
     def test_if_embedding_search_returns_result(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
@@ -44,7 +44,7 @@ class TestSearch:
 
     def test_embedding_search_on_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         random_string_generator: Callable,
@@ -72,7 +72,7 @@ class TestSearch:
 
     def test_embedding_search_with_invalid_embedding(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
@@ -100,7 +100,7 @@ class TestSearch:
 
     def test_embedding_search_with_invalid_accuracy(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
@@ -129,7 +129,7 @@ class TestSearch:
 
     def test_if_semantic_search_returns_result(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         semantic_search_test_collection_id: str,
@@ -158,7 +158,7 @@ class TestSearch:
 
     def test_semantic_search_on_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         random_string_generator: Callable,
@@ -187,7 +187,7 @@ class TestSearch:
 
     def test_semantic_search_with_invalid_accuracy(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         embedding_search_test_collection_id: str,
@@ -217,7 +217,7 @@ class TestSearch:
 
     def test_more_like_this_search(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         more_like_this_test_collection_id: str,
@@ -257,7 +257,7 @@ class TestSearch:
 
     def test_more_like_these_search(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key: str,
         more_like_this_test_collection_id: str,

@@ -117,7 +117,7 @@ def _parse_exception(exception: Exception, response=None) -> Exception:
     return exception
 
 
-class Vantage:
+class VantageClient:
     def __init__(
         self,
         management_api: ManagementAPI,
@@ -140,7 +140,7 @@ class Vantage:
         account_id: str,
         vantage_api_key: Optional[str] = None,
         api_host: Optional[str] = "https://api.vanta.ge",
-    ) -> Vantage:
+    ) -> VantageClient:
         host = f"{api_host}/v1"
         auth_client = AuthorizationClient.using_provided_token(
             vantage_jwt_token=vantage_api_jwt_token
@@ -171,7 +171,7 @@ class Vantage:
         vantage_api_key: Optional[str] = None,
         api_host: Optional[str] = "https://api.vanta.ge",
         auth_host: Optional[str] = "https://auth.vanta.ge",
-    ) -> Vantage:
+    ) -> VantageClient:
         host = f"{api_host}/v1"
         auth_endpoint = f"{auth_host}/oauth/token"
         auth_client = AuthorizationClient.automatic_token_management(
@@ -623,6 +623,9 @@ class Vantage:
         embedding: List[int],
         collection_id: str,
         accuracy: float = 0.3,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -641,11 +644,26 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
+        if page:
+            pagination = GlobalSearchPropertiesPagination(
+                page=page,
+                count=page_count,
+            )
+        else:
+            pagination = None
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
+        else:
+            search_filter = None
+
         query = EmbeddingSearchQuery(
             embedding=embedding,
             collection=collection,
-            filter=None,
-            pagination=None,
+            filter=search_filter,
+            pagination=pagination,
         )
 
         vantage_api_key = (
@@ -672,6 +690,9 @@ class Vantage:
         text: str,
         collection_id: str,
         accuracy: float = 0.3,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -688,11 +709,26 @@ class Vantage:
             account_id=account_id if account_id else self.account_id,
         )
 
+        if page:
+            pagination = GlobalSearchPropertiesPagination(
+                page=page,
+                count=page_count,
+            )
+        else:
+            pagination = None
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
+        else:
+            search_filter = None
+
         query = SemanticSearchQuery(
             text=text,
             collection=collection,
-            filter=None,
-            pagination=None,
+            filter=search_filter,
+            pagination=pagination,
         )
 
         vantage_api_key = (
@@ -739,13 +775,16 @@ class Vantage:
 
         if page:
             pagination = GlobalSearchPropertiesPagination(
-                page=page, count=page_count
+                page=page,
+                count=page_count,
             )
         else:
             pagination = None
 
         if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
         else:
             search_filter = None
 
@@ -805,7 +844,9 @@ class Vantage:
             pagination = None
 
         if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(boolean_filter="")
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
         else:
             search_filter = None
 

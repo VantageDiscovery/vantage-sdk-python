@@ -4,7 +4,7 @@ import pytest
 
 from tests.integration_tests.conftest import skip_delete_external_api_key_test
 from vantage.exceptions import VantageForbiddenError, VantageServiceError
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 """Integration tests for API keys endpoints."""
@@ -19,7 +19,9 @@ def _mask_secret(secret: str) -> str:
 
 
 class TestApiKeys:
-    def test_get_vantage_api_keys(self, client: Vantage, account_params: dict):
+    def test_get_vantage_api_keys(
+        self, client: VantageClient, account_params: dict
+    ):
         """
         Tests fetching all vantage API keys present on a user account.
         """
@@ -34,7 +36,7 @@ class TestApiKeys:
 
     def test_get_vantage_api_keys_using_wrong_account(
         self,
-        client: Vantage,
+        client: VantageClient,
         random_string_generator: Callable,
     ):
         # When
@@ -46,7 +48,7 @@ class TestApiKeys:
 
     def test_get_vantage_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key_id: str,
     ):
@@ -66,7 +68,7 @@ class TestApiKeys:
 
     def test_get_vantage_api_key_using_wrong_account(
         self,
-        client: Vantage,
+        client: VantageClient,
         vantage_api_key_id: str,
         random_string_generator: Callable,
     ):
@@ -85,7 +87,7 @@ class TestApiKeys:
 
     def test_get_non_existing_vantage_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         vantage_api_key_id: str,
         random_uuid: str,
@@ -102,7 +104,7 @@ class TestApiKeys:
 
     def test_get_external_api_keys(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ):
@@ -139,7 +141,7 @@ class TestApiKeys:
 
     def test_get_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ):
@@ -171,7 +173,7 @@ class TestApiKeys:
 
     def test_get_non_existing_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_uuid: str,
     ):
@@ -190,7 +192,7 @@ class TestApiKeys:
 
     def test_create_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         external_api_key_id: str,
         random_string_generator: str,
@@ -220,7 +222,7 @@ class TestApiKeys:
 
     def test_update_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         external_api_key_id: str,
         random_string_generator: str,
@@ -266,7 +268,7 @@ class TestApiKeys:
 
     def test_update_non_existing_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_uuid: str,
         random_string_generator: Callable,
@@ -293,7 +295,7 @@ class TestApiKeys:
     )
     def test_delete_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         external_api_key_id: str,
     ):
@@ -317,7 +319,7 @@ class TestApiKeys:
 
     def test_delete_non_existing_external_api_key(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_uuid: str,
     ):

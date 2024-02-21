@@ -7,7 +7,7 @@ from typing import Callable
 import pytest
 
 from vantage.exceptions import VantageNotFoundError
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -62,13 +62,13 @@ _configuration = {
 jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
 
 if jwt_token:
-    _client = Vantage.using_jwt_token(
+    _client = VantageClient.using_jwt_token(
         vantage_api_jwt_token=jwt_token,
         account_id=_configuration["account"]["id"],
         api_host=_configuration["api"]["api_host"],
     )
 else:
-    _client = Vantage.using_client_credentials(
+    _client = VantageClient.using_client_credentials(
         vantage_client_id=_configuration["api"]["client_id"],
         vantage_client_secret=_configuration["api"]["client_secret"],
         api_host=_configuration["api"]["api_host"],
@@ -208,7 +208,7 @@ def external_api_key_provider() -> str:
 
 
 @pytest.fixture(scope="module")
-def client() -> Vantage:
+def client() -> VantageClient:
     return _client
 
 

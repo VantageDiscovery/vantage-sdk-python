@@ -6,7 +6,7 @@ from typing import Callable
 import pytest
 
 from vantage.exceptions import VantageFileUploadError, VantageNotFoundError
-from vantage.vantage import Vantage
+from vantage.vantage import VantageClient
 
 
 class TestCollections:
@@ -14,7 +14,7 @@ class TestCollections:
 
     def test_create_collection_with_user_embeddings(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -43,7 +43,7 @@ class TestCollections:
 
     def test_upload_user_embeddings_to_a_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -77,7 +77,7 @@ class TestCollections:
 
     def test_upload_user_embeddings_to_a_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -102,7 +102,7 @@ class TestCollections:
 
     def test_upload_non_existing_user_embeddings(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -128,7 +128,7 @@ class TestCollections:
 
     def test_upload_user_embeddings_with_wrong_file_size(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -167,7 +167,7 @@ class TestCollections:
 
     def test_create_vantage_managed_embeddings_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -181,7 +181,7 @@ class TestCollections:
 
     def test_list_collections(
         self,
-        client: Vantage,
+        client: VantageClient,
         random_string_generator: Callable,
         account_params: dict,
     ) -> None:
@@ -223,7 +223,7 @@ class TestCollections:
 
     def test_get_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -254,7 +254,7 @@ class TestCollections:
 
     def test_get_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -275,7 +275,7 @@ class TestCollections:
 
     def test_update_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -309,7 +309,7 @@ class TestCollections:
 
     def test_update_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
@@ -331,7 +331,7 @@ class TestCollections:
 
     def test_delete_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         collection_params: dict,
         random_string_generator: Callable,
@@ -372,7 +372,7 @@ class TestCollections:
 
     def test_delete_non_existing_collection(
         self,
-        client: Vantage,
+        client: VantageClient,
         account_params: dict,
         random_string_generator: Callable,
     ) -> None:
