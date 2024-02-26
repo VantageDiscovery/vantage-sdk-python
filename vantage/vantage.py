@@ -126,6 +126,10 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
         host: Optional[str] = None,
     ) -> None:
+        """
+        The `VantageClient` class is the main entry point for interacting with Vantage Discovery via the Python SDK.
+        It is used to create, delete, and manage your accounts, collections and keys.
+        """
         self.management_api = management_api
         self.search_api = search_api
         self.account_id = account_id
@@ -141,6 +145,17 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
         api_host: Optional[str] = "https://api.vanta.ge",
     ) -> VantageClient:
+        """Initialization of the VantageClient using JWT token.
+
+        Args:
+            vantage_api_jwt_token (str): The JWT token to use for authentication.
+            account_id (str): Account ID TODO
+            vantage_api_key (str): Vantage API Key TODO
+            api_host (str): API host, if not provided default host will be used.
+
+        Retruns:
+            VantageClient: Vantage client initialized using JWT token.
+        """
         host = f"{api_host}/v1"
         auth_client = AuthorizationClient.using_provided_token(
             vantage_jwt_token=vantage_api_jwt_token
@@ -172,6 +187,19 @@ class VantageClient:
         api_host: Optional[str] = "https://api.vanta.ge",
         auth_host: Optional[str] = "https://auth.vanta.ge",
     ) -> VantageClient:
+        """Initialization of the VantageClient using client credentials.
+
+        Args:
+            vantage_client_id (str): Vantage Client ID TODO
+            vantage_client_secret (str): Vantage Client Secret TODO
+            account_id (str): Account ID TODO
+            vantage_api_key (str): Vantage API Key TODO
+            api_host (str): Vantage API host, if not provided default API host will be used.
+            auth_host (str): Vantage auth host, if not provided default auth host will be used.
+
+        Retruns:
+            VantageClient: Vantage client initialized using client credentials.
+        """
         host = f"{api_host}/v1"
         auth_endpoint = f"{auth_host}/oauth/token"
         auth_client = AuthorizationClient.automatic_token_management(
@@ -204,7 +232,31 @@ class VantageClient:
         self,
         account_id: Optional[str] = None,
     ) -> Account:
-        # TODO: docstring
+        """
+        Retrieves the details of an Account.
+
+        This method fetches the details of an account identified by its account ID.
+        If the account ID is not specified, it defaults to the account ID of the current instance.
+        It uses the Management API to retrieve the account information and returns an Account object upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account to be retrieved.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        Account
+            An Account object containing the details of the requested account.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> account = vantage_client.get_account()
+        >>> print(account.account_name)
+        "Example Account Name"
+        """
 
         try:
             result = self.management_api.account_api.api.get_account(
@@ -220,7 +272,33 @@ class VantageClient:
         account_name: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> Account:
-        # TODO: docstring
+        """
+        Updates the Account.
+
+        This method allows for updating the name of an account identified by its account ID.
+        If the account ID is not specified, it defaults to the account ID of the current instance.
+        It uses the Management API to perform the update operation and returns an updated Account object upon success.
+
+        Parameters
+        ----------
+        account_name : Optional[str], optional
+            The new name for the account.
+        account_id : Optional[str], optional
+            The unique identifier of the account to be updated.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        Account
+            An updated Account object reflecting the changes made.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> updated_account = vantage_client.update_account(account_name="New Account Name")
+        >>> print(updated_account.account_name)
+        "New Account Name"
+        """
 
         account_modifiable = AccountModifiable(account_name=account_name)
 
@@ -241,7 +319,33 @@ class VantageClient:
         self,
         account_id: Optional[str] = None,
     ) -> List[VantageAPIKey]:
-        # TODO: docstring
+        """
+        Retrieves a list of Vantage API keys for a specified account.
+
+        This method fetches all the Vantage API keys associated with an account identified by its account ID.
+        If the account ID is not specified, it defaults to the account ID of the current instance.
+        It uses the Management API to retrieve the keys and returns a list of VantageAPIKey objects upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the Vantage API keys are to be retrieved.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        List[VantageAPIKey]
+            A list of VantageAPIKey objects, each representing a Vantage API key associated with the account.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_api_keys = vantage_client.get_vantage_api_keys()
+        >>> for key in vantage_api_keys:
+        ...     print(key.vantage_api_key_value)
+        "12345"
+        "54321"
+        """
 
         try:
             keys = self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
@@ -260,7 +364,34 @@ class VantageClient:
         vantage_api_key_id: str,
         account_id: Optional[str] = None,
     ) -> VantageAPIKey:
-        # TODO: docstring
+        """
+        Retrieves a specific Vantage API key for a given account.
+
+        This method obtains the details of a specific Vantage API key identified
+        by `vantage_api_key_id` for the account specified by `account_id`.
+        If the account ID is not specified, it defaults to the account ID of the current instance.
+        It uses the Management API to retrieve the key and returns an VantageAPIKey object upon success.
+
+        Parameters
+        ----------
+        vantage_api_key_id : str
+            The unique identifier of the Vantage API key to be retrieved.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the Vantage API key is associated.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        VantageAPIKey
+            A VantageAPIKey object containing the details of the requested API key.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_api_key = vantage_client.get_vantage_api_key(vantage_api_key_id="api_key_12345")
+        >>> print(vantage_api_key.vantage_api_key_value)
+        "12345"
+        """
 
         try:
             key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
@@ -282,7 +413,44 @@ class VantageClient:
         llm_secret: str,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
-        # TODO: docstring
+        """
+        Creates a new external API key associated with a given account.
+
+        This method generates a new external API key for integrating with external services, specified by the
+        URL, LLM (Large Language Model) provider, and a secret for the LLM.
+        The API key is associated with the account identified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API for the creation operation and returns an ExternalAPIKey object upon success.
+
+        Parameters
+        ----------
+        url : str
+            TODO: ?
+        llm_provider : str
+            The provider of the Large Language Model (LLM) service.
+            Supported options are: OpenAI and HuggingFace (Hugging)
+        llm_secret : str
+            The secret key for accessing the LLM service.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the external API key is to be created.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        ExternalAPIKey
+            An ExternalAPIKey object containing the details of the newly created API key.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> external_api_key = vantage_client.create_external_api_key(
+        ...     url="https://example.com/api",
+        ...     llm_provider="OpenAI",
+        ...     llm_secret="secret123",
+        ... )
+        >>> print(external_api_key.external_key_id)
+        "external_key_123"
+        """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
@@ -302,7 +470,33 @@ class VantageClient:
         self,
         account_id: Optional[str] = None,
     ) -> List[ExternalAPIKey]:
-        # TODO: docstring
+        """
+        Retrieves a list of external API keys associated with a given account.
+
+        This method fetches all external API keys linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to obtain the keys and returns a list of ExternalAPIKey objects upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the external API keys are to be retrieved.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        List[ExternalAPIKey]
+            A list of ExternalAPIKey objects, each representing an external API key associated with the account.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient()
+        >>> external_api_keys = vantage_client.get_external_api_keys()
+        >>> for key in external_api_keys:
+        ...     print(key.external_key_id)
+        "external_key_123"
+        "external_key_321"
+        """
 
         try:
             keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
@@ -320,7 +514,35 @@ class VantageClient:
         external_key_id: str,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
-        # TODO: docstring
+        """
+        Retrieves a specific external API key associated with a given account.
+
+        This method fetches the details of an external API key identified
+        by `external_key_id` for the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to perform the retrieval and returns an ExternalAPIKey
+        object containing the details of the requested API key upon success.
+
+        Parameters
+        ----------
+        external_key_id : str
+            The unique identifier of the external API key to be retrieved.
+        account_id : Optional[str], optional
+            The unique identifier of the account to which the external API key is associated.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        ExternalAPIKey
+            An ExternalAPIKey object containing the details of the requested external API key.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient()
+        >>> external_api_key = vantage_client.get_external_api_key(external_key_id="external_key_123")
+        >>> print(external_api_key.llm_provider)
+        "OpenAI"
+        """
 
         try:
             key = self.management_api.external_api_keys_api.api.get_external_api_key(
@@ -340,7 +562,46 @@ class VantageClient:
         llm_secret: str,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
-        # TODO: docstring
+        """
+        Updates the details of a specific external API key associated with a given account.
+
+        This method allows for updating the URL, LLM (Large Language Model) provider, and LLM secret of an
+        external API key identified by `external_key_id`.
+        If `account_id` is not specified, it defaults to using the account ID of the current instance.
+        It uses the Management API to perform the update and returns an updated ExternalAPIKey object upon success.
+
+        Parameters
+        ----------
+        external_key_id : str
+            The unique identifier of the external API key to be updated.
+        url : str
+            The new URL associated with the external API key, indicating the endpoint of the external service.
+        llm_provider : str
+            The new provider of the Large Language Model (LLM) service.
+        llm_secret : str
+            The new secret key for accessing the LLM service.
+        account_id : Optional[str], optional
+            The unique identifier of the account to which the external API key is associated.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        ExternalAPIKey
+            An ExternalAPIKey object containing the updated details of the external API key.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient()
+        >>> updated_external_api_key = vantage_client.update_external_api_key(
+        ...     external_key_id="external_key_123",
+        ...     url="https://newexample.com/api",
+        ...     llm_provider="OpenAI",
+        ...     llm_secret="new_secret_123",
+        ...     account_id="12345"
+        ... )
+        >>> print(updated_external_api_key.llm_secret)
+        "new_secret_123"
+        """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
@@ -362,7 +623,27 @@ class VantageClient:
         external_key_id: str,
         account_id: Optional[str] = None,
     ) -> None:
-        # TODO: docstring
+        """
+        Deletes a specific external API key associated with a given account.
+
+        This method removes an external API key identified by `external_key_id`
+        from the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to perform the deletion.
+
+        Parameters
+        ----------
+        external_key_id : str
+            The unique identifier of the external API key to be deleted.
+        account_id : Optional[str], optional
+            The unique identifier of the account to which the external API key is associated.
+            If None, the account ID of the current instance is used.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient()
+        >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
+        """
 
         try:
             self.management_api.external_api_keys_api.api.delete_external_api_key(
@@ -380,7 +661,34 @@ class VantageClient:
         self,
         account_id: Optional[str] = None,
     ) -> List[Collection]:
-        # TODO: docstring
+        """
+        Retrieves a list of collections associated with a given account.
+
+        This method fetches all collections linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to obtain the list of collections and
+        returns a list of Collection objects upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the collections are to be retrieved.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        List[Collection]
+            A list of Collection objects, each representing a collection associated with the account.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> collections = vantage_client.list_collections(account_id="12345")
+        >>> for collection in collections:
+        ...     print(collection.collection_name)
+        "Collection 1"
+        "Collection 2"
+        """
 
         try:
             collections = (
@@ -402,6 +710,23 @@ class VantageClient:
         self,
         account_id: Optional[str] = None,
     ) -> List[str]:
+        """
+        Retrieves a list of existing collection IDs associated with a given account.
+
+        This private method fetches the IDs of all collections linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the collection IDs are to be retrieved.
+            If None, the account ID of the current instance is used.
+
+        Returns
+        -------
+        List[str]
+            A list of strings, each representing the unique ID of a collection associated with the account.
+        """
         try:
             collections = self.list_collections(
                 account_id=account_id if account_id else self.account_id
@@ -421,7 +746,69 @@ class VantageClient:
         collection_preview_url_pattern: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> Collection:
-        # TODO: docstring
+        """
+        Creates a new collection with the specified parameters.
+
+        This method creates a new collection identified by a unique collection ID.
+        It checks for the uniqueness of the collection ID within the specified account
+        and raises an exception if a collection with the given ID already exists.
+        The collection can optionally be configured to use user-provided embeddings
+        or leverage a Large Language Model (LLM) for embeddings generation.
+        Additional parameters allow specifying an external key for API integration,
+        a preview URL pattern for collection items, and the dimensionality of embeddings.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier for the new collection.
+        collection_name : str
+            The name of the new collection.
+        embeddings_dimension : int
+            The dimensionality of the embeddings for the collection items.
+        user_provided_embeddings : Optional[bool], optional
+            Indicates whether embeddings are provided by the user (True)
+            or managed by Vantage (False). Defaults to False.
+        llm : Optional[str], optional
+            The identifier of the Large Language Model used for generating embeddings, if applicable.
+        external_key_id : Optional[str], optional
+            The external key ID used for API integration, if applicable.
+        collection_preview_url_pattern : Optional[str], optional
+            A URL pattern for previewing items in the collection, if applicable.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If None, the current account ID is used.
+
+        Returns
+        -------
+        Collection
+            A Collection object representing the newly created collection.
+
+        Example
+        -------
+        User-Provided:
+        >>> vantage_client = VantageClient(...)
+        >>> new_collection = vantage_client.create_collection(
+                collection_id="user-provided",
+                collection_name="My Collection",
+                embeddings_dimension=1536,
+                user_provided_embeddings=True,
+                llm="text-embedding-ada-002",
+                external_key_id="external_key_123",
+            )
+        >>> print(new_collection.collection_id)
+        "user-provided"
+
+        Vantage-Managed:
+        >>> vantage_client = VantageClient(...)
+        >>> new_collection = vantage_client.create_collection(
+                collection_id="vantage-managed",
+                collection_name="My Collection",
+                embeddings_dimension=1536,
+                user_provided_embeddings=False,
+            )
+        >>> print(new_collection.collection_id)
+        "vantage-managed"
+        """
 
         if collection_id in self._existing_collection_ids(
             account_id=account_id
@@ -459,7 +846,36 @@ class VantageClient:
         collection_id: str,
         account_id: Optional[str] = None,
     ) -> Collection:
-        # TODO: docstring
+        """
+        Retrieves the details of a specified collection.
+
+        This method fetches the details of a collection identified
+        by its unique ID within a specified account.
+        It checks for the existence of the collection ID and raises
+        an exception if no collection with the given ID exists.
+        The method returns a Collection object containing
+        the collection's details upon successful retrieval.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to be retrieved.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If None, the current account ID is used.
+
+        Returns
+        -------
+        Collection
+            A Collection object containing the details of the specified collection.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
+        >>> print(collection.collection_name)
+        "My Collection"
+        """
 
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
@@ -486,7 +902,40 @@ class VantageClient:
         collection_preview_url_pattern: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> Collection:
-        # TODO: docstring
+        """
+        Updates an existing collection's details such as its name, associated external key ID, and preview URL pattern.
+        It checks for the existence of the collection within the specified account and raises an exception if the
+        collection does not exist. Upon successful update, it returns an updated Collection object.
+
+        Parameters
+        ----------
+        collection_id : str
+            Unique identifier of the collection to be updated.
+        collection_name : Optional[str], optional
+            New name for the collection, if updating.
+        external_key_id : Optional[str], optional
+            New external key ID, if updating.
+        collection_preview_url_pattern : Optional[str], optional
+            New URL pattern for previewing items in the collection, if updating.
+        account_id : Optional[str], optional
+            Account ID to which the collection belongs.
+            If None, uses the current account ID.
+
+        Returns
+        -------
+        Collection
+            A Collection object representing the updated collection.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> updated_collection = vantage_client.update_collection(
+                collection_id="my-collection",
+                collection_name="Updated Collection Name",
+            )
+        >>> print(updated_collection.collection_name)
+        "Updated Collection Name"
+        """
 
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
@@ -519,7 +968,28 @@ class VantageClient:
         collection_id: str,
         account_id: Optional[str] = None,
     ) -> Collection:
-        # TODO: docstring
+        """
+        Deletes a specific collection identified by its collection ID within a specified account. It first verifies
+        the existence of the collection in the account and raises an exception if the collection does not exist. Upon
+        successful deletion, it returns the Collection object that was deleted.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to be deleted.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs. If None, the current account ID is used.
+
+        Returns
+        -------
+        Collection
+            A Collection object representing the collection that was deleted.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> deleted_collection = vantage_client.delete_collection(collection_id="my-collection")
+        """
 
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
@@ -547,7 +1017,36 @@ class VantageClient:
         customer_batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> CollectionUploadURL:
-        # TODO: docstring
+        """
+        Retrieves a browser upload URL for uploading files to a specified collection.
+        It verifies the existence of the collection within the specified account and
+        raises an exception if the collection does not exist.
+        The method generates a URL that can be used to upload files directly from a browser,
+        using specified file sizes and an optional customer batch identifier for tracking.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the file will be uploaded.
+        file_size : int
+            The size of the file to be uploaded, in bytes.
+        customer_batch_identifier : Optional[str], optional
+            An optional identifier provided by the customer to track the batch of uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs. If None, the current account ID is used.
+
+        Returns
+        -------
+        CollectionUploadURL
+            An object containing the URL for browser-based file uploads.
+
+        Raises
+        ------
+        VantageNotFoundError
+            If the collection with the provided ID does not exist within the specified account.
+        Exception
+            For other exceptions that occur during the URL retrieval process.
+        """
 
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
@@ -890,7 +1389,48 @@ class VantageClient:
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
-        # TODO: docstring
+        """
+        Uploads documents to a specified collection from a string containing JSONL-formatted documents.
+        The `documents` string is expected to be in JSONL format, where each line is a valid JSON
+        document.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the documents will be uploaded.
+        documents : str
+            A string containing the documents to be uploaded, formatted as JSONL.
+        encoding : Optional[str], optional
+            The character encoding of the documents string. Currently not used.
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If None, the current account ID is used.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}'
+        >>> vantage_client.upload_documents_from_jsonl(
+                collection_id="my-collection",
+                documents=documents_jsonl,
+            )
+        # This will upload two documents to "my-collection".
+
+        Note
+        -------
+        Documents in the JSONL file should be in the right format:
+
+        Uploading to user-provided collection (`embeddings` field is included):
+        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}
+
+
+        Uploading to vantage-managed collection (`embeddings` field is excluded):
+        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
+
+        Metadata fields should all have `meta_` prefix.
+        """
 
         try:
             self.management_api.documents_api.api.upload_documents(
@@ -909,6 +1449,46 @@ class VantageClient:
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
+        """
+        Uploads documents to a specified collection from a JSONL file located at a given file path.
+        This method checks if the file exists at the specified path and raises a FileNotFoundError if it does not.
+        It then reads the file and uploads the documents contained within the file to the specified
+        collection using the `upload_documents_from_jsonl` method.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the documents will be uploaded.
+        file_path : str
+            The path to the JSONL file containing the documents to be uploaded.
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If None, the current account ID is used.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> vantage_client.upload_documents_from_path(
+                collection_id="my-collection",
+                file_path="/path/to/documents.jsonl",
+            )
+        # This will upload documents from "/path/to/documents.jsonl" to "my-collection".
+
+        Note
+        -------
+        Documents in the JSONL file should be in the right format:
+
+        Uploading to user-provided collection (`embeddings` field is included):
+        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}
+
+
+        Uploading to vantage-managed collection (`embeddings` field is excluded):
+        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
+
+        Metadata fields should all have `meta_` prefix.
+        """
         if not exists(file_path):
             raise FileNotFoundError(f"File \"{file_path}\" not found.")
 
