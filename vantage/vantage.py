@@ -28,7 +28,17 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageNotFoundError, VantageValueError
+from vantage.config import (
+    DEFAULT_API_HOST,
+    API_HOST_VERSION,
+    DEFAULT_AUTH_HOST,
+    AUTH_ENDPOINT,
+    DEFAULT_ENCODING,
+)
+from vantage.exceptions import (
+    VantageNotFoundError,
+    VantageValueError,
+)
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
