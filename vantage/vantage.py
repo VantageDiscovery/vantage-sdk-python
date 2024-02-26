@@ -35,6 +35,13 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
+from vantage.config import (
+    DEFAULT_API_HOST,
+    API_HOST_VERSION,
+    DEFAULT_AUTH_HOST,
+    AUTH_ENDPOINT,
+    DEFAULT_ENCODING,
+)
 from vantage.exceptions import (
     VantageForbiddenError,
     VantageInvalidRequestError,
@@ -153,7 +160,7 @@ class VantageClient:
         self.account_id = account_id
         self.vantage_api_key = vantage_api_key
         self.host = host
-        self._default_encoding = "utf-8"
+        self._default_encoding = DEFAULT_ENCODING
 
     @classmethod
     def using_jwt_token(
@@ -161,7 +168,7 @@ class VantageClient:
         vantage_api_jwt_token: str,
         account_id: str,
         vantage_api_key: Optional[str] = None,
-        api_host: Optional[str] = "https://api.vanta.ge",
+        api_host: Optional[str] = DEFAULT_API_HOST,
     ) -> VantageClient:
         """
         Instantiates a `VantageClient` using a JWT token for authentication.
@@ -185,8 +192,7 @@ class VantageClient:
         VantageClient
             An instance of the VantageClient.
         """
-
-        host = f"{api_host}/v1"
+        host = f"{api_host}/{API_HOST_VERSION}"
         auth_client = AuthorizationClient.using_provided_token(
             vantage_jwt_token=vantage_api_jwt_token
         )
@@ -214,8 +220,8 @@ class VantageClient:
         vantage_client_secret: str,
         account_id: str,
         vantage_api_key: Optional[str] = None,
-        api_host: Optional[str] = "https://api.vanta.ge",
-        auth_host: Optional[str] = "https://auth.vanta.ge",
+        api_host: Optional[str] = DEFAULT_API_HOST,
+        auth_host: Optional[str] = DEFAULT_AUTH_HOST,
     ) -> VantageClient:
         """
         Instantiates a `VantageClient` using OAuth client credentials for authentication.
@@ -252,8 +258,8 @@ class VantageClient:
         - The method performs authentication with the Vantage OAuth server
         automatically and configures the internal API client with the obtained access token.
         """
-        host = f"{api_host}/v1"
-        auth_endpoint = f"{auth_host}/oauth/token"
+        host = f"{api_host}/{API_HOST_VERSION}"
+        auth_endpoint = f"{auth_host}{AUTH_ENDPOINT}"
         auth_client = AuthorizationClient.automatic_token_management(
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
