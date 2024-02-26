@@ -6,6 +6,13 @@ from typing import List, Optional
 
 from pydantic_core._pydantic_core import ValidationError
 
+from vantage.config import (
+    API_HOST_VERSION,
+    AUTH_ENDPOINT,
+    DEFAULT_API_HOST,
+    DEFAULT_AUTH_HOST,
+    DEFAULT_ENCODING,
+)
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage.core.http.exceptions import (
     ApiAttributeError,
@@ -35,13 +42,6 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.config import (
-    DEFAULT_API_HOST,
-    API_HOST_VERSION,
-    DEFAULT_AUTH_HOST,
-    AUTH_ENDPOINT,
-    DEFAULT_ENCODING,
-)
 from vantage.exceptions import (
     VantageForbiddenError,
     VantageInvalidRequestError,

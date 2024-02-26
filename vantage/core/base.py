@@ -6,9 +6,9 @@ from typing import Optional
 from urllib import request
 
 from vantage.config import (
+    AUTH_ENDPOINT,
     DEFAULT_API_HOST,
     DEFAULT_AUTH_HOST,
-    AUTH_ENDPOINT,
     DEFAULT_ENCODING,
 )
 from vantage.core.http import ApiClient
@@ -200,13 +200,13 @@ class AuthorizedApiClient(ApiClient):
             return super().call_api(*args)
 
         try:
-            header_params["authorization"] = (
-                f"Bearer {self.authorization_client.jwt_token}"
-            )
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
             return super().call_api(*args)
         except UnauthorizedException:
             self.authorization_client.authenticate()
-            header_params["authorization"] = (
-                f"Bearer {self.authorization_client.jwt_token}"
-            )
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
             return super().call_api(*args)
