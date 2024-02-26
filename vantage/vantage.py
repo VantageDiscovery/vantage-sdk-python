@@ -145,16 +145,24 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
         api_host: Optional[str] = "https://api.vanta.ge",
     ) -> VantageClient:
-        """Initialization of the VantageClient using JWT token.
+        """
+        Initializes the VantageClient using JWT token.
 
-        Args:
-            vantage_api_jwt_token (str): The JWT token to use for authentication.
-            account_id (str): Account ID TODO
-            vantage_api_key (str): Vantage API Key TODO
-            api_host (str): API host, if not provided default host will be used.
+        Parameters
+        ----------
+            vantage_api_jwt_token: str
+                The JWT token to use for authentication.
+            account_id: str
+                Account ID TODO
+            vantage_api_key: str
+                Vantage API Key TODO
+            api_host: str
+                API host, if not provided default host will be used.
 
-        Retruns:
-            VantageClient: Vantage client initialized using JWT token.
+        Returns
+        -------
+            VantageClient
+                Vantage client initialized using JWT token.
         """
         host = f"{api_host}/v1"
         auth_client = AuthorizationClient.using_provided_token(
@@ -187,18 +195,28 @@ class VantageClient:
         api_host: Optional[str] = "https://api.vanta.ge",
         auth_host: Optional[str] = "https://auth.vanta.ge",
     ) -> VantageClient:
-        """Initialization of the VantageClient using client credentials.
+        """
+        Initializes the VantageClient using client credentials.
 
-        Args:
-            vantage_client_id (str): Vantage Client ID TODO
-            vantage_client_secret (str): Vantage Client Secret TODO
-            account_id (str): Account ID TODO
-            vantage_api_key (str): Vantage API Key TODO
-            api_host (str): Vantage API host, if not provided default API host will be used.
-            auth_host (str): Vantage auth host, if not provided default auth host will be used.
+        Parameters
+        ----------
+            vantage_client_id: str
+                Vantage Client ID TODO
+            vantage_client_secret: str
+                Vantage Client Secret TODO
+            account_id: str
+                Account ID TODO
+            vantage_api_key: str
+                Vantage API Key TODO
+            api_host: str
+                Vantage API host, if not provided default API host will be used.
+            auth_host: str
+                Vantage auth host, if not provided default auth host will be used.
 
-        Retruns:
-            VantageClient: Vantage client initialized using client credentials.
+        Returns
+        -------
+            VantageClient
+                Vantage client initialized using client credentials.
         """
         host = f"{api_host}/v1"
         auth_endpoint = f"{auth_host}/oauth/token"
