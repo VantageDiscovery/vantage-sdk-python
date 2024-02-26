@@ -28,13 +28,6 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.config import (
-    DEFAULT_API_HOST,
-    API_HOST_VERSION,
-    DEFAULT_AUTH_HOST,
-    AUTH_ENDPOINT,
-    DEFAULT_ENCODING,
-)
 from vantage.exceptions import (
     VantageNotFoundError,
     VantageValueError,
