@@ -36,10 +36,10 @@ class TestCollections:
         )
 
         # Then
-        assert collection.collection_id == collection_id
-        assert collection.collection_name == collection_name
-        assert collection.collection_status == "Pending"
-        assert collection.collection_state == "Active"
+        assert collection.id == collection_id
+        assert collection.name == collection_name
+        assert collection.status == "Pending"
+        assert collection.state == "Active"
 
     def test_upload_user_embeddings_to_a_collection(
         self,
@@ -210,16 +210,15 @@ class TestCollections:
         # Then
         created_collections = list(
             filter(
-                lambda collection: collection.collection_name
-                in collection_names,
+                lambda collection: collection.name in collection_names,
                 collections,
             )
         )
         assert len(created_collections) == collections_count
         for collection in created_collections:
-            assert collection.collection_name == collection.collection_id
-            assert collection.collection_id in collection_names
-            assert collection.collection_name in collection_names
+            assert collection.name == collection.id
+            assert collection.id in collection_names
+            assert collection.name in collection_names
 
     def test_get_collection(
         self,
@@ -247,10 +246,10 @@ class TestCollections:
         )
 
         # Then
-        assert collection.collection_id == collection_id
-        assert collection.collection_name == collection_name
-        assert collection.collection_status == "Pending"
-        assert collection.collection_state == "Active"
+        assert collection.id == collection_id
+        assert collection.name == collection_name
+        assert collection.status == "Pending"
+        assert collection.state == "Active"
 
     def test_get_non_existing_collection(
         self,
@@ -304,8 +303,8 @@ class TestCollections:
         )
 
         # Then
-        assert collection.collection_name == updated_collection_name
-        assert collection.collection_preview_url_pattern == updated_url_pattern
+        assert collection.name == updated_collection_name
+        assert collection.preview_url_pattern == updated_url_pattern
 
     def test_update_non_existing_collection(
         self,
@@ -364,7 +363,7 @@ class TestCollections:
 
         listed_deleted_collection = list(
             filter(
-                lambda col: col.collection_id == collection_id,
+                lambda col: col.id == collection_id,
                 client.list_collections(),
             )
         )

@@ -70,20 +70,20 @@ def main(
             llm=DEFAULT_LLM,
             external_key_id=EXTERNAL_KEY_ID,
         )
-        print(f"Created collection with id: {res.collection_id}. Details:\n")
+        print(f"Created collection with id: {res.id}. Details:\n")
 
     elif task == "update_collection":
         res = vantage_instance.update_collection(
             collection_id=collection_id,
             collection_name=DEFAULT_UPDATE_COLLECTION_NAME,
         )
-        print(f"Updated collection with id: {res.collection_id}. Details:\n")
+        print(f"Updated collection with id: {res.id}. Details:\n")
 
     elif task == "get_collection":
         res = vantage_instance.get_collection(
             collection_id,
         )
-        print(f"Collection with id: {res.collection_id}. Details:\n")
+        print(f"Collection with id: {res.id}. Details:\n")
 
     elif task == "browser_url":
         res = vantage_instance._get_browser_upload_url(
@@ -104,7 +104,7 @@ def main(
         res = vantage_instance.delete_collection(
             collection_id,
         )
-        print(f"Deleted collection with id: {res.collection_id}. Details:\n")
+        print(f"Deleted collection with id: {res.id}. Details:\n")
 
     elif task == "semantic_search":
         res = vantage_instance.semantic_search(

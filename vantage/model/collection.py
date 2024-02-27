@@ -4,16 +4,16 @@ from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
 
 
 class Collection(BaseModel):
-    collection_created_time: Optional[StrictStr] = None
-    collection_status: Optional[StrictStr] = None
-    collection_state: Optional[StrictStr] = None
-    collection_id: Optional[StrictStr] = None
+    created_time: Optional[StrictStr] = None
+    status: Optional[StrictStr] = None
+    state: Optional[StrictStr] = None
+    id: Optional[StrictStr] = None
     user_provided_embeddings: Optional[StrictBool] = None
     llm: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = None
     external_key_id: Optional[StrictStr] = None
-    collection_name: Optional[StrictStr] = None
-    collection_preview_url_pattern: Optional[StrictStr] = None
+    name: Optional[StrictStr] = None
+    preview_url_pattern: Optional[StrictStr] = None
 
 
 class CollectionUploadURL(BaseModel):
