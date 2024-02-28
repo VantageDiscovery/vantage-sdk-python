@@ -5,7 +5,7 @@ from typing import Callable
 import pytest
 
 from vantage.exceptions import VantageInvalidRequestError, VantageNotFoundError
-from vantage.model.search import MoreLikeThese
+from vantage.model.search import MoreLikeTheseItem
 from vantage.vantage import VantageClient
 
 
@@ -267,11 +267,11 @@ class TestSearch:
         """
         # Given
         more_like_these = [
-            MoreLikeThese(
+            MoreLikeTheseItem(
                 weight=1.0,
                 query_text="bla",
             ),
-            MoreLikeThese(
+            MoreLikeTheseItem(
                 weight=1.0,
                 query_text="bla bla",
             ),

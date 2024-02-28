@@ -47,7 +47,7 @@ from vantage.exceptions import (
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
-from vantage.model.search import MoreLikeThese, SearchResult
+from vantage.model.search import MoreLikeTheseItem, SearchResult
 
 
 def _parse_exception(exception: Exception, response=None) -> Exception:
@@ -127,9 +127,27 @@ class VantageClient:
         host: Optional[str] = None,
     ) -> None:
         """
-        The `VantageClient` class is the main entry point for interacting with Vantage Discovery via the Python SDK.
-        It is used to create, delete, and manage your accounts, collections and keys.
+        Initializes a new instance of the 'VantageClient' class, the main
+        entry point for interacting with Vantage Discovery via the Python SDK,
+        setting up the necessary APIs for management and search operations.
+
+        Parameters
+        ----------
+        management_api : ManagementAPI
+            An instance of the ManagementAPI class to manage accounts, collections and keys.
+        search_api : SearchAPI
+            An instance of the SearchAPI class to perform search operations.
+        account_id : str
+            The account ID to be used for all operations within the Vantage platform.
+        vantage_api_key : Optional[str], optional
+            An optional Vantage API key used for search operations.
+            If not provided, must be set elsewhere before performing those operations.
+            Defaults to None.
+        host : Optional[str], optional
+            The host URL for the Vantage API.
+            If not provided, a default value is used.
         """
+
         self.management_api = management_api
         self.search_api = search_api
         self.account_id = account_id
@@ -146,24 +164,28 @@ class VantageClient:
         api_host: Optional[str] = "https://api.vanta.ge",
     ) -> VantageClient:
         """
-        Initializes the VantageClient using JWT token.
+        Instantiates a `VantageClient` using a JWT token for authentication.
 
         Parameters
         ----------
-            vantage_api_jwt_token: str
-                The JWT token to use for authentication.
-            account_id: str
-                Account ID TODO
-            vantage_api_key: str
-                Vantage API Key TODO
-            api_host: str
-                API host, if not provided default host will be used.
+        vantage_api_jwt_token : str
+            The JWT token for authenticating API requests.
+        account_id : str
+            The account ID associated with the Vantage operations.
+        vantage_api_key : Optional[str], optional
+            An optional Vantage API key used for search operations.
+            If not provided, must be set elsewhere before performing those operations.
+            Defaults to None.
+        api_host : Optional[str], optional
+            The host URL for the Vantage API.
+            If not provided, a default value is used.
 
         Returns
         -------
-            VantageClient
-                Vantage client initialized using JWT token.
+        VantageClient
+            An instance of the VantageClient.
         """
+
         host = f"{api_host}/v1"
         auth_client = AuthorizationClient.using_provided_token(
             vantage_jwt_token=vantage_api_jwt_token
@@ -196,27 +218,39 @@ class VantageClient:
         auth_host: Optional[str] = "https://auth.vanta.ge",
     ) -> VantageClient:
         """
-        Initializes the VantageClient using client credentials.
+        Instantiates a `VantageClient` using OAuth client credentials for authentication.
+
+        This class method simplifies the process of creating a `VantageClient` instance
+        by handling OAuth authentication automatically, using the provided client ID and secret.
 
         Parameters
         ----------
-            vantage_client_id: str
-                Vantage Client ID TODO
-            vantage_client_secret: str
-                Vantage Client Secret TODO
-            account_id: str
-                Account ID TODO
-            vantage_api_key: str
-                Vantage API Key TODO
-            api_host: str
-                Vantage API host, if not provided default API host will be used.
-            auth_host: str
-                Vantage auth host, if not provided default auth host will be used.
+        vantage_client_id : str
+            The client ID issued by Vantage for OAuth authentication.
+        vantage_client_secret : str
+            The client secret issued by Vantage for OAuth authentication.
+        account_id : str
+            The account ID to be used with the Vantage operations.
+        vantage_api_key : Optional[str], optional
+            An optional Vantage API key used for search operations.
+            If not provided, must be set elsewhere before performing those operations.
+            Defaults to None.
+        api_host : Optional[str], optional
+            The host URL for the Vantage API.
+            If not provided, a default value is used.
+        auth_host : Optional[str], optional
+            The base URL of the Vantage authentication server.
+            If not provided, a default value is used.
 
         Returns
         -------
-            VantageClient
-                Vantage client initialized using client credentials.
+        VantageClient
+            An instance of the VantageClient.
+
+        Notes
+        -----
+        - The method performs authentication with the Vantage OAuth server
+        automatically and configures the internal API client with the obtained access token.
         """
         host = f"{api_host}/v1"
         auth_endpoint = f"{auth_host}/oauth/token"
@@ -261,7 +295,8 @@ class VantageClient:
         ----------
         account_id : Optional[str], optional
             The unique identifier of the account to be retrieved.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -272,7 +307,7 @@ class VantageClient:
         --------
         >>> vantage_client = VantageClient(...)
         >>> account = vantage_client.get_account()
-        >>> print(account.account_name)
+        >>> print(account.name)
         "Example Account Name"
         """
 
@@ -303,7 +338,8 @@ class VantageClient:
             The new name for the account.
         account_id : Optional[str], optional
             The unique identifier of the account to be updated.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -314,7 +350,7 @@ class VantageClient:
         --------
         >>> vantage_client = VantageClient(...)
         >>> updated_account = vantage_client.update_account(account_name="New Account Name")
-        >>> print(updated_account.account_name)
+        >>> print(updated_account.name)
         "New Account Name"
         """
 
@@ -348,7 +384,8 @@ class VantageClient:
         ----------
         account_id : Optional[str], optional
             The unique identifier of the account for which the Vantage API keys are to be retrieved.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -360,7 +397,7 @@ class VantageClient:
         >>> vantage_client = VantageClient(...)
         >>> vantage_api_keys = vantage_client.get_vantage_api_keys()
         >>> for key in vantage_api_keys:
-        ...     print(key.vantage_api_key_value)
+        ...     print(key.value)
         "12345"
         "54321"
         """
@@ -396,7 +433,8 @@ class VantageClient:
             The unique identifier of the Vantage API key to be retrieved.
         account_id : Optional[str], optional
             The unique identifier of the account for which the Vantage API key is associated.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -407,7 +445,7 @@ class VantageClient:
         --------
         >>> vantage_client = VantageClient(...)
         >>> vantage_api_key = vantage_client.get_vantage_api_key(vantage_api_key_id="api_key_12345")
-        >>> print(vantage_api_key.vantage_api_key_value)
+        >>> print(vantage_api_key.value)
         "12345"
         """
 
@@ -443,7 +481,7 @@ class VantageClient:
         Parameters
         ----------
         url : str
-            TODO: ?
+            Currently not in use
         llm_provider : str
             The provider of the Large Language Model (LLM) service.
             Supported options are: OpenAI and HuggingFace (Hugging)
@@ -451,7 +489,8 @@ class VantageClient:
             The secret key for accessing the LLM service.
         account_id : Optional[str], optional
             The unique identifier of the account for which the external API key is to be created.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -466,7 +505,7 @@ class VantageClient:
         ...     llm_provider="OpenAI",
         ...     llm_secret="secret123",
         ... )
-        >>> print(external_api_key.external_key_id)
+        >>> print(external_api_key.id)
         "external_key_123"
         """
 
@@ -499,7 +538,8 @@ class VantageClient:
         ----------
         account_id : Optional[str], optional
             The unique identifier of the account for which the external API keys are to be retrieved.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -508,10 +548,10 @@ class VantageClient:
 
         Examples
         --------
-        >>> vantage_client = VantageClient()
+        >>> vantage_client = VantageClient(...)
         >>> external_api_keys = vantage_client.get_external_api_keys()
         >>> for key in external_api_keys:
-        ...     print(key.external_key_id)
+        ...     print(key.id)
         "external_key_123"
         "external_key_321"
         """
@@ -547,7 +587,8 @@ class VantageClient:
             The unique identifier of the external API key to be retrieved.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -556,7 +597,7 @@ class VantageClient:
 
         Examples
         --------
-        >>> vantage_client = VantageClient()
+        >>> vantage_client = VantageClient(...)
         >>> external_api_key = vantage_client.get_external_api_key(external_key_id="external_key_123")
         >>> print(external_api_key.llm_provider)
         "OpenAI"
@@ -600,7 +641,8 @@ class VantageClient:
             The new secret key for accessing the LLM service.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -609,7 +651,7 @@ class VantageClient:
 
         Examples
         --------
-        >>> vantage_client = VantageClient()
+        >>> vantage_client = VantageClient(...)
         >>> updated_external_api_key = vantage_client.update_external_api_key(
         ...     external_key_id="external_key_123",
         ...     url="https://newexample.com/api",
@@ -655,11 +697,12 @@ class VantageClient:
             The unique identifier of the external API key to be deleted.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Examples
         --------
-        >>> vantage_client = VantageClient()
+        >>> vantage_client = VantageClient(...)
         >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
         """
 
@@ -691,7 +734,8 @@ class VantageClient:
         ----------
         account_id : Optional[str], optional
             The unique identifier of the account for which the collections are to be retrieved.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -703,7 +747,7 @@ class VantageClient:
         >>> vantage_client = VantageClient(...)
         >>> collections = vantage_client.list_collections(account_id="12345")
         >>> for collection in collections:
-        ...     print(collection.collection_name)
+        ...     print(collection.name)
         "Collection 1"
         "Collection 2"
         """
@@ -738,7 +782,8 @@ class VantageClient:
         ----------
         account_id : Optional[str], optional
             The unique identifier of the account for which the collection IDs are to be retrieved.
-            If None, the account ID of the current instance is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -779,6 +824,9 @@ class VantageClient:
         ----------
         collection_id : str
             The unique identifier for the new collection.
+            It can only contain lowercase letters [a-z], digits [0-9] and a hypen [-].
+            The maximum length for a colleciton ID is 36 characters.
+            It can not be changed after the collection is created.
         collection_name : str
             The name of the new collection.
         embeddings_dimension : int
@@ -794,7 +842,8 @@ class VantageClient:
             A URL pattern for previewing items in the collection, if applicable.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
-            If None, the current account ID is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -813,7 +862,7 @@ class VantageClient:
                 llm="text-embedding-ada-002",
                 external_key_id="external_key_123",
             )
-        >>> print(new_collection.collection_id)
+        >>> print(new_collection.id)
         "user-provided"
 
         Vantage-Managed:
@@ -824,7 +873,7 @@ class VantageClient:
                 embeddings_dimension=1536,
                 user_provided_embeddings=False,
             )
-        >>> print(new_collection.collection_id)
+        >>> print(new_collection.id)
         "vantage-managed"
         """
 
@@ -880,7 +929,8 @@ class VantageClient:
             The unique identifier of the collection to be retrieved.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
-            If None, the current account ID is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -891,7 +941,7 @@ class VantageClient:
         -------
         >>> vantage_client = VantageClient()
         >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
-        >>> print(collection.collection_name)
+        >>> print(collection.name)
         "My Collection"
         """
 
@@ -937,7 +987,8 @@ class VantageClient:
             New URL pattern for previewing items in the collection, if updating.
         account_id : Optional[str], optional
             Account ID to which the collection belongs.
-            If None, uses the current account ID.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -946,12 +997,12 @@ class VantageClient:
 
         Example
         -------
-        >>> vantage_client = VantageClient()
+        >>> vantage_client = VantageClient(...)
         >>> updated_collection = vantage_client.update_collection(
                 collection_id="my-collection",
                 collection_name="Updated Collection Name",
             )
-        >>> print(updated_collection.collection_name)
+        >>> print(updated_collection.name)
         "Updated Collection Name"
         """
 
@@ -996,7 +1047,9 @@ class VantageClient:
         collection_id : str
             The unique identifier of the collection to be deleted.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs. If None, the current account ID is used.
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
@@ -1005,8 +1058,8 @@ class VantageClient:
 
         Example
         -------
-        >>> vantage_client = VantageClient()
-        >>> deleted_collection = vantage_client.delete_collection(collection_id="my-collection")
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_client.delete_collection(collection_id="my-collection")
         """
 
         if collection_id not in self._existing_collection_ids(
@@ -1051,19 +1104,14 @@ class VantageClient:
         customer_batch_identifier : Optional[str], optional
             An optional identifier provided by the customer to track the batch of uploads.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs. If None, the current account ID is used.
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Returns
         -------
         CollectionUploadURL
             An object containing the URL for browser-based file uploads.
-
-        Raises
-        ------
-        VantageNotFoundError
-            If the collection with the provided ID does not exist within the specified account.
-        Exception
-            For other exceptions that occur during the URL retrieval process.
         """
 
         if collection_id not in self._existing_collection_ids(
@@ -1146,7 +1194,43 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
-        # TODO: docstring
+        """
+        Performs a search within a specified collection using an embedding vector,
+        with optional parameters for accuracy, pagination, and a boolean filter for refined
+        search criteria.
+
+        Parameters
+        ----------
+        embedding : List[int]
+            The embedding vector used for the search.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : float, optional
+            The accuracy threshold for the search.
+            Defaults to 0.3.
+        page : Optional[int], optional
+            The page number for pagination.
+            Defaults to None.
+        page_count : Optional[int], optional
+            The number of results per page for pagination.
+            Defaults to None.
+        boolean_filter : Optional[str], optional
+            A boolean filter string for refining search results.
+            Defaults to None.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results.
+        """
 
         if collection_id not in self._existing_collection_ids(
             account_id=account_id
@@ -1213,7 +1297,43 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
-        # TODO: docstring
+        """
+        Performs a search within a specified collection using a text query,
+        with optional parameters for accuracy, pagination, and a boolean filter for refined
+        search criteria.
+
+        Parameters
+        ----------
+        text : str
+            The text query for the semantic search.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : float, optional
+            The accuracy threshold for the search.
+            Defaults to 0.3.
+        page : Optional[int], optional
+            The page number for pagination.
+            Defaults to None.
+        page_count : Optional[int], optional
+            The number of results per page for pagination.
+            Defaults to None.
+        boolean_filter : Optional[str], optional
+            A boolean filter string for refining search results.
+            Defaults to None.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results.
+        """
 
         if collection_id not in self._existing_collection_ids(account_id):
             raise VantageNotFoundError(
@@ -1270,16 +1390,51 @@ class VantageClient:
     def more_like_this_search(
         self,
         document_id: str,
-        collection_id: Optional[str] = None,
-        accuracy: Optional[int | float] = None,
+        collection_id: str,
+        accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
-        request_id: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
-        # TODO: docstring
+        """
+        Performs a "More Like This" search to find documents similar to a specified
+        document within a specified collection using optional parameters for
+        accuracy, pagination, and a boolean filter for refined search criteria.
+
+        Parameters
+        ----------
+        document_id : str
+            The ID of the document to find similar documents to.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : float, optional
+            The accuracy threshold for the search.
+            Defaults to 0.3.
+        page : Optional[int], optional
+            The page number for pagination.
+            Defaults to None.
+        page_count : Optional[int], optional
+            The number of results per page for pagination.
+            Defaults to None.
+        boolean_filter : Optional[str], optional
+            A boolean filter string for refining search results.
+            Defaults to None.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results similar to the specified document.
+        """
 
         if collection_id or accuracy:
             collection = GlobalSearchPropertiesCollection(
@@ -1318,7 +1473,6 @@ class VantageClient:
             result = self.search_api.api.more_like_this_search(
                 more_like_this_query=MoreLikeThisQuery(
                     collection=collection,
-                    request_id=request_id,
                     filter=search_filter,
                     pagination=pagination,
                     document_id=document_id,
@@ -1332,17 +1486,52 @@ class VantageClient:
 
     def more_like_these_search(
         self,
-        more_like_these: list[MoreLikeThese],
-        collection_id: Optional[str] = None,
-        accuracy: Optional[int | float] = None,
+        more_like_these: list[MoreLikeTheseItem],
+        collection_id: str,
+        accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
-        request_id: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
-        # TODO: docstring
+        """
+        Performs a "More Like These" search to find documents similar to a specified list
+        of MoreLikeTheseItem objects within a specified collection using optional parameters for
+        accuracy, pagination, and a boolean filter for refined search criteria.
+
+        Parameters
+        ----------
+        more_like_these : list[MoreLikeTheseItem]
+            The list of "MoreLikeTheseItem" objects to find similar documents to.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : float, optional
+            The accuracy threshold for the search.
+            Defaults to 0.3.
+        page : Optional[int], optional
+            The page number for pagination.
+            Defaults to None.
+        page_count : Optional[int], optional
+            The number of results per page for pagination.
+            Defaults to None.
+        boolean_filter : Optional[str], optional
+            A boolean filter string for refining search results.
+            Defaults to None.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results similar to the specified document.
+        """
 
         if collection_id or accuracy:
             collection = GlobalSearchPropertiesCollection(
@@ -1384,7 +1573,6 @@ class VantageClient:
                         for item in more_like_these
                     ],
                     collection=collection,
-                    request_id=request_id,
                     filter=search_filter,
                     pagination=pagination,
                 ),
@@ -1403,7 +1591,6 @@ class VantageClient:
         self,
         collection_id: str,
         documents: str,
-        encoding: Optional[str] = None,
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
@@ -1418,18 +1605,17 @@ class VantageClient:
             The unique identifier of the collection to which the documents will be uploaded.
         documents : str
             A string containing the documents to be uploaded, formatted as JSONL.
-        encoding : Optional[str], optional
-            The character encoding of the documents string. Currently not used.
         batch_identifier : Optional[str], optional
             An optional identifier provided by the user to track the batch of document uploads.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
-            If None, the current account ID is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Example
         -------
-        >>> vantage_client = VantageClient()
-        >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}'
+        >>> vantage_client = VantageClient(...)
+        >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}' # noqa: E501
         >>> vantage_client.upload_documents_from_jsonl(
                 collection_id="my-collection",
                 documents=documents_jsonl,
@@ -1483,7 +1669,8 @@ class VantageClient:
             An optional identifier provided by the user to track the batch of document uploads.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
-            If None, the current account ID is used.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
 
         Example
         -------
@@ -1499,7 +1686,7 @@ class VantageClient:
         Documents in the JSONL file should be in the right format:
 
         Uploading to user-provided collection (`embeddings` field is included):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}
+        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]} # noqa: E501
 
 
         Uploading to vantage-managed collection (`embeddings` field is excluded):
@@ -1516,6 +1703,7 @@ class VantageClient:
             collection_id=collection_id,
             documents=file_content,
             batch_identifier=batch_identifier,
+            account_id=account_id,
         )
 
     # endregion

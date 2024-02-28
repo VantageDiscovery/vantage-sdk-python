@@ -15,7 +15,7 @@ class SearchResult(BaseModel):
     results: Optional[List[SearchResultItem]] = None
 
 
-class MoreLikeThese(BaseModel):
+class MoreLikeTheseItem(BaseModel):
     weight: StrictInt | StrictFloat
     query_text: StrictStr
     query_document_id: Optional[StrictStr] = None
