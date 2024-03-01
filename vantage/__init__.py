@@ -1,10 +1,14 @@
 """Top-level package for Vantage SDK Python."""
 
-from vantage.vantage import VantageClient
-from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.account import Account
-from vantage.model.keys import VantageAPIKey, ExternalAPIKey
-from vantage.model.search import SearchResult, SearchResultItem, MoreLikeThese
+from vantage.model.collection import Collection, CollectionUploadURL
+from vantage.model.keys import ExternalAPIKey, VantageAPIKey
+from vantage.model.search import (
+    MoreLikeTheseItem,
+    SearchResult,
+    SearchResultItem,
+)
+from vantage.vantage import VantageClient
 
 
 __author__ = """Vantage"""
@@ -19,5 +23,5 @@ __all__ = [
     "ExternalAPIKey",
     "SearchResult",
     "SearchResultItem",
-    "MoreLikeThese",
+    "MoreLikeTheseItem",
 ]
