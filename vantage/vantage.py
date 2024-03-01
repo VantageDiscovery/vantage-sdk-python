@@ -4,8 +4,6 @@ from os.path import exists
 from pathlib import Path
 from typing import List, Optional
 
-from pydantic_core._pydantic_core import ValidationError
-
 from vantage.config import (
     API_HOST_VERSION,
     AUTH_ENDPOINT,
@@ -14,18 +12,6 @@ from vantage.config import (
     DEFAULT_ENCODING,
 )
 from vantage.core.base import AuthorizationClient, AuthorizedApiClient
-from vantage.core.http.exceptions import (
-    ApiAttributeError,
-    ApiException,
-    ApiKeyError,
-    ApiValueError,
-    BadRequestException,
-    ForbiddenException,
-    NotFoundException,
-    OpenApiException,
-    ServiceException,
-    UnauthorizedException,
-)
 from vantage.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -43,12 +29,7 @@ from vantage.core.http.models import (
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
 from vantage.exceptions import (
-    VantageForbiddenError,
-    VantageInvalidRequestError,
-    VantageInvalidResponseError,
     VantageNotFoundError,
-    VantageServiceError,
-    VantageUnauthorizedError,
     VantageValueError,
 )
 from vantage.model.account import Account
@@ -56,72 +37,7 @@ from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import MoreLikeTheseItem, SearchResult
 
-
-def _parse_exception(exception: Exception, response=None) -> Exception:
-    if isinstance(exception, BadRequestException):
-        return VantageInvalidRequestError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, NotFoundException):
-        return VantageNotFoundError(message=exception.reason)
-
-    if isinstance(exception, UnauthorizedException):
-        return VantageUnauthorizedError("")
-
-    if isinstance(exception, ForbiddenException):
-        return VantageForbiddenError("")
-
-    if isinstance(exception, ServiceException):
-        return VantageServiceError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, ApiValueError):
-        return VantageInvalidRequestError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, ApiAttributeError):
-        return VantageInvalidRequestError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, ApiKeyError):
-        return VantageInvalidRequestError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, ApiException):
-        return VantageServiceError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, OpenApiException):
-        return VantageServiceError(
-            reason=exception.reason,
-            status=exception.status,
-            response=exception.body,
-        )
-
-    if isinstance(exception, ValidationError):
-        return VantageInvalidResponseError(
-            error_message=exception.title, validation_error=exception
-        )
-
-    return exception
+from utils import _parse_exception
 
 
 class VantageClient:
@@ -800,7 +716,7 @@ class VantageClient:
             collections = self.list_collections(
                 account_id=account_id if account_id else self.account_id
             )
-            return [col.model_dump()["collection_id"] for col in collections]
+            return [col.model_dump()["id"] for col in collections]
         except Exception as exception:
             raise _parse_exception(exception)
 
@@ -1189,6 +1105,57 @@ class VantageClient:
 
     # region Search
 
+    def _prepare_embedding_query(
+        self,
+        embedding: List[int],
+        collection_id: str,
+        accuracy: float = 0.3,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> EmbeddingSearchQuery:
+
+        collection = GlobalSearchPropertiesCollection(
+            collection_id=collection_id,
+            accuracy=accuracy,
+            account_id=account_id if account_id else self.account_id,
+        )
+
+        if page:
+            pagination = GlobalSearchPropertiesPagination(
+                page=page,
+                count=page_count,
+            )
+        else:
+            pagination = None
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
+        else:
+            search_filter = None
+
+        return EmbeddingSearchQuery(
+            embedding=embedding,
+            collection=collection,
+            filter=search_filter,
+            pagination=pagination,
+        )
+
+    def _vantage_api_key_check(self, vantage_api_key: str) -> str:
+        vantage_api_key = (
+            vantage_api_key if vantage_api_key else self.vantage_api_key
+        )
+
+        if not vantage_api_key:
+            raise VantageValueError(
+                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
+            )
+
+        return vantage_api_key
+
     def embedding_search(
         self,
         embedding: List[int],
@@ -1245,42 +1212,17 @@ class VantageClient:
                 f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
 
-        collection = GlobalSearchPropertiesCollection(
-            collection_id=collection_id,
-            accuracy=accuracy,
-            account_id=account_id if account_id else self.account_id,
+        query = self._prepare_embedding_query(
+            embedding,
+            collection_id,
+            accuracy,
+            page,
+            page_count,
+            boolean_filter,
+            account_id,
         )
 
-        if page:
-            pagination = GlobalSearchPropertiesPagination(
-                page=page,
-                count=page_count,
-            )
-        else:
-            pagination = None
-
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
-                boolean_filter=boolean_filter,
-            )
-        else:
-            search_filter = None
-
-        query = EmbeddingSearchQuery(
-            embedding=embedding,
-            collection=collection,
-            filter=search_filter,
-            pagination=pagination,
-        )
-
-        vantage_api_key = (
-            vantage_api_key if vantage_api_key else self.vantage_api_key
-        )
-
-        if not vantage_api_key:
-            raise VantageValueError(
-                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
-            )
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         try:
             result = self.search_api.api.embedding_search(
@@ -1374,14 +1316,7 @@ class VantageClient:
             pagination=pagination,
         )
 
-        vantage_api_key = (
-            vantage_api_key if vantage_api_key else self.vantage_api_key
-        )
-
-        if not vantage_api_key:
-            raise VantageValueError(
-                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
-            )
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         try:
             result = self.search_api.api.semantic_search(
@@ -1466,14 +1401,7 @@ class VantageClient:
         else:
             search_filter = None
 
-        vantage_api_key = (
-            vantage_api_key if vantage_api_key else self.vantage_api_key
-        )
-
-        if not vantage_api_key:
-            raise VantageValueError(
-                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
-            )
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         try:
             result = self.search_api.api.more_like_this_search(
@@ -1562,14 +1490,7 @@ class VantageClient:
         else:
             search_filter = None
 
-        vantage_api_key = (
-            vantage_api_key if vantage_api_key else self.vantage_api_key
-        )
-
-        if not vantage_api_key:
-            raise VantageValueError(
-                "Vantage API Key is missing. Please provide the 'vantage_api_key' parameter to authenticate with the Search API."  # noqa: E501
-            )
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         try:
             result = self.search_api.api.more_like_these_search(
