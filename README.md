@@ -1,4 +1,4 @@
-# [Vantage Discovery Pyton SDK](https://github.com/VantageDiscovery/vantage-sdk-python)
+# Vantage Discovery Pyton SDK
 
 The Vantage Discovery Python SDK provides an easy-to-use interface to interact with the Vantage vector database, enabling developers to seamlessly integrate vector search and collection management capabilities into their Python applications.
 
@@ -32,10 +32,10 @@ vantage_client = VantageClient.using_client_credentials(
 The Vantage Discovery Python SDK is divided into several modules, allowing you to manage accounts, collections, and API keys, as well as perform various types of searches.
 
 #### Key Features
-- Collection Management: Easily create, update, list, and delete collections.
-- Documents Upload: Upload your data easily to your collections.
-- Search: Perform semantic, embedding and "more like this" searches within your collections.
-- LLM Keys Management: Keep your LLM provider secrets safe and up-to-date.
+- __Collection Management__: Easily create, update, list, and delete collections.
+- __Documents Upload__: Upload your data easily to your collections.
+- __Search__: Perform semantic, embedding and "more like this/these" searches within your collections.
+- __LLM Keys Management__: Keep your LLM provider secrets safe and up-to-date.
 
 ## Examples
 
@@ -45,7 +45,9 @@ The Vantage Discovery Python SDK is divided into several modules, allowing you t
 collection = vantage_client.create_collection(
     collection_id="my_collection",
     collection_name="My Test Collection",
-    embeddings_dimension=128
+    embeddings_dimension=1536,
+    llm="text-embedding-ada-002",
+    external_key_id="YOUR_EXTERNAL_KEY_ID" # Get from Vantage Console UI or using the SDK
 )
 print(f"Created collection: {collection.name}")
 ```
@@ -59,17 +61,16 @@ vantage_client.upload_documents_from_jsonl(
 )
 ```
 
-## Performing a Search
-
+### Performing a Search
 ```python
 search_result = vantage_client.semantic_search(
     text="Find documents similar to this text",
     collection_id="my_collection"
 )
 for result in search_result.results:
-    print(result.document_id, result.score)
+    print(result.id, result.score)
 ```
 
 ## Documentation 
 
-For detailed documentation on all methods and their parameters, please refer to the official [Vantage Discovery Python SDK repositry](https://github.com/VantageDiscovery/vantage-sdk-python) or check some of the examples from our [Vantage Tutorials repository](https://github.com/VantageDiscovery/vantage-tutorials).
+For detailed documentation on all methods and their parameters, please refer to the [Vantage Discovery Python SDK repository](https://github.com/VantageDiscovery/vantage-sdk-python) or check some of the examples from our [Vantage Tutorials repository](https://github.com/VantageDiscovery/vantage-tutorials).
