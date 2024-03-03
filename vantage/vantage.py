@@ -35,7 +35,11 @@ from vantage.exceptions import (
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
-from vantage.model.search import MoreLikeTheseItem, SearchResult
+from vantage.model.search import (
+    MoreLikeTheseItem,
+    SearchResult,
+    GlobalSearchProperties,
+)
 
 from vantage.utils import _parse_exception
 
@@ -241,7 +245,6 @@ class VantageClient:
         except Exception as exception:
             raise _parse_exception(exception)
 
-    # TODO: Check what fields are mandatory
     def update_account(
         self,
         account_name: Optional[str] = None,
@@ -384,67 +387,6 @@ class VantageClient:
 
     # region External API keys
 
-    def create_external_api_key(
-        self,
-        url: str,
-        llm_provider: str,
-        llm_secret: str,
-        account_id: Optional[str] = None,
-    ) -> ExternalAPIKey:
-        """
-        Creates a new external API key associated with a given account.
-
-        This method generates a new external API key for integrating with external services, specified by the
-        URL, LLM (Large Language Model) provider, and a secret for the LLM.
-        The API key is associated with the account identified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API for the creation operation and returns an ExternalAPIKey object upon success.
-
-        Parameters
-        ----------
-        url : str
-            Currently not in use
-        llm_provider : str
-            The provider of the Large Language Model (LLM) service.
-            Supported options are: OpenAI and HuggingFace (Hugging)
-        llm_secret : str
-            The secret key for accessing the LLM service.
-        account_id : Optional[str], optional
-            The unique identifier of the account for which the external API key is to be created.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        ExternalAPIKey
-            An ExternalAPIKey object containing the details of the newly created API key.
-
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_key = vantage_client.create_external_api_key(
-        ...     url="https://example.com/api",
-        ...     llm_provider="OpenAI",
-        ...     llm_secret="secret123",
-        ... )
-        >>> print(external_api_key.id)
-        "external_key_123"
-        """
-
-        external_api_key_modifiable = ExternalAPIKeyModifiable(
-            url=url, llm_provider=llm_provider, llm_secret=llm_secret
-        )
-
-        try:
-            key = self.management_api.external_api_keys_api.api.create_external_api_key(
-                account_id=account_id if account_id else self.account_id,
-                external_api_key_modifiable=external_api_key_modifiable,
-            )
-
-            return ExternalAPIKey.model_validate(key.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
-
     def get_external_api_keys(
         self,
         account_id: Optional[str] = None,
@@ -529,6 +471,67 @@ class VantageClient:
             key = self.management_api.external_api_keys_api.api.get_external_api_key(
                 account_id=account_id if account_id else self.account_id,
                 external_key_id=external_key_id,
+            )
+
+            return ExternalAPIKey.model_validate(key.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
+
+    def create_external_api_key(
+        self,
+        url: str,
+        llm_provider: str,
+        llm_secret: str,
+        account_id: Optional[str] = None,
+    ) -> ExternalAPIKey:
+        """
+        Creates a new external API key associated with a given account.
+
+        This method generates a new external API key for integrating with external services, specified by the
+        URL, LLM (Large Language Model) provider, and a secret for the LLM.
+        The API key is associated with the account identified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API for the creation operation and returns an ExternalAPIKey object upon success.
+
+        Parameters
+        ----------
+        url : str
+            Currently not in use
+        llm_provider : str
+            The provider of the Large Language Model (LLM) service.
+            Supported options are: OpenAI and HuggingFace (Hugging)
+        llm_secret : str
+            The secret key for accessing the LLM service.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the external API key is to be created.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        ExternalAPIKey
+            An ExternalAPIKey object containing the details of the newly created API key.
+
+        Examples
+        --------
+        >>> vantage_client = VantageClient(...)
+        >>> external_api_key = vantage_client.create_external_api_key(
+        ...     url="https://example.com/api",
+        ...     llm_provider="OpenAI",
+        ...     llm_secret="secret123",
+        ... )
+        >>> print(external_api_key.id)
+        "external_key_123"
+        """
+
+        external_api_key_modifiable = ExternalAPIKeyModifiable(
+            url=url, llm_provider=llm_provider, llm_secret=llm_secret
+        )
+
+        try:
+            key = self.management_api.external_api_keys_api.api.create_external_api_key(
+                account_id=account_id if account_id else self.account_id,
+                external_api_key_modifiable=external_api_key_modifiable,
             )
 
             return ExternalAPIKey.model_validate(key.model_dump())
@@ -640,6 +643,90 @@ class VantageClient:
 
     # region Collections
 
+    def _existing_collection_ids(
+        self,
+        account_id: Optional[str] = None,
+    ) -> List[str]:
+        """
+        Retrieves a list of existing collection IDs associated with a given account.
+
+        This private method fetches the IDs of all collections linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the collection IDs are to be retrieved.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[str]
+            A list of strings, each representing the unique ID of a collection associated with the account.
+        """
+        try:
+            collections = self.list_collections(
+                account_id=account_id if account_id else self.account_id
+            )
+            return [col.model_dump()["id"] for col in collections]
+        except Exception as exception:
+            raise _parse_exception(exception)
+
+    def _get_browser_upload_url(
+        self,
+        collection_id: str,
+        file_size: int,
+        customer_batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> CollectionUploadURL:
+        """
+        Retrieves a browser upload URL for uploading files to a specified collection.
+        It verifies the existence of the collection within the specified account and
+        raises an exception if the collection does not exist.
+        The method generates a URL that can be used to upload files directly from a browser,
+        using specified file sizes and an optional customer batch identifier for tracking.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the file will be uploaded.
+        file_size : int
+            The size of the file to be uploaded, in bytes.
+        customer_batch_identifier : Optional[str], optional
+            An optional identifier provided by the customer to track the batch of uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        CollectionUploadURL
+            An object containing the URL for browser-based file uploads.
+        """
+
+        if collection_id not in self._existing_collection_ids(
+            account_id=account_id
+        ):
+            raise VantageNotFoundError(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+            )
+
+        try:
+            url = (
+                self.management_api.collection_api.api.get_browser_upload_url(
+                    collection_id=collection_id,
+                    file_size=file_size,
+                    customer_batch_identifier=customer_batch_identifier,
+                    account_id=account_id if account_id else self.account_id,
+                )
+            )
+
+            return CollectionUploadURL.model_validate(url.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
+
     def list_collections(
         self,
         account_id: Optional[str] = None,
@@ -690,33 +777,57 @@ class VantageClient:
         except Exception as exception:
             raise _parse_exception(exception)
 
-    def _existing_collection_ids(
+    def get_collection(
         self,
+        collection_id: str,
         account_id: Optional[str] = None,
-    ) -> List[str]:
+    ) -> Collection:
         """
-        Retrieves a list of existing collection IDs associated with a given account.
+        Retrieves the details of a specified collection.
 
-        This private method fetches the IDs of all collections linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        This method fetches the details of a collection identified
+        by its unique ID within a specified account.
+        It checks for the existence of the collection ID and raises
+        an exception if no collection with the given ID exists.
+        The method returns a Collection object containing
+        the collection's details upon successful retrieval.
 
         Parameters
         ----------
+        collection_id : str
+            The unique identifier of the collection to be retrieved.
         account_id : Optional[str], optional
-            The unique identifier of the account for which the collection IDs are to be retrieved.
+            The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
         Returns
         -------
-        List[str]
-            A list of strings, each representing the unique ID of a collection associated with the account.
+        Collection
+            A Collection object containing the details of the specified collection.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient()
+        >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
+        >>> print(collection.name)
+        "My Collection"
         """
-        try:
-            collections = self.list_collections(
-                account_id=account_id if account_id else self.account_id
+
+        if collection_id not in self._existing_collection_ids(
+            account_id=account_id
+        ):
+            raise VantageNotFoundError(
+                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
             )
-            return [col.model_dump()["id"] for col in collections]
+
+        try:
+            collection = self.management_api.collection_api.api.get_collection(
+                collection_id=collection_id,
+                account_id=account_id if account_id else self.account_id,
+            )
+
+            return Collection.model_validate(collection.model_dump())
         except Exception as exception:
             raise _parse_exception(exception)
 
@@ -824,60 +935,6 @@ class VantageClient:
                     create_collection_request=create_collection_request,
                     account_id=account_id if account_id else self.account_id,
                 )
-            )
-
-            return Collection.model_validate(collection.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
-
-    def get_collection(
-        self,
-        collection_id: str,
-        account_id: Optional[str] = None,
-    ) -> Collection:
-        """
-        Retrieves the details of a specified collection.
-
-        This method fetches the details of a collection identified
-        by its unique ID within a specified account.
-        It checks for the existence of the collection ID and raises
-        an exception if no collection with the given ID exists.
-        The method returns a Collection object containing
-        the collection's details upon successful retrieval.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection to be retrieved.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        Collection
-            A Collection object containing the details of the specified collection.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient()
-        >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
-        >>> print(collection.name)
-        "My Collection"
-        """
-
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
-        try:
-            collection = self.management_api.collection_api.api.get_collection(
-                collection_id=collection_id,
-                account_id=account_id if account_id else self.account_id,
             )
 
             return Collection.model_validate(collection.model_dump())
@@ -1003,60 +1060,6 @@ class VantageClient:
         except Exception as exception:
             raise _parse_exception(exception)
 
-    def _get_browser_upload_url(
-        self,
-        collection_id: str,
-        file_size: int,
-        customer_batch_identifier: Optional[str] = None,
-        account_id: Optional[str] = None,
-    ) -> CollectionUploadURL:
-        """
-        Retrieves a browser upload URL for uploading files to a specified collection.
-        It verifies the existence of the collection within the specified account and
-        raises an exception if the collection does not exist.
-        The method generates a URL that can be used to upload files directly from a browser,
-        using specified file sizes and an optional customer batch identifier for tracking.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection to which the file will be uploaded.
-        file_size : int
-            The size of the file to be uploaded, in bytes.
-        customer_batch_identifier : Optional[str], optional
-            An optional identifier provided by the customer to track the batch of uploads.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        CollectionUploadURL
-            An object containing the URL for browser-based file uploads.
-        """
-
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
-        try:
-            url = (
-                self.management_api.collection_api.api.get_browser_upload_url(
-                    collection_id=collection_id,
-                    file_size=file_size,
-                    customer_batch_identifier=customer_batch_identifier,
-                    account_id=account_id if account_id else self.account_id,
-                )
-            )
-
-            return CollectionUploadURL.model_validate(url.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
-
     def upload_embedding(
         self,
         collection_id: str,
@@ -1105,22 +1108,27 @@ class VantageClient:
 
     # region Search
 
-    def _prepare_embedding_query(
+    def _prepare_search_query(
         self,
-        embedding: List[int],
         collection_id: str,
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         account_id: Optional[str] = None,
-    ) -> EmbeddingSearchQuery:
-
+    ) -> GlobalSearchProperties:
         collection = GlobalSearchPropertiesCollection(
             collection_id=collection_id,
             accuracy=accuracy,
             account_id=account_id if account_id else self.account_id,
         )
+
+        if boolean_filter:
+            search_filter = GlobalSearchPropertiesFilter(
+                boolean_filter=boolean_filter,
+            )
+        else:
+            search_filter = None
 
         if page:
             pagination = GlobalSearchPropertiesPagination(
@@ -1130,15 +1138,7 @@ class VantageClient:
         else:
             pagination = None
 
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
-                boolean_filter=boolean_filter,
-            )
-        else:
-            search_filter = None
-
-        return EmbeddingSearchQuery(
-            embedding=embedding,
+        return GlobalSearchProperties(
             collection=collection,
             filter=search_filter,
             pagination=pagination,
@@ -1155,6 +1155,88 @@ class VantageClient:
             )
 
         return vantage_api_key
+
+    def semantic_search(
+        self,
+        text: str,
+        collection_id: str,
+        accuracy: float = 0.3,
+        page: Optional[int] = None,
+        page_count: Optional[int] = None,
+        boolean_filter: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> SearchResult:
+        """
+        Performs a search within a specified collection using a text query,
+        with optional parameters for accuracy, pagination, and a boolean filter for refined
+        search criteria.
+
+        Parameters
+        ----------
+        text : str
+            The text query for the semantic search.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : float, optional
+            The accuracy threshold for the search.
+            Defaults to 0.3.
+        page : Optional[int], optional
+            The page number for pagination.
+            Defaults to None.
+        page_count : Optional[int], optional
+            The number of results per page for pagination.
+            Defaults to None.
+        boolean_filter : Optional[str], optional
+            A boolean filter string for refining search results.
+            Defaults to None.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results.
+        """
+
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundError(
+                f"Collection with provided collection id [{collection_id}] does not exist."
+            )
+
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        search_properties = self._prepare_search_query(
+            collection_id,
+            accuracy,
+            page,
+            page_count,
+            boolean_filter,
+            account_id,
+        )
+
+        query = SemanticSearchQuery(
+            text=text,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+        )
+
+        try:
+            result = self.search_api.api.semantic_search(
+                query,
+                _headers={"authorization": f"Bearer {vantage_api_key}"},
+            )
+
+            return SearchResult.model_validate(result.model_dump())
+        except Exception as exception:
+            raise _parse_exception(exception)
 
     def embedding_search(
         self,
@@ -1209,11 +1291,12 @@ class VantageClient:
             account_id=account_id
         ):
             raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
+                f"Collection with provided collection id [{collection_id}] does not exist."
             )
 
-        query = self._prepare_embedding_query(
-            embedding,
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        search_properties = self._prepare_search_query(
             collection_id,
             accuracy,
             page,
@@ -1222,104 +1305,15 @@ class VantageClient:
             account_id,
         )
 
-        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+        query = EmbeddingSearchQuery(
+            embedding=embedding,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+        )
 
         try:
             result = self.search_api.api.embedding_search(
-                query,
-                _headers={"authorization": f"Bearer {vantage_api_key}"},
-            )
-
-            return SearchResult.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
-
-    def semantic_search(
-        self,
-        text: str,
-        collection_id: str,
-        accuracy: float = 0.3,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        vantage_api_key: Optional[str] = None,
-        account_id: Optional[str] = None,
-    ) -> SearchResult:
-        """
-        Performs a search within a specified collection using a text query,
-        with optional parameters for accuracy, pagination, and a boolean filter for refined
-        search criteria.
-
-        Parameters
-        ----------
-        text : str
-            The text query for the semantic search.
-        collection_id : str
-            The ID of the collection to search within.
-        accuracy : float, optional
-            The accuracy threshold for the search.
-            Defaults to 0.3.
-        page : Optional[int], optional
-            The page number for pagination.
-            Defaults to None.
-        page_count : Optional[int], optional
-            The number of results per page for pagination.
-            Defaults to None.
-        boolean_filter : Optional[str], optional
-            A boolean filter string for refining search results.
-            Defaults to None.
-        vantage_api_key : Optional[str], optional
-            The Vantage API key used for authentication.
-            If not provided, the instance's API key is used.
-            Defaults to None.
-        account_id : Optional[str], optional
-            The account ID associated with the search.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        SearchResult
-            An object containing the search results.
-        """
-
-        if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
-        collection = GlobalSearchPropertiesCollection(
-            collection_id=collection_id,
-            accuracy=accuracy,
-            account_id=account_id if account_id else self.account_id,
-        )
-
-        if page:
-            pagination = GlobalSearchPropertiesPagination(
-                page=page,
-                count=page_count,
-            )
-        else:
-            pagination = None
-
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
-                boolean_filter=boolean_filter,
-            )
-        else:
-            search_filter = None
-
-        query = SemanticSearchQuery(
-            text=text,
-            collection=collection,
-            filter=search_filter,
-            pagination=pagination,
-        )
-
-        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
-
-        try:
-            result = self.search_api.api.semantic_search(
                 query,
                 _headers={"authorization": f"Bearer {vantage_api_key}"},
             )
@@ -1377,40 +1371,32 @@ class VantageClient:
             An object containing the search results similar to the specified document.
         """
 
-        if collection_id or accuracy:
-            collection = GlobalSearchPropertiesCollection(
-                account_id=(account_id if account_id else self.account_id),
-                collection_id=collection_id,
-                accuracy=accuracy,
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundError(
+                f"Collection with provided collection id [{collection_id}] does not exist."
             )
-        else:
-            collection = None
-
-        if page:
-            pagination = GlobalSearchPropertiesPagination(
-                page=page,
-                count=page_count,
-            )
-        else:
-            pagination = None
-
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
-                boolean_filter=boolean_filter,
-            )
-        else:
-            search_filter = None
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
+        search_properties = self._prepare_search_query(
+            collection_id,
+            accuracy,
+            page,
+            page_count,
+            boolean_filter,
+            account_id,
+        )
+
+        query = MoreLikeThisQuery(
+            document_id=document_id,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+        )
+
         try:
             result = self.search_api.api.more_like_this_search(
-                more_like_this_query=MoreLikeThisQuery(
-                    collection=collection,
-                    filter=search_filter,
-                    pagination=pagination,
-                    document_id=document_id,
-                ),
+                more_like_this_query=query,
                 _headers={"authorization": f"Bearer {vantage_api_key}"},
             )
 
@@ -1467,42 +1453,35 @@ class VantageClient:
             An object containing the search results similar to the specified document.
         """
 
-        if collection_id or accuracy:
-            collection = GlobalSearchPropertiesCollection(
-                account_id=(account_id if account_id else self.account_id),
-                collection_id=collection_id,
-                accuracy=accuracy,
+        if collection_id not in self._existing_collection_ids(account_id):
+            raise VantageNotFoundError(
+                f"Collection with provided collection id [{collection_id}] does not exist."
             )
-        else:
-            collection = None
-
-        if page:
-            pagination = GlobalSearchPropertiesPagination(
-                page=page, count=page_count
-            )
-        else:
-            pagination = None
-
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
-                boolean_filter=boolean_filter,
-            )
-        else:
-            search_filter = None
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
+        search_properties = self._prepare_search_query(
+            collection_id,
+            accuracy,
+            page,
+            page_count,
+            boolean_filter,
+            account_id,
+        )
+
+        query = MoreLikeTheseQuery(
+            these=[
+                MLTheseTheseInner.model_validate(item.model_dump())
+                for item in more_like_these
+            ],
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+        )
+
         try:
             result = self.search_api.api.more_like_these_search(
-                more_like_these_query=MoreLikeTheseQuery(
-                    these=[
-                        MLTheseTheseInner.model_validate(item.model_dump())
-                        for item in more_like_these
-                    ],
-                    collection=collection,
-                    filter=search_filter,
-                    pagination=pagination,
-                ),
+                more_like_these_query=query,
                 _headers={"authorization": f"Bearer {vantage_api_key}"},
             )
 
