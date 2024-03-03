@@ -37,7 +37,7 @@ from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import MoreLikeTheseItem, SearchResult
 
-from utils import _parse_exception
+from vantage.utils import _parse_exception
 
 
 class VantageClient:
