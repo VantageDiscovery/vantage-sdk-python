@@ -7,7 +7,7 @@ class VantageAPIKey(BaseModel):
     vantage_api_key_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
     vantage_api_key_created_date: Optional[StrictStr] = None
-    vantage_api_key_value: Optional[StrictStr] = None
+    vantage_api_key_obfuscated: Optional[StrictStr] = None
 
 
 class ExternalAPIKey(BaseModel):
