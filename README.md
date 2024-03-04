@@ -71,6 +71,6 @@ for result in search_result.results:
     print(result.id, result.score)
 ```
 
-## Documentation 
+## Documentation
 
 For detailed documentation on all methods and their parameters, please refer to the [Vantage Discovery Python SDK repository](https://github.com/VantageDiscovery/vantage-sdk-python) or check some of the examples from our [Vantage Tutorials repository](https://github.com/VantageDiscovery/vantage-tutorials).

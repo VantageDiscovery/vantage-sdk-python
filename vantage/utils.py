@@ -12,7 +12,6 @@ from vantage.core.http.exceptions import (
     ServiceException,
     UnauthorizedException,
 )
-
 from vantage.exceptions import (
     VantageForbiddenError,
     VantageInvalidRequestError,

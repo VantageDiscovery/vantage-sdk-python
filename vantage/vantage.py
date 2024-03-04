@@ -28,19 +28,15 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import (
-    VantageNotFoundError,
-    VantageValueError,
-)
+from vantage.exceptions import VantageNotFoundError, VantageValueError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import (
+    GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
-    GlobalSearchProperties,
 )
-
 from vantage.utils import _parse_exception
 
 
