@@ -1,6 +1,11 @@
 from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+from vantage.core.http.models import (
+    GlobalSearchPropertiesCollection,
+    GlobalSearchPropertiesFilter,
+    GlobalSearchPropertiesPagination,
+)
 
 
 class SearchResultItem(BaseModel):
@@ -21,3 +26,9 @@ class MoreLikeTheseItem(BaseModel):
     query_document_id: Optional[StrictStr] = None
     embedding: Optional[list[StrictInt | StrictFloat]] = None
     these: Optional[list[dict[StrictStr, Any]]] = None
+
+
+class GlobalSearchProperties(BaseModel):
+    collection: GlobalSearchPropertiesCollection
+    filter: GlobalSearchPropertiesFilter
+    pagination: GlobalSearchPropertiesPagination

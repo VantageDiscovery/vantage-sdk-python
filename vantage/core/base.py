@@ -5,6 +5,12 @@ import json
 from typing import Optional
 from urllib import request
 
+from vantage.config import (
+    AUTH_ENDPOINT,
+    DEFAULT_API_HOST,
+    DEFAULT_AUTH_HOST,
+    DEFAULT_ENCODING,
+)
 from vantage.core.http import ApiClient
 from vantage.core.http.exceptions import UnauthorizedException
 
@@ -13,17 +19,15 @@ from vantage.core.http.exceptions import UnauthorizedException
 #       it needs to be revised for production usage.
 class AuthorizationClient:
     _DAY_IN_SECONDS = 86400
-    _DEFAULT_API_HOST = "https://api.vanta.ge"
-    _DEFAULT_AUTH_ENDPOINT = "https://auth.vanta.ge/oauth/token"
 
     def __init__(
         self,
-        vantage_audience_url: str = _DEFAULT_API_HOST,
-        sso_endpoint_url: str = _DEFAULT_AUTH_ENDPOINT,
+        vantage_audience_url: str = DEFAULT_API_HOST,
+        sso_endpoint_url: str = f"{DEFAULT_AUTH_HOST}{AUTH_ENDPOINT}",
         vantage_client_id: Optional[str] = None,
         vantage_client_secret: Optional[str] = None,
         vantage_jwt_token: Optional[str] = None,
-        encoding: str = "utf-8",
+        encoding: str = DEFAULT_ENCODING,
     ) -> None:
         self._check_credentials(
             vantage_client_id=vantage_client_id,
