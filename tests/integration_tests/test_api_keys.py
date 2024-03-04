@@ -31,7 +31,7 @@ class TestApiKeys:
         # Then
         assert len(keys) == 1
         api_key = keys[0]
-        assert api_key.value is None
+        assert api_key.vantage_api_key_value is None
         assert api_key.account_id == account_params["id"]
 
     def test_get_vantage_api_keys_using_wrong_account(
@@ -63,8 +63,8 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.value is None
-        api_key.id == vantage_api_key_id
+        assert api_key.vantage_api_key_value is None
+        api_key.vantage_api_key_id == vantage_api_key_id
 
     def test_get_vantage_api_key_using_wrong_account(
         self,
@@ -128,14 +128,14 @@ class TestApiKeys:
         assert len(keys) > 0
         api_keys = list(
             filter(
-                lambda key: key.id == given_key.id,
+                lambda key: key.external_key_id == given_key.external_key_id,
                 keys,
             )
         )
         assert len(api_keys) == 1
         api_key = api_keys[0]
         assert api_key.account_id == account_params["id"]
-        assert api_key.id == given_key.id
+        assert api_key.external_key_id == given_key.external_key_id
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
@@ -162,12 +162,12 @@ class TestApiKeys:
         # When
         api_key = client.get_external_api_key(
             account_id=account_params["id"],
-            external_key_id=given_key.id,
+            external_key_id=given_key.external_key_id,
         )
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.id == given_key.id
+        assert api_key.external_key_id == given_key.external_key_id
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
@@ -258,13 +258,13 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.id == external_api_key_id
+        assert api_key.external_key_id == external_api_key_id
         assert api_key.llm_provider == llm_provider
         assert api_key.llm_secret == _mask_secret(llm_secret)
         assert api_key.url == url
 
         # After
-        client.delete_external_api_key(api_key.id)
+        client.delete_external_api_key(api_key.external_key_id)
 
     def test_update_non_existing_external_api_key(
         self,

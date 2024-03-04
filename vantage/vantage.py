@@ -28,19 +28,15 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import (
-    VantageNotFoundError,
-    VantageValueError,
-)
+from vantage.exceptions import VantageNotFoundError, VantageValueError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
 from vantage.model.search import (
+    GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
-    GlobalSearchProperties,
 )
-
 from vantage.utils import _parse_exception
 
 
@@ -669,7 +665,7 @@ class VantageClient:
             collections = self.list_collections(
                 account_id=account_id if account_id else self.account_id
             )
-            return [col.model_dump()["id"] for col in collections]
+            return [col.model_dump()["collection_id"] for col in collections]
         except Exception as exception:
             raise _parse_exception(exception)
 
