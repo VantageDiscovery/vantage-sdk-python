@@ -109,7 +109,7 @@ def pytest_sessionfinish(session, exitstatus):
     try:
         collections = _client.list_collections(account_id=account_id)
         for collection in collections:
-            collection_id = collection.id
+            collection_id = collection.collection_id
 
             if collection_id in _protected_collections:
                 continue
@@ -125,7 +125,7 @@ def pytest_sessionfinish(session, exitstatus):
     try:
         keys = _client.get_external_api_keys(account_id=account_id)
         for key in keys:
-            _client.delete_external_api_key(key.id)
+            _client.delete_external_api_key(key.external_key_id)
     except VantageNotFoundError:
         # Do nothing
         pass

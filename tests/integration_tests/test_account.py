@@ -39,7 +39,7 @@ class TestAccount:
         account = client.get_account(test_account_id)
 
         # Then
-        assert account.name == test_account_name
+        assert account.account_name == test_account_name
 
     def test_get_non_existing_account(
         self,
@@ -80,7 +80,7 @@ class TestAccount:
 
         # Then
         account = client.get_account(test_account_id)
-        assert account.name == updated_test_account_name
+        assert account.account_name == updated_test_account_name
 
     def test_update_non_existing_account(
         self,
