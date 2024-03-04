@@ -665,7 +665,7 @@ class VantageClient:
             collections = self.list_collections(
                 account_id=account_id if account_id else self.account_id
             )
-            return [col.model_dump()["id"] for col in collections]
+            return [col.model_dump()["collection_id"] for col in collections]
         except Exception as exception:
             raise _parse_exception(exception)
 
