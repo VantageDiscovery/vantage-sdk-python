@@ -3,7 +3,7 @@ from typing import Callable
 
 import pytest
 
-from vantage.core.http.exceptions import ForbiddenException
+from vantage.exceptions import VantageForbiddenError
 from vantage.vantage import VantageClient
 
 
@@ -54,11 +54,11 @@ class TestAccount:
         non_existing_account_id = random_string_generator(10)
 
         # When
-        with pytest.raises(ForbiddenException) as exception:
+        with pytest.raises(VantageForbiddenError) as exception:
             client.get_account(non_existing_account_id)
 
         # Then
-        assert exception.type is ForbiddenException
+        assert exception.type is VantageForbiddenError
 
     def test_update_account(
         self,
@@ -96,10 +96,10 @@ class TestAccount:
         non_existing_account_name = random_string_generator(10)
 
         # When
-        with pytest.raises(ForbiddenException) as exception:
+        with pytest.raises(VantageForbiddenError) as exception:
             client.update_account(
                 non_existing_account_id, non_existing_account_name
             )
 
         # Then
-        assert exception.type is ForbiddenException
+        assert exception.type is VantageForbiddenError
