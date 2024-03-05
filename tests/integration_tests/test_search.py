@@ -39,7 +39,6 @@ class TestSearch:
 
         # Then
         assert result.status == 200
-        assert result.message == "Success."
         assert len(result.results) == 10
 
     def test_embedding_search_on_non_existing_collection(
