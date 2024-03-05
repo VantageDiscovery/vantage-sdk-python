@@ -15,8 +15,6 @@ from vantage.core.http import ApiClient
 from vantage.core.http.exceptions import UnauthorizedException
 
 
-# TODO: This client is a quick temporary solution,
-#       it needs to be revised for production usage.
 class AuthorizationClient:
     _DAY_IN_SECONDS = 86400
 
