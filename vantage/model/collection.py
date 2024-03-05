@@ -11,7 +11,7 @@ class Collection(BaseModel):
     user_provided_embeddings: Optional[StrictBool] = None
     llm: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = None
-    external_key_id: Optional[StrictStr] = None
+    external_account_id: Optional[StrictStr] = None
     collection_name: Optional[StrictStr] = None
     collection_preview_url_pattern: Optional[StrictStr] = None
 
