@@ -13,7 +13,7 @@ from vantage.vantage import VantageClient
 
 __author__ = """Vantage"""
 __email__ = 'none@vantage.com'
-__version__ = '0.0.6'
+__version__ = '0.0.7'
 __all__ = [
     "VantageClient",
     "Collection",
