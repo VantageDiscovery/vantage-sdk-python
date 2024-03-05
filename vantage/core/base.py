@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import datetime
-import json
 from typing import Optional
-from urllib import request
+
+import requests
 
 from vantage.config import (
     AUTH_ENDPOINT,
@@ -15,8 +15,6 @@ from vantage.core.http import ApiClient
 from vantage.core.http.exceptions import UnauthorizedException
 
 
-# TODO: This client is a quick temporary solution,
-#       it needs to be revised for production usage.
 class AuthorizationClient:
     _DAY_IN_SECONDS = 86400
 
@@ -78,24 +76,16 @@ class AuthorizationClient:
         if self._user_provided_token:
             return
 
-        headers = {"content-type": "application/json"}
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {
             "client_id": self._vantage_client_id,
             "client_secret": self._vantage_client_secret,
-            "audience": self._vantage_audience_url,
             "grant_type": "client_credentials",
         }
-        data = str.encode(json.dumps(body), encoding=self._encoding)
-        get_token_request = request.Request(
-            url=self._sso_endpoint_url,
-            data=data,
-            headers=headers,
-            method="POST",
-        )
 
-        with request.urlopen(get_token_request) as response:
-            response_body = response.read().decode(self._encoding)
-            return json.loads(response_body)
+        return requests.post(
+            self._sso_endpoint_url, data=body, headers=headers
+        ).json()
 
     def _has_expired(self) -> bool:
         if self._jwt_token is None:
