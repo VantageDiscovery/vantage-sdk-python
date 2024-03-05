@@ -114,26 +114,22 @@ class MoreLikeThisQuery(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection": (
-                    GlobalSearchPropertiesCollection.from_dict(
-                        obj.get("collection")
-                    )
-                    if obj.get("collection") is not None
-                    else None
-                ),
+                "collection": GlobalSearchPropertiesCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
                 "request_id": obj.get("request_id"),
-                "filter": (
-                    GlobalSearchPropertiesFilter.from_dict(obj.get("filter"))
-                    if obj.get("filter") is not None
-                    else None
-                ),
-                "pagination": (
-                    GlobalSearchPropertiesPagination.from_dict(
-                        obj.get("pagination")
-                    )
-                    if obj.get("pagination") is not None
-                    else None
-                ),
+                "filter": GlobalSearchPropertiesFilter.from_dict(
+                    obj.get("filter")
+                )
+                if obj.get("filter") is not None
+                else None,
+                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
                 "document_id": obj.get("document_id"),
             }
         )

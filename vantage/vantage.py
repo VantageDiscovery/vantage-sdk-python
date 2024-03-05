@@ -1011,7 +1011,7 @@ class VantageClient:
         self,
         collection_id: str,
         account_id: Optional[str] = None,
-    ) -> Collection:
+    ) -> None:
         """
         Deletes a specific collection identified by its collection ID within a specified account. It first verifies
         the existence of the collection in the account and raises an exception if the collection does not exist. Upon
@@ -1045,14 +1045,10 @@ class VantageClient:
             )
 
         try:
-            collection = (
-                self.management_api.collection_api.api.delete_collection(
-                    collection_id=collection_id,
-                    account_id=account_id if account_id else self.account_id,
-                )
+            self.management_api.collection_api.api.delete_collection(
+                collection_id=collection_id,
+                account_id=account_id if account_id else self.account_id,
             )
-
-            return Collection.model_validate(collection.model_dump())
         except Exception as exception:
             raise _parse_exception(exception)
 

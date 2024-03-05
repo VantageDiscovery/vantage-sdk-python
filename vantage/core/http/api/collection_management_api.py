@@ -376,7 +376,7 @@ class CollectionManagementApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> Collection:
+    ) -> None:
         """Delete Collection
 
         Mark as deactivated {collection_id}
@@ -417,7 +417,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Collection",
+            '200': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -456,7 +456,7 @@ class CollectionManagementApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[Collection]:
+    ) -> ApiResponse[None]:
         """Delete Collection
 
         Mark as deactivated {collection_id}
@@ -497,7 +497,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Collection",
+            '200': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -577,7 +577,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "Collection",
+            '200': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -614,11 +614,6 @@ class CollectionManagementApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-
-        # set the HTTP header `Accept`
-        _header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json']
-        )
 
         # authentication setting
         _auth_settings: List[str] = ['BearerAuth']
