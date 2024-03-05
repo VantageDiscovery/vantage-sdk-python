@@ -30,6 +30,6 @@ class MoreLikeTheseItem(BaseModel):
 
 
 class GlobalSearchProperties(BaseModel):
-    collection: GlobalSearchPropertiesCollection
-    filter: GlobalSearchPropertiesFilter
-    pagination: GlobalSearchPropertiesPagination
+    collection: Optional[GlobalSearchPropertiesCollection] = None
+    filter: Optional[GlobalSearchPropertiesFilter] = None
+    pagination: Optional[GlobalSearchPropertiesPagination] = None
