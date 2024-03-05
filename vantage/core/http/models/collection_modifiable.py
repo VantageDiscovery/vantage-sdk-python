@@ -34,7 +34,7 @@ class CollectionModifiable(BaseModel):
     CollectionModifiable
     """  # noqa: E501
 
-    external_account_id: Optional[StrictStr] = Field(
+    external_key_id: Optional[StrictStr] = Field(
         default=None,
         description="The external API key, for the llm_provider to use for the collection",
     )
@@ -44,7 +44,7 @@ class CollectionModifiable(BaseModel):
         description="To be able to preview items in test on the test collection page, enter in a URL that supports the open graph extensions for previewing links.",
     )
     __properties: ClassVar[List[str]] = [
-        "external_account_id",
+        "external_key_id",
         "collection_name",
         "collection_preview_url_pattern",
     ]
@@ -97,7 +97,7 @@ class CollectionModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "external_account_id": obj.get("external_account_id"),
+                "external_key_id": obj.get("external_key_id"),
                 "collection_name": obj.get("collection_name"),
                 "collection_preview_url_pattern": obj.get(
                     "collection_preview_url_pattern"

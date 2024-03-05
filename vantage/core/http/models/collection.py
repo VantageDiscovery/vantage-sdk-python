@@ -57,7 +57,7 @@ class Collection(BaseModel):
         default=None,
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
     )
-    external_account_id: Optional[StrictStr] = Field(
+    external_key_id: Optional[StrictStr] = Field(
         default=None,
         description="The external API key, for the llm_provider to use for the collection",
     )
@@ -74,7 +74,7 @@ class Collection(BaseModel):
         "user_provided_embeddings",
         "llm",
         "embeddings_dimension",
-        "external_account_id",
+        "external_key_id",
         "collection_name",
         "collection_preview_url_pattern",
     ]
@@ -173,7 +173,7 @@ class Collection(BaseModel):
                 else False,
                 "llm": obj.get("llm"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
-                "external_account_id": obj.get("external_account_id"),
+                "external_key_id": obj.get("external_key_id"),
                 "collection_name": obj.get("collection_name"),
                 "collection_preview_url_pattern": obj.get(
                     "collection_preview_url_pattern"
