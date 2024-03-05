@@ -44,14 +44,16 @@ class VantageAPIKey(BaseModel):
     vantage_api_key_created_date: Optional[StrictStr] = Field(
         default=None, description="date this key was created"
     )
-    vantage_api_key_value: Optional[StrictStr] = Field(
+    vantage_api_key_obfuscated: Optional[StrictStr] = Field(
         default=None, description="obfuscated key"
     )
+    status: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "vantage_api_key_id",
         "account_id",
         "vantage_api_key_created_date",
-        "vantage_api_key_value",
+        "vantage_api_key_obfuscated",
+        "status",
     ]
 
     model_config = {
@@ -114,7 +116,10 @@ class VantageAPIKey(BaseModel):
                 "vantage_api_key_created_date": obj.get(
                     "vantage_api_key_created_date"
                 ),
-                "vantage_api_key_value": obj.get("vantage_api_key_value"),
+                "vantage_api_key_obfuscated": obj.get(
+                    "vantage_api_key_obfuscated"
+                ),
+                "status": obj.get("status"),
             }
         )
         return _obj
