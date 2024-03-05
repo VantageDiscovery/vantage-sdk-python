@@ -1,3 +1,5 @@
+<img src="assets/vantage_logo.png" title="Vantage Discovery Logo" width="300"/></br>
+
 # Vantage Discovery Python SDK
 
 The Vantage Discovery Python SDK provides an easy-to-use interface to interact with the Vantage vector database, enabling developers to seamlessly integrate vector search and collection management capabilities into their Python applications.
