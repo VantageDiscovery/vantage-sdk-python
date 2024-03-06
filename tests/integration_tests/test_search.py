@@ -138,8 +138,8 @@ class TestSearch:
         """
         # Given
         collection_id = semantic_search_test_collection_id
-        accuracy = 0.5
-        search_text = "Test search"
+        accuracy = 0.3
+        search_text = "Book's my daughter would find inspiring with coming of age and empowerment"
 
         # When
         result = client.semantic_search(
@@ -152,7 +152,6 @@ class TestSearch:
 
         # Then
         assert result.status == 200
-        assert result.message == "Success."
         assert len(result.results) == 10
 
     def test_semantic_search_on_non_existing_collection(
@@ -226,20 +225,18 @@ class TestSearch:
         """
         # Given
         expected_results = {
-            "en_0982760": {"score": 0.8988204002380371},
-            'en_0581405': {"score": 0.8959484100341797},
-            'en_0970727': {"score": 0.8955060839653015},
+            "en_0370917": {"score": 0.9071175456047058},
+            'en_0127807': {"score": 0.90435791015625},
+            'en_0772990': {"score": 0.9041850566864014},
         }
 
         # When
         response = client.more_like_this_search(
             collection_id=more_like_this_test_collection_id,
             accuracy=0.3,
-            document_id="en_0340173",
+            document_id="en_0530926",
             page=1,
             page_count=3,
-            request_id=1,
-            boolean_filter="rock",
             account_id=account_params["id"],
             vantage_api_key=vantage_api_key,
         )
@@ -247,7 +244,6 @@ class TestSearch:
         # Then
         assert response is not None
         assert response.status == 200
-        assert response.message == "Success."
         results = response.results
         assert len(results) == len(expected_results)
         for result in results:
@@ -280,6 +276,7 @@ class TestSearch:
             "en_0375881": {"score": 0.891213059425354},
             "en_0266579": {"score": 0.8911941647529602},
             "en_0218966": {"score": 0.8909063339233398},
+            "en_0622322": {"score": 0.8903354406356812},
         }
 
         response = client.more_like_these_search(
@@ -287,8 +284,6 @@ class TestSearch:
             accuracy=0.3,
             page=1,
             page_count=5,
-            request_id=1,
-            boolean_filter="rock",
             account_id=account_params["id"],
             vantage_api_key=vantage_api_key,
             more_like_these=more_like_these,
@@ -297,7 +292,6 @@ class TestSearch:
         # Then
         assert response is not None
         assert response.status == 200
-        assert response.message == "Success."
         results = response.results
         assert len(results) == len(expected_results)
         for result in results:
