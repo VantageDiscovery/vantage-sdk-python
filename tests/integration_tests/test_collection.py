@@ -153,7 +153,7 @@ class TestCollections:
 
         # When
         with pytest.raises(VantageFileUploadError) as exception:
-            client.upload_embedding(
+            client.upload_parquet_embedding(
                 collection_id=collection_id,
                 content=file_content,
                 file_size=file_size,

@@ -44,3 +44,34 @@ class TestDocuments:
 
         # Then
         # Do nothing, if exception has not been thrown, everything is fine
+
+    def test_parquet_upload(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        random_string_generator: Callable,
+        parquet_file_path: str,
+    ):
+        """
+        TODO: docstring
+        """
+        # Given
+        collection_id = random_string_generator(10)
+        collection_name = random_string_generator(10)
+
+        client.create_collection(
+            account_id=account_params["id"],
+            collection_id=collection_id,
+            collection_name=collection_name,
+            user_provided_embeddings=True,
+            embeddings_dimension=1536,
+        )
+
+        # When
+        result = client.upload_embedding_from_parquet_file(
+            collection_id=collection_id,
+            file_path=parquet_file_path,
+            account_id=account_params["id"],
+        )
+
+        assert result == 200

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ntpath
 from os.path import exists
 from pathlib import Path
 from typing import List, Optional
@@ -673,7 +674,7 @@ class VantageClient:
         self,
         collection_id: str,
         file_size: int,
-        customer_batch_identifier: Optional[str] = None,
+        parquet_file_name: str,
         account_id: Optional[str] = None,
     ) -> CollectionUploadURL:
         """
@@ -714,7 +715,7 @@ class VantageClient:
                 self.management_api.collection_api.api.get_browser_upload_url(
                     collection_id=collection_id,
                     file_size=file_size,
-                    customer_batch_identifier=customer_batch_identifier,
+                    customer_batch_identifier=parquet_file_name,
                     account_id=account_id if account_id else self.account_id,
                 )
             )
@@ -1052,18 +1053,18 @@ class VantageClient:
         except Exception as exception:
             raise _parse_exception(exception)
 
-    def upload_embedding(
+    def upload_parquet_embedding(
         self,
         collection_id: str,
         content: bytes,
         file_size: int,
-        customer_batch_identifier: Optional[str] = None,
+        parquet_file_name: str,
         account_id: Optional[str] = None,
     ) -> int:
         browser_upload_url = self._get_browser_upload_url(
             collection_id=collection_id,
             file_size=file_size,
-            customer_batch_identifier=customer_batch_identifier,
+            parquet_file_name=parquet_file_name,
             account_id=account_id,
         )
 
@@ -1075,24 +1076,27 @@ class VantageClient:
         except Exception as exception:
             raise _parse_exception(exception)
 
-    def upload_embedding_by_path(
+    def upload_embedding_from_parquet_file(
         self,
         collection_id: str,
         file_path: str,
-        customer_batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> int:
         if not exists(file_path):
             raise FileNotFoundError(f"File \"{file_path}\" not found.")
+        file_name = ntpath.basename(file_path)
+
+        if not file_path.endswith(".parquet"):
+            raise ValueError("File mast be Parquet file.")
 
         file_size = Path(file_path).stat().st_size
         file = open(file_path, "rb")
         file_content = file.read()
-        return self.upload_embedding(
+        return self.upload_parquet_embedding(
             collection_id=collection_id,
             content=file_content,
             file_size=file_size,
-            customer_batch_identifier=customer_batch_identifier,
+            parquet_file_name=file_name,
             account_id=account_id,
         )
 

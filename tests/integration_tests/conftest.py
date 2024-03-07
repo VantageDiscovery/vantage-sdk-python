@@ -276,3 +276,8 @@ def random_uuid() -> str:
 @pytest.fixture(scope="module")
 def jsonl_documents_path() -> str:
     return "tests/data/documents.jsonl"
+
+
+@pytest.fixture(scope="module")
+def parquet_file_path() -> str:
+    return "tests/data/hello_world.parquet"
