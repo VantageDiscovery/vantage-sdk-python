@@ -81,6 +81,7 @@ class AuthorizationClient:
             "client_id": self._vantage_client_id,
             "client_secret": self._vantage_client_secret,
             "grant_type": "client_credentials",
+            "audience": self._vantage_audience_url,
         }
 
         return requests.post(
