@@ -3,7 +3,7 @@ from typing import Callable
 import pytest
 
 from tests.integration_tests.conftest import skip_delete_external_api_key_test
-from vantage.exceptions import VantageForbiddenError, VantageNotFoundError
+from vantage.core.http.exceptions import ForbiddenException, NotFoundException
 from vantage.vantage import VantageClient
 
 
@@ -40,11 +40,11 @@ class TestApiKeys:
         random_string_generator: Callable,
     ):
         # When
-        with pytest.raises(VantageForbiddenError) as exception:
+        with pytest.raises(ForbiddenException) as exception:
             client.get_vantage_api_keys(account_id=random_string_generator(10))
 
         # Then
-        assert exception.type == VantageForbiddenError
+        assert exception.type == ForbiddenException
 
     def test_get_vantage_api_key(
         self,
@@ -76,14 +76,14 @@ class TestApiKeys:
         Tests fetching a single Vantage API key using non-existing account ID.
         """
         # When
-        with pytest.raises(VantageForbiddenError) as exception:
+        with pytest.raises(ForbiddenException) as exception:
             client.get_vantage_api_key(
                 vantage_api_key_id=vantage_api_key_id,
                 account_id=random_string_generator(10),
             )
 
         # Then
-        assert exception.type == VantageForbiddenError
+        assert exception.type == ForbiddenException
 
     def test_get_non_existing_vantage_api_key(
         self,
@@ -96,11 +96,11 @@ class TestApiKeys:
         Tests fetching a non-existing Vantage API key from a user account.
         """
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(NotFoundException) as exception:
             client.get_vantage_api_key(vantage_api_key_id=random_uuid)
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is NotFoundException
 
     def test_get_external_api_keys(
         self,
@@ -181,14 +181,14 @@ class TestApiKeys:
         Tests fetching a non-existing external API key from a users' account.
         """
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(NotFoundException) as exception:
             client.get_external_api_key(
                 account_id=account_params["id"],
                 external_key_id=random_uuid,
             )
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is NotFoundException
 
     def test_create_external_api_key(
         self,
@@ -277,7 +277,7 @@ class TestApiKeys:
         on a users' account.
         """
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(NotFoundException) as exception:
             client.update_external_api_key(
                 external_key_id=random_uuid,
                 url=random_string_generator(10),
@@ -287,7 +287,7 @@ class TestApiKeys:
             )
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is NotFoundException
 
     @pytest.mark.skipif(
         skip_delete_external_api_key_test(), reason="Test disabled by user."
@@ -309,12 +309,12 @@ class TestApiKeys:
 
         # Then
         assert api_key is None
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(NotFoundException) as exception:
             client.get_external_api_key(
                 external_key_id=external_api_key_id,
                 account_id=account_params["id"],
             )
-        assert exception.type is VantageNotFoundError
+        assert exception.type is NotFoundException
 
     def test_delete_non_existing_external_api_key(
         self,
@@ -326,11 +326,11 @@ class TestApiKeys:
         Tests deleting a non-existing external API key on users' account.
         """
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(NotFoundException) as exception:
             client.delete_external_api_key(
                 external_key_id=random_uuid,
                 account_id=account_params["id"],
             )
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is NotFoundException
