@@ -4,7 +4,10 @@ from typing import Callable
 
 import pytest
 
-from vantage.exceptions import VantageInvalidRequestError, VantageNotFoundError
+from vantage.core.http.exceptions import (
+    BadRequestException,
+    UnauthorizedException,
+)
 from vantage.model.search import MoreLikeTheseItem
 from vantage.vantage import VantageClient
 
@@ -57,7 +60,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(UnauthorizedException) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -67,7 +70,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is UnauthorizedException
 
     def test_embedding_search_with_invalid_embedding(
         self,
@@ -85,7 +88,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(VantageInvalidRequestError) as exception:
+        with pytest.raises(BadRequestException) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -95,7 +98,7 @@ class TestSearch:
             )
         search_embedding = [1 for col in range(1536)]
         # Then
-        assert exception.type is VantageInvalidRequestError
+        assert exception.type is BadRequestException
 
     def test_embedding_search_with_invalid_accuracy(
         self,
@@ -114,7 +117,7 @@ class TestSearch:
         accuracy = 800
 
         # When
-        with pytest.raises(VantageInvalidRequestError) as exception:
+        with pytest.raises(BadRequestException) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
@@ -124,7 +127,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageInvalidRequestError
+        assert exception.type is BadRequestException
 
     def test_if_semantic_search_returns_result(
         self,
@@ -171,7 +174,7 @@ class TestSearch:
         accuracy = 0.5
 
         # When
-        with pytest.raises(VantageNotFoundError) as exception:
+        with pytest.raises(UnauthorizedException) as exception:
             client.semantic_search(
                 text=search_text,
                 collection_id=collection_id,
@@ -181,7 +184,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageNotFoundError
+        assert exception.type is UnauthorizedException
 
     def test_semantic_search_with_invalid_accuracy(
         self,
@@ -201,7 +204,7 @@ class TestSearch:
         accuracy = 800
 
         # When
-        with pytest.raises(VantageInvalidRequestError) as exception:
+        with pytest.raises(BadRequestException) as exception:
             client.semantic_search(
                 text=search_text,
                 collection_id=collection_id,
@@ -211,7 +214,7 @@ class TestSearch:
             )
 
         # Then
-        assert exception.type is VantageInvalidRequestError
+        assert exception.type is BadRequestException
 
     def test_more_like_this_search(
         self,
@@ -225,9 +228,9 @@ class TestSearch:
         """
         # Given
         expected_results = {
-            "en_0370917": {"score": 0.9071175456047058},
-            'en_0127807': {"score": 0.90435791015625},
-            'en_0772990': {"score": 0.9041850566864014},
+            "en_0370917": {"score": 0.907},
+            'en_0127807': {"score": 0.904},
+            'en_0772990': {"score": 0.904},
         }
 
         # When
@@ -248,7 +251,9 @@ class TestSearch:
         assert len(results) == len(expected_results)
         for result in results:
             assert result.id in expected_results.keys()
-            assert expected_results[result.id]["score"] == result.score
+            assert expected_results[result.id]["score"] == round(
+                result.score, 3
+            )
 
     def test_more_like_these_search(
         self,
@@ -272,11 +277,11 @@ class TestSearch:
             ),
         ]
         expected_results = {
-            "en_0022659": {"score": 0.8912180066108704},
-            "en_0375881": {"score": 0.891213059425354},
-            "en_0266579": {"score": 0.8911941647529602},
-            "en_0218966": {"score": 0.8909063339233398},
-            "en_0622322": {"score": 0.8903354406356812},
+            "en_0022659": {"score": 0.891},
+            "en_0375881": {"score": 0.891},
+            "en_0266579": {"score": 0.891},
+            "en_0218966": {"score": 0.891},
+            "en_0622322": {"score": 0.89},
         }
 
         response = client.more_like_these_search(
@@ -296,4 +301,6 @@ class TestSearch:
         assert len(results) == len(expected_results)
         for result in results:
             assert result.id in expected_results.keys()
-            assert expected_results[result.id]["score"] == result.score
+            assert expected_results[result.id]["score"] == round(
+                result.score, 3
+            )

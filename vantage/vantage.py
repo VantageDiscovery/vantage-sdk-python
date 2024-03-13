@@ -1559,7 +1559,7 @@ class VantageClient:
             collection_id=collection_id,
             content=file_content,
             file_size=file_size,
-            parquet_file_name=file_name,
+            batch_identifier=file_name,
             account_id=account_id,
         )
 
