@@ -65,7 +65,7 @@ class TestCollections:
         )
 
         # When
-        status = client.upload_embedding_by_path(
+        status = client.upload_embeddings_from_parquet(
             collection_id=collection_id,
             file_path=test_parquet_file_path,
             customer_batch_identifier="automated-tests",
@@ -90,7 +90,7 @@ class TestCollections:
         collection_id = random_string_generator(10)
 
         with pytest.raises(VantageNotFoundError) as exception:
-            client.upload_embedding_by_path(
+            client.upload_embeddings_from_parquet(
                 collection_id=collection_id,
                 file_path=test_parquet_file_path,
                 customer_batch_identifier="automated-tests",
@@ -116,7 +116,7 @@ class TestCollections:
         non_existing_file_path = random_string_generator(10)
 
         with pytest.raises(FileNotFoundError) as exception:
-            client.upload_embedding_by_path(
+            client.upload_embeddings_from_parquet(
                 collection_id=collection_id,
                 file_path=non_existing_file_path,
                 customer_batch_identifier="automated-tests",
@@ -153,7 +153,7 @@ class TestCollections:
 
         # When
         with pytest.raises(VantageFileUploadError) as exception:
-            client.upload_parquet_embedding(
+            client.upload_embeddings_from_bytes(
                 collection_id=collection_id,
                 content=file_content,
                 file_size=file_size,

@@ -30,7 +30,7 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageNotFoundError, VantageValueError
+from vantage.exceptions import VantageValueError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, VantageAPIKey
@@ -39,7 +39,6 @@ from vantage.model.search import (
     MoreLikeTheseItem,
     SearchResult,
 )
-from vantage.utils import _parse_exception
 
 
 class VantageClient:
@@ -235,13 +234,10 @@ class VantageClient:
         "Example Account Name"
         """
 
-        try:
-            result = self.management_api.account_api.api.get_account(
-                account_id=account_id if account_id else self.account_id
-            )
-            return Account.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        result = self.management_api.account_api.api.get_account(
+            account_id=account_id if account_id else self.account_id
+        )
+        return Account.model_validate(result.model_dump())
 
     def update_account(
         self,
@@ -279,14 +275,11 @@ class VantageClient:
 
         account_modifiable = AccountModifiable(account_name=account_name)
 
-        try:
-            result = self.management_api.account_api.api.update_account(
-                account_id=account_id if account_id else self.account_id,
-                account_modifiable=account_modifiable,
-            )
-            return Account.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        result = self.management_api.account_api.api.update_account(
+            account_id=account_id if account_id else self.account_id,
+            account_modifiable=account_modifiable,
+        )
+        return Account.model_validate(result.model_dump())
 
     # endregion
 
@@ -325,17 +318,16 @@ class VantageClient:
         "54321"
         """
 
-        try:
-            keys = self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
+        keys = (
+            self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
                 account_id=account_id if account_id else self.account_id,
             )
+        )
 
-            return [
-                VantageAPIKey.model_validate(key.actual_instance.model_dump())
-                for key in keys
-            ]
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return [
+            VantageAPIKey.model_validate(key.actual_instance.model_dump())
+            for key in keys
+        ]
 
     def get_vantage_api_key(
         self,
@@ -372,14 +364,11 @@ class VantageClient:
         "12345"
         """
 
-        try:
-            key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
-                account_id=account_id if account_id else self.account_id,
-                vantage_api_key_id=vantage_api_key_id,
-            )
-            return VantageAPIKey.model_validate(key.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
+            account_id=account_id if account_id else self.account_id,
+            vantage_api_key_id=vantage_api_key_id,
+        )
+        return VantageAPIKey.model_validate(key.model_dump())
 
     # endregion
 
@@ -418,16 +407,13 @@ class VantageClient:
         "external_key_321"
         """
 
-        try:
-            keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
-                account_id=account_id if account_id else self.account_id,
-            )
-            return [
-                ExternalAPIKey.model_validate(key.actual_instance.model_dump())
-                for key in keys
-            ]
-        except Exception as exception:
-            raise _parse_exception(exception)
+        keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
+            account_id=account_id if account_id else self.account_id,
+        )
+        return [
+            ExternalAPIKey.model_validate(key.actual_instance.model_dump())
+            for key in keys
+        ]
 
     def get_external_api_key(
         self,
@@ -465,21 +451,20 @@ class VantageClient:
         "OpenAI"
         """
 
-        try:
-            key = self.management_api.external_api_keys_api.api.get_external_api_key(
+        key = (
+            self.management_api.external_api_keys_api.api.get_external_api_key(
                 account_id=account_id if account_id else self.account_id,
                 external_key_id=external_key_id,
             )
+        )
 
-            return ExternalAPIKey.model_validate(key.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def create_external_api_key(
         self,
-        url: str,
         llm_provider: str,
         llm_secret: str,
+        url: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
         """
@@ -493,13 +478,14 @@ class VantageClient:
 
         Parameters
         ----------
-        url : str
-            Currently not in use
         llm_provider : str
             The provider of the Large Language Model (LLM) service.
             Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret : str
             The secret key for accessing the LLM service.
+        url : Optional[str], optional
+            Currently not in use
+            Defaults to None.
         account_id : Optional[str], optional
             The unique identifier of the account for which the external API key is to be created.
             If not provided, the instance's account ID is used.
@@ -514,7 +500,6 @@ class VantageClient:
         --------
         >>> vantage_client = VantageClient(...)
         >>> external_api_key = vantage_client.create_external_api_key(
-        ...     url="https://example.com/api",
         ...     llm_provider="OpenAI",
         ...     llm_secret="secret123",
         ... )
@@ -526,22 +511,19 @@ class VantageClient:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        try:
-            key = self.management_api.external_api_keys_api.api.create_external_api_key(
-                account_id=account_id if account_id else self.account_id,
-                external_api_key_modifiable=external_api_key_modifiable,
-            )
+        key = self.management_api.external_api_keys_api.api.create_external_api_key(
+            account_id=account_id if account_id else self.account_id,
+            external_api_key_modifiable=external_api_key_modifiable,
+        )
 
-            return ExternalAPIKey.model_validate(key.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def update_external_api_key(
         self,
         external_key_id: str,
-        url: str,
         llm_provider: str,
         llm_secret: str,
+        url: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
         """
@@ -556,12 +538,12 @@ class VantageClient:
         ----------
         external_key_id : str
             The unique identifier of the external API key to be updated.
-        url : str
-            The new URL associated with the external API key, indicating the endpoint of the external service.
         llm_provider : str
             The new provider of the Large Language Model (LLM) service.
         llm_secret : str
             The new secret key for accessing the LLM service.
+        url : Optional[str], optional
+            The new URL associated with the external API key, indicating the endpoint of the external service.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
             If not provided, the instance's account ID is used.
@@ -577,10 +559,8 @@ class VantageClient:
         >>> vantage_client = VantageClient(...)
         >>> updated_external_api_key = vantage_client.update_external_api_key(
         ...     external_key_id="external_key_123",
-        ...     url="https://newexample.com/api",
         ...     llm_provider="OpenAI",
         ...     llm_secret="new_secret_123",
-        ...     account_id="12345"
         ... )
         >>> print(updated_external_api_key.llm_secret)
         "new_secret_123"
@@ -590,16 +570,13 @@ class VantageClient:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        try:
-            key = self.management_api.external_api_keys_api.api.update_external_api_key(
-                account_id=account_id if account_id else self.account_id,
-                external_key_id=external_key_id,
-                external_api_key_modifiable=external_api_key_modifiable,
-            )
+        key = self.management_api.external_api_keys_api.api.update_external_api_key(
+            account_id=account_id if account_id else self.account_id,
+            external_key_id=external_key_id,
+            external_api_key_modifiable=external_api_key_modifiable,
+        )
 
-            return ExternalAPIKey.model_validate(key.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return ExternalAPIKey.model_validate(key.model_dump())
 
     def delete_external_api_key(
         self,
@@ -629,13 +606,10 @@ class VantageClient:
         >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
         """
 
-        try:
-            self.management_api.external_api_keys_api.api.delete_external_api_key(
-                account_id=account_id if account_id else self.account_id,
-                external_key_id=external_key_id,
-            )
-        except Exception as exception:
-            raise _parse_exception(exception)
+        self.management_api.external_api_keys_api.api.delete_external_api_key(
+            account_id=account_id if account_id else self.account_id,
+            external_key_id=external_key_id,
+        )
 
     # endregion
 
@@ -663,13 +637,11 @@ class VantageClient:
         List[str]
             A list of strings, each representing the unique ID of a collection associated with the account.
         """
-        try:
-            collections = self.list_collections(
-                account_id=account_id if account_id else self.account_id
-            )
-            return [col.model_dump()["collection_id"] for col in collections]
-        except Exception as exception:
-            raise _parse_exception(exception)
+
+        collections = self.list_collections(
+            account_id=account_id if account_id else self.account_id
+        )
+        return [col.model_dump()["collection_id"] for col in collections]
 
     def _get_browser_upload_url(
         self,
@@ -704,26 +676,14 @@ class VantageClient:
             An object containing the URL for browser-based file uploads.
         """
 
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
+        url = self.management_api.collection_api.api.get_browser_upload_url(
+            collection_id=collection_id,
+            file_size=file_size,
+            customer_batch_identifier=parquet_file_name,
+            account_id=account_id if account_id else self.account_id,
+        )
 
-        try:
-            url = (
-                self.management_api.collection_api.api.get_browser_upload_url(
-                    collection_id=collection_id,
-                    file_size=file_size,
-                    customer_batch_identifier=parquet_file_name,
-                    account_id=account_id if account_id else self.account_id,
-                )
-            )
-
-            return CollectionUploadURL.model_validate(url.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return CollectionUploadURL.model_validate(url.model_dump())
 
     def list_collections(
         self,
@@ -759,21 +719,14 @@ class VantageClient:
         "Collection 2"
         """
 
-        try:
-            collections = (
-                self.management_api.collection_api.api.list_collections(
-                    account_id=account_id if account_id else self.account_id
-                )
-            )
+        collections = self.management_api.collection_api.api.list_collections(
+            account_id=account_id if account_id else self.account_id
+        )
 
-            return [
-                Collection.model_validate(
-                    collection.actual_instance.model_dump()
-                )
-                for collection in collections
-            ]
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return [
+            Collection.model_validate(collection.actual_instance.model_dump())
+            for collection in collections
+        ]
 
     def get_collection(
         self,
@@ -812,28 +765,18 @@ class VantageClient:
         "My Collection"
         """
 
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
+        collection = self.management_api.collection_api.api.get_collection(
+            collection_id=collection_id,
+            account_id=account_id if account_id else self.account_id,
+        )
 
-        try:
-            collection = self.management_api.collection_api.api.get_collection(
-                collection_id=collection_id,
-                account_id=account_id if account_id else self.account_id,
-            )
-
-            return Collection.model_validate(collection.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return Collection.model_validate(collection.model_dump())
 
     def create_collection(
         self,
         collection_id: str,
-        collection_name: str,
         embeddings_dimension: int,
+        collection_name: Optional[str] = None,
         user_provided_embeddings: Optional[bool] = False,
         llm: Optional[str] = None,
         external_key_id: Optional[str] = None,
@@ -908,12 +851,11 @@ class VantageClient:
         "vantage-managed"
         """
 
-        if collection_id in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageValueError(
-                f"Collection with provided collection id [{collection_id}] already exists."  # noqa: E501
-            )
+        collection_name = (
+            collection_name
+            if collection_name
+            else f"Collection [{collection_id}]"
+        )
 
         create_collection_request = CreateCollectionRequest(
             external_key_id=(
@@ -927,17 +869,12 @@ class VantageClient:
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
-        try:
-            collection = (
-                self.management_api.collection_api.api.create_collection(
-                    create_collection_request=create_collection_request,
-                    account_id=account_id if account_id else self.account_id,
-                )
-            )
+        collection = self.management_api.collection_api.api.create_collection(
+            create_collection_request=create_collection_request,
+            account_id=account_id if account_id else self.account_id,
+        )
 
-            return Collection.model_validate(collection.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return Collection.model_validate(collection.model_dump())
 
     def update_collection(
         self,
@@ -983,31 +920,19 @@ class VantageClient:
         "Updated Collection Name"
         """
 
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
         collection_modifiable = CollectionModifiable(
             external_key_id=external_key_id,
             collection_preview_url_pattern=collection_preview_url_pattern,
             collection_name=collection_name,
         )
 
-        try:
-            collection = (
-                self.management_api.collection_api.api.update_collection(
-                    collection_id=collection_id,
-                    collection_modifiable=collection_modifiable,
-                    account_id=account_id if account_id else self.account_id,
-                )
-            )
+        collection = self.management_api.collection_api.api.update_collection(
+            collection_id=collection_id,
+            collection_modifiable=collection_modifiable,
+            account_id=account_id if account_id else self.account_id,
+        )
 
-            return Collection.model_validate(collection.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return Collection.model_validate(collection.model_dump())
 
     def delete_collection(
         self,
@@ -1039,138 +964,9 @@ class VantageClient:
         >>> vantage_client.delete_collection(collection_id="my-collection")
         """
 
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."  # noqa: E501
-            )
-
-        try:
-            self.management_api.collection_api.api.delete_collection(
-                collection_id=collection_id,
-                account_id=account_id if account_id else self.account_id,
-            )
-        except Exception as exception:
-            raise _parse_exception(exception)
-
-    def upload_parquet_embedding(
-        self,
-        collection_id: str,
-        content: bytes,
-        file_size: int,
-        batch_identifier: Optional[str],
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Uploads embeddings in parquet format to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection embeddings are being uploaded.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-        content: bytes
-            Embeddings content as bytes.
-        file_size: int
-            Size of contents being uploaded, in bytes.
-        parquet_file_name: str
-        batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-            Identifier needs to end with '.parquet',if it doesn't, it will be
-            automatically added.
-            If none is provided, it will be generated automatically.
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
-        """
-        if batch_identifier is None:
-            batch_identifier = f"{uuid.uuid4}.parquet"
-        elif not batch_identifier.endswith(".parquet"):
-            batch_identifier = f"{batch_identifier}.parquet"
-
-        browser_upload_url = self._get_browser_upload_url(
+        self.management_api.collection_api.api.delete_collection(
             collection_id=collection_id,
-            file_size=file_size,
-            parquet_file_name=batch_identifier,
-            account_id=account_id,
-        )
-
-        try:
-            return self.management_api.collection_api.upload_embedding(
-                upload_url=browser_upload_url.upload_url,
-                upload_content=content,
-            )
-        except Exception as exception:
-            raise _parse_exception(exception)
-
-    def upload_embedding_from_parquet_file(
-        self,
-        collection_id: str,
-        file_path: str,
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Uploads embeddings from a parquet file to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection
-            embeddings are being uploaded to.
-        file_path : str, optional
-            Path to the parquet file in a filesystem.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
-        """
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
-        file_name = ntpath.basename(file_path)
-
-        if not file_path.endswith(".parquet"):
-            raise ValueError("File mast be a parquet file.")
-
-        file_size = Path(file_path).stat().st_size
-        file = open(file_path, "rb")
-        file_content = file.read()
-        return self.upload_parquet_embedding(
-            collection_id=collection_id,
-            content=file_content,
-            file_size=file_size,
-            parquet_file_name=file_name,
-            account_id=account_id,
+            account_id=account_id if account_id else self.account_id,
         )
 
     # endregion
@@ -1274,11 +1070,6 @@ class VantageClient:
             An object containing the search results.
         """
 
-        if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."
-            )
-
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
@@ -1297,15 +1088,12 @@ class VantageClient:
             pagination=search_properties.pagination,
         )
 
-        try:
-            result = self.search_api.api.semantic_search(
-                query,
-                _headers={"authorization": f"Bearer {vantage_api_key}"},
-            )
+        result = self.search_api.api.semantic_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
-            return SearchResult.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return SearchResult.model_validate(result.model_dump())
 
     def embedding_search(
         self,
@@ -1356,13 +1144,6 @@ class VantageClient:
             An object containing the search results.
         """
 
-        if collection_id not in self._existing_collection_ids(
-            account_id=account_id
-        ):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."
-            )
-
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
@@ -1381,15 +1162,12 @@ class VantageClient:
             pagination=search_properties.pagination,
         )
 
-        try:
-            result = self.search_api.api.embedding_search(
-                query,
-                _headers={"authorization": f"Bearer {vantage_api_key}"},
-            )
+        result = self.search_api.api.embedding_search(
+            query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
-            return SearchResult.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return SearchResult.model_validate(result.model_dump())
 
     def more_like_this_search(
         self,
@@ -1440,11 +1218,6 @@ class VantageClient:
             An object containing the search results similar to the specified document.
         """
 
-        if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."
-            )
-
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
@@ -1463,15 +1236,12 @@ class VantageClient:
             pagination=search_properties.pagination,
         )
 
-        try:
-            result = self.search_api.api.more_like_this_search(
-                more_like_this_query=query,
-                _headers={"authorization": f"Bearer {vantage_api_key}"},
-            )
+        result = self.search_api.api.more_like_this_search(
+            more_like_this_query=query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
-            return SearchResult.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return SearchResult.model_validate(result.model_dump())
 
     def more_like_these_search(
         self,
@@ -1522,11 +1292,6 @@ class VantageClient:
             An object containing the search results similar to the specified document.
         """
 
-        if collection_id not in self._existing_collection_ids(account_id):
-            raise VantageNotFoundError(
-                f"Collection with provided collection id [{collection_id}] does not exist."
-            )
-
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
@@ -1548,19 +1313,16 @@ class VantageClient:
             pagination=search_properties.pagination,
         )
 
-        try:
-            result = self.search_api.api.more_like_these_search(
-                more_like_these_query=query,
-                _headers={"authorization": f"Bearer {vantage_api_key}"},
-            )
+        result = self.search_api.api.more_like_these_search(
+            more_like_these_query=query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
 
-            return SearchResult.model_validate(result.model_dump())
-        except Exception as exception:
-            raise _parse_exception(exception)
+        return SearchResult.model_validate(result.model_dump())
 
     # endregion
 
-    # region Documents
+    # region Upload - Documents
 
     def upload_documents_from_jsonl(
         self,
@@ -1611,15 +1373,12 @@ class VantageClient:
         Metadata fields should all have `meta_` prefix.
         """
 
-        try:
-            self.management_api.documents_api.api.upload_documents(
-                body=documents,
-                account_id=account_id if account_id else self.account_id,
-                collection_id=collection_id,
-                customer_batch_identifier=batch_identifier,
-            )
-        except Exception as exception:
-            raise _parse_exception(exception)
+        self.management_api.documents_api.api.upload_documents(
+            body=documents,
+            account_id=account_id if account_id else self.account_id,
+            collection_id=collection_id,
+            customer_batch_identifier=batch_identifier,
+        )
 
     def upload_documents_from_path(
         self,
@@ -1669,6 +1428,7 @@ class VantageClient:
 
         Metadata fields should all have `meta_` prefix.
         """
+
         if not exists(file_path):
             raise FileNotFoundError(f"File \"{file_path}\" not found.")
 
@@ -1678,6 +1438,128 @@ class VantageClient:
             collection_id=collection_id,
             documents=file_content,
             batch_identifier=batch_identifier,
+            account_id=account_id,
+        )
+
+    # endregion
+
+    # region Upload - Embeddings
+
+    def upload_embeddings_from_bytes(
+        self,
+        collection_id: str,
+        content: bytes,
+        file_size: int,
+        batch_identifier: Optional[str],
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads embeddings in parquet format to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection embeddings are being uploaded.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+        content: bytes
+            Embeddings content as bytes.
+        file_size: int
+            Size of contents being uploaded, in bytes.
+        parquet_file_name: str
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+            Identifier needs to end with '.parquet',if it doesn't, it will be
+            automatically added.
+            If none is provided, it will be generated automatically.
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_client.upload_parquet_embedding(
+            collection_id="my-collection",
+            content=parquet_content_as_bytes,
+            file_size=1000,
+            batch_identifier="my-embeddings.parquet"
+        )
+        """
+
+        if batch_identifier is None:
+            batch_identifier = f"{uuid.uuid4}.parquet"
+        elif not batch_identifier.endswith(".parquet"):
+            batch_identifier = f"{batch_identifier}.parquet"
+
+        browser_upload_url = self._get_browser_upload_url(
+            collection_id=collection_id,
+            file_size=file_size,
+            parquet_file_name=batch_identifier,
+            account_id=account_id,
+        )
+
+        return self.management_api.collection_api.upload_embedding(
+            upload_url=browser_upload_url.upload_url,
+            upload_content=content,
+        )
+
+    def upload_embeddings_from_parquet(
+        self,
+        collection_id: str,
+        file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads embeddings from a parquet file to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        file_path : str, optional
+            Path to the parquet file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_client.upload_parquet_embedding(
+            collection_id="my-collection",
+            content=parquet_content_as_bytes,
+            file_size=1000,
+            batch_identifier="my-embeddings.parquet"
+        )
+        """
+
+        if not exists(file_path):
+            raise FileNotFoundError(f"File \"{file_path}\" not found.")
+        file_name = ntpath.basename(file_path)
+
+        if not file_path.endswith(".parquet"):
+            raise ValueError("File mast be a parquet file.")
+
+        file_size = Path(file_path).stat().st_size
+        file = open(file_path, "rb")
+        file_content = file.read()
+        return self.upload_embeddings_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            parquet_file_name=file_name,
             account_id=account_id,
         )
 

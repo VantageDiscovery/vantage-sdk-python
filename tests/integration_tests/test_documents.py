@@ -68,7 +68,7 @@ class TestDocuments:
         )
 
         # When
-        result = client.upload_embedding_from_parquet_file(
+        result = client.upload_embeddings_from_parquet(
             collection_id=collection_id,
             file_path=parquet_file_path,
             account_id=account_params["id"],
