@@ -80,6 +80,52 @@ class VantageClient:
         self._default_encoding = DEFAULT_ENCODING
 
     @classmethod
+    def using_vantage_api_key(
+        cls,
+        vantage_api_key: str,
+        account_id: str,
+        api_host: Optional[str] = DEFAULT_API_HOST,
+    ) -> VantageClient:
+        """
+        Instantiates a `VantageClient` using a JWT token for authentication.
+
+        Parameters
+        ----------
+        vantage_api_key : str
+            The Vantage API key for authenticating API requests.
+        account_id : str
+            The account ID associated with the Vantage operations.
+        api_host : Optional[str], optional
+            The host URL for the Vantage API.
+            If not provided, a default value is used.
+
+        Returns
+        -------
+        VantageClient
+            An instance of the VantageClient.
+        """
+        host = f"{api_host}/{API_HOST_VERSION}"
+        auth_client = AuthorizationClient.using_provided_vantage_api_key(
+            vantage_api_key=vantage_api_key
+        )
+
+        api_client = AuthorizedApiClient(authorization_client=auth_client)
+
+        if host is not None:
+            api_client.configuration.host = host
+
+        management_api = ManagementAPI.from_defaults(api_client)
+        search_api = SearchAPI(api_client)
+
+        return cls(
+            management_api,
+            search_api,
+            account_id,
+            vantage_api_key,
+            host,
+        )
+
+    @classmethod
     def using_jwt_token(
         cls,
         vantage_api_jwt_token: str,

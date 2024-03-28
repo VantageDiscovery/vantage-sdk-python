@@ -146,6 +146,10 @@ class AuthorizationClient:
         )
 
     @classmethod
+    def using_provided_vantage_api_key(cls, vantage_api_key: str):
+        return cls(vantage_api_key=vantage_api_key)
+
+    @classmethod
     def using_provided_token(cls, vantage_jwt_token: str):
         return cls(vantage_jwt_token=vantage_jwt_token)
 
