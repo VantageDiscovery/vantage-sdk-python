@@ -87,7 +87,7 @@ class VantageClient:
         api_host: Optional[str] = DEFAULT_API_HOST,
     ) -> VantageClient:
         """
-        Instantiates a `VantageClient` using a JWT token for authentication.
+        Instantiates a `VantageClient` using a Vantage API key for authentication.
 
         Parameters
         ----------
