@@ -37,23 +37,15 @@ class AuthorizationClient:
 
         if vantage_api_key:
             self._vantage_api_key = vantage_api_key
-            self._vantage_client_id = None
-            self._vantage_client_secret = None
-            self._jwt_token = None
         elif vantage_jwt_token:
             now = datetime.datetime.now().timestamp() * 1000
             self._jwt_token = {
                 "token": vantage_jwt_token,
                 "valid_until": now + AuthorizationClient._DAY_IN_SECONDS,
             }
-            self._vantage_api_key = None
-            self._vantage_client_id = None
-            self._vantage_client_secret = None
         else:
-            self._vantage_api_key = None
             self._vantage_client_id = vantage_client_id
             self._vantage_client_secret = vantage_client_secret
-            self._jwt_token = None
 
         self._vantage_audience_url = vantage_audience_url
         self._sso_endpoint_url = sso_endpoint_url
@@ -78,9 +70,6 @@ class AuthorizationClient:
             )
 
     def _authenticate(self) -> dict:
-        if self._vantage_api_key or self._jwt_token:
-            return
-
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
         body = {
             "client_id": self._vantage_client_id,
@@ -109,6 +98,7 @@ class AuthorizationClient:
     def _get_new_token(self):
         if self._vantage_api_key or self._jwt_token:
             return
+
         authentication = self._authenticate()
         now = datetime.datetime.now().timestamp() * 1000
         self._jwt_token = {
