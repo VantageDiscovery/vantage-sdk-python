@@ -65,7 +65,8 @@ class AuthorizationClient:
         ):
             raise ValueError(
                 (
-                    "Please provide Vantage API key or Vantage JWT token, or both Client ID and secret. None of these was found."
+                    "Please provide Vantage API key or Vantage JWT token, or both Client ID and secret. ",
+                    "None of these was found.",
                 )
             )
 
@@ -201,7 +202,7 @@ class AuthorizedApiClient(ApiClient):
             return super().call_api(*args)
         except UnauthorizedException:
             self.authorization_client.authenticate()
-            header_params["authorization"] = (
-                f"Bearer {self.authorization_client.jwt_token}"
-            )
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
             return super().call_api(*args)

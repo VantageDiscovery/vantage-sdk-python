@@ -10,6 +10,7 @@ class Collection(BaseModel):
     collection_id: Optional[StrictStr] = None
     user_provided_embeddings: Optional[StrictBool] = None
     llm: Optional[StrictStr] = None
+    url: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = None
     external_account_id: Optional[StrictStr] = None
     collection_name: Optional[StrictStr] = None

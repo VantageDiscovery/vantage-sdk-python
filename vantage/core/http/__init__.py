@@ -81,6 +81,9 @@ from vantage.core.http.models.global_search_properties_filter import (
 from vantage.core.http.models.global_search_properties_pagination import (
     GlobalSearchPropertiesPagination,
 )
+from vantage.core.http.models.global_search_properties_sort import (
+    GlobalSearchPropertiesSort,
+)
 from vantage.core.http.models.ml_these import MLThese
 from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage.core.http.models.more_like_these_query import MoreLikeTheseQuery

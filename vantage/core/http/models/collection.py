@@ -53,6 +53,7 @@ class Collection(BaseModel):
         description="Ignore llm field will provide own embeddings for both ingest and search",
     )
     llm: Optional[StrictStr] = None
+    url: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = Field(
         default=None,
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
@@ -73,6 +74,7 @@ class Collection(BaseModel):
         "collection_id",
         "user_provided_embeddings",
         "llm",
+        "url",
         "embeddings_dimension",
         "external_key_id",
         "collection_name",
@@ -172,6 +174,7 @@ class Collection(BaseModel):
                 if obj.get("user_provided_embeddings") is not None
                 else False,
                 "llm": obj.get("llm"),
+                "url": obj.get("url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),
                 "collection_name": obj.get("collection_name"),
