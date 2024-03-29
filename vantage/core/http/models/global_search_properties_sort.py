@@ -14,53 +14,53 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
-
-
+from pydantic import BaseModel, StrictStr, field_validator
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class CollectionImmutable(BaseModel):
+class GlobalSearchPropertiesSort(BaseModel):
     """
-    CollectionImmutable
-    """  # noqa: E501
+    GlobalSearchPropertiesSort
+    """ # noqa: E501
+    field: Optional[StrictStr] = None
+    order: Optional[StrictStr] = None
+    mode: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["field", "order", "mode"]
 
-    collection_id: Optional[StrictStr] = Field(
-        default=None,
-        description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\"",
-    )
-    user_provided_embeddings: Optional[StrictBool] = Field(
-        default=False,
-        description="Ignore llm field will provide own embeddings for both ingest and search",
-    )
-    llm: Optional[StrictStr] = None
-    url: Optional[StrictStr] = None
-    embeddings_dimension: Optional[StrictInt] = Field(
-        default=None,
-        description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
-    )
-    __properties: ClassVar[List[str]] = [
-        "collection_id",
-        "user_provided_embeddings",
-        "llm",
-        "url",
-        "embeddings_dimension",
-    ]
+    @field_validator('order')
+    def order_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('asc', 'desc'):
+            raise ValueError("must be one of enum values ('asc', 'desc')")
+        return value
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('semantic_threshold', 'field_selection'):
+            raise ValueError("must be one of enum values ('semantic_threshold', 'field_selection')")
+        return value
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -73,7 +73,7 @@ class CollectionImmutable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CollectionImmutable from a JSON string"""
+        """Create an instance of GlobalSearchPropertiesSort from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -88,29 +88,26 @@ class CollectionImmutable(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of CollectionImmutable from a dict"""
+        """Create an instance of GlobalSearchPropertiesSort from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": obj.get("user_provided_embeddings")
-                if obj.get("user_provided_embeddings") is not None
-                else False,
-                "llm": obj.get("llm"),
-                "url": obj.get("url"),
-                "embeddings_dimension": obj.get("embeddings_dimension"),
-            }
-        )
+        _obj = cls.model_validate({
+            "field": obj.get("field"),
+            "order": obj.get("order"),
+            "mode": obj.get("mode")
+        })
         return _obj
+
+

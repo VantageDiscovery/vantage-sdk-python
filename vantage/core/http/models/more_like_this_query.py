@@ -31,6 +31,9 @@ from vantage.core.http.models.global_search_properties_filter import (
 from vantage.core.http.models.global_search_properties_pagination import (
     GlobalSearchPropertiesPagination,
 )
+from vantage.core.http.models.global_search_properties_sort import (
+    GlobalSearchPropertiesSort,
+)
 
 
 try:
@@ -48,12 +51,14 @@ class MoreLikeThisQuery(BaseModel):
     request_id: Optional[StrictInt] = None
     filter: Optional[GlobalSearchPropertiesFilter] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
+    sort: Optional[GlobalSearchPropertiesSort] = None
     document_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection",
         "request_id",
         "filter",
         "pagination",
+        "sort",
         "document_id",
     ]
 
@@ -101,6 +106,9 @@ class MoreLikeThisQuery(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of sort
+        if self.sort:
+            _dict['sort'] = self.sort.to_dict()
         return _dict
 
     @classmethod
@@ -129,6 +137,9 @@ class MoreLikeThisQuery(BaseModel):
                     obj.get("pagination")
                 )
                 if obj.get("pagination") is not None
+                else None,
+                "sort": GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
+                if obj.get("sort") is not None
                 else None,
                 "document_id": obj.get("document_id"),
             }
