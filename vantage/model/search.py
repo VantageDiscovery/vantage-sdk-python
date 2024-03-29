@@ -6,6 +6,7 @@ from vantage.core.http.models import (
     GlobalSearchPropertiesCollection,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
+    GlobalSearchPropertiesSort,
 )
 
 
@@ -33,3 +34,4 @@ class GlobalSearchProperties(BaseModel):
     collection: Optional[GlobalSearchPropertiesCollection] = None
     filter: Optional[GlobalSearchPropertiesFilter] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
+    sort: Optional[GlobalSearchPropertiesSort] = None
