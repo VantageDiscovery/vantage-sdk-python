@@ -23,6 +23,7 @@ from vantage.core.http.models import (
     GlobalSearchPropertiesCollection,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
+    GlobalSearchPropertiesSort,
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
@@ -1026,6 +1027,9 @@ class VantageClient:
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
+        sort_field: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        sort_mode: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> GlobalSearchProperties:
         collection = GlobalSearchPropertiesCollection(
@@ -1034,25 +1038,38 @@ class VantageClient:
             account_id=account_id if account_id else self.account_id,
         )
 
-        if boolean_filter:
-            search_filter = GlobalSearchPropertiesFilter(
+        search_filter = (
+            GlobalSearchPropertiesFilter(
                 boolean_filter=boolean_filter,
             )
-        else:
-            search_filter = None
+            if boolean_filter
+            else None
+        )
 
-        if page:
-            pagination = GlobalSearchPropertiesPagination(
+        pagination = (
+            GlobalSearchPropertiesPagination(
                 page=page,
                 count=page_count,
             )
-        else:
-            pagination = None
+            if page
+            else None
+        )
+
+        sort = (
+            GlobalSearchPropertiesSort(
+                field=sort_field,
+                order=sort_order,
+                mode=sort_mode,
+            )
+            if sort_field
+            else None
+        )
 
         return GlobalSearchProperties(
             collection=collection,
             filter=search_filter,
             pagination=pagination,
+            sort=sort,
         )
 
     def _vantage_api_key_check(self, vantage_api_key: str) -> str:
@@ -1075,6 +1092,9 @@ class VantageClient:
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
+        sort_field: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        sort_mode: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1101,6 +1121,16 @@ class VantageClient:
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
             Defaults to None.
+        sort_field: Optional[str], optional
+            Meta field name for sorting search results on.
+            If set, other sort_ fields will be taken into account.
+            Defaults to None.
+        sort_order: Optional[str], optional
+            Sort order. Possible values [asc, desc].
+            Defaults to desc.
+        sort_mode: Optional[str], optional
+            Sort mode. Possible values [semantic_threshold, field_selection].
+            Defaults to field_selection.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1124,6 +1154,9 @@ class VantageClient:
             page,
             page_count,
             boolean_filter,
+            sort_field,
+            sort_order,
+            sort_mode,
             account_id,
         )
 
@@ -1132,6 +1165,7 @@ class VantageClient:
             collection=search_properties.collection,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
+            sort=search_properties.sort,
         )
 
         result = self.search_api.api.semantic_search(
@@ -1149,6 +1183,9 @@ class VantageClient:
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
+        sort_field: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        sort_mode: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1175,6 +1212,16 @@ class VantageClient:
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
             Defaults to None.
+        sort_field: Optional[str], optional
+            Meta field name for sorting search results on.
+            If set, other sort_ fields will be taken into account.
+            Defaults to None.
+        sort_order: Optional[str], optional
+            Sort order. Possible values [asc, desc].
+            Defaults to desc.
+        sort_mode: Optional[str], optional
+            Sort mode. Possible values [semantic_threshold, field_selection].
+            Defaults to field_selection.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1198,6 +1245,9 @@ class VantageClient:
             page,
             page_count,
             boolean_filter,
+            sort_field,
+            sort_order,
+            sort_mode,
             account_id,
         )
 
@@ -1206,6 +1256,7 @@ class VantageClient:
             collection=search_properties.collection,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
+            sort=search_properties.sort,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1223,6 +1274,9 @@ class VantageClient:
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
+        sort_field: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        sort_mode: Optional[str] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1249,6 +1303,16 @@ class VantageClient:
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
             Defaults to None.
+        sort_field: Optional[str], optional
+            Meta field name for sorting search results on.
+            If set, other sort_ fields will be taken into account.
+            Defaults to None.
+        sort_order: Optional[str], optional
+            Sort order. Possible values [asc, desc].
+            Defaults to desc.
+        sort_mode: Optional[str], optional
+            Sort mode. Possible values [semantic_threshold, field_selection].
+            Defaults to field_selection.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1272,6 +1336,9 @@ class VantageClient:
             page,
             page_count,
             boolean_filter,
+            sort_field,
+            sort_order,
+            sort_mode,
             account_id,
         )
 
@@ -1280,6 +1347,7 @@ class VantageClient:
             collection=search_properties.collection,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
+            sort=search_properties.sort,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1297,6 +1365,9 @@ class VantageClient:
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         boolean_filter: Optional[str] = None,
+        sort_field: Optional[str] = None,
+        sort_order: Optional[str] = None,
+        sort_mode: Optional[str] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1323,6 +1394,16 @@ class VantageClient:
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
             Defaults to None.
+        sort_field: Optional[str], optional
+            Meta field name for sorting search results on.
+            If set, other sort_ fields will be taken into account.
+            Defaults to None.
+        sort_order: Optional[str], optional
+            Sort order. Possible values [asc, desc].
+            Defaults to desc.
+        sort_mode: Optional[str], optional
+            Sort mode. Possible values [semantic_threshold, field_selection].
+            Defaults to field_selection.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1346,6 +1427,9 @@ class VantageClient:
             page,
             page_count,
             boolean_filter,
+            sort_field,
+            sort_order,
+            sort_mode,
             account_id,
         )
 
@@ -1357,6 +1441,7 @@ class VantageClient:
             collection=search_properties.collection,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
+            sort=search_properties.sort,
         )
 
         result = self.search_api.api.more_like_these_search(
