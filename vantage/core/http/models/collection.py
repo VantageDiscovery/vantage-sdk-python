@@ -53,6 +53,8 @@ class Collection(BaseModel):
         description="Ignore llm field will provide own embeddings for both ingest and search",
     )
     llm: Optional[StrictStr] = None
+    llm_provider: Optional[StrictStr] = None
+    llm_secret: Optional[StrictStr] = None
     url: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = Field(
         default=None,
@@ -74,6 +76,8 @@ class Collection(BaseModel):
         "collection_id",
         "user_provided_embeddings",
         "llm",
+        "llm_provider",
+        "llm_secret",
         "url",
         "embeddings_dimension",
         "external_key_id",
@@ -108,6 +112,18 @@ class Collection(BaseModel):
         if value not in ('Active', 'Standby', 'Deleted'):
             raise ValueError(
                 "must be one of enum values ('Active', 'Standby', 'Deleted')"
+            )
+        return value
+
+    @field_validator('llm_provider')
+    def llm_provider_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('Hugging', 'OpenAI'):
+            raise ValueError(
+                "must be one of enum values ('Hugging', 'OpenAI')"
             )
         return value
 
@@ -170,10 +186,14 @@ class Collection(BaseModel):
                 "collection_status": obj.get("collection_status"),
                 "collection_state": obj.get("collection_state"),
                 "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": obj.get("user_provided_embeddings")
-                if obj.get("user_provided_embeddings") is not None
-                else False,
+                "user_provided_embeddings": (
+                    obj.get("user_provided_embeddings")
+                    if obj.get("user_provided_embeddings") is not None
+                    else False
+                ),
                 "llm": obj.get("llm"),
+                "llm_provider": obj.get("llm_provider"),
+                "llm_secret": obj.get("llm_secret"),
                 "url": obj.get("url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),

@@ -20,7 +20,14 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, Field, StrictBool, StrictInt, StrictStr
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictBool,
+    StrictInt,
+    StrictStr,
+    field_validator,
+)
 
 
 try:
@@ -42,6 +49,8 @@ class CreateCollectionRequest(BaseModel):
         description="Ignore llm field will provide own embeddings for both ingest and search",
     )
     llm: Optional[StrictStr] = None
+    llm_provider: Optional[StrictStr] = None
+    llm_secret: Optional[StrictStr] = None
     url: Optional[StrictStr] = None
     embeddings_dimension: StrictInt = Field(
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings."
@@ -59,12 +68,26 @@ class CreateCollectionRequest(BaseModel):
         "collection_id",
         "user_provided_embeddings",
         "llm",
+        "llm_provider",
+        "llm_secret",
         "url",
         "embeddings_dimension",
         "external_key_id",
         "collection_name",
         "collection_preview_url_pattern",
     ]
+
+    @field_validator('llm_provider')
+    def llm_provider_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('Hugging', 'OpenAI'):
+            raise ValueError(
+                "must be one of enum values ('Hugging', 'OpenAI')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -115,10 +138,14 @@ class CreateCollectionRequest(BaseModel):
         _obj = cls.model_validate(
             {
                 "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": obj.get("user_provided_embeddings")
-                if obj.get("user_provided_embeddings") is not None
-                else False,
+                "user_provided_embeddings": (
+                    obj.get("user_provided_embeddings")
+                    if obj.get("user_provided_embeddings") is not None
+                    else False
+                ),
                 "llm": obj.get("llm"),
+                "llm_provider": obj.get("llm_provider"),
+                "llm_secret": obj.get("llm_secret"),
                 "url": obj.get("url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),
