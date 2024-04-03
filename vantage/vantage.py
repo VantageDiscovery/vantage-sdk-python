@@ -923,11 +923,7 @@ class VantageClient:
         "vantage-managed"
         """
 
-        collection_name = (
-            collection_name
-            if collection_name
-            else f"Collection [{collection_id}]"
-        )
+        collection_name = collection_name or f"Collection [{collection_id}]"
 
         if external_key_id:
             external_key = self.get_external_api_key(
@@ -935,16 +931,11 @@ class VantageClient:
             )
 
             llm_provider = external_key.llm_provider
-
-            self._validate_create_collection_parameters(
-                external_key.llm_provider,
-                url,
-                llm,
-            )
         else:
-            if llm_provider not in [el.value for el in LLMProvider]:
+            llm_providers = [el.value for el in LLMProvider]
+            if llm_provider not in llm_providers:
                 raise ValueError(
-                    f"LLM provider needs to take one of the following values: {[el.value for el in LLMProvider]}."
+                    f"LLM provider needs to take one of the following values: {llm_providers}."
                 )
 
             if not llm_provider or not llm_secret:
@@ -957,32 +948,30 @@ class VantageClient:
                     f"LLM parameter is required if LLM provider is set to {llm_provider}."
                 )
 
-            self._validate_create_collection_parameters(
-                llm_provider,
-                url,
-                llm,
-            )
+        self._validate_create_collection_parameters(
+            llm_provider,
+            url,
+            llm,
+        )
 
         create_collection_request = CreateCollectionRequest(
-            external_key_id=(
-                external_key_id if not user_provided_embeddings else None
-            ),
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=int(embeddings_dimension),
             user_provided_embeddings=bool(user_provided_embeddings),
-            llm=llm if not user_provided_embeddings else None,
-            llm_secret=llm_secret if not user_provided_embeddings else None,
-            llm_provider=(
-                llm_provider if not user_provided_embeddings else None
+            external_key_id=(
+                None if user_provided_embeddings else external_key_id
             ),
-            url=url if not user_provided_embeddings else None,
+            llm=None if user_provided_embeddings else llm,
+            llm_secret=None if not user_provided_embeddings else llm_secret,
+            llm_provider=None if user_provided_embeddings else llm_provider,
+            url=None if user_provided_embeddings else url,
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
         collection = self.management_api.collection_api.api.create_collection(
             create_collection_request=create_collection_request,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         return Collection.model_validate(collection.model_dump())
