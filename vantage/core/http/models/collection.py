@@ -55,7 +55,7 @@ class Collection(BaseModel):
     llm: Optional[StrictStr] = None
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
-    url: Optional[StrictStr] = None
+    external_url: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = Field(
         default=None,
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
@@ -78,7 +78,7 @@ class Collection(BaseModel):
         "llm",
         "llm_provider",
         "llm_secret",
-        "url",
+        "external_url",
         "embeddings_dimension",
         "external_key_id",
         "collection_name",
@@ -186,15 +186,13 @@ class Collection(BaseModel):
                 "collection_status": obj.get("collection_status"),
                 "collection_state": obj.get("collection_state"),
                 "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": (
-                    obj.get("user_provided_embeddings")
-                    if obj.get("user_provided_embeddings") is not None
-                    else False
-                ),
+                "user_provided_embeddings": obj.get("user_provided_embeddings")
+                if obj.get("user_provided_embeddings") is not None
+                else False,
                 "llm": obj.get("llm"),
                 "llm_provider": obj.get("llm_provider"),
                 "llm_secret": obj.get("llm_secret"),
-                "url": obj.get("url"),
+                "external_url": obj.get("external_url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),
                 "collection_name": obj.get("collection_name"),
