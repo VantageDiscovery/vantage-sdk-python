@@ -825,11 +825,11 @@ class VantageClient:
         url: Optional[str] = None,
         llm: Optional[str] = None,
     ) -> None:
-        if llm_provider == LLMProvider.HuggingFace and not url:
+        if llm_provider == LLMProvider.HuggingFace.value and not url:
             raise ValueError(
                 f"URL parameter is required if {llm_provider} is used as LLM provider."
             )
-        elif llm_provider == LLMProvider.OpenAI and not llm:
+        elif llm_provider == LLMProvider.OpenAI.value and not llm:
             raise ValueError(
                 f"LLM parameter is required if {llm_provider} is used as LLM provider."
             )
@@ -927,6 +927,11 @@ class VantageClient:
 
         if not user_provided_embeddings:
             if external_key_id:
+                if llm_provider or llm_secret:
+                    raise ValueError(
+                        f"Please provide either external API key or LLM provider and secret, but not both."
+                    )
+
                 external_key = self.get_external_api_key(
                     external_key_id=external_key_id
                 )
@@ -934,19 +939,15 @@ class VantageClient:
                 llm_provider = external_key.llm_provider
             else:
                 llm_providers = [el.value for el in LLMProvider]
-                if llm_provider not in llm_providers:
-                    raise ValueError(
-                        f"LLM provider needs to take one of the following values: {llm_providers}."
-                    )
 
                 if not llm_provider or not llm_secret:
                     raise ValueError(
                         "Both LLM provider and LLM secret need to be provided if External API key ID is None."
                     )
 
-                if llm_provider == LLMProvider.OpenAI.value and not llm:
+                if llm_provider not in llm_providers:
                     raise ValueError(
-                        f"LLM parameter is required if LLM provider is set to {llm_provider}."
+                        f"LLM provider needs to take one of the following values: {llm_providers}."
                     )
 
             self._validate_create_collection_parameters(
@@ -964,7 +965,7 @@ class VantageClient:
                 None if user_provided_embeddings else external_key_id
             ),
             llm=None if user_provided_embeddings else llm,
-            llm_secret=None if not user_provided_embeddings else llm_secret,
+            llm_secret=None if user_provided_embeddings else llm_secret,
             llm_provider=None if user_provided_embeddings else llm_provider,
             external_url=None if user_provided_embeddings else url,
             collection_preview_url_pattern=collection_preview_url_pattern,
