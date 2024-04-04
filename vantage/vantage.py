@@ -526,10 +526,10 @@ class VantageClient:
         Parameters
         ----------
         llm_provider : str
-            The provider of the Large Language Model (LLM) service.
+            The provider of the Large Language Model (LLM).
             Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret : str
-            The secret key for accessing the LLM service.
+            The secret key for accessing the LLM.
         url : Optional[str], optional
             Currently not in use
             Defaults to None.
@@ -586,9 +586,9 @@ class VantageClient:
         external_key_id : str
             The unique identifier of the external API key to be updated.
         llm_provider : str
-            The new provider of the Large Language Model (LLM) service.
+            The new provider of the Large Language Model (LLM).
         llm_secret : str
-            The new secret key for accessing the LLM service.
+            The new secret key for accessing the LLM.
         url : Optional[str], optional
             The new URL associated with the external API key, indicating the endpoint of the external service.
         account_id : Optional[str], optional
@@ -877,13 +877,14 @@ class VantageClient:
         llm : Optional[str], optional
             The identifier of the Large Language Model used for generating embeddings, if applicable.
         url : Optional[str], optional
-            ...
+            Link to the deployed model. Required when llm_provider is set to [Hugging].
         external_key_id : Optional[str], optional
             The external key ID used for API integration, if applicable.
         llm_provider: Optional[str], optional
-            ...
+            The provider of the Large Language Model (LLM).
+            Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret: Optional[str], optional
-            ...
+            The secret key for accessing the LLM.
         collection_preview_url_pattern : Optional[str], optional
             A URL pattern for previewing items in the collection, if applicable.
         account_id : Optional[str], optional
