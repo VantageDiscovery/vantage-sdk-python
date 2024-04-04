@@ -34,7 +34,7 @@ from vantage.core.search import SearchAPI
 from vantage.exceptions import VantageValueError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
-from vantage.model.keys import ExternalAPIKey, VantageAPIKey
+from vantage.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
 from vantage.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
@@ -526,10 +526,10 @@ class VantageClient:
         Parameters
         ----------
         llm_provider : str
-            The provider of the Large Language Model (LLM) service.
+            The provider of the Large Language Model (LLM).
             Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret : str
-            The secret key for accessing the LLM service.
+            The secret key for accessing the LLM.
         url : Optional[str], optional
             Currently not in use
             Defaults to None.
@@ -586,9 +586,9 @@ class VantageClient:
         external_key_id : str
             The unique identifier of the external API key to be updated.
         llm_provider : str
-            The new provider of the Large Language Model (LLM) service.
+            The new provider of the Large Language Model (LLM).
         llm_secret : str
-            The new secret key for accessing the LLM service.
+            The new secret key for accessing the LLM.
         url : Optional[str], optional
             The new URL associated with the external API key, indicating the endpoint of the external service.
         account_id : Optional[str], optional
@@ -819,6 +819,21 @@ class VantageClient:
 
         return Collection.model_validate(collection.model_dump())
 
+    def _validate_create_collection_parameters(
+        self,
+        llm_provider: str,
+        url: Optional[str] = None,
+        llm: Optional[str] = None,
+    ) -> None:
+        if llm_provider == LLMProvider.HuggingFace.value and not url:
+            raise ValueError(
+                f"URL parameter is required if {llm_provider} is used as LLM provider."
+            )
+        elif llm_provider == LLMProvider.OpenAI.value and not llm:
+            raise ValueError(
+                f"LLM parameter is required if {llm_provider} is used as LLM provider."
+            )
+
     def create_collection(
         self,
         collection_id: str,
@@ -826,7 +841,10 @@ class VantageClient:
         collection_name: Optional[str] = None,
         user_provided_embeddings: Optional[bool] = False,
         llm: Optional[str] = None,
+        url: Optional[str] = None,
         external_key_id: Optional[str] = None,
+        llm_provider: Optional[str] = None,
+        llm_secret: Optional[str] = None,
         collection_preview_url_pattern: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> Collection:
@@ -848,17 +866,25 @@ class VantageClient:
             It can only contain lowercase letters [a-z], digits [0-9] and a hypen [-].
             The maximum length for a colleciton ID is 36 characters.
             It can not be changed after the collection is created.
-        collection_name : str
-            The name of the new collection.
         embeddings_dimension : int
             The dimensionality of the embeddings for the collection items.
+        collection_name : Optional[str], optional
+            The name of the new collection.
+            If not provided, value will be 'Colllection [<collection_id>]'
         user_provided_embeddings : Optional[bool], optional
             Indicates whether embeddings are provided by the user (True)
             or managed by Vantage (False). Defaults to False.
         llm : Optional[str], optional
             The identifier of the Large Language Model used for generating embeddings, if applicable.
+        url : Optional[str], optional
+            Link to the deployed model. Required when llm_provider is set to [Hugging].
         external_key_id : Optional[str], optional
             The external key ID used for API integration, if applicable.
+        llm_provider: Optional[str], optional
+            The provider of the Large Language Model (LLM).
+            Supported options are: OpenAI and HuggingFace (Hugging)
+        llm_secret: Optional[str], optional
+            The secret key for accessing the LLM.
         collection_preview_url_pattern : Optional[str], optional
             A URL pattern for previewing items in the collection, if applicable.
         account_id : Optional[str], optional
@@ -898,27 +924,57 @@ class VantageClient:
         "vantage-managed"
         """
 
-        collection_name = (
-            collection_name
-            if collection_name
-            else f"Collection [{collection_id}]"
-        )
+        collection_name = collection_name or f"Collection [{collection_id}]"
+
+        if not user_provided_embeddings:
+            if external_key_id:
+                if llm_provider or llm_secret:
+                    raise ValueError(
+                        f"Please provide either external API key or LLM provider and secret, but not both."
+                    )
+
+                external_key = self.get_external_api_key(
+                    external_key_id=external_key_id
+                )
+
+                llm_provider = external_key.llm_provider
+            else:
+                llm_providers = [el.value for el in LLMProvider]
+
+                if not llm_provider or not llm_secret:
+                    raise ValueError(
+                        "Both LLM provider and LLM secret need to be provided if External API key ID is None."
+                    )
+
+                if llm_provider not in llm_providers:
+                    raise ValueError(
+                        f"LLM provider needs to take one of the following values: {llm_providers}."
+                    )
+
+            self._validate_create_collection_parameters(
+                llm_provider,
+                url,
+                llm,
+            )
 
         create_collection_request = CreateCollectionRequest(
-            external_key_id=(
-                external_key_id if not user_provided_embeddings else None
-            ),
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=int(embeddings_dimension),
             user_provided_embeddings=bool(user_provided_embeddings),
-            llm=llm if not user_provided_embeddings else None,
+            external_key_id=(
+                None if user_provided_embeddings else external_key_id
+            ),
+            llm=None if user_provided_embeddings else llm,
+            llm_secret=None if user_provided_embeddings else llm_secret,
+            llm_provider=None if user_provided_embeddings else llm_provider,
+            external_url=None if user_provided_embeddings else url,
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
         collection = self.management_api.collection_api.api.create_collection(
             create_collection_request=create_collection_request,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         return Collection.model_validate(collection.model_dump())
