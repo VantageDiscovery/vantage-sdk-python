@@ -4,6 +4,7 @@ import ntpath
 import uuid
 from os.path import exists
 from pathlib import Path
+import requests
 from typing import List, Optional
 
 from vantage.config import (
@@ -31,7 +32,7 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageValueError
+from vantage.exceptions import VantageValueError, VantageFileUploadError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
@@ -49,7 +50,7 @@ class VantageClient:
         search_api: SearchAPI,
         account_id: str,
         vantage_api_key: Optional[str] = None,
-        host: Optional[str] = None,
+        host: Optional[str] = DEFAULT_API_HOST,
     ) -> None:
         """
         Initializes a new instance of the 'VantageClient' class, the main
@@ -106,6 +107,7 @@ class VantageClient:
             An instance of the VantageClient.
         """
         host = f"{api_host}/{API_HOST_VERSION}"
+
         auth_client = AuthorizationClient.using_provided_vantage_api_key(
             vantage_api_key=vantage_api_key
         )
@@ -115,15 +117,15 @@ class VantageClient:
         if host is not None:
             api_client.configuration.host = host
 
-        management_api = ManagementAPI.from_defaults(api_client)
-        search_api = SearchAPI(api_client)
+        management_api = ManagementAPI.from_defaults(api_client=api_client)
+        search_api = SearchAPI(api_client=api_client)
 
         return cls(
-            management_api,
-            search_api,
-            account_id,
-            vantage_api_key,
-            host,
+            management_api=management_api,
+            search_api=search_api,
+            account_id=account_id,
+            vantage_api_key=vantage_api_key,
+            host=host,
         )
 
     @classmethod
@@ -157,6 +159,7 @@ class VantageClient:
             An instance of the VantageClient.
         """
         host = f"{api_host}/{API_HOST_VERSION}"
+
         auth_client = AuthorizationClient.using_provided_token(
             vantage_jwt_token=vantage_api_jwt_token
         )
@@ -166,15 +169,15 @@ class VantageClient:
         if host is not None:
             api_client.configuration.host = host
 
-        management_api = ManagementAPI.from_defaults(api_client)
-        search_api = SearchAPI(api_client)
+        management_api = ManagementAPI.from_defaults(api_client=api_client)
+        search_api = SearchAPI(api_client=api_client)
 
         return cls(
-            management_api,
-            search_api,
-            account_id,
-            vantage_api_key,
-            host,
+            management_api=management_api,
+            search_api=search_api,
+            account_id=account_id,
+            vantage_api_key=vantage_api_key,
+            host=host,
         )
 
     @classmethod
@@ -224,6 +227,7 @@ class VantageClient:
         """
         host = f"{api_host}/{API_HOST_VERSION}"
         auth_endpoint = f"{auth_host}{AUTH_ENDPOINT}"
+
         auth_client = AuthorizationClient.automatic_token_management(
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
@@ -237,15 +241,15 @@ class VantageClient:
         if host is not None:
             api_client.configuration.host = host
 
-        management_api = ManagementAPI.from_defaults(api_client)
-        search_api = SearchAPI(api_client)
+        management_api = ManagementAPI.from_defaults(api_client=api_client)
+        search_api = SearchAPI(api_client=api_client)
 
         return cls(
-            management_api,
-            search_api,
-            account_id,
-            vantage_api_key,
-            host,
+            management_api=management_api,
+            search_api=search_api,
+            account_id=account_id,
+            vantage_api_key=vantage_api_key,
+            host=host,
         )
 
     # region Account
@@ -281,8 +285,8 @@ class VantageClient:
         "Example Account Name"
         """
 
-        result = self.management_api.account_api.api.get_account(
-            account_id=account_id if account_id else self.account_id
+        result = self.management_api.account_api.get_account(
+            account_id=account_id or self.account_id
         )
         return Account.model_validate(result.model_dump())
 
@@ -322,8 +326,8 @@ class VantageClient:
 
         account_modifiable = AccountModifiable(account_name=account_name)
 
-        result = self.management_api.account_api.api.update_account(
-            account_id=account_id if account_id else self.account_id,
+        result = self.management_api.account_api.update_account(
+            account_id=account_id or self.account_id,
             account_modifiable=account_modifiable,
         )
         return Account.model_validate(result.model_dump())
@@ -365,10 +369,8 @@ class VantageClient:
         "54321"
         """
 
-        keys = (
-            self.management_api.vantage_api_keys_api.api.get_vantage_api_keys(
-                account_id=account_id if account_id else self.account_id,
-            )
+        keys = self.management_api.vantage_api_keys_api.get_vantage_api_keys(
+            account_id=account_id or self.account_id,
         )
 
         return [
@@ -411,8 +413,8 @@ class VantageClient:
         "12345"
         """
 
-        key = self.management_api.vantage_api_keys_api.api.get_vantage_api_key(
-            account_id=account_id if account_id else self.account_id,
+        key = self.management_api.vantage_api_keys_api.get_vantage_api_key(
+            account_id=account_id or self.account_id,
             vantage_api_key_id=vantage_api_key_id,
         )
         return VantageAPIKey.model_validate(key.model_dump())
@@ -454,8 +456,8 @@ class VantageClient:
         "external_key_321"
         """
 
-        keys = self.management_api.external_api_keys_api.api.get_external_api_keys(
-            account_id=account_id if account_id else self.account_id,
+        keys = self.management_api.external_api_keys_api.get_external_api_keys(
+            account_id=account_id or self.account_id,
         )
         return [
             ExternalAPIKey.model_validate(key.actual_instance.model_dump())
@@ -498,11 +500,9 @@ class VantageClient:
         "OpenAI"
         """
 
-        key = (
-            self.management_api.external_api_keys_api.api.get_external_api_key(
-                account_id=account_id if account_id else self.account_id,
-                external_key_id=external_key_id,
-            )
+        key = self.management_api.external_api_keys_api.get_external_api_key(
+            account_id=account_id or self.account_id,
+            external_key_id=external_key_id,
         )
 
         return ExternalAPIKey.model_validate(key.model_dump())
@@ -558,9 +558,11 @@ class VantageClient:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = self.management_api.external_api_keys_api.api.create_external_api_key(
-            account_id=account_id if account_id else self.account_id,
-            external_api_key_modifiable=external_api_key_modifiable,
+        key = (
+            self.management_api.external_api_keys_api.create_external_api_key(
+                account_id=account_id or self.account_id,
+                external_api_key_modifiable=external_api_key_modifiable,
+            )
         )
 
         return ExternalAPIKey.model_validate(key.model_dump())
@@ -617,10 +619,12 @@ class VantageClient:
             url=url, llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = self.management_api.external_api_keys_api.api.update_external_api_key(
-            account_id=account_id if account_id else self.account_id,
-            external_key_id=external_key_id,
-            external_api_key_modifiable=external_api_key_modifiable,
+        key = (
+            self.management_api.external_api_keys_api.update_external_api_key(
+                account_id=account_id or self.account_id,
+                external_key_id=external_key_id,
+                external_api_key_modifiable=external_api_key_modifiable,
+            )
         )
 
         return ExternalAPIKey.model_validate(key.model_dump())
@@ -653,8 +657,8 @@ class VantageClient:
         >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
         """
 
-        self.management_api.external_api_keys_api.api.delete_external_api_key(
-            account_id=account_id if account_id else self.account_id,
+        self.management_api.external_api_keys_api.delete_external_api_key(
+            account_id=account_id or self.account_id,
             external_key_id=external_key_id,
         )
 
@@ -686,7 +690,7 @@ class VantageClient:
         """
 
         collections = self.list_collections(
-            account_id=account_id if account_id else self.account_id
+            account_id=account_id or self.account_id
         )
         return [col.model_dump()["collection_id"] for col in collections]
 
@@ -723,11 +727,11 @@ class VantageClient:
             An object containing the URL for browser-based file uploads.
         """
 
-        url = self.management_api.collection_api.api.get_browser_upload_url(
+        url = self.management_api.collection_api.get_browser_upload_url(
             collection_id=collection_id,
             file_size=file_size,
             customer_batch_identifier=parquet_file_name,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         return CollectionUploadURL.model_validate(url.model_dump())
@@ -766,8 +770,8 @@ class VantageClient:
         "Collection 2"
         """
 
-        collections = self.management_api.collection_api.api.list_collections(
-            account_id=account_id if account_id else self.account_id
+        collections = self.management_api.collection_api.list_collections(
+            account_id=account_id or self.account_id
         )
 
         return [
@@ -812,9 +816,9 @@ class VantageClient:
         "My Collection"
         """
 
-        collection = self.management_api.collection_api.api.get_collection(
+        collection = self.management_api.collection_api.get_collection(
             collection_id=collection_id,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         return Collection.model_validate(collection.model_dump())
@@ -840,11 +844,11 @@ class VantageClient:
         embeddings_dimension: int,
         collection_name: Optional[str] = None,
         user_provided_embeddings: Optional[bool] = False,
-        llm: Optional[str] = None,
-        url: Optional[str] = None,
         external_key_id: Optional[str] = None,
         llm_provider: Optional[str] = None,
         llm_secret: Optional[str] = None,
+        llm: Optional[str] = None,
+        external_url: Optional[str] = None,
         collection_preview_url_pattern: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> Collection:
@@ -874,10 +878,6 @@ class VantageClient:
         user_provided_embeddings : Optional[bool], optional
             Indicates whether embeddings are provided by the user (True)
             or managed by Vantage (False). Defaults to False.
-        llm : Optional[str], optional
-            The identifier of the Large Language Model used for generating embeddings, if applicable.
-        url : Optional[str], optional
-            Link to the deployed model. Required when llm_provider is set to [Hugging].
         external_key_id : Optional[str], optional
             The external key ID used for API integration, if applicable.
         llm_provider: Optional[str], optional
@@ -885,6 +885,10 @@ class VantageClient:
             Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret: Optional[str], optional
             The secret key for accessing the LLM.
+        llm : Optional[str], optional
+            The identifier of the Large Language Model used for generating embeddings, if applicable.
+        external_url : Optional[str], optional
+            Link to the deployed model. Required when llm_provider is set to [Hugging].
         collection_preview_url_pattern : Optional[str], optional
             A URL pattern for previewing items in the collection, if applicable.
         account_id : Optional[str], optional
@@ -953,7 +957,7 @@ class VantageClient:
 
             self._validate_create_collection_parameters(
                 llm_provider,
-                url,
+                external_url,
                 llm,
             )
 
@@ -968,11 +972,11 @@ class VantageClient:
             llm=None if user_provided_embeddings else llm,
             llm_secret=None if user_provided_embeddings else llm_secret,
             llm_provider=None if user_provided_embeddings else llm_provider,
-            external_url=None if user_provided_embeddings else url,
+            external_url=None if user_provided_embeddings else external_url,
             collection_preview_url_pattern=collection_preview_url_pattern,
         )
 
-        collection = self.management_api.collection_api.api.create_collection(
+        collection = self.management_api.collection_api.create_collection(
             create_collection_request=create_collection_request,
             account_id=account_id or self.account_id,
         )
@@ -1029,10 +1033,10 @@ class VantageClient:
             collection_name=collection_name,
         )
 
-        collection = self.management_api.collection_api.api.update_collection(
+        collection = self.management_api.collection_api.update_collection(
             collection_id=collection_id,
             collection_modifiable=collection_modifiable,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         return Collection.model_validate(collection.model_dump())
@@ -1067,7 +1071,7 @@ class VantageClient:
         >>> vantage_client.delete_collection(collection_id="my-collection")
         """
 
-        self.management_api.collection_api.api.delete_collection(
+        self.management_api.collection_api.delete_collection(
             collection_id=collection_id,
             account_id=account_id if account_id else self.account_id,
         )
@@ -1091,7 +1095,7 @@ class VantageClient:
         collection = GlobalSearchPropertiesCollection(
             collection_id=collection_id,
             accuracy=accuracy,
-            account_id=account_id if account_id else self.account_id,
+            account_id=account_id or self.account_id,
         )
 
         search_filter = (
@@ -1224,7 +1228,7 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.api.semantic_search(
+        result = self.search_api.semantic_search(
             query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
@@ -1315,7 +1319,7 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.api.embedding_search(
+        result = self.search_api.embedding_search(
             query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
@@ -1406,7 +1410,7 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.api.more_like_this_search(
+        result = self.search_api.more_like_this_search(
             more_like_this_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
@@ -1500,7 +1504,7 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.api.more_like_these_search(
+        result = self.search_api.more_like_these_search(
             more_like_these_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
@@ -1560,7 +1564,7 @@ class VantageClient:
         Metadata fields should all have `meta_` prefix.
         """
 
-        self.management_api.documents_api.api.upload_documents(
+        self.management_api.documents_api.upload_documents(
             body=documents,
             account_id=account_id if account_id else self.account_id,
             collection_id=collection_id,
@@ -1632,6 +1636,17 @@ class VantageClient:
 
     # region Upload - Embeddings
 
+    def _upload_embedding(self, upload_url: str, upload_content) -> int:
+        response = requests.put(
+            upload_url,
+            data=upload_content,
+        )
+
+        if response.status_code != 200:
+            raise VantageFileUploadError(response.reason, response.status_code)
+
+        return response.status_code
+
     def upload_embeddings_from_bytes(
         self,
         collection_id: str,
@@ -1690,7 +1705,7 @@ class VantageClient:
             account_id=account_id,
         )
 
-        return self.management_api.collection_api.upload_embedding(
+        return self._upload_embedding(
             upload_url=browser_upload_url.upload_url,
             upload_content=content,
         )
