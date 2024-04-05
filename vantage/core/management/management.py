@@ -1,23 +1,24 @@
 from __future__ import annotations
 
-from vantage.core.http.api_client import ApiClient
-from vantage.core.management.apis import (
-    AccountAPI,
-    CollectionAPI,
-    DocumentsAPI,
-    ExternalAPIKeysAPI,
-    VantageAPIKeysAPI,
+from vantage.core.http.api.account_management_api import AccountManagementApi
+from vantage.core.http.api.collection_management_api import (
+    CollectionManagementApi,
 )
+from vantage.core.http.api.external_api_keys_api import ExternalAPIKeysApi
+from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage.core.http.api.documents_api import DocumentsApi
+
+from vantage.core.http.api_client import ApiClient
 
 
 class ManagementAPI:
     def __init__(
         self,
-        account_api: AccountAPI,
-        collection_api: CollectionAPI,
-        external_api_keys_api: ExternalAPIKeysAPI,
-        vantage_api_keys_api: VantageAPIKeysAPI,
-        documents_api: DocumentsAPI,
+        account_api: AccountManagementApi,
+        collection_api: CollectionManagementApi,
+        external_api_keys_api: ExternalAPIKeysApi,
+        vantage_api_keys_api: VantageAPIKeysApi,
+        documents_api: DocumentsApi,
     ):
         self.account_api = account_api
         self.collection_api = collection_api
@@ -27,15 +28,15 @@ class ManagementAPI:
 
     @classmethod
     def from_defaults(cls, api_client: ApiClient) -> ManagementAPI:
-        account_api = AccountAPI(api_client)
-        collection_api = CollectionAPI(api_client)
-        external_api_keys_api = ExternalAPIKeysAPI(api_client)
-        vantage_api_keys_api = VantageAPIKeysAPI(api_client)
-        documents_api = DocumentsAPI(api_client)
+        account_api = AccountManagementApi(api_client=api_client)
+        collection_api = CollectionManagementApi(api_client=api_client)
+        external_api_keys_api = ExternalAPIKeysApi(api_client=api_client)
+        vantage_api_keys_api = VantageAPIKeysApi(api_client=api_client)
+        documents_api = DocumentsApi(api_client=api_client)
         return cls(
-            account_api,
-            collection_api,
-            external_api_keys_api,
-            vantage_api_keys_api,
-            documents_api,
+            account_api=account_api,
+            collection_api=collection_api,
+            external_api_keys_api=external_api_keys_api,
+            vantage_api_keys_api=vantage_api_keys_api,
+            documents_api=documents_api,
         )
