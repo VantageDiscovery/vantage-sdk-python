@@ -25,6 +25,9 @@ from pydantic import BaseModel, StrictFloat, StrictInt
 from vantage.core.http.models.global_search_properties_collection import (
     GlobalSearchPropertiesCollection,
 )
+from vantage.core.http.models.global_search_properties_field_value_weighting import (
+    GlobalSearchPropertiesFieldValueWeighting,
+)
 from vantage.core.http.models.global_search_properties_filter import (
     GlobalSearchPropertiesFilter,
 )
@@ -50,6 +53,9 @@ class EmbeddingSearchQuery(BaseModel):
     collection: Optional[GlobalSearchPropertiesCollection] = None
     request_id: Optional[StrictInt] = None
     filter: Optional[GlobalSearchPropertiesFilter] = None
+    field_value_weighting: Optional[
+        GlobalSearchPropertiesFieldValueWeighting
+    ] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
     sort: Optional[GlobalSearchPropertiesSort] = None
     embedding: Optional[List[Union[StrictFloat, StrictInt]]] = None
@@ -57,6 +63,7 @@ class EmbeddingSearchQuery(BaseModel):
         "collection",
         "request_id",
         "filter",
+        "field_value_weighting",
         "pagination",
         "sort",
         "embedding",
@@ -103,6 +110,11 @@ class EmbeddingSearchQuery(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of field_value_weighting
+        if self.field_value_weighting:
+            _dict[
+                'field_value_weighting'
+            ] = self.field_value_weighting.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
@@ -132,6 +144,11 @@ class EmbeddingSearchQuery(BaseModel):
                     obj.get("filter")
                 )
                 if obj.get("filter") is not None
+                else None,
+                "field_value_weighting": GlobalSearchPropertiesFieldValueWeighting.from_dict(
+                    obj.get("field_value_weighting")
+                )
+                if obj.get("field_value_weighting") is not None
                 else None,
                 "pagination": GlobalSearchPropertiesPagination.from_dict(
                     obj.get("pagination")

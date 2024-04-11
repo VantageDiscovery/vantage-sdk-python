@@ -35,21 +35,21 @@ class AuthorizationClient:
             vantage_jwt_token=vantage_jwt_token,
         )
 
-        if vantage_api_key:
-            self._vantage_api_key = vantage_api_key
-        elif vantage_jwt_token:
+        self._vantage_api_key = vantage_api_key
+        self._vantage_client_id = vantage_client_id
+        self._vantage_client_secret = vantage_client_secret
+        self._vantage_audience_url = vantage_audience_url
+        self._sso_endpoint_url = sso_endpoint_url
+        self._encoding = encoding
+
+        if vantage_jwt_token:
             now = datetime.datetime.now().timestamp() * 1000
             self._jwt_token = {
                 "token": vantage_jwt_token,
                 "valid_until": now + AuthorizationClient._DAY_IN_SECONDS,
             }
         else:
-            self._vantage_client_id = vantage_client_id
-            self._vantage_client_secret = vantage_client_secret
-
-        self._vantage_audience_url = vantage_audience_url
-        self._sso_endpoint_url = sso_endpoint_url
-        self._encoding = encoding
+            self._jwt_token = None
 
     def _check_credentials(
         self,
@@ -202,7 +202,7 @@ class AuthorizedApiClient(ApiClient):
             return super().call_api(*args)
         except UnauthorizedException:
             self.authorization_client.authenticate()
-            header_params[
-                "authorization"
-            ] = f"Bearer {self.authorization_client.jwt_token}"
+            header_params["authorization"] = (
+                f"Bearer {self.authorization_client.jwt_token}"
+            )
             return super().call_api(*args)

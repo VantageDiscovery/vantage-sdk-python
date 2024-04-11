@@ -4,8 +4,9 @@ import ntpath
 import uuid
 from os.path import exists
 from pathlib import Path
-import requests
 from typing import List, Optional
+
+import requests
 
 from vantage.config import (
     API_HOST_VERSION,
@@ -32,7 +33,7 @@ from vantage.core.http.models import (
 )
 from vantage.core.management import ManagementAPI
 from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageValueError, VantageFileUploadError
+from vantage.exceptions import VantageFileUploadError, VantageValueError
 from vantage.model.account import Account
 from vantage.model.collection import Collection, CollectionUploadURL
 from vantage.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
@@ -934,7 +935,7 @@ class VantageClient:
             if external_key_id:
                 if llm_provider or llm_secret:
                     raise ValueError(
-                        f"Please provide either external API key or LLM provider and secret, but not both."
+                        "Please provide either external API key or LLM provider and secret, but not both."
                     )
 
                 external_key = self.get_external_api_key(
@@ -1228,8 +1229,10 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.semantic_search(
-            query,
+        result = self.search_api.api.semantic_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
@@ -1319,8 +1322,10 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.embedding_search(
-            query,
+        result = self.search_api.api.embedding_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
@@ -1410,7 +1415,9 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.more_like_this_search(
+        result = self.search_api.api.more_like_this_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
             more_like_this_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
@@ -1504,7 +1511,9 @@ class VantageClient:
             sort=search_properties.sort,
         )
 
-        result = self.search_api.more_like_these_search(
+        result = self.search_api.api.more_like_these_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
             more_like_these_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )

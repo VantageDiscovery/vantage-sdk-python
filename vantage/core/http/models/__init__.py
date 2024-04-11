@@ -49,6 +49,9 @@ from vantage.core.http.models.global_search_properties import (
 from vantage.core.http.models.global_search_properties_collection import (
     GlobalSearchPropertiesCollection,
 )
+from vantage.core.http.models.global_search_properties_field_value_weighting import (
+    GlobalSearchPropertiesFieldValueWeighting,
+)
 from vantage.core.http.models.global_search_properties_filter import (
     GlobalSearchPropertiesFilter,
 )
@@ -71,3 +74,4 @@ from vantage.core.http.models.vantage_api_key import VantageAPIKey
 from vantage.core.http.models.vantage_api_keys_result_inner import (
     VantageAPIKeysResultInner,
 )
+from vantage.core.http.models.weighted_field_values import WeightedFieldValues
