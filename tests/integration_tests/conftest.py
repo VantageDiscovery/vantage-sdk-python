@@ -104,13 +104,15 @@ else:
 
 _protected_collections = []
 
-embedding_collection_id = _configuration["collection"][
+embedding_collection_id = _configuration["collection"].get(
     "embedding_search_test_collection_id"
-]
-semantic_colection_id = _configuration["collection"][
+)
+semantic_colection_id = _configuration["collection"].get(
     "semantic_search_test_collection_id"
-]
-mlt_collection_id = _configuration["collection"]["more_like_this_collection"]
+)
+mlt_collection_id = _configuration["collection"].get(
+    "more_like_this_collection"
+)
 if embedding_collection_id:
     _protected_collections.append(embedding_collection_id)
 if semantic_colection_id:
@@ -177,8 +179,8 @@ def collection_params() -> dict:
 
 
 @pytest.fixture(scope="module")
-def api_key() -> dict:
-    vantage_api_key = _configuration["keys"]["vantage_api_key"]
+def vantage_api_key() -> dict:
+    vantage_api_key = _configuration["keys"].get("vantage_api_key")
     if vantage_api_key is None:
         pytest.skip("No Vantage API key available.")
 
@@ -187,7 +189,7 @@ def api_key() -> dict:
 
 @pytest.fixture(scope="module")
 def vantage_api_key_id() -> dict:
-    vantage_api_key_id = _configuration["keys"]["vantage_api_key_id"]
+    vantage_api_key_id = _configuration["keys"].get("vantage_api_key_id")
     if vantage_api_key_id is None:
         pytest.skip("No Vantage API key ID available.")
 
@@ -196,7 +198,7 @@ def vantage_api_key_id() -> dict:
 
 @pytest.fixture(scope="module")
 def open_api_key() -> str:
-    open_api_key = _configuration["keys"]["open_api_key"]
+    open_api_key = _configuration["keys"].get("open_api_key")
     if open_api_key is None:
         pytest.skip("No OpenAPI key available.")
 
@@ -205,7 +207,7 @@ def open_api_key() -> str:
 
 @pytest.fixture(scope="module")
 def external_api_key() -> str:
-    external_api_key = _configuration["keys"]["external_api_key"]
+    external_api_key = _configuration["keys"].get("external_api_key")
     if external_api_key is None:
         pytest.skip("No external API key available.")
 
@@ -214,7 +216,7 @@ def external_api_key() -> str:
 
 @pytest.fixture(scope="module")
 def external_api_key_id() -> str:
-    external_api_key_id = _configuration["keys"]["external_api_key_id"]
+    external_api_key_id = _configuration["keys"].get("external_api_key_id")
     if external_api_key_id is None:
         pytest.skip("No external API key ID available.")
 
