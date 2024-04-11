@@ -9,7 +9,7 @@ from vantage_sdk.core.http.exceptions import (
     UnauthorizedException,
 )
 from vantage_sdk.model.search import MoreLikeTheseItem
-from vantage_sdk.vantage import VantageClient
+from vantage_sdk.vantage_sdk import VantageClient
 
 
 """Integration tests for search endpoints"""
