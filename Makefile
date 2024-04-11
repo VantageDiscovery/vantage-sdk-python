@@ -1,4 +1,4 @@
-sources = vantage
+sources = vantage_sdk
 
 .PHONY: test format lint unittest coverage pre-commit clean
 test: format lint unittest

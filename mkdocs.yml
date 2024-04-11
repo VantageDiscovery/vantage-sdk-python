@@ -65,4 +65,4 @@ plugins:
       lang: en
 
 watch:
-  - vantage
+  - vantage_sdk

@@ -2,11 +2,11 @@ from typing import Callable
 
 import pytest
 
+from vantage_sdk.client import VantageClient
 from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
-from vantage_sdk.client import VantageClient
 
 
 """Integration tests for API keys endpoints."""

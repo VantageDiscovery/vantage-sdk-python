@@ -9,7 +9,7 @@ classifiers=[
     'Programming Language :: Python :: 3.10',
 ]
 packages = [
-    { include = "vantage" },
+    { include = "vantage_sdk" },
     { include = "tests", format = "sdist" },
 ]
 
@@ -103,7 +103,7 @@ exclude = '''
 '''
 
 [tool.flake8]
-exclude = "vantage/core/http"
+exclude = "vantage_sdk/core/http"
 extend-ignore = [
     "D100",
     "D101",
@@ -113,7 +113,7 @@ extend-ignore = [
 ]
 
 [tool.mypy]
-exclude = "vantage/core/http"
+exclude = "vantage_sdk/core/http"
 
 [bumpver]
 current_version = "0.0.13"
@@ -123,7 +123,7 @@ version_pattern = "MAJOR.MINOR.PATCH"
 "pyproject.toml" = [
     'version = "{version}"',
 ]
-"vantage/__init__.py" = [
+"vantage_sdk/__init__.py" = [
     "__version__ = '{version}'",
 ]
 

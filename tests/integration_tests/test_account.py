@@ -3,8 +3,8 @@ from typing import Callable
 
 import pytest
 
-from vantage_sdk.core.http.exceptions import ForbiddenException
 from vantage_sdk.client import VantageClient
+from vantage_sdk.core.http.exceptions import ForbiddenException
 
 
 """ Integration tests for account endpoints."""

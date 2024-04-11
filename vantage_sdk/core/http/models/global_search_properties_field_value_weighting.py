@@ -14,12 +14,12 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional, Union
+
 from pydantic import (
     BaseModel,
     StrictFloat,
@@ -27,9 +27,11 @@ from pydantic import (
     StrictStr,
     field_validator,
 )
+
 from vantage_sdk.core.http.models.weighted_field_values import (
     WeightedFieldValues,
 )
+
 
 try:
     from typing import Self

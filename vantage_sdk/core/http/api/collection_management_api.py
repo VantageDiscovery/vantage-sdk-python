@@ -33,8 +33,12 @@ from typing_extensions import Annotated
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
 from vantage_sdk.core.http.models.collection import Collection
-from vantage_sdk.core.http.models.collection_modifiable import CollectionModifiable
-from vantage_sdk.core.http.models.collection_upload_url import CollectionUploadURL
+from vantage_sdk.core.http.models.collection_modifiable import (
+    CollectionModifiable,
+)
+from vantage_sdk.core.http.models.collection_upload_url import (
+    CollectionUploadURL,
+)
 from vantage_sdk.core.http.models.collections_result_inner import (
     CollectionsResultInner,
 )

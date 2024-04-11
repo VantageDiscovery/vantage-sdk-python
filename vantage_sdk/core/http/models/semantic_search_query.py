@@ -112,9 +112,9 @@ class SemanticSearchQuery(BaseModel):
             _dict['filter'] = self.filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of field_value_weighting
         if self.field_value_weighting:
-            _dict['field_value_weighting'] = (
-                self.field_value_weighting.to_dict()
-            )
+            _dict[
+                'field_value_weighting'
+            ] = self.field_value_weighting.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()

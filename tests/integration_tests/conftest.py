@@ -6,8 +6,8 @@ from typing import Callable
 
 import pytest
 
-from vantage_sdk.exceptions import VantageNotFoundError
 from vantage_sdk.client import VantageClient
+from vantage_sdk.exceptions import VantageNotFoundError
 
 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
