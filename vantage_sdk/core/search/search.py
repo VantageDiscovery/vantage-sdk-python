@@ -1,5 +1,5 @@
-from vantage.core.http.api.search_api import SearchApi
-from vantage.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api.search_api import SearchApi
+from vantage_sdk.core.http.api_client import ApiClient
 
 
 class SearchAPI:

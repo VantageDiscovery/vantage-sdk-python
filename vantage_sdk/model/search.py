@@ -2,7 +2,7 @@ from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
-from vantage.core.http.models import (
+from vantage_sdk.core.http.models import (
     GlobalSearchPropertiesCollection,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,

@@ -8,15 +8,15 @@ from typing import List, Optional
 
 import requests
 
-from vantage.config import (
+from vantage_sdk.config import (
     API_HOST_VERSION,
     AUTH_ENDPOINT,
     DEFAULT_API_HOST,
     DEFAULT_AUTH_HOST,
     DEFAULT_ENCODING,
 )
-from vantage.core.base import AuthorizationClient, AuthorizedApiClient
-from vantage.core.http.models import (
+from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
+from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
     CreateCollectionRequest,
@@ -31,13 +31,13 @@ from vantage.core.http.models import (
     MoreLikeThisQuery,
     SemanticSearchQuery,
 )
-from vantage.core.management import ManagementAPI
-from vantage.core.search import SearchAPI
-from vantage.exceptions import VantageFileUploadError, VantageValueError
-from vantage.model.account import Account
-from vantage.model.collection import Collection, CollectionUploadURL
-from vantage.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
-from vantage.model.search import (
+from vantage_sdk.core.management import ManagementAPI
+from vantage_sdk.core.search import SearchAPI
+from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
+from vantage_sdk.model.account import Account
+from vantage_sdk.model.collection import Collection, CollectionUploadURL
+from vantage_sdk.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
+from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,

@@ -5,14 +5,14 @@ from typing import Optional
 
 import requests
 
-from vantage.config import (
+from vantage_sdk.config import (
     AUTH_ENDPOINT,
     DEFAULT_API_HOST,
     DEFAULT_AUTH_HOST,
     DEFAULT_ENCODING,
 )
-from vantage.core.http import ApiClient
-from vantage.core.http.exceptions import UnauthorizedException
+from vantage_sdk.core.http import ApiClient
+from vantage_sdk.core.http.exceptions import UnauthorizedException
 
 
 class AuthorizationClient:

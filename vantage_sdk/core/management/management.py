@@ -1,13 +1,15 @@
 from __future__ import annotations
 
-from vantage.core.http.api.account_management_api import AccountManagementApi
-from vantage.core.http.api.collection_management_api import (
+from vantage_sdk.core.http.api.account_management_api import (
+    AccountManagementApi,
+)
+from vantage_sdk.core.http.api.collection_management_api import (
     CollectionManagementApi,
 )
-from vantage.core.http.api.documents_api import DocumentsApi
-from vantage.core.http.api.external_api_keys_api import ExternalAPIKeysApi
-from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
-from vantage.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api.documents_api import DocumentsApi
+from vantage_sdk.core.http.api.external_api_keys_api import ExternalAPIKeysApi
+from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage_sdk.core.http.api_client import ApiClient
 
 
 class ManagementAPI:
