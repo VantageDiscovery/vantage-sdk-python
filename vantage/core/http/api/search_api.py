@@ -25,7 +25,7 @@ try:
 except ImportError:
     from typing_extensions import Annotated
 
-from pydantic import Field
+from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 
 from vantage.core.http.api_client import ApiClient
@@ -55,6 +55,15 @@ class SearchApi:
     @validate_call
     def embedding_search(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         embedding_search_query: Annotated[
             EmbeddingSearchQuery,
             Field(
@@ -78,6 +87,10 @@ class SearchApi:
 
         Search by embedding
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param embedding_search_query: The JSON that describes how Vantage should search embeddings (required)
         :type embedding_search_query: EmbeddingSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -103,6 +116,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._embedding_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             embedding_search_query=embedding_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -126,6 +141,15 @@ class SearchApi:
     @validate_call
     def embedding_search_with_http_info(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         embedding_search_query: Annotated[
             EmbeddingSearchQuery,
             Field(
@@ -149,6 +173,10 @@ class SearchApi:
 
         Search by embedding
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param embedding_search_query: The JSON that describes how Vantage should search embeddings (required)
         :type embedding_search_query: EmbeddingSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -174,6 +202,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._embedding_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             embedding_search_query=embedding_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -197,6 +227,15 @@ class SearchApi:
     @validate_call
     def embedding_search_without_preload_content(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         embedding_search_query: Annotated[
             EmbeddingSearchQuery,
             Field(
@@ -220,6 +259,10 @@ class SearchApi:
 
         Search by embedding
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param embedding_search_query: The JSON that describes how Vantage should search embeddings (required)
         :type embedding_search_query: EmbeddingSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -245,6 +288,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._embedding_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             embedding_search_query=embedding_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -263,6 +308,8 @@ class SearchApi:
 
     def _embedding_search_serialize(
         self,
+        account_id,
+        collection_id,
         embedding_search_query,
         _request_auth,
         _content_type,
@@ -281,6 +328,10 @@ class SearchApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -308,7 +359,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/search/embedding',
+            resource_path='/search/{account_id}/{collection_id}/embedding',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -324,6 +375,15 @@ class SearchApi:
     @validate_call
     def more_like_these_search(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_these_query: Annotated[
             MoreLikeTheseQuery,
             Field(
@@ -347,6 +407,10 @@ class SearchApi:
 
         Search for similar items, blending docs, text, and embeddings
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_these_query: An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these. (required)
         :type more_like_these_query: MoreLikeTheseQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -372,6 +436,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_these_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_these_query=more_like_these_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -395,6 +461,15 @@ class SearchApi:
     @validate_call
     def more_like_these_search_with_http_info(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_these_query: Annotated[
             MoreLikeTheseQuery,
             Field(
@@ -418,6 +493,10 @@ class SearchApi:
 
         Search for similar items, blending docs, text, and embeddings
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_these_query: An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these. (required)
         :type more_like_these_query: MoreLikeTheseQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -443,6 +522,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_these_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_these_query=more_like_these_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -466,6 +547,15 @@ class SearchApi:
     @validate_call
     def more_like_these_search_without_preload_content(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_these_query: Annotated[
             MoreLikeTheseQuery,
             Field(
@@ -489,6 +579,10 @@ class SearchApi:
 
         Search for similar items, blending docs, text, and embeddings
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_these_query: An array, including nested these.  Each element may have only one of query_text, embedding, query_document_id or these. (required)
         :type more_like_these_query: MoreLikeTheseQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -514,6 +608,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_these_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_these_query=more_like_these_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -532,6 +628,8 @@ class SearchApi:
 
     def _more_like_these_search_serialize(
         self,
+        account_id,
+        collection_id,
         more_like_these_query,
         _request_auth,
         _content_type,
@@ -550,6 +648,10 @@ class SearchApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -577,7 +679,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/search/morelikethese',
+            resource_path='/search/{account_id}/{collection_id}/morelikethese',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -593,6 +695,15 @@ class SearchApi:
     @validate_call
     def more_like_this_search(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_this_query: Annotated[
             MoreLikeThisQuery,
             Field(
@@ -616,6 +727,10 @@ class SearchApi:
 
         Search for similar items, based on existing item id
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_this_query: The JSON that describes how Vantage should search a collection (required)
         :type more_like_this_query: MoreLikeThisQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -641,6 +756,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_this_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_this_query=more_like_this_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -664,6 +781,15 @@ class SearchApi:
     @validate_call
     def more_like_this_search_with_http_info(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_this_query: Annotated[
             MoreLikeThisQuery,
             Field(
@@ -687,6 +813,10 @@ class SearchApi:
 
         Search for similar items, based on existing item id
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_this_query: The JSON that describes how Vantage should search a collection (required)
         :type more_like_this_query: MoreLikeThisQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -712,6 +842,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_this_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_this_query=more_like_this_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -735,6 +867,15 @@ class SearchApi:
     @validate_call
     def more_like_this_search_without_preload_content(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         more_like_this_query: Annotated[
             MoreLikeThisQuery,
             Field(
@@ -758,6 +899,10 @@ class SearchApi:
 
         Search for similar items, based on existing item id
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param more_like_this_query: The JSON that describes how Vantage should search a collection (required)
         :type more_like_this_query: MoreLikeThisQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -783,6 +928,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._more_like_this_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             more_like_this_query=more_like_this_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -801,6 +948,8 @@ class SearchApi:
 
     def _more_like_this_search_serialize(
         self,
+        account_id,
+        collection_id,
         more_like_this_query,
         _request_auth,
         _content_type,
@@ -819,6 +968,10 @@ class SearchApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -846,7 +999,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/search/morelikethis',
+            resource_path='/search/{account_id}/{collection_id}/morelikethis',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -862,6 +1015,15 @@ class SearchApi:
     @validate_call
     def semantic_search(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         semantic_search_query: Annotated[
             SemanticSearchQuery,
             Field(
@@ -885,6 +1047,10 @@ class SearchApi:
 
         Search by text
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param semantic_search_query: The JSON that describes how Vantage should search a collection (required)
         :type semantic_search_query: SemanticSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -910,6 +1076,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._semantic_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             semantic_search_query=semantic_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -933,6 +1101,15 @@ class SearchApi:
     @validate_call
     def semantic_search_with_http_info(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         semantic_search_query: Annotated[
             SemanticSearchQuery,
             Field(
@@ -956,6 +1133,10 @@ class SearchApi:
 
         Search by text
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param semantic_search_query: The JSON that describes how Vantage should search a collection (required)
         :type semantic_search_query: SemanticSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -981,6 +1162,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._semantic_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             semantic_search_query=semantic_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1004,6 +1187,15 @@ class SearchApi:
     @validate_call
     def semantic_search_without_preload_content(
         self,
+        account_id: Annotated[
+            StrictStr, Field(description="The account to get information on")
+        ],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
         semantic_search_query: Annotated[
             SemanticSearchQuery,
             Field(
@@ -1027,6 +1219,10 @@ class SearchApi:
 
         Search by text
 
+        :param account_id: The account to get information on (required)
+        :type account_id: str
+        :param collection_id: The collection id to get details for {collection_id} (required)
+        :type collection_id: str
         :param semantic_search_query: The JSON that describes how Vantage should search a collection (required)
         :type semantic_search_query: SemanticSearchQuery
         :param _request_timeout: timeout setting for this request. If one
@@ -1052,6 +1248,8 @@ class SearchApi:
         """  # noqa: E501
 
         _param = self._semantic_search_serialize(
+            account_id=account_id,
+            collection_id=collection_id,
             semantic_search_query=semantic_search_query,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1070,6 +1268,8 @@ class SearchApi:
 
     def _semantic_search_serialize(
         self,
+        account_id,
+        collection_id,
         semantic_search_query,
         _request_auth,
         _content_type,
@@ -1088,6 +1288,10 @@ class SearchApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1115,7 +1319,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/search/semantic',
+            resource_path='/search/{account_id}/{collection_id}/semantic',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
