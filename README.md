@@ -14,7 +14,7 @@ pip install vantage-sdk
 
 ## Quickstart
 
-To get started with the Vantage Python SDK, you'll need to set up your Vantage account and obtain your API keys. Once you have your credentials, you can initialize the VantageClient to begin managing collections and performing searches.
+To get started with the Vantage Python SDK, you'll need to set up your [Vantage account](https://console.vanta.ge/) and obtain your account ID and Vantage API key. Once you have your ID and key, you can initialize the VantageClient which you can then use to manage your account, collections and keys and perform searches.
 
 ```python
 from vantage_sdk import VantageClient
@@ -30,7 +30,7 @@ vantage_client = VantageClient.using_vantage_api_key(
 
 ## Overview
 
-The Vantage Discovery Python SDK is divided into several modules, allowing you to manage accounts, collections, and API keys, as well as perform various types of searches.
+The Vantage Discovery Python SDK is divided into several modules, allowing you to manage account, collections, and API keys, as well as perform various types of searches.
 
 #### Key Features
 - __Collection Management__: Easily create, update, list, and delete collections.
