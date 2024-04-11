@@ -7,7 +7,7 @@ import pytest
 
 from vantage_sdk.core.exceptions import VantageFileUploadError
 from vantage_sdk.core.http.exceptions import NotFoundException
-from vantage_sdk.vantage_sdk import VantageClient
+from vantage_sdk.client import VantageClient
 
 
 class TestCollections:

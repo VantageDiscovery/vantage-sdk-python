@@ -6,7 +6,7 @@ from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
-from vantage_sdk.vantage_sdk import VantageClient
+from vantage_sdk.client import VantageClient
 
 
 """Integration tests for API keys endpoints."""

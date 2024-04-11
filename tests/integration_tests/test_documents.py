@@ -2,7 +2,7 @@
 
 from typing import Callable
 
-from vantage_sdk.vantage_sdk import VantageClient
+from vantage_sdk.client import VantageClient
 
 
 """Integration tests for search endpoints"""

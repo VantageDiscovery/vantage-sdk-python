@@ -8,7 +8,7 @@ from vantage_sdk.model.search import (
     SearchResult,
     SearchResultItem,
 )
-from vantage_sdk.vantage_sdk import VantageClient
+from vantage_sdk.client import VantageClient
 
 
 __author__ = """Vantage"""
