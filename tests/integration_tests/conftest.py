@@ -12,6 +12,7 @@ from vantage.vantage import VantageClient
 
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(ABS_PATH, os.pardir, os.pardir))
+DISABLE_EXTERNAL_API_KEYS_TESTS = True
 
 
 def _load_env() -> None:
@@ -59,21 +60,46 @@ _configuration = {
     },
 }
 
-jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN")
+auth_method = os.getenv("VANTAGE_AUTH_METHOD", "client_credentials")
+jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN", None)
 
-if jwt_token:
+if auth_method == "api_key":
+    api_key = _configuration["keys"]["vantage_api_key"]
+
+    if api_key is None:
+        raise ValueError("Vantage API key unspecified.")
+
+    _client = VantageClient.using_vantage_api_key(
+        vantage_api_key=api_key,
+        account_id=_configuration["account"]["id"],
+        api_host=_configuration["api"]["api_host"],
+    )
+elif auth_method == "jwt_token":
+    if jwt_token is None:
+        raise ValueError("JWT token unspecified.")
+
     _client = VantageClient.using_jwt_token(
         vantage_api_jwt_token=jwt_token,
         account_id=_configuration["account"]["id"],
         api_host=_configuration["api"]["api_host"],
     )
-else:
+elif auth_method == "client_credentials":
+    client_id = _configuration["api"]["client_id"]
+    client_secret = _configuration["api"]["client_secret"]
+
+    if client_id is None or client_secret is None:
+        raise ValueError("Missing client credentials.")
+
     _client = VantageClient.using_client_credentials(
         vantage_client_id=_configuration["api"]["client_id"],
         vantage_client_secret=_configuration["api"]["client_secret"],
         api_host=_configuration["api"]["api_host"],
         auth_host=_configuration["api"]["auth_host"],
         account_id=_configuration["account"]["id"],
+    )
+else:
+    raise ValueError(
+        f"Unknown auth method in $VANTAGE_AUTH_METHOD: {auth_method}"
     )
 
 _protected_collections = []
@@ -105,25 +131,24 @@ def skip_delete_external_api_key_test() -> bool:
 
 # Runs after all tests have finished
 def pytest_sessionfinish(session, exitstatus):
-    account_id = _configuration["account"]["id"]
     try:
-        collections = _client.list_collections(account_id=account_id)
+        collections = _client.list_collections()
         for collection in collections:
             collection_id = collection.collection_id
 
             if collection_id in _protected_collections:
                 continue
 
-            _client.delete_collection(
-                collection_id=collection_id,
-                account_id=account_id,
-            )
+            _client.delete_collection(collection_id=collection_id)
     except VantageNotFoundError:
         # Do nothing
         pass
 
+    if DISABLE_EXTERNAL_API_KEYS_TESTS:
+        return
+
     try:
-        keys = _client.get_external_api_keys(account_id=account_id)
+        keys = _client.get_external_api_keys()
         for key in keys:
             _client.delete_external_api_key(key.external_key_id)
     except VantageNotFoundError:
@@ -152,7 +177,7 @@ def collection_params() -> dict:
 
 
 @pytest.fixture(scope="module")
-def vantage_api_key() -> dict:
+def api_key() -> dict:
     vantage_api_key = _configuration["keys"]["vantage_api_key"]
     if vantage_api_key is None:
         pytest.skip("No Vantage API key available.")
