@@ -2,7 +2,6 @@ from typing import Callable
 
 import pytest
 
-from tests.integration_tests.conftest import skip_delete_external_api_key_test
 from vantage.core.http.exceptions import ForbiddenException, NotFoundException
 from vantage.vantage import VantageClient
 
@@ -102,6 +101,12 @@ class TestApiKeys:
         # Then
         assert exception.type is NotFoundException
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_get_external_api_keys(
         self,
         client: VantageClient,
@@ -139,6 +144,12 @@ class TestApiKeys:
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_get_external_api_key(
         self,
         client: VantageClient,
@@ -171,6 +182,12 @@ class TestApiKeys:
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_get_non_existing_external_api_key(
         self,
         client: VantageClient,
@@ -190,6 +207,12 @@ class TestApiKeys:
         # Then
         assert exception.type is NotFoundException
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_create_external_api_key(
         self,
         client: VantageClient,
@@ -220,6 +243,12 @@ class TestApiKeys:
         assert response.llm_secret == llm_secret
         assert response.url == url
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_update_external_api_key(
         self,
         client: VantageClient,
@@ -265,6 +294,12 @@ class TestApiKeys:
         # After
         client.delete_external_api_key(api_key.external_key_id)
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_update_non_existing_external_api_key(
         self,
         client: VantageClient,
@@ -289,8 +324,11 @@ class TestApiKeys:
         # Then
         assert exception.type is NotFoundException
 
-    @pytest.mark.skipif(
-        skip_delete_external_api_key_test(), reason="Test disabled by user."
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
     )
     def test_delete_external_api_key(
         self,
@@ -316,6 +354,12 @@ class TestApiKeys:
             )
         assert exception.type is NotFoundException
 
+    @pytest.mark.skip(
+        reason=(
+            "Cannot test with mock keys "
+            "because of external API Key validation"
+        )
+    )
     def test_delete_non_existing_external_api_key(
         self,
         client: VantageClient,
