@@ -30,7 +30,7 @@ from pydantic import (
 )
 from typing_extensions import Literal
 
-from vantage.core.http.models.external_api_key import ExternalAPIKey
+from vantage_sdk.core.http.models.external_api_key import ExternalAPIKey
 
 
 try:

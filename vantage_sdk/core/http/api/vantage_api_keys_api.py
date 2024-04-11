@@ -30,13 +30,13 @@ from typing import List
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 
-from vantage.core.http.api_client import ApiClient
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.models.vantage_api_key import VantageAPIKey
-from vantage.core.http.models.vantage_api_keys_result_inner import (
+from vantage_sdk.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
+from vantage_sdk.core.http.models.vantage_api_keys_result_inner import (
     VantageAPIKeysResultInner,
 )
-from vantage.core.http.rest import RESTResponseType
+from vantage_sdk.core.http.rest import RESTResponseType
 
 
 class VantageAPIKeysApi:

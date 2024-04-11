@@ -25,11 +25,11 @@ from urllib.parse import quote
 
 from dateutil.parser import parse
 
-import vantage.core.http.models
-from vantage.core.http import rest
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.configuration import Configuration
-from vantage.core.http.exceptions import (
+import vantage_sdk.core.http.models
+from vantage_sdk.core.http import rest
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.configuration import Configuration
+from vantage_sdk.core.http.exceptions import (
     ApiException,
     ApiValueError,
     BadRequestException,
@@ -420,7 +420,7 @@ class ApiClient:
             if klass in self.NATIVE_TYPES_MAPPING:
                 klass = self.NATIVE_TYPES_MAPPING[klass]
             else:
-                klass = getattr(vantage.core.http.models, klass)
+                klass = getattr(vantage_sdk.core.http.models, klass)
 
         if klass in self.PRIMITIVE_TYPES:
             return self.__deserialize_primitive(data, klass)

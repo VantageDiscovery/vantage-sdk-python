@@ -30,7 +30,7 @@ from pydantic import (
 )
 from typing_extensions import Literal
 
-from vantage.core.http.models.collection import Collection
+from vantage_sdk.core.http.models.collection import Collection
 
 
 try:

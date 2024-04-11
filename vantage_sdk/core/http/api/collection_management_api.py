@@ -30,18 +30,18 @@ from typing import List, Optional
 from pydantic import Field, StrictInt, StrictStr
 from typing_extensions import Annotated
 
-from vantage.core.http.api_client import ApiClient
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.models.collection import Collection
-from vantage.core.http.models.collection_modifiable import CollectionModifiable
-from vantage.core.http.models.collection_upload_url import CollectionUploadURL
-from vantage.core.http.models.collections_result_inner import (
+from vantage_sdk.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.collection import Collection
+from vantage_sdk.core.http.models.collection_modifiable import CollectionModifiable
+from vantage_sdk.core.http.models.collection_upload_url import CollectionUploadURL
+from vantage_sdk.core.http.models.collections_result_inner import (
     CollectionsResultInner,
 )
-from vantage.core.http.models.create_collection_request import (
+from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
-from vantage.core.http.rest import RESTResponseType
+from vantage_sdk.core.http.rest import RESTResponseType
 
 
 class CollectionManagementApi:

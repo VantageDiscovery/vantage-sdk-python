@@ -30,9 +30,9 @@ from typing import Optional
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 
-from vantage.core.http.api_client import ApiClient
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.rest import RESTResponseType
+from vantage_sdk.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.rest import RESTResponseType
 
 
 class DocumentsApi:

@@ -22,7 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel
 
-from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
+from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 
 
 try:
@@ -94,12 +94,14 @@ class MLThese(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "these": [
-                    MLTheseTheseInner.from_dict(_item)
-                    for _item in obj.get("these")
-                ]
-                if obj.get("these") is not None
-                else None
+                "these": (
+                    [
+                        MLTheseTheseInner.from_dict(_item)
+                        for _item in obj.get("these")
+                    ]
+                    if obj.get("these") is not None
+                    else None
+                )
             }
         )
         return _obj

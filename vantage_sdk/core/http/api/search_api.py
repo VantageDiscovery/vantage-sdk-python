@@ -28,16 +28,20 @@ except ImportError:
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
 
-from vantage.core.http.api_client import ApiClient
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.models.embedding_search_query import (
+from vantage_sdk.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
 )
-from vantage.core.http.models.more_like_these_query import MoreLikeTheseQuery
-from vantage.core.http.models.more_like_this_query import MoreLikeThisQuery
-from vantage.core.http.models.search_result import SearchResult
-from vantage.core.http.models.semantic_search_query import SemanticSearchQuery
-from vantage.core.http.rest import RESTResponseType
+from vantage_sdk.core.http.models.more_like_these_query import (
+    MoreLikeTheseQuery,
+)
+from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
+from vantage_sdk.core.http.models.search_result import SearchResult
+from vantage_sdk.core.http.models.semantic_search_query import (
+    SemanticSearchQuery,
+)
+from vantage_sdk.core.http.rest import RESTResponseType
 
 
 class SearchApi:

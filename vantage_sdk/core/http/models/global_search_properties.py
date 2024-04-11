@@ -22,19 +22,19 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictInt
 
-from vantage.core.http.models.global_search_properties_collection import (
+from vantage_sdk.core.http.models.global_search_properties_collection import (
     GlobalSearchPropertiesCollection,
 )
-from vantage.core.http.models.global_search_properties_field_value_weighting import (
+from vantage_sdk.core.http.models.global_search_properties_field_value_weighting import (
     GlobalSearchPropertiesFieldValueWeighting,
 )
-from vantage.core.http.models.global_search_properties_filter import (
+from vantage_sdk.core.http.models.global_search_properties_filter import (
     GlobalSearchPropertiesFilter,
 )
-from vantage.core.http.models.global_search_properties_pagination import (
+from vantage_sdk.core.http.models.global_search_properties_pagination import (
     GlobalSearchPropertiesPagination,
 )
-from vantage.core.http.models.global_search_properties_sort import (
+from vantage_sdk.core.http.models.global_search_properties_sort import (
     GlobalSearchPropertiesSort,
 )
 
@@ -110,9 +110,9 @@ class GlobalSearchProperties(BaseModel):
             _dict['filter'] = self.filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of field_value_weighting
         if self.field_value_weighting:
-            _dict[
-                'field_value_weighting'
-            ] = self.field_value_weighting.to_dict()
+            _dict['field_value_weighting'] = (
+                self.field_value_weighting.to_dict()
+            )
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
@@ -132,30 +132,38 @@ class GlobalSearchProperties(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection": GlobalSearchPropertiesCollection.from_dict(
-                    obj.get("collection")
-                )
-                if obj.get("collection") is not None
-                else None,
+                "collection": (
+                    GlobalSearchPropertiesCollection.from_dict(
+                        obj.get("collection")
+                    )
+                    if obj.get("collection") is not None
+                    else None
+                ),
                 "request_id": obj.get("request_id"),
-                "filter": GlobalSearchPropertiesFilter.from_dict(
-                    obj.get("filter")
-                )
-                if obj.get("filter") is not None
-                else None,
-                "field_value_weighting": GlobalSearchPropertiesFieldValueWeighting.from_dict(
-                    obj.get("field_value_weighting")
-                )
-                if obj.get("field_value_weighting") is not None
-                else None,
-                "pagination": GlobalSearchPropertiesPagination.from_dict(
-                    obj.get("pagination")
-                )
-                if obj.get("pagination") is not None
-                else None,
-                "sort": GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
-                if obj.get("sort") is not None
-                else None,
+                "filter": (
+                    GlobalSearchPropertiesFilter.from_dict(obj.get("filter"))
+                    if obj.get("filter") is not None
+                    else None
+                ),
+                "field_value_weighting": (
+                    GlobalSearchPropertiesFieldValueWeighting.from_dict(
+                        obj.get("field_value_weighting")
+                    )
+                    if obj.get("field_value_weighting") is not None
+                    else None
+                ),
+                "pagination": (
+                    GlobalSearchPropertiesPagination.from_dict(
+                        obj.get("pagination")
+                    )
+                    if obj.get("pagination") is not None
+                    else None
+                ),
+                "sort": (
+                    GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
+                    if obj.get("sort") is not None
+                    else None
+                ),
             }
         )
         return _obj

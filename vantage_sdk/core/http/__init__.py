@@ -18,20 +18,22 @@
 __version__ = "1.0.0"
 
 # import apis into sdk package
-from vantage.core.http.api.account_management_api import AccountManagementApi
-from vantage.core.http.api.collection_management_api import (
+from vantage_sdk.core.http.api.account_management_api import (
+    AccountManagementApi,
+)
+from vantage_sdk.core.http.api.collection_management_api import (
     CollectionManagementApi,
 )
-from vantage.core.http.api.documents_api import DocumentsApi
-from vantage.core.http.api.external_api_keys_api import ExternalAPIKeysApi
-from vantage.core.http.api.search_api import SearchApi
-from vantage.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
-from vantage.core.http.api_client import ApiClient
+from vantage_sdk.core.http.api.documents_api import DocumentsApi
+from vantage_sdk.core.http.api.external_api_keys_api import ExternalAPIKeysApi
+from vantage_sdk.core.http.api.search_api import SearchApi
+from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage_sdk.core.http.api_client import ApiClient
 
 # import ApiClient
-from vantage.core.http.api_response import ApiResponse
-from vantage.core.http.configuration import Configuration
-from vantage.core.http.exceptions import (
+from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.configuration import Configuration
+from vantage_sdk.core.http.exceptions import (
     ApiAttributeError,
     ApiException,
     ApiKeyError,
@@ -41,63 +43,77 @@ from vantage.core.http.exceptions import (
 )
 
 # import models into sdk package
-from vantage.core.http.models.account import Account
-from vantage.core.http.models.account_modifiable import AccountModifiable
-from vantage.core.http.models.account_read_only import AccountReadOnly
-from vantage.core.http.models.collection import Collection
-from vantage.core.http.models.collection_immutable import CollectionImmutable
-from vantage.core.http.models.collection_modifiable import CollectionModifiable
-from vantage.core.http.models.collection_read_only import CollectionReadOnly
-from vantage.core.http.models.collection_upload_url import CollectionUploadURL
-from vantage.core.http.models.collections_result_inner import (
+from vantage_sdk.core.http.models.account import Account
+from vantage_sdk.core.http.models.account_modifiable import AccountModifiable
+from vantage_sdk.core.http.models.account_read_only import AccountReadOnly
+from vantage_sdk.core.http.models.collection import Collection
+from vantage_sdk.core.http.models.collection_immutable import (
+    CollectionImmutable,
+)
+from vantage_sdk.core.http.models.collection_modifiable import (
+    CollectionModifiable,
+)
+from vantage_sdk.core.http.models.collection_read_only import (
+    CollectionReadOnly,
+)
+from vantage_sdk.core.http.models.collection_upload_url import (
+    CollectionUploadURL,
+)
+from vantage_sdk.core.http.models.collections_result_inner import (
     CollectionsResultInner,
 )
-from vantage.core.http.models.create_collection_request import (
+from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
-from vantage.core.http.models.document_batch import DocumentBatch
-from vantage.core.http.models.embedding_search_query import (
+from vantage_sdk.core.http.models.document_batch import DocumentBatch
+from vantage_sdk.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
 )
-from vantage.core.http.models.external_api_key import ExternalAPIKey
-from vantage.core.http.models.external_api_key_modifiable import (
+from vantage_sdk.core.http.models.external_api_key import ExternalAPIKey
+from vantage_sdk.core.http.models.external_api_key_modifiable import (
     ExternalAPIKeyModifiable,
 )
-from vantage.core.http.models.external_api_key_read_only import (
+from vantage_sdk.core.http.models.external_api_key_read_only import (
     ExternalAPIKeyReadOnly,
 )
-from vantage.core.http.models.external_api_keys_result_inner import (
+from vantage_sdk.core.http.models.external_api_keys_result_inner import (
     ExternalAPIKeysResultInner,
 )
-from vantage.core.http.models.global_search_properties import (
+from vantage_sdk.core.http.models.global_search_properties import (
     GlobalSearchProperties,
 )
-from vantage.core.http.models.global_search_properties_collection import (
+from vantage_sdk.core.http.models.global_search_properties_collection import (
     GlobalSearchPropertiesCollection,
 )
-from vantage.core.http.models.global_search_properties_field_value_weighting import (
+from vantage_sdk.core.http.models.global_search_properties_field_value_weighting import (
     GlobalSearchPropertiesFieldValueWeighting,
 )
-from vantage.core.http.models.global_search_properties_filter import (
+from vantage_sdk.core.http.models.global_search_properties_filter import (
     GlobalSearchPropertiesFilter,
 )
-from vantage.core.http.models.global_search_properties_pagination import (
+from vantage_sdk.core.http.models.global_search_properties_pagination import (
     GlobalSearchPropertiesPagination,
 )
-from vantage.core.http.models.global_search_properties_sort import (
+from vantage_sdk.core.http.models.global_search_properties_sort import (
     GlobalSearchPropertiesSort,
 )
-from vantage.core.http.models.ml_these import MLThese
-from vantage.core.http.models.ml_these_these_inner import MLTheseTheseInner
-from vantage.core.http.models.more_like_these_query import MoreLikeTheseQuery
-from vantage.core.http.models.more_like_this_query import MoreLikeThisQuery
-from vantage.core.http.models.search_result import SearchResult
-from vantage.core.http.models.search_result_results_inner import (
+from vantage_sdk.core.http.models.ml_these import MLThese
+from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
+from vantage_sdk.core.http.models.more_like_these_query import (
+    MoreLikeTheseQuery,
+)
+from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
+from vantage_sdk.core.http.models.search_result import SearchResult
+from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
 )
-from vantage.core.http.models.semantic_search_query import SemanticSearchQuery
-from vantage.core.http.models.vantage_api_key import VantageAPIKey
-from vantage.core.http.models.vantage_api_keys_result_inner import (
+from vantage_sdk.core.http.models.semantic_search_query import (
+    SemanticSearchQuery,
+)
+from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
+from vantage_sdk.core.http.models.vantage_api_keys_result_inner import (
     VantageAPIKeysResultInner,
 )
-from vantage.core.http.models.weighted_field_values import WeightedFieldValues
+from vantage_sdk.core.http.models.weighted_field_values import (
+    WeightedFieldValues,
+)

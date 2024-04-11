@@ -22,7 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictInt, StrictStr
 
-from vantage.core.http.models.search_result_results_inner import (
+from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
 )
 
@@ -107,12 +107,14 @@ class SearchResult(BaseModel):
                 "request_id": obj.get("request_id"),
                 "status": obj.get("status"),
                 "message": obj.get("message"),
-                "results": [
-                    SearchResultResultsInner.from_dict(_item)
-                    for _item in obj.get("results")
-                ]
-                if obj.get("results") is not None
-                else None,
+                "results": (
+                    [
+                        SearchResultResultsInner.from_dict(_item)
+                        for _item in obj.get("results")
+                    ]
+                    if obj.get("results") is not None
+                    else None
+                ),
             }
         )
         return _obj
