@@ -5,9 +5,9 @@ from typing import Callable
 
 import pytest
 
-from vantage.core.exceptions import VantageFileUploadError
-from vantage.core.http.exceptions import NotFoundException
-from vantage.vantage import VantageClient
+from vantage_sdk.core.exceptions import VantageFileUploadError
+from vantage_sdk.core.http.exceptions import NotFoundException
+from vantage_sdk.vantage import VantageClient
 
 
 class TestCollections:

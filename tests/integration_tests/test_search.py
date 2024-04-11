@@ -4,12 +4,12 @@ from typing import Callable
 
 import pytest
 
-from vantage.core.http.exceptions import (
+from vantage_sdk.core.http.exceptions import (
     BadRequestException,
     UnauthorizedException,
 )
-from vantage.model.search import MoreLikeTheseItem
-from vantage.vantage import VantageClient
+from vantage_sdk.model.search import MoreLikeTheseItem
+from vantage_sdk.vantage import VantageClient
 
 
 """Integration tests for search endpoints"""
