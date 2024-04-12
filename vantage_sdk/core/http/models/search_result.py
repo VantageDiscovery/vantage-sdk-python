@@ -107,14 +107,12 @@ class SearchResult(BaseModel):
                 "request_id": obj.get("request_id"),
                 "status": obj.get("status"),
                 "message": obj.get("message"),
-                "results": (
-                    [
-                        SearchResultResultsInner.from_dict(_item)
-                        for _item in obj.get("results")
-                    ]
-                    if obj.get("results") is not None
-                    else None
-                ),
+                "results": [
+                    SearchResultResultsInner.from_dict(_item)
+                    for _item in obj.get("results")
+                ]
+                if obj.get("results") is not None
+                else None,
             }
         )
         return _obj

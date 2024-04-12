@@ -43,7 +43,6 @@ class ExternalAPIKey(BaseModel):
     external_key_created_date: Optional[StrictStr] = Field(
         default=None, description="date this key was created"
     )
-    url: Optional[StrictStr] = None
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
@@ -51,7 +50,6 @@ class ExternalAPIKey(BaseModel):
         "external_key_id",
         "account_id",
         "external_key_created_date",
-        "url",
         "llm_provider",
         "llm_secret",
         "state",
@@ -129,7 +127,6 @@ class ExternalAPIKey(BaseModel):
                 "external_key_created_date": obj.get(
                     "external_key_created_date"
                 ),
-                "url": obj.get("url"),
                 "llm_provider": obj.get("llm_provider"),
                 "llm_secret": obj.get("llm_secret"),
                 "state": obj.get("state"),

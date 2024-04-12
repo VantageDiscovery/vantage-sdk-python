@@ -134,38 +134,30 @@ class EmbeddingSearchQuery(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection": (
-                    GlobalSearchPropertiesCollection.from_dict(
-                        obj.get("collection")
-                    )
-                    if obj.get("collection") is not None
-                    else None
-                ),
+                "collection": GlobalSearchPropertiesCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
                 "request_id": obj.get("request_id"),
-                "filter": (
-                    GlobalSearchPropertiesFilter.from_dict(obj.get("filter"))
-                    if obj.get("filter") is not None
-                    else None
-                ),
-                "field_value_weighting": (
-                    GlobalSearchPropertiesFieldValueWeighting.from_dict(
-                        obj.get("field_value_weighting")
-                    )
-                    if obj.get("field_value_weighting") is not None
-                    else None
-                ),
-                "pagination": (
-                    GlobalSearchPropertiesPagination.from_dict(
-                        obj.get("pagination")
-                    )
-                    if obj.get("pagination") is not None
-                    else None
-                ),
-                "sort": (
-                    GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
-                    if obj.get("sort") is not None
-                    else None
-                ),
+                "filter": GlobalSearchPropertiesFilter.from_dict(
+                    obj.get("filter")
+                )
+                if obj.get("filter") is not None
+                else None,
+                "field_value_weighting": GlobalSearchPropertiesFieldValueWeighting.from_dict(
+                    obj.get("field_value_weighting")
+                )
+                if obj.get("field_value_weighting") is not None
+                else None,
+                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
+                "sort": GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
+                if obj.get("sort") is not None
+                else None,
                 "embedding": obj.get("embedding"),
             }
         )
