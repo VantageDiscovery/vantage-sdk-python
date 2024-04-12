@@ -275,9 +275,9 @@ def semantic_search_test_collection_id() -> str:
 
 @pytest.fixture(scope="module")
 def more_like_this_test_collection_id() -> str:
-    mlt_search_test_collection_id = _configuration["collection"][
+    mlt_search_test_collection_id = _configuration["collection"].get(
         "more_like_this_collection"
-    ]
+    )
 
     if mlt_search_test_collection_id is None:
         pytest.skip("No more like this search test collection available.")
@@ -287,12 +287,26 @@ def more_like_this_test_collection_id() -> str:
 
 @pytest.fixture(scope="module")
 def embedding_search_test_collection_id_for_setup() -> str:
-    return _configuration["collection"]["embedding_search_test_collection_id"]
+    embedding_search_test_collection_id = _configuration["collection"].get(
+        "embedding_search_test_collection_id"
+    )
+
+    if embedding_search_test_collection_id is None:
+        pytest.skip("No embedding search test collection available.")
+
+    return embedding_search_test_collection_id
 
 
 @pytest.fixture(scope="module")
 def semantic_search_test_collection_id_for_setup() -> str:
-    return _configuration["collection"]["semantic_search_test_collection_id"]
+    semantic_search_test_collection_id = _configuration["collection"].get(
+        "semantic_search_test_collection_id"
+    )
+
+    if semantic_search_test_collection_id is None:
+        pytest.skip("No embedding search test collection available.")
+
+    return semantic_search_test_collection_id
 
 
 @pytest.fixture(scope="module")
