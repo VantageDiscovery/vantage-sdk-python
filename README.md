@@ -14,15 +14,14 @@ pip install vantage-sdk
 
 ## Quickstart
 
-To get started with the Vantage Python SDK, you'll need to set up your Vantage account and obtain your API keys. Once you have your credentials, you can initialize the VantageClient to begin managing collections and performing searches.
+To get started with the Vantage Python SDK, you'll need to set up your [Vantage account](https://console.vanta.ge/) and obtain your account ID and Vantage API key. Once you have your ID and key, you can initialize the VantageClient which you can then use to manage your account, collections and keys and perform searches.
 
 ```python
-from vantage import VantageClient
+from vantage_sdk import VantageClient
 
-# Initialize the VantageClient with your account details
-vantage_client = VantageClient.using_client_credentials(
-    vantage_client_id='YOUR_CLIENT_ID',
-    vantage_client_secret='YOUR_CLIENT_SECRET',
+# Initialize the VantageClient with your Vantage API key and Account ID
+vantage_client = VantageClient.using_vantage_api_key(
+    vantage_api_key='YOUR_VANTAGE_API_KEY',
     account_id='YOUR_ACCOUNT_ID'
 )
 
@@ -31,7 +30,7 @@ vantage_client = VantageClient.using_client_credentials(
 
 ## Overview
 
-The Vantage Discovery Python SDK is divided into several modules, allowing you to manage accounts, collections, and API keys, as well as perform various types of searches.
+The Vantage Discovery Python SDK is divided into several modules, allowing you to manage account, collections, and API keys, as well as perform various types of searches.
 
 #### Key Features
 - __Collection Management__: Easily create, update, list, and delete collections.
@@ -75,4 +74,4 @@ for result in search_result.results:
 
 ## Documentation
 
-For detailed documentation on all methods and their parameters, please refer to the [Vantage Discovery Python SDK repository](https://github.com/VantageDiscovery/vantage-sdk-python) or check some of the examples from our [Vantage Tutorials repository](https://github.com/VantageDiscovery/vantage-tutorials).
+For detailed documentation on all methods and their parameters, please refer to the [Vantage Discovery official documentation](https://docs.vantagediscovery.com/docs/concepts).
