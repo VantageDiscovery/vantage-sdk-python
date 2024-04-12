@@ -120,11 +120,9 @@ class TestApiKeys:
         Tests fetching all external API keys from a users' account.
         """
         # Given
-        url = f"http://{random_string_generator(10)}"
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
         given_key = client.create_external_api_key(
-            url=url,
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -163,11 +161,9 @@ class TestApiKeys:
         Tests fetching a single external API key from a users' account.
         """
         # Given
-        url = f"http://{random_string_generator(10)}"
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
         given_key = client.create_external_api_key(
-            url=url,
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -227,13 +223,11 @@ class TestApiKeys:
         Tests creating an external API key on a users' account.
         """
         # Given
-        url = f"http://{random_string_generator(10)}"
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
 
         # When
         response = client.create_external_api_key(
-            url=url,
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -244,7 +238,6 @@ class TestApiKeys:
         assert response.account_id == account_params["id"]
         assert response.llm_provider == llm_provider
         assert response.llm_secret == llm_secret
-        assert response.url == url
 
     @pytest.mark.skip(
         reason=(
@@ -262,11 +255,9 @@ class TestApiKeys:
         Tests updating an external API key present on a users' account.
         """
         # Given
-        url = f"http://{random_string_generator(10)}"
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
         test_api_key = client.create_external_api_key(
-            url=url,
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -276,7 +267,6 @@ class TestApiKeys:
         # When
         client.update_external_api_key(
             external_key_id=external_api_key_id,
-            url=url,
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -292,7 +282,6 @@ class TestApiKeys:
         assert api_key.external_key_id == external_api_key_id
         assert api_key.llm_provider == llm_provider
         assert api_key.llm_secret == _mask_secret(llm_secret)
-        assert api_key.url == url
 
         # After
         client.delete_external_api_key(api_key.external_key_id)
@@ -318,7 +307,6 @@ class TestApiKeys:
         with pytest.raises(NotFoundException) as exception:
             client.update_external_api_key(
                 external_key_id=random_uuid,
-                url=random_string_generator(10),
                 llm_provider="OpenAI",
                 llm_secret=random_string_generator(10),
                 account_id=account_params["id"],
