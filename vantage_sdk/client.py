@@ -512,7 +512,6 @@ class VantageClient:
         self,
         llm_provider: str,
         llm_secret: str,
-        url: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
         """
@@ -531,9 +530,6 @@ class VantageClient:
             Supported options are: OpenAI and HuggingFace (Hugging)
         llm_secret : str
             The secret key for accessing the LLM.
-        url : Optional[str], optional
-            Currently not in use
-            Defaults to None.
         account_id : Optional[str], optional
             The unique identifier of the account for which the external API key is to be created.
             If not provided, the instance's account ID is used.
@@ -556,7 +552,7 @@ class VantageClient:
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
-            url=url, llm_provider=llm_provider, llm_secret=llm_secret
+            llm_provider=llm_provider, llm_secret=llm_secret
         )
 
         key = (
@@ -573,7 +569,6 @@ class VantageClient:
         external_key_id: str,
         llm_provider: str,
         llm_secret: str,
-        url: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ExternalAPIKey:
         """
@@ -592,8 +587,6 @@ class VantageClient:
             The new provider of the Large Language Model (LLM).
         llm_secret : str
             The new secret key for accessing the LLM.
-        url : Optional[str], optional
-            The new URL associated with the external API key, indicating the endpoint of the external service.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
             If not provided, the instance's account ID is used.
@@ -617,7 +610,7 @@ class VantageClient:
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
-            url=url, llm_provider=llm_provider, llm_secret=llm_secret
+            llm_provider=llm_provider, llm_secret=llm_secret
         )
 
         key = (

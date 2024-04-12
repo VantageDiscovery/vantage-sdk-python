@@ -94,14 +94,12 @@ class MLThese(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "these": (
-                    [
-                        MLTheseTheseInner.from_dict(_item)
-                        for _item in obj.get("these")
-                    ]
-                    if obj.get("these") is not None
-                    else None
-                )
+                "these": [
+                    MLTheseTheseInner.from_dict(_item)
+                    for _item in obj.get("these")
+                ]
+                if obj.get("these") is not None
+                else None
             }
         )
         return _obj

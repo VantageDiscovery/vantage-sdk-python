@@ -34,16 +34,10 @@ class ExternalAPIKeyModifiable(BaseModel):
     ExternalAPIKeyModifiable
     """  # noqa: E501
 
-    url: Optional[StrictStr] = None
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "url",
-        "llm_provider",
-        "llm_secret",
-        "state",
-    ]
+    __properties: ClassVar[List[str]] = ["llm_provider", "llm_secret", "state"]
 
     @field_validator('llm_provider')
     def llm_provider_validate_enum(cls, value):
@@ -105,7 +99,6 @@ class ExternalAPIKeyModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "url": obj.get("url"),
                 "llm_provider": obj.get("llm_provider"),
                 "llm_secret": obj.get("llm_secret"),
                 "state": obj.get("state"),

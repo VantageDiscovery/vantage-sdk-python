@@ -128,14 +128,12 @@ class GlobalSearchPropertiesFieldValueWeighting(BaseModel):
                 "query_key_word_weighting_mode": obj.get(
                     "query_key_word_weighting_mode"
                 ),
-                "weighted_field_values": (
-                    [
-                        WeightedFieldValues.from_dict(_item)
-                        for _item in obj.get("weighted_field_values")
-                    ]
-                    if obj.get("weighted_field_values") is not None
-                    else None
-                ),
+                "weighted_field_values": [
+                    WeightedFieldValues.from_dict(_item)
+                    for _item in obj.get("weighted_field_values")
+                ]
+                if obj.get("weighted_field_values") is not None
+                else None,
             }
         )
         return _obj
