@@ -1225,7 +1225,7 @@ class VantageClient:
         result = self.search_api.api.semantic_search(
             collection_id=collection_id,
             account_id=account_id or self.account_id,
-            query=query,
+            semantic_search_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 
@@ -1318,7 +1318,7 @@ class VantageClient:
         result = self.search_api.api.embedding_search(
             collection_id=collection_id,
             account_id=account_id or self.account_id,
-            query=query,
+            embedding_search_query=query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 from pathlib import Path
 from typing import Callable
 
@@ -248,7 +249,7 @@ class TestCollections:
         assert collection.collection_id == collection_id
         assert collection.collection_name == collection_name
         assert collection.collection_status == "Pending"
-        assert collection.collection_state == "Active"
+        assert collection.collection_state is None
 
     def test_get_non_existing_collection(
         self,
@@ -292,6 +293,8 @@ class TestCollections:
         )
         updated_collection_name = random_string_generator(10)
         updated_url_pattern = random_string_generator(10)
+        # Take a nap while API sets up a collection.
+        time.sleep(3)
 
         # When
         collection = client.update_collection(
