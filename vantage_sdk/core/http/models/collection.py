@@ -29,6 +29,10 @@ from pydantic import (
     field_validator,
 )
 
+from vantage_sdk.core.http.models.collection_modifiable_secondary_external_accounts_inner import (
+    CollectionModifiableSecondaryExternalAccountsInner,
+)
+
 
 try:
     from typing import Self
@@ -64,6 +68,9 @@ class Collection(BaseModel):
         default=None,
         description="The external API key, for the llm_provider to use for the collection",
     )
+    secondary_external_accounts: Optional[
+        List[CollectionModifiableSecondaryExternalAccountsInner]
+    ] = None
     collection_name: Optional[StrictStr] = None
     collection_preview_url_pattern: Optional[StrictStr] = Field(
         default=None,
@@ -81,6 +88,7 @@ class Collection(BaseModel):
         "external_url",
         "embeddings_dimension",
         "external_key_id",
+        "secondary_external_accounts",
         "collection_name",
         "collection_preview_url_pattern",
     ]
@@ -169,6 +177,13 @@ class Collection(BaseModel):
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in secondary_external_accounts (list)
+        _items = []
+        if self.secondary_external_accounts:
+            for _item in self.secondary_external_accounts:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['secondary_external_accounts'] = _items
         return _dict
 
     @classmethod
@@ -195,6 +210,14 @@ class Collection(BaseModel):
                 "external_url": obj.get("external_url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),
+                "secondary_external_accounts": [
+                    CollectionModifiableSecondaryExternalAccountsInner.from_dict(
+                        _item
+                    )
+                    for _item in obj.get("secondary_external_accounts")
+                ]
+                if obj.get("secondary_external_accounts") is not None
+                else None,
                 "collection_name": obj.get("collection_name"),
                 "collection_preview_url_pattern": obj.get(
                     "collection_preview_url_pattern"

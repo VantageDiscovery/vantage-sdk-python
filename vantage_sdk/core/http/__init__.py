@@ -53,6 +53,9 @@ from vantage_sdk.core.http.models.collection_immutable import (
 from vantage_sdk.core.http.models.collection_modifiable import (
     CollectionModifiable,
 )
+from vantage_sdk.core.http.models.collection_modifiable_secondary_external_accounts_inner import (
+    CollectionModifiableSecondaryExternalAccountsInner,
+)
 from vantage_sdk.core.http.models.collection_read_only import (
     CollectionReadOnly,
 )
@@ -106,6 +109,9 @@ from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
 from vantage_sdk.core.http.models.search_result import SearchResult
 from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
+)
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
 )
 from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,

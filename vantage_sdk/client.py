@@ -21,6 +21,7 @@ from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
     CreateCollectionRequest,
+    SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
     EmbeddingSearchQuery,
     ExternalAPIKeyModifiable,
     GlobalSearchPropertiesCollection,
@@ -37,7 +38,12 @@ from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
 from vantage_sdk.model.account import Account
 from vantage_sdk.model.collection import Collection, CollectionUploadURL
-from vantage_sdk.model.keys import ExternalAPIKey, LLMProvider, VantageAPIKey
+from vantage_sdk.model.keys import (
+    ExternalAPIKey,
+    SecondaryExternalAccount,
+    LLMProvider,
+    VantageAPIKey,
+)
 from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
@@ -845,6 +851,9 @@ class VantageClient:
         collection_name: Optional[str] = None,
         user_provided_embeddings: Optional[bool] = False,
         external_key_id: Optional[str] = None,
+        secondary_external_accounts: Optional[
+            List[SecondaryExternalAccount]
+        ] = None,
         llm_provider: Optional[str] = None,
         llm_secret: Optional[str] = None,
         llm: Optional[str] = None,
@@ -961,6 +970,16 @@ class VantageClient:
                 llm,
             )
 
+            # In Progress
+            # if secondary_external_accounts:
+            #     secondary_external_accounts = [
+            #         OpenAPISecondaryExternalAccount(
+            #             external_account_id=account.external_account_id,
+            #             external_type=account.external_type,
+            #         )
+            #         for account in secondary_external_accounts
+            #     ]
+
         create_collection_request = CreateCollectionRequest(
             collection_id=collection_id,
             collection_name=collection_name,
@@ -969,6 +988,7 @@ class VantageClient:
             external_key_id=(
                 None if user_provided_embeddings else external_key_id
             ),
+            secondary_external_accounts=secondary_external_accounts,
             llm=None if user_provided_embeddings else llm,
             llm_secret=None if user_provided_embeddings else llm_secret,
             llm_provider=None if user_provided_embeddings else llm_provider,

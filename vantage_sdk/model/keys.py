@@ -24,3 +24,8 @@ class ExternalAPIKey(BaseModel):
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
+
+
+class SecondaryExternalAccount(BaseModel):
+    external_account_id: Optional[StrictStr] = None
+    external_type: Optional[StrictStr] = None

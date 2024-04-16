@@ -1,6 +1,8 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
+
+from vantage_sdk.model.keys import SecondaryExternalAccount
 
 
 class Collection(BaseModel):
@@ -13,6 +15,9 @@ class Collection(BaseModel):
     external_url: Optional[StrictStr] = None
     embeddings_dimension: Optional[StrictInt] = None
     external_account_id: Optional[StrictStr] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
     collection_name: Optional[StrictStr] = None
     collection_preview_url_pattern: Optional[StrictStr] = None
 
