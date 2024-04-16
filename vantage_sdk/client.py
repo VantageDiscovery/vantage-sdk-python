@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import ntpath
 import uuid
+import json
 from os.path import exists
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import requests
 
@@ -41,6 +42,11 @@ from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
+)
+from vantage_sdk.model.document import (
+    VantageManagedEmbeddingsDocument,
+    UserProvidedEmbeddingsDocument,
+    MetadataItem,
 )
 
 
@@ -1768,3 +1774,58 @@ class VantageClient:
         )
 
     # endregion
+
+    def _document_to_collection_compatibility_check(
+        self,
+        collection: Collection,
+        document: Union[
+            UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
+        ],
+    ) -> None:
+        if collection.user_provided_embeddings and isinstance(
+            document, VantageManagedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."
+            )
+        elif not collection.user_provided_embeddings and isinstance(
+            document, UserProvidedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."
+            )
+
+    def upsert(
+        self,
+        collection_id: str,
+        documents: Union[
+            List[VantageManagedEmbeddingsDocument],
+            List[UserProvidedEmbeddingsDocument],
+        ],
+        account_id: Optional[str] = None,
+    ):
+        if not documents:
+            raise ValueError("Documents object can't be empty.")
+
+        collection = self.get_collection(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        self._document_to_collection_compatibility_check(
+            collection=collection,
+            document=documents[0],
+        )
+
+        vantage_documents_jsonl = "\n".join(
+            map(
+                json.dumps,
+                [document.to_vantage_dict() for document in documents],
+            )
+        )
+
+        self.upload_documents_from_jsonl(
+            collection_id=collection_id,
+            documents=vantage_documents_jsonl,
+            account_id=account_id or self.account_id,
+        )
