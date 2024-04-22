@@ -1,14 +1,14 @@
-import uuid
+from uuid import uuid4
 from typing import Optional, List, Any, Union, Dict
 
 from pydantic import (
     BaseModel,
+    Field,
     StrictStr,
     StrictFloat,
     StrictBool,
     StrictInt,
     model_validator,
-    field_validator,
 )
 
 from vantage_sdk.config import METADATA_PREFIX, METADATA_ORDERED_PREFIX
@@ -19,26 +19,22 @@ class MetadataItem(BaseModel):
     value: Union[StrictStr, StrictInt, StrictFloat, StrictBool]
 
     @model_validator(mode="before")
-    def add_prefix(cls, values):
-        key, value = values.get('key'), values.get('value')
+    def add_prefix(cls, values: Dict):
+        key, value = values.get("key"), values.get("value")
         if isinstance(value, float):
             prefix = METADATA_ORDERED_PREFIX
         else:
             prefix = METADATA_PREFIX
 
         if key:
-            values['key'] = prefix + key
+            values["key"] = prefix + key
         return values
 
 
 class VantageDocument(BaseModel):
     text: StrictStr
+    id: Optional[StrictStr] = Field(default_factory=lambda: uuid4().hex)
     metadata: Optional[List[MetadataItem]] = None
-    id: Optional[StrictStr] = None
-
-    @field_validator('id', mode="before")
-    def set_default_id(cls, v):
-        return v or str(uuid.uuid4())
 
     def to_vantage_dict(self):
         vantage_dict = {
