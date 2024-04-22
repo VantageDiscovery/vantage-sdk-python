@@ -1,7 +1,15 @@
 import uuid
 from typing import Optional, List, Any, Union, Dict
 
-from pydantic import BaseModel, StrictStr, StrictFloat, StrictBool, StrictInt
+from pydantic import (
+    BaseModel,
+    StrictStr,
+    StrictFloat,
+    StrictBool,
+    StrictInt,
+    root_validator,
+    validator,
+)
 
 from vantage_sdk.config import METADATA_PREFIX, METADATA_ORDERED_PREFIX
 
@@ -10,20 +18,17 @@ class MetadataItem(BaseModel):
     key: StrictStr
     value: Union[StrictStr, StrictInt, StrictFloat, StrictBool]
 
-    def __init__(
-        self,
-        key: StrictStr,
-        value: Union[StrictStr, StrictInt, StrictFloat, StrictBool],
-    ) -> None:
-        super().__init__(key=key, value=value)
-        prefix = (
-            METADATA_ORDERED_PREFIX
-            if isinstance(value, float)
-            else METADATA_PREFIX
-        )
+    @root_validator(pre=True)
+    def add_prefix(cls, values):
+        key, value = values.get('key'), values.get('value')
+        if isinstance(value, float):
+            prefix = METADATA_ORDERED_PREFIX
+        else:
+            prefix = METADATA_PREFIX
 
-        self.key = prefix + key
-        self.value = value
+        if key:
+            values['key'] = prefix + key
+        return values
 
 
 class VantageDocument(BaseModel):
@@ -31,14 +36,9 @@ class VantageDocument(BaseModel):
     metadata: Optional[List[MetadataItem]] = None
     id: Optional[StrictStr] = None
 
-    def __init__(
-        self,
-        text: StrictStr,
-        metadata: Optional[List[MetadataItem]] = None,
-        id: Optional[StrictStr] = None,
-    ):
-        super().__init__(text=text, metadata=metadata, id=id)
-        self.id = id or str(uuid.uuid4())
+    @validator('id', pre=True, always=True)
+    def set_default_id(cls, v):
+        return v or str(uuid.uuid4())
 
     def to_vantage_dict(self):
         vantage_dict = {
@@ -61,16 +61,6 @@ class UserProvidedEmbeddingsDocument(VantageDocument):
     """Document class for User-provided embeddings collections"""
 
     embeddings: List[StrictFloat] = None
-
-    def __init__(
-        self,
-        text: StrictStr,
-        embeddings: List[StrictFloat],
-        metadata: Optional[List[MetadataItem]] = None,
-        id: Optional[StrictStr] = None,
-    ):
-        super().__init__(text=text, metadata=metadata, id=id)
-        self.embeddings = embeddings
 
     def to_vantage_dict(self):
         vantage_dict = super().to_vantage_dict()
