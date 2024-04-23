@@ -22,6 +22,7 @@ from vantage_sdk.core.http.models import (
     CollectionModifiable,
     CreateCollectionRequest,
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
+    CollectionModifiableSecondaryExternalAccountsInner,
     EmbeddingSearchQuery,
     ExternalAPIKeyModifiable,
     GlobalSearchPropertiesCollection,
@@ -37,7 +38,13 @@ from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
 from vantage_sdk.model.account import Account
-from vantage_sdk.model.collection import Collection, CollectionUploadURL
+from vantage_sdk.model.collection import (
+    Collection,
+    CollectionUploadURL,
+    UserProvidedEmbeddingsCollection,
+    OpenAICollection,
+    HuggingFaceCollection,
+)
 from vantage_sdk.model.keys import (
     ExternalAPIKey,
     SecondaryExternalAccount,
@@ -846,64 +853,28 @@ class VantageClient:
 
     def create_collection(
         self,
-        collection_id: str,
-        embeddings_dimension: int,
-        collection_name: Optional[str] = None,
-        user_provided_embeddings: Optional[bool] = False,
-        external_key_id: Optional[str] = None,
-        secondary_external_accounts: Optional[
-            List[SecondaryExternalAccount]
-        ] = None,
-        llm_provider: Optional[str] = None,
-        llm_secret: Optional[str] = None,
-        llm: Optional[str] = None,
-        external_url: Optional[str] = None,
-        collection_preview_url_pattern: Optional[str] = None,
+        collection: Union[
+            UserProvidedEmbeddingsCollection,
+            OpenAICollection,
+            HuggingFaceCollection,
+        ],
         account_id: Optional[str] = None,
-    ) -> Collection:
+    ) -> Union[
+        UserProvidedEmbeddingsCollection,
+        OpenAICollection,
+        HuggingFaceCollection,
+    ]:
         """
         Creates a new collection with the specified parameters.
 
-        This method creates a new collection identified by a unique collection ID.
-        It checks for the uniqueness of the collection ID within the specified account
-        and raises an exception if a collection with the given ID already exists.
-        The collection can optionally be configured to use user-provided embeddings
-        or leverage a Large Language Model (LLM) for embeddings generation.
-        Additional parameters allow specifying an external key for API integration,
-        a preview URL pattern for collection items, and the dimensionality of embeddings.
+        This method creates a new collection based on the provided collection object.
 
         Parameters
         ----------
-        collection_id : str
-            The unique identifier for the new collection.
-            It can only contain lowercase letters [a-z], digits [0-9] and a hypen [-].
-            The maximum length for a colleciton ID is 36 characters.
-            It can not be changed after the collection is created.
-        embeddings_dimension : int
-            The dimensionality of the embeddings for the collection items.
-        collection_name : Optional[str], optional
-            The name of the new collection.
-            If not provided, value will be 'Colllection [<collection_id>]'
-        user_provided_embeddings : Optional[bool], optional
-            Indicates whether embeddings are provided by the user (True)
-            or managed by Vantage (False). Defaults to False.
-        external_key_id : Optional[str], optional
-            The external key ID used for API integration, if applicable.
-        llm_provider: Optional[str], optional
-            The provider of the Large Language Model (LLM).
-            Supported options are: OpenAI and HuggingFace (Hugging)
-        llm_secret: Optional[str], optional
-            The secret key for accessing the LLM.
-        llm : Optional[str], optional
-            The identifier of the Large Language Model used for generating embeddings, if applicable.
-        external_url : Optional[str], optional
-            Link to the deployed model. Required when llm_provider is set to [Hugging].
-        collection_preview_url_pattern : Optional[str], optional
-            A URL pattern for previewing items in the collection, if applicable.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
+        collection : Collection
+            Instance of a UserProvidedEmbeddingsCollection, which creates and uses
+            embeddings provided by the user, or instance of OpenAICollection /
+            HuggingFaceCollection, both of which create and use Vantage-managed embeddings.
 
         Returns
         -------
@@ -914,86 +885,52 @@ class VantageClient:
         -------
         User-Provided:
         >>> vantage_client = VantageClient(...)
+        >>> upe_collection = UserProvidedEmbeddingsCollection(
+                collection_id="upe-test-collection",
+                embeddings_dimension=3,
+            )
         >>> new_collection = vantage_client.create_collection(
-                collection_id="user-provided",
-                collection_name="My Collection",
-                embeddings_dimension=1536,
-                user_provided_embeddings=True,
-                llm="text-embedding-ada-002",
-                external_key_id="external_key_123",
+                collection=upe_collection,
             )
         >>> print(new_collection.id)
-        "user-provided"
+        "upe-test-collection"
 
         Vantage-Managed:
         >>> vantage_client = VantageClient(...)
+        >>> openai_collection = OpenAICollection(
+            collection_id="openai-test-collection",
+            external_account_id="123_id",
+            llm="text-embedding-ada-002",
+            embeddings_dimension=1536,
+        )
         >>> new_collection = vantage_client.create_collection(
-                collection_id="vantage-managed",
-                collection_name="My Collection",
-                embeddings_dimension=1536,
-                user_provided_embeddings=False,
+                collection=upe_collection,
             )
         >>> print(new_collection.id)
-        "vantage-managed"
+        "openai-test-collection"
         """
 
-        collection_name = collection_name or f"Collection [{collection_id}]"
-
-        if not user_provided_embeddings:
-            if external_key_id:
-                if llm_provider or llm_secret:
-                    raise ValueError(
-                        "Please provide either external API key or LLM provider and secret, but not both."
-                    )
-
-                external_key = self.get_external_api_key(
-                    external_key_id=external_key_id
-                )
-
-                llm_provider = external_key.llm_provider
-            else:
-                llm_providers = [el.value for el in LLMProvider]
-
-                if not llm_provider or not llm_secret:
-                    raise ValueError(
-                        "Both LLM provider and LLM secret need to be provided if External API key ID is None."
-                    )
-
-                if llm_provider not in llm_providers:
-                    raise ValueError(
-                        f"LLM provider needs to take one of the following values: {llm_providers}."
-                    )
-
-            self._validate_create_collection_parameters(
-                llm_provider,
-                external_url,
-                llm,
+        if hasattr(collection, "secondary_external_accounts"):
+            collection._convert_secondary_external_accounts(
+                collection.secondary_external_accounts
             )
 
-            # In Progress
-            # if secondary_external_accounts:
-            #     secondary_external_accounts = [
-            #         OpenAPISecondaryExternalAccount(
-            #             external_account_id=account.external_account_id,
-            #             external_type=account.external_type,
-            #         )
-            #         for account in secondary_external_accounts
-            #     ]
-
         create_collection_request = CreateCollectionRequest(
-            collection_id=collection_id,
-            collection_name=collection_name,
-            embeddings_dimension=int(embeddings_dimension),
-            user_provided_embeddings=bool(user_provided_embeddings),
-            external_key_id=(
-                None if user_provided_embeddings else external_key_id
+            collection_id=collection.collection_id,
+            collection_name=collection.collection_name,
+            user_provided_embeddings=bool(collection.user_provided_embeddings),
+            embeddings_dimension=int(collection.embeddings_dimension),
+            external_key_id=getattr(collection, 'external_account_id', None),
+            secondary_external_accounts=getattr(
+                collection, 'secondary_external_accounts', None
             ),
-            secondary_external_accounts=secondary_external_accounts,
-            llm=None if user_provided_embeddings else llm,
-            llm_secret=None if user_provided_embeddings else llm_secret,
-            llm_provider=None if user_provided_embeddings else llm_provider,
-            external_url=None if user_provided_embeddings else external_url,
-            collection_preview_url_pattern=collection_preview_url_pattern,
+            llm=getattr(collection, 'llm', None),
+            llm_secret=getattr(collection, 'llm_secret', None),
+            llm_provider=getattr(collection, 'llm_provider', None),
+            external_url=getattr(collection, 'external_url', None),
+            collection_preview_url_pattern=getattr(
+                collection, 'collection_preview_url_pattern', None
+            ),
         )
 
         collection = self.management_api.collection_api.create_collection(
@@ -1001,18 +938,20 @@ class VantageClient:
             account_id=account_id or self.account_id,
         )
 
-        return Collection.model_validate(collection.model_dump())
+        return collection.model_validate(collection.model_dump())
 
     def update_collection(
         self,
         collection_id: str,
         collection_name: Optional[str] = None,
         external_key_id: Optional[str] = None,
-        collection_preview_url_pattern: Optional[str] = None,
+        secondary_external_accounts: Optional[
+            List[SecondaryExternalAccount]
+        ] = None,
         account_id: Optional[str] = None,
     ) -> Collection:
         """
-        Updates an existing collection's details such as its name, associated external key ID, and preview URL pattern.
+        Updates an existing collection's details such as its name, associated external key ID, and secondary accounts.
         It checks for the existence of the collection within the specified account and raises an exception if the
         collection does not exist. Upon successful update, it returns an updated Collection object.
 
@@ -1024,8 +963,9 @@ class VantageClient:
             New name for the collection, if updating.
         external_key_id : Optional[str], optional
             New external key ID, if updating.
-        collection_preview_url_pattern : Optional[str], optional
-            New URL pattern for previewing items in the collection, if updating.
+        secondary_external_accounts: Optional[List[SecondaryExternalAccount]], optional
+            Additional external accounts/keys used for indexing, search or both.
+            Applicable if llm_provider is set to OpenAI.
         account_id : Optional[str], optional
             Account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1047,9 +987,35 @@ class VantageClient:
         "Updated Collection Name"
         """
 
+        collection = self.management_api.collection_api.get_collection(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        if secondary_external_accounts:
+            if collection.user_provided_embeddings:
+                raise ValueError(
+                    "Collections with user-provided embeddings cannot have secondary external accounts."
+                )
+
+            if collection.llm_provider is not LLMProvider.OpenAI.value:
+                raise ValueError(
+                    f"Only collections which are using {LLMProvider.OpenAI.value} as LLM provider can have secondary external accounts."
+                )
+
+            secondary_external_accounts = [
+                CollectionModifiableSecondaryExternalAccountsInner(
+                    actual_instance=OpenAPISecondaryExternalAccount(
+                        external_account_id=account.external_account_id,
+                        external_type=account.external_type,
+                    )
+                )
+                for account in secondary_external_accounts
+            ]
+
         collection_modifiable = CollectionModifiable(
             external_key_id=external_key_id,
-            collection_preview_url_pattern=collection_preview_url_pattern,
+            secondary_external_accounts=secondary_external_accounts,
             collection_name=collection_name,
         )
 

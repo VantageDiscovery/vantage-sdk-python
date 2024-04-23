@@ -1,25 +1,93 @@
-from typing import Optional, List
+from typing import Any, Optional, List
+from typing_extensions import Literal, Unpack
 
-from pydantic import BaseModel, StrictBool, StrictInt, StrictStr
+from pydantic import (
+    BaseModel,
+    StrictBool,
+    StrictInt,
+    StrictStr,
+    model_validator,
+)
 
-from vantage_sdk.model.keys import SecondaryExternalAccount
+from vantage_sdk.core.http.models import (
+    CollectionModifiableSecondaryExternalAccountsInner,
+    SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
+)
+from vantage_sdk.model.keys import SecondaryExternalAccount, LLMProvider
 
 
 class Collection(BaseModel):
-    collection_created_time: Optional[StrictStr] = None
-    collection_status: Optional[StrictStr] = None
+    collection_id: StrictStr
+    embeddings_dimension: StrictInt
+    user_provided_embeddings: StrictBool
+    collection_name: Optional[StrictStr] = None
     collection_state: Optional[StrictStr] = None
-    collection_id: Optional[StrictStr] = None
-    user_provided_embeddings: Optional[StrictBool] = None
-    llm: Optional[StrictStr] = None
-    external_url: Optional[StrictStr] = None
-    embeddings_dimension: Optional[StrictInt] = None
+    collection_status: Optional[StrictStr] = None
+    collection_created_time: Optional[StrictStr] = None
+    collection_preview_url_pattern: Optional[StrictStr] = None
+
+    @model_validator(mode="before")
+    def set_default_collection_name(cls, values):
+        if (
+            "collection_name" not in values
+            or values["collection_name"] is None
+        ):
+            collection_id = values.get("collection_id")
+            if collection_id:
+                values["collection_name"] = f"Collection [{collection_id}]"
+        return values
+
+
+class UserProvidedEmbeddingsCollection(Collection):
+    """User-provided embeddings collection"""
+
+    user_provided_embeddings: StrictBool = True
+
+
+class VantageManagedEmbeddingsCollection(Collection):
+    """Vantage-managed embeddings collection"""
+
+    llm_provider: StrictStr
+    user_provided_embeddings: StrictBool = False
+    llm_secret: Optional[StrictStr] = None
     external_account_id: Optional[StrictStr] = None
+
+    @model_validator(mode="after")
+    def check_extrnal_authentication_method_exists(cls, values):
+        if not values.llm_secret and not values.external_account_id:
+            raise ValueError(
+                "Please provide either `llm_secret` or `external_account_id` to authenticate with the LLM provider."
+            )
+
+
+class OpenAICollection(VantageManagedEmbeddingsCollection):
+    """Vantage-managed embeddings collection which uses OpenAI as LLM provider"""
+
+    llm_provider: StrictStr = LLMProvider.OpenAI.value
+    llm: StrictStr
     secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
         None
     )
-    collection_name: Optional[StrictStr] = None
-    collection_preview_url_pattern: Optional[StrictStr] = None
+
+    def _convert_secondary_external_accounts(
+        self, secondary_external_accounts_raw: List[SecondaryExternalAccount]
+    ) -> List[CollectionModifiableSecondaryExternalAccountsInner]:
+        self.secondary_external_accounts = [
+            CollectionModifiableSecondaryExternalAccountsInner(
+                actual_instance=OpenAPISecondaryExternalAccount(
+                    external_account_id=account.external_account_id,
+                    external_type=account.external_type,
+                )
+            )
+            for account in secondary_external_accounts_raw
+        ]
+
+
+class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
+    """Vantage-managed embeddings collection which uses HuggingFace as LLM provider"""
+
+    llm_provider: StrictStr = LLMProvider.HuggingFace.value
+    external_url: StrictStr = None
 
 
 class CollectionUploadURL(BaseModel):
