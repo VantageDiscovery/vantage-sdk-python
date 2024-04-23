@@ -53,9 +53,6 @@ from vantage_sdk.core.http.models.collection_immutable import (
 from vantage_sdk.core.http.models.collection_modifiable import (
     CollectionModifiable,
 )
-from vantage_sdk.core.http.models.collection_modifiable_secondary_external_accounts_inner import (
-    CollectionModifiableSecondaryExternalAccountsInner,
-)
 from vantage_sdk.core.http.models.collection_read_only import (
     CollectionReadOnly,
 )

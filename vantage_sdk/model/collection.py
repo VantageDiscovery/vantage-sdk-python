@@ -7,13 +7,6 @@ from pydantic import (
     StrictStr,
     model_validator,
 )
-
-from vantage_sdk.core.http.models import (
-    CollectionModifiableSecondaryExternalAccountsInner,
-)
-from vantage_sdk.core.http.models import (
-    SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
-)
 from vantage_sdk.model.keys import LLMProvider, SecondaryExternalAccount
 
 
@@ -66,22 +59,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     llm: StrictStr
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
-
-    def _convert_secondary_external_accounts(
-        self, secondary_external_accounts_raw: List[SecondaryExternalAccount]
-    ) -> List[CollectionModifiableSecondaryExternalAccountsInner]:
-        self.secondary_external_accounts = [
-            CollectionModifiableSecondaryExternalAccountsInner(
-                actual_instance=OpenAPISecondaryExternalAccount(
-                    external_account_id=account.external_account_id,
-                    external_type=account.external_type,
-                )
-            )
-            for account in secondary_external_accounts_raw
-        ]
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):

@@ -22,8 +22,8 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, Field, StrictStr
 
-from vantage_sdk.core.http.models.collection_modifiable_secondary_external_accounts_inner import (
-    CollectionModifiableSecondaryExternalAccountsInner,
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
 )
 
 
@@ -43,7 +43,7 @@ class CollectionModifiable(BaseModel):
         description="The external API key, for the llm_provider to use for the collection",
     )
     secondary_external_accounts: Optional[
-        List[CollectionModifiableSecondaryExternalAccountsInner]
+        List[SecondaryExternalAccount]
     ] = None
     collection_name: Optional[StrictStr] = None
     collection_preview_url_pattern: Optional[StrictStr] = Field(
@@ -114,9 +114,7 @@ class CollectionModifiable(BaseModel):
             {
                 "external_key_id": obj.get("external_key_id"),
                 "secondary_external_accounts": [
-                    CollectionModifiableSecondaryExternalAccountsInner.from_dict(
-                        _item
-                    )
+                    SecondaryExternalAccount.from_dict(_item)
                     for _item in obj.get("secondary_external_accounts")
                 ]
                 if obj.get("secondary_external_accounts") is not None

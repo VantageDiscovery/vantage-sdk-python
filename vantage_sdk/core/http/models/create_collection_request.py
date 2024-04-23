@@ -29,8 +29,8 @@ from pydantic import (
     field_validator,
 )
 
-from vantage_sdk.core.http.models.collection_modifiable_secondary_external_accounts_inner import (
-    CollectionModifiableSecondaryExternalAccountsInner,
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
 )
 
 
@@ -64,7 +64,7 @@ class CreateCollectionRequest(BaseModel):
         description="The external API key, for the llm_provider to use for the collection",
     )
     secondary_external_accounts: Optional[
-        List[CollectionModifiableSecondaryExternalAccountsInner]
+        List[SecondaryExternalAccount]
     ] = None
     collection_name: StrictStr
     collection_preview_url_pattern: Optional[StrictStr] = Field(
@@ -163,9 +163,7 @@ class CreateCollectionRequest(BaseModel):
                 "embeddings_dimension": obj.get("embeddings_dimension"),
                 "external_key_id": obj.get("external_key_id"),
                 "secondary_external_accounts": [
-                    CollectionModifiableSecondaryExternalAccountsInner.from_dict(
-                        _item
-                    )
+                    SecondaryExternalAccount.from_dict(_item)
                     for _item in obj.get("secondary_external_accounts")
                 ]
                 if obj.get("secondary_external_accounts") is not None

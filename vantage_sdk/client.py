@@ -20,7 +20,6 @@ from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
-    CollectionModifiableSecondaryExternalAccountsInner,
     CreateCollectionRequest,
     EmbeddingSearchQuery,
     ExternalAPIKeyModifiable,
@@ -915,9 +914,13 @@ class VantageClient:
             hasattr(collection, "secondary_external_accounts")
             and collection.secondary_external_accounts is not None
         ):
-            collection._convert_secondary_external_accounts(
-                collection.secondary_external_accounts
-            )
+            collection.secondary_external_accounts = [
+                OpenAPISecondaryExternalAccount(
+                    external_account_id=account.external_account_id,
+                    external_type=account.external_type,
+                )
+                for account in collection.secondary_external_accounts
+            ]
 
         create_collection_request = CreateCollectionRequest(
             collection_id=collection.collection_id,
@@ -1008,11 +1011,9 @@ class VantageClient:
                 )
 
             secondary_external_accounts = [
-                CollectionModifiableSecondaryExternalAccountsInner(
-                    actual_instance=OpenAPISecondaryExternalAccount(
-                        external_account_id=account.external_account_id,
-                        external_type=account.external_type,
-                    )
+                OpenAPISecondaryExternalAccount(
+                    external_account_id=account.external_account_id,
+                    external_type=account.external_type,
                 )
                 for account in secondary_external_accounts
             ]
