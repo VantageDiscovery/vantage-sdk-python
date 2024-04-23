@@ -911,7 +911,10 @@ class VantageClient:
         "openai-test-collection"
         """
 
-        if hasattr(collection, "secondary_external_accounts"):
+        if (
+            hasattr(collection, "secondary_external_accounts")
+            and collection.secondary_external_accounts is not None
+        ):
             collection._convert_secondary_external_accounts(
                 collection.secondary_external_accounts
             )
