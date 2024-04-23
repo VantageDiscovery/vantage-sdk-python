@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import json
 import ntpath
 import uuid
-import json
 from os.path import exists
 from pathlib import Path
 from typing import List, Optional, Union
@@ -20,9 +20,8 @@ from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
-    CreateCollectionRequest,
-    SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
     CollectionModifiableSecondaryExternalAccountsInner,
+    CreateCollectionRequest,
     EmbeddingSearchQuery,
     ExternalAPIKeyModifiable,
     GlobalSearchPropertiesCollection,
@@ -32,8 +31,11 @@ from vantage_sdk.core.http.models import (
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
-    SemanticSearchQuery,
 )
+from vantage_sdk.core.http.models import (
+    SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
+)
+from vantage_sdk.core.http.models import SemanticSearchQuery
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
@@ -41,25 +43,24 @@ from vantage_sdk.model.account import Account
 from vantage_sdk.model.collection import (
     Collection,
     CollectionUploadURL,
-    UserProvidedEmbeddingsCollection,
-    OpenAICollection,
     HuggingFaceCollection,
+    OpenAICollection,
+    UserProvidedEmbeddingsCollection,
+)
+from vantage_sdk.model.document import (
+    UserProvidedEmbeddingsDocument,
+    VantageManagedEmbeddingsDocument,
 )
 from vantage_sdk.model.keys import (
     ExternalAPIKey,
-    SecondaryExternalAccount,
     LLMProvider,
+    SecondaryExternalAccount,
     VantageAPIKey,
 )
 from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
-)
-from vantage_sdk.model.document import (
-    VantageManagedEmbeddingsDocument,
-    UserProvidedEmbeddingsDocument,
-    MetadataItem,
 )
 
 
@@ -1000,7 +1001,7 @@ class VantageClient:
 
             if collection.llm_provider is not LLMProvider.OpenAI.value:
                 raise ValueError(
-                    f"Only collections which are using {LLMProvider.OpenAI.value} as LLM provider can have secondary external accounts."
+                    f"Only collections which are using {LLMProvider.OpenAI.value} as LLM provider can have secondary external accounts."  # noqa: E501
                 )
 
             secondary_external_accounts = [
@@ -1772,13 +1773,13 @@ class VantageClient:
             document, VantageManagedEmbeddingsDocument
         ):
             raise ValueError(
-                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."
+                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
         elif not collection.user_provided_embeddings and isinstance(
             document, UserProvidedEmbeddingsDocument
         ):
             raise ValueError(
-                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."
+                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
 
     def upsert(

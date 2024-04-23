@@ -1,17 +1,17 @@
+from typing import Dict, List, Optional, Union
 from uuid import uuid4
-from typing import Optional, List, Any, Union, Dict
 
 from pydantic import (
     BaseModel,
     Field,
-    StrictStr,
-    StrictFloat,
     StrictBool,
+    StrictFloat,
     StrictInt,
+    StrictStr,
     model_validator,
 )
 
-from vantage_sdk.config import METADATA_PREFIX, METADATA_ORDERED_PREFIX
+from vantage_sdk.config import METADATA_ORDERED_PREFIX, METADATA_PREFIX
 
 
 class MetadataItem(BaseModel):

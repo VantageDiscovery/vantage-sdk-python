@@ -1,5 +1,4 @@
-from typing import Any, Optional, List
-from typing_extensions import Literal, Unpack
+from typing import List, Optional
 
 from pydantic import (
     BaseModel,
@@ -11,9 +10,11 @@ from pydantic import (
 
 from vantage_sdk.core.http.models import (
     CollectionModifiableSecondaryExternalAccountsInner,
+)
+from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
-from vantage_sdk.model.keys import SecondaryExternalAccount, LLMProvider
+from vantage_sdk.model.keys import LLMProvider, SecondaryExternalAccount
 
 
 class Collection(BaseModel):
@@ -65,9 +66,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     llm: StrictStr
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
-        None
-    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
 
     def _convert_secondary_external_accounts(
         self, secondary_external_accounts_raw: List[SecondaryExternalAccount]
