@@ -20,11 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, Field, StrictStr
-
-from vantage_sdk.core.http.models.secondary_external_account import (
-    SecondaryExternalAccount,
-)
+from pydantic import BaseModel, Field, StrictStr, field_validator
 
 
 try:
@@ -33,29 +29,31 @@ except ImportError:
     from typing_extensions import Self
 
 
-class CollectionModifiable(BaseModel):
+class SecondaryExternalAccount(BaseModel):
     """
-    CollectionModifiable
+    SecondaryExternalAccount
     """  # noqa: E501
 
-    external_key_id: Optional[StrictStr] = Field(
-        default=None,
-        description="The external API key, for the llm_provider to use for the collection",
+    external_account_id: Optional[StrictStr] = Field(
+        default=None, description="The external API key ID"
     )
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
-    collection_name: Optional[StrictStr] = None
-    collection_preview_url_pattern: Optional[StrictStr] = Field(
-        default=None,
-        description="To be able to preview items in test on the test collection page, enter in a URL that supports the open graph extensions for previewing links.",
-    )
+    external_type: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
-        "external_key_id",
-        "secondary_external_accounts",
-        "collection_name",
-        "collection_preview_url_pattern",
+        "external_account_id",
+        "external_type",
     ]
+
+    @field_validator('external_type')
+    def external_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('index', 'search', 'both'):
+            raise ValueError(
+                "must be one of enum values ('index', 'search', 'both')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -74,7 +72,7 @@ class CollectionModifiable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CollectionModifiable from a JSON string"""
+        """Create an instance of SecondaryExternalAccount from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -92,18 +90,11 @@ class CollectionModifiable(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in secondary_external_accounts (list)
-        _items = []
-        if self.secondary_external_accounts:
-            for _item in self.secondary_external_accounts:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['secondary_external_accounts'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of CollectionModifiable from a dict"""
+        """Create an instance of SecondaryExternalAccount from a dict"""
         if obj is None:
             return None
 
@@ -112,17 +103,8 @@ class CollectionModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "external_key_id": obj.get("external_key_id"),
-                "secondary_external_accounts": [
-                    SecondaryExternalAccount.from_dict(_item)
-                    for _item in obj.get("secondary_external_accounts")
-                ]
-                if obj.get("secondary_external_accounts") is not None
-                else None,
-                "collection_name": obj.get("collection_name"),
-                "collection_preview_url_pattern": obj.get(
-                    "collection_preview_url_pattern"
-                ),
+                "external_account_id": obj.get("external_account_id"),
+                "external_type": obj.get("external_type"),
             }
         )
         return _obj

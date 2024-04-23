@@ -107,6 +107,9 @@ from vantage_sdk.core.http.models.search_result import SearchResult
 from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
 )
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
+)
 from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
 )
