@@ -31,9 +31,6 @@ from vantage_sdk.core.http.models.collection_read_only import (
 from vantage_sdk.core.http.models.collection_upload_url import (
     CollectionUploadURL,
 )
-from vantage_sdk.core.http.models.collections_result_inner import (
-    CollectionsResultInner,
-)
 from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
@@ -47,9 +44,6 @@ from vantage_sdk.core.http.models.external_api_key_modifiable import (
 )
 from vantage_sdk.core.http.models.external_api_key_read_only import (
     ExternalAPIKeyReadOnly,
-)
-from vantage_sdk.core.http.models.external_api_keys_result_inner import (
-    ExternalAPIKeysResultInner,
 )
 from vantage_sdk.core.http.models.global_search_properties import (
     GlobalSearchProperties,
@@ -86,9 +80,6 @@ from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
-from vantage_sdk.core.http.models.vantage_api_keys_result_inner import (
-    VantageAPIKeysResultInner,
-)
 from vantage_sdk.core.http.models.weighted_field_values import (
     WeightedFieldValues,
 )
