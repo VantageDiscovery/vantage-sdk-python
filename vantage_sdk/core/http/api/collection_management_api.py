@@ -39,9 +39,6 @@ from vantage_sdk.core.http.models.collection_modifiable import (
 from vantage_sdk.core.http.models.collection_upload_url import (
     CollectionUploadURL,
 )
-from vantage_sdk.core.http.models.collections_result_inner import (
-    CollectionsResultInner,
-)
 from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
@@ -1295,7 +1292,7 @@ class CollectionManagementApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[CollectionsResultInner]:
+    ) -> List[Collection]:
         """List Collections
 
         List the collections in account_id
@@ -1333,7 +1330,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CollectionsResultInner]",
+            '200': "List[Collection]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1361,7 +1358,7 @@ class CollectionManagementApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[CollectionsResultInner]]:
+    ) -> ApiResponse[List[Collection]]:
         """List Collections
 
         List the collections in account_id
@@ -1399,7 +1396,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CollectionsResultInner]",
+            '200': "List[Collection]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1465,7 +1462,7 @@ class CollectionManagementApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[CollectionsResultInner]",
+            '200': "List[Collection]",
             '405': None,
         }
         response_data = self.api_client.call_api(

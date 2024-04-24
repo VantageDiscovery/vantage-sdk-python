@@ -393,10 +393,7 @@ class VantageClient:
             account_id=account_id or self.account_id,
         )
 
-        return [
-            VantageAPIKey.model_validate(key.actual_instance.model_dump())
-            for key in keys
-        ]
+        return [VantageAPIKey.model_validate(key.model_dump()) for key in keys]
 
     def get_vantage_api_key(
         self,
@@ -480,8 +477,7 @@ class VantageClient:
             account_id=account_id or self.account_id,
         )
         return [
-            ExternalAPIKey.model_validate(key.actual_instance.model_dump())
-            for key in keys
+            ExternalAPIKey.model_validate(key.model_dump()) for key in keys
         ]
 
     def get_external_api_key(
@@ -788,7 +784,7 @@ class VantageClient:
         )
 
         return [
-            Collection.model_validate(collection.actual_instance.model_dump())
+            Collection.model_validate(collection.model_dump())
             for collection in collections
         ]
 

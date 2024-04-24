@@ -33,9 +33,6 @@ from typing_extensions import Annotated
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
-from vantage_sdk.core.http.models.vantage_api_keys_result_inner import (
-    VantageAPIKeysResultInner,
-)
 from vantage_sdk.core.http.rest import RESTResponseType
 
 
@@ -340,7 +337,7 @@ class VantageAPIKeysApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[VantageAPIKeysResultInner]:
+    ) -> List[VantageAPIKey]:
         """Get Vantage API keys
 
         Get Vantage API keys
@@ -378,7 +375,7 @@ class VantageAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[VantageAPIKeysResultInner]",
+            '200': "List[VantageAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -408,7 +405,7 @@ class VantageAPIKeysApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[VantageAPIKeysResultInner]]:
+    ) -> ApiResponse[List[VantageAPIKey]]:
         """Get Vantage API keys
 
         Get Vantage API keys
@@ -446,7 +443,7 @@ class VantageAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[VantageAPIKeysResultInner]",
+            '200': "List[VantageAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -514,7 +511,7 @@ class VantageAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[VantageAPIKeysResultInner]",
+            '200': "List[VantageAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(

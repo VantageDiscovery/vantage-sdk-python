@@ -36,9 +36,6 @@ from vantage_sdk.core.http.models.external_api_key import ExternalAPIKey
 from vantage_sdk.core.http.models.external_api_key_modifiable import (
     ExternalAPIKeyModifiable,
 )
-from vantage_sdk.core.http.models.external_api_keys_result_inner import (
-    ExternalAPIKeysResultInner,
-)
 from vantage_sdk.core.http.rest import RESTResponseType
 
 
@@ -893,7 +890,7 @@ class ExternalAPIKeysApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> List[ExternalAPIKeysResultInner]:
+    ) -> List[ExternalAPIKey]:
         """Get external API keys
 
         Get external API keys
@@ -931,7 +928,7 @@ class ExternalAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ExternalAPIKeysResultInner]",
+            '200': "List[ExternalAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -961,7 +958,7 @@ class ExternalAPIKeysApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[List[ExternalAPIKeysResultInner]]:
+    ) -> ApiResponse[List[ExternalAPIKey]]:
         """Get external API keys
 
         Get external API keys
@@ -999,7 +996,7 @@ class ExternalAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ExternalAPIKeysResultInner]",
+            '200': "List[ExternalAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1067,7 +1064,7 @@ class ExternalAPIKeysApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "List[ExternalAPIKeysResultInner]",
+            '200': "List[ExternalAPIKey]",
             '405': None,
         }
         response_data = self.api_client.call_api(

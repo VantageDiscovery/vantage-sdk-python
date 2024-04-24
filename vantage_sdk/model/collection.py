@@ -7,6 +7,7 @@ from pydantic import (
     StrictStr,
     model_validator,
 )
+
 from vantage_sdk.model.keys import LLMProvider, SecondaryExternalAccount
 
 
@@ -59,9 +60,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     llm: StrictStr
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
-        None
-    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
