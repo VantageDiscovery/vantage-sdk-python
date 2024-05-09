@@ -1193,6 +1193,13 @@ class VantageClient:
             An object containing the search results.
         """
 
+        collection = self.get_collection(collection_id=collection_id)
+
+        if collection.user_provided_embeddings:
+            raise ValueError(
+                "Semantic search is not possible on a collection of user-provided embeddings (UPE)."
+            )
+
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
@@ -1508,7 +1515,7 @@ class VantageClient:
 
     # endregion
 
-    # region Upload - Documents
+    # region Documents - Upload
 
     def upload_documents_from_jsonl(
         self,
@@ -1629,7 +1636,35 @@ class VantageClient:
 
     # endregion
 
-    # region Upload - Embeddings
+    # region Documents - Delete
+
+    def delete_documents(
+        self,
+        collection_id: str,
+        document_ids: List[str],
+        account_id: Optional[str] = None,
+    ) -> None:
+
+        documents_to_delete = [
+            {"id": id, "operation": "delete"} for id in document_ids
+        ]
+
+        vantage_documents_jsonl = "\n".join(
+            map(
+                json.dumps,
+                [document for document in documents_to_delete],
+            )
+        )
+
+        self.upload_documents_from_jsonl(
+            collection_id=collection_id,
+            documents=vantage_documents_jsonl,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
+    # region Documents with Embeddings - Upload
 
     def _upload_embedding(self, upload_url: str, upload_content) -> int:
         response = requests.put(
