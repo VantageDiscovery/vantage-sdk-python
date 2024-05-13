@@ -56,7 +56,7 @@ class VantageManagedEmbeddingsDocument(VantageDocument):
 class UserProvidedEmbeddingsDocument(VantageDocument):
     """Document class for User-provided embeddings collections"""
 
-    embeddings: List[StrictFloat] = None
+    embeddings: List[StrictFloat]
 
     def to_vantage_dict(self):
         vantage_dict = super().to_vantage_dict()
