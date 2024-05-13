@@ -69,7 +69,7 @@ class TestCollections:
         # When
         status = client.upsert_documents_from_parquet_file(
             collection_id=collection_id,
-            file_path=test_parquet_file_path,
+            parquet_file_path=test_parquet_file_path,
             account_id=account_params["id"],
         )
 
@@ -93,7 +93,7 @@ class TestCollections:
         with pytest.raises(NotFoundException) as exception:
             client.upsert_documents_from_parquet_file(
                 collection_id=collection_id,
-                file_path=test_parquet_file_path,
+                parquet_file_path=test_parquet_file_path,
                 account_id=account_params["id"],
             )
 
@@ -118,7 +118,7 @@ class TestCollections:
         with pytest.raises(FileNotFoundError) as exception:
             client.upsert_documents_from_parquet_file(
                 collection_id=collection_id,
-                file_path=non_existing_file_path,
+                parquet_file_path=non_existing_file_path,
                 account_id=account_params["id"],
             )
 

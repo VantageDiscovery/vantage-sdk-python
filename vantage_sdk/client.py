@@ -1528,6 +1528,9 @@ class VantageClient:
             UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
         ],
     ) -> None:
+        """
+        TODO: Docstring
+        """
         if collection.user_provided_embeddings and isinstance(
             document, VantageManagedEmbeddingsDocument
         ):
@@ -1542,8 +1545,13 @@ class VantageClient:
             )
 
     def _upsert_documents_using_browser_upload_url(
-        self, browser_upload_url: str, upload_content
+        self,
+        browser_upload_url: str,
+        upload_content,
     ) -> int:
+        """
+        TODO: Docstring
+        """
         response = requests.put(
             browser_upload_url,
             data=upload_content,
@@ -1563,7 +1571,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Uploads documents in parquet format to a user-provided embeddings collection.
+        Upserts documents as bytes to a user-provided embeddings collection.
 
         Parameters
         ----------
@@ -1574,10 +1582,9 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None
         content: bytes
-            Embeddings content as bytes.
+            Documents content as bytes.
         file_size: int
             Size of contents being uploaded, in bytes.
-        parquet_file_name: str
         batch_identifier : Optional[str], optional
             An optional identifier provided by the user to track the batch of document uploads.
             Identifier needs to end with '.parquet',if it doesn't, it will be
@@ -1588,16 +1595,6 @@ class VantageClient:
         -------
         int
             HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client._upload_documents_from_bytes(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
         """
 
         if batch_identifier is None:
@@ -1630,6 +1627,9 @@ class VantageClient:
         ],
         account_id: Optional[str] = None,
     ):
+        """
+        TODO: Docstring
+        """
         if not documents:
             raise ValueError("Documents object can't be empty.")
 
@@ -1652,19 +1652,19 @@ class VantageClient:
 
         self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
-            documents=vantage_documents_jsonl,
+            documents_jsonl=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
         )
 
     def upsert_documents_from_jsonl_string(
         self,
         collection_id: str,
-        documents: str,
+        documents_jsonl: str,
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Uploads documents to a specified collection from a string containing JSONL-formatted documents.
+        Upserts documents to a specified collection from a string containing JSONL-formatted documents.
         The `documents` string is expected to be in JSONL format, where each line is a valid JSON
         document.
 
@@ -1672,7 +1672,7 @@ class VantageClient:
         ----------
         collection_id : str
             The unique identifier of the collection to which the documents will be uploaded.
-        documents : str
+        documents_jsonl : str
             A string containing the documents to be uploaded, formatted as JSONL.
         batch_identifier : Optional[str], optional
             An optional identifier provided by the user to track the batch of document uploads.
@@ -1685,9 +1685,9 @@ class VantageClient:
         -------
         >>> vantage_client = VantageClient(...)
         >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}' # noqa: E501
-        >>> vantage_client.upload_documents_from_jsonl(
+        >>> vantage_client.upsert_documents_from_jsonl_string(
                 collection_id="my-collection",
-                documents=documents_jsonl,
+                documents_jsonl=documents_jsonl,
             )
         # This will upload two documents to "my-collection".
 
@@ -1706,7 +1706,7 @@ class VantageClient:
         """
 
         self.management_api.documents_api.upload_documents(
-            body=documents,
+            body=documents_jsonl,
             account_id=account_id if account_id else self.account_id,
             collection_id=collection_id,
             customer_batch_identifier=batch_identifier,
@@ -1715,15 +1715,15 @@ class VantageClient:
     def upsert_documents_from_jsonl_file(
         self,
         collection_id: str,
-        file_path: str,
+        jsonl_file_path: str,
         batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Uploads documents to a specified collection from a JSONL file located at a given file path.
+        Upserts documents to a specified collection from a JSONL file located at a given file path.
         This method checks if the file exists at the specified path and raises a FileNotFoundError if it does not.
         It then reads the file and uploads the documents contained within the file to the specified
-        collection using the `upload_documents_from_jsonl` method.
+        collection using the `upsert_documents_from_jsonl_string` method.
 
         Parameters
         ----------
@@ -1741,9 +1741,9 @@ class VantageClient:
         Example
         -------
         >>> vantage_client = VantageClient()
-        >>> vantage_client.upload_documents_from_path(
+        >>> vantage_client.upsert_documents_from_jsonl_fil(
                 collection_id="my-collection",
-                file_path="/path/to/documents.jsonl",
+                jsonl_file_path="/path/to/documents.jsonl",
             )
         # This will upload documents from "/path/to/documents.jsonl" to "my-collection".
 
@@ -1761,14 +1761,14 @@ class VantageClient:
         Metadata fields should all have `meta_` prefix.
         """
 
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
+        if not exists(jsonl_file_path):
+            raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
 
-        file = open(file_path, "rb")
+        file = open(jsonl_file_path, "rb")
         file_content = file.read().decode(self._default_encoding)
         self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
-            documents=file_content,
+            documents_jsonl=file_content,
             batch_identifier=batch_identifier,
             account_id=account_id,
         )
@@ -1776,18 +1776,18 @@ class VantageClient:
     def upsert_documents_from_parquet_file(
         self,
         collection_id: str,
-        file_path: str,
+        parquet_file_path: str,
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Uploads embeddings from a parquet file to a user-provided embeddings collection.
+        Upserts embeddings from a parquet file to a user-provided embeddings collection.
 
         Parameters
         ----------
         collection_id : str
             The unique identifier of the collection
             embeddings are being uploaded to.
-        file_path : str, optional
+        parquet_file_path : str, optional
             Path to the parquet file in a filesystem.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
@@ -1802,23 +1802,21 @@ class VantageClient:
         Example
         -------
         >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_documents_from_parquet_file(
+        >>> vantage_client.upsert_documents_from_parquet_file(
             collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
+            parquet_file_path="my_documents.parquet",
         )
         """
 
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
-        file_name = ntpath.basename(file_path)
+        if not exists(parquet_file_path):
+            raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
+        file_name = ntpath.basename(parquet_file_path)
 
-        if not file_path.endswith(".parquet"):
+        if not parquet_file_path.endswith(".parquet"):
             raise ValueError("File mast be a parquet file.")
 
-        file_size = Path(file_path).stat().st_size
-        file = open(file_path, "rb")
+        file_size = Path(parquet_file_path).stat().st_size
+        file = open(parquet_file_path, "rb")
         file_content = file.read()
         return self._upsert_documents_from_bytes(
             collection_id=collection_id,
@@ -1852,7 +1850,7 @@ class VantageClient:
 
         self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
-            documents=vantage_documents_jsonl,
+            documents_jsonl=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
         )
 
