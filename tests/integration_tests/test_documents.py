@@ -3,6 +3,7 @@
 from typing import Callable
 
 from vantage_sdk.client import VantageClient
+from vantage_sdk.model.collection import UserProvidedEmbeddingsCollection
 
 
 """Integration tests for search endpoints"""
@@ -20,23 +21,22 @@ class TestDocuments:
         TODO: docstring
         """
         # Given
-        collection_id = random_string_generator(10)
-        collection_name = random_string_generator(10)
         batch_identifier = (
             f"test_documents_upload-{random_string_generator(6)}"
         )
-
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=random_string_generator(10),
+            embeddings_dimension=1536,
+            collection_name=random_string_generator(10),
+        )
         client.create_collection(
             account_id=account_params["id"],
-            collection_id=collection_id,
-            collection_name=collection_name,
-            user_provided_embeddings=True,
-            embeddings_dimension=1536,
+            collection=collection,
         )
 
         # When
         client.upload_documents_from_path(
-            collection_id=collection_id,
+            collection_id=collection.collection_id,
             file_path=jsonl_documents_path,
             batch_identifier=batch_identifier,
             account_id=account_params["id"],
@@ -56,20 +56,19 @@ class TestDocuments:
         TODO: docstring
         """
         # Given
-        collection_id = random_string_generator(10)
-        collection_name = random_string_generator(10)
-
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=random_string_generator(10),
+            embeddings_dimension=1536,
+            collection_name=random_string_generator(10),
+        )
         client.create_collection(
             account_id=account_params["id"],
-            collection_id=collection_id,
-            collection_name=collection_name,
-            user_provided_embeddings=True,
-            embeddings_dimension=1536,
+            collection=collection,
         )
 
         # When
         result = client.upload_embeddings_from_parquet(
-            collection_id=collection_id,
+            collection_id=collection.collection_id,
             file_path=parquet_file_path,
             account_id=account_params["id"],
         )
