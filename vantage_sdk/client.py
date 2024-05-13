@@ -1528,9 +1528,6 @@ class VantageClient:
             UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
         ],
     ) -> None:
-        """
-        TODO: Docstring
-        """
         if collection.user_provided_embeddings and isinstance(
             document, VantageManagedEmbeddingsDocument
         ):
@@ -1549,9 +1546,6 @@ class VantageClient:
         browser_upload_url: str,
         upload_content,
     ) -> int:
-        """
-        TODO: Docstring
-        """
         response = requests.put(
             browser_upload_url,
             data=upload_content,
@@ -1628,7 +1622,35 @@ class VantageClient:
         account_id: Optional[str] = None,
     ):
         """
-        TODO: Docstring
+        Upserts documents to a specified collection from a list of Vantage
+        documents. The `documents` object should be a list of one type of Vantage
+        document objects—either VantageManagedEmbeddingsDocument or UserProvidedEmbeddingsDocument,
+        depending on the type of the collection to which you are upserting.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier for the collection to which the documents will be upserted.
+        documents : Union[List[VantageManagedEmbeddingsDocument], List[UserProvidedEmbeddingsDocument]]
+            A list of documents to upsert. This list should contain only one type of document,
+            either VantageManagedEmbeddingsDocument or UserProvidedEmbeddingsDocument,
+            depending on the collection's type.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient(...)
+        >>> documents = [
+                UserProvidedEmbeddingsDocument(text=text, id=id, embeddings=emb)
+                for id, text, emb in zip(ids, texts, embeddings)
+            ]
+        >>> vantage_client.upsert_documents(
+                collection_id="my-collection",
+                documents=documents,
+            )
         """
         if not documents:
             raise ValueError("Documents object can't be empty.")
@@ -1780,7 +1802,8 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Upserts embeddings from a parquet file to a user-provided embeddings collection.
+        Upserts embeddings from a parquet file to a collection.
+        This upsert method is available for user-provided embeddings collections only.
 
         Parameters
         ----------
@@ -1803,10 +1826,17 @@ class VantageClient:
         -------
         >>> vantage_client = VantageClient(...)
         >>> vantage_client.upsert_documents_from_parquet_file(
-            collection_id="my-collection",
+            collection_id="my-upe-collection",
             parquet_file_path="my_documents.parquet",
         )
         """
+
+        collection = self.get_collection(collection_id=collection_id)
+
+        if not collection.user_provided_embeddings:
+            raise ValueError(
+                "Upsert using parquet file is available only for user-provided embeddings (UPE) collections."
+            )
 
         if not exists(parquet_file_path):
             raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
