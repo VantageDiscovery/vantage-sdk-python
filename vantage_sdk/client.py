@@ -1065,7 +1065,7 @@ class VantageClient:
 
     # endregion
 
-    # region Search
+    # region Search Helper Functions
 
     def _prepare_search_query(
         self,
@@ -1130,6 +1130,10 @@ class VantageClient:
             )
 
         return vantage_api_key
+
+    # endregion
+
+    # region Search
 
     def semantic_search(
         self,
@@ -1515,9 +1519,144 @@ class VantageClient:
 
     # endregion
 
-    # region Documents - Upload
+    # region Documents - Upsert Helper Functions
 
-    def upload_documents_from_jsonl(
+    def _document_to_collection_compatibility_check(
+        self,
+        collection: Collection,
+        document: Union[
+            UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
+        ],
+    ) -> None:
+        if collection.user_provided_embeddings and isinstance(
+            document, VantageManagedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."  # noqa: E501
+            )
+        elif not collection.user_provided_embeddings and isinstance(
+            document, UserProvidedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
+            )
+
+    def _upsert_documents_using_browser_upload_url(
+        self, browser_upload_url: str, upload_content
+    ) -> int:
+        response = requests.put(
+            browser_upload_url,
+            data=upload_content,
+        )
+
+        if response.status_code != 200:
+            raise VantageFileUploadError(response.reason, response.status_code)
+
+        return response.status_code
+
+    def _upsert_documents_from_bytes(
+        self,
+        collection_id: str,
+        content: bytes,
+        file_size: int,
+        batch_identifier: Optional[str],
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads documents in parquet format to a user-provided embeddings collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection embeddings are being uploaded.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+        content: bytes
+            Embeddings content as bytes.
+        file_size: int
+            Size of contents being uploaded, in bytes.
+        parquet_file_name: str
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+            Identifier needs to end with '.parquet',if it doesn't, it will be
+            automatically added.
+            If none is provided, it will be generated automatically.
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_client._upload_documents_from_bytes(
+            collection_id="my-collection",
+            content=parquet_content_as_bytes,
+            file_size=1000,
+            batch_identifier="my-embeddings.parquet"
+        )
+        """
+
+        if batch_identifier is None:
+            batch_identifier = f"{uuid.uuid4}.parquet"
+        elif not batch_identifier.endswith(".parquet"):
+            batch_identifier = f"{batch_identifier}.parquet"
+
+        browser_upload_url = self._get_browser_upload_url(
+            collection_id=collection_id,
+            file_size=file_size,
+            parquet_file_name=batch_identifier,
+            account_id=account_id,
+        )
+
+        return self._upsert_documents_using_browser_upload_url(
+            browser_upload_url=browser_upload_url.upload_url,
+            upload_content=content,
+        )
+
+    # endregion
+
+    # region Documents - Upsert
+
+    def upsert_documents(
+        self,
+        collection_id: str,
+        documents: Union[
+            List[VantageManagedEmbeddingsDocument],
+            List[UserProvidedEmbeddingsDocument],
+        ],
+        account_id: Optional[str] = None,
+    ):
+        if not documents:
+            raise ValueError("Documents object can't be empty.")
+
+        collection = self.get_collection(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        self._document_to_collection_compatibility_check(
+            collection=collection,
+            document=documents[0],
+        )
+
+        vantage_documents_jsonl = "\n".join(
+            map(
+                json.dumps,
+                [document.to_vantage_dict() for document in documents],
+            )
+        )
+
+        self.upsert_documents_from_jsonl_string(
+            collection_id=collection_id,
+            documents=vantage_documents_jsonl,
+            account_id=account_id or self.account_id,
+        )
+
+    def upsert_documents_from_jsonl_string(
         self,
         collection_id: str,
         documents: str,
@@ -1573,7 +1712,7 @@ class VantageClient:
             customer_batch_identifier=batch_identifier,
         )
 
-    def upload_documents_from_path(
+    def upsert_documents_from_jsonl_file(
         self,
         collection_id: str,
         file_path: str,
@@ -1627,10 +1766,65 @@ class VantageClient:
 
         file = open(file_path, "rb")
         file_content = file.read().decode(self._default_encoding)
-        self.upload_documents_from_jsonl(
+        self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
             documents=file_content,
             batch_identifier=batch_identifier,
+            account_id=account_id,
+        )
+
+    def upsert_documents_from_parquet_file(
+        self,
+        collection_id: str,
+        file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads embeddings from a parquet file to a user-provided embeddings collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        file_path : str, optional
+            Path to the parquet file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Example
+        -------
+        >>> vantage_client = VantageClient(...)
+        >>> vantage_client.upload_documents_from_parquet_file(
+            collection_id="my-collection",
+            content=parquet_content_as_bytes,
+            file_size=1000,
+            batch_identifier="my-embeddings.parquet"
+        )
+        """
+
+        if not exists(file_path):
+            raise FileNotFoundError(f"File \"{file_path}\" not found.")
+        file_name = ntpath.basename(file_path)
+
+        if not file_path.endswith(".parquet"):
+            raise ValueError("File mast be a parquet file.")
+
+        file_size = Path(file_path).stat().st_size
+        file = open(file_path, "rb")
+        file_content = file.read()
+        return self._upsert_documents_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            batch_identifier=file_name,
             account_id=account_id,
         )
 
@@ -1656,198 +1850,10 @@ class VantageClient:
             )
         )
 
-        self.upload_documents_from_jsonl(
+        self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
             documents=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
         )
 
     # endregion
-
-    # region Documents with Embeddings - Upload
-
-    def _upload_embedding(self, upload_url: str, upload_content) -> int:
-        response = requests.put(
-            upload_url,
-            data=upload_content,
-        )
-
-        if response.status_code != 200:
-            raise VantageFileUploadError(response.reason, response.status_code)
-
-        return response.status_code
-
-    def upload_embeddings_from_bytes(
-        self,
-        collection_id: str,
-        content: bytes,
-        file_size: int,
-        batch_identifier: Optional[str],
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Uploads embeddings in parquet format to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection embeddings are being uploaded.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-        content: bytes
-            Embeddings content as bytes.
-        file_size: int
-            Size of contents being uploaded, in bytes.
-        parquet_file_name: str
-        batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-            Identifier needs to end with '.parquet',if it doesn't, it will be
-            automatically added.
-            If none is provided, it will be generated automatically.
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
-        """
-
-        if batch_identifier is None:
-            batch_identifier = f"{uuid.uuid4}.parquet"
-        elif not batch_identifier.endswith(".parquet"):
-            batch_identifier = f"{batch_identifier}.parquet"
-
-        browser_upload_url = self._get_browser_upload_url(
-            collection_id=collection_id,
-            file_size=file_size,
-            parquet_file_name=batch_identifier,
-            account_id=account_id,
-        )
-
-        return self._upload_embedding(
-            upload_url=browser_upload_url.upload_url,
-            upload_content=content,
-        )
-
-    def upload_embeddings_from_parquet(
-        self,
-        collection_id: str,
-        file_path: str,
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Uploads embeddings from a parquet file to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection
-            embeddings are being uploaded to.
-        file_path : str, optional
-            Path to the parquet file in a filesystem.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
-        """
-
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
-        file_name = ntpath.basename(file_path)
-
-        if not file_path.endswith(".parquet"):
-            raise ValueError("File mast be a parquet file.")
-
-        file_size = Path(file_path).stat().st_size
-        file = open(file_path, "rb")
-        file_content = file.read()
-        return self.upload_embeddings_from_bytes(
-            collection_id=collection_id,
-            content=file_content,
-            file_size=file_size,
-            batch_identifier=file_name,
-            account_id=account_id,
-        )
-
-    # endregion
-
-    def _document_to_collection_compatibility_check(
-        self,
-        collection: Collection,
-        document: Union[
-            UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
-        ],
-    ) -> None:
-        if collection.user_provided_embeddings and isinstance(
-            document, VantageManagedEmbeddingsDocument
-        ):
-            raise ValueError(
-                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."  # noqa: E501
-            )
-        elif not collection.user_provided_embeddings and isinstance(
-            document, UserProvidedEmbeddingsDocument
-        ):
-            raise ValueError(
-                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
-            )
-
-    def upsert(
-        self,
-        collection_id: str,
-        documents: Union[
-            List[VantageManagedEmbeddingsDocument],
-            List[UserProvidedEmbeddingsDocument],
-        ],
-        account_id: Optional[str] = None,
-    ):
-        if not documents:
-            raise ValueError("Documents object can't be empty.")
-
-        collection = self.get_collection(
-            collection_id=collection_id,
-            account_id=account_id or self.account_id,
-        )
-
-        self._document_to_collection_compatibility_check(
-            collection=collection,
-            document=documents[0],
-        )
-
-        vantage_documents_jsonl = "\n".join(
-            map(
-                json.dumps,
-                [document.to_vantage_dict() for document in documents],
-            )
-        )
-
-        self.upload_documents_from_jsonl(
-            collection_id=collection_id,
-            documents=vantage_documents_jsonl,
-            account_id=account_id or self.account_id,
-        )
