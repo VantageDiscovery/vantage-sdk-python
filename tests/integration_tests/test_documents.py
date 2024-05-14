@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 from typing import Callable, List
+import pytest
 
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.collection import UserProvidedEmbeddingsCollection
@@ -45,6 +46,35 @@ class TestDocuments:
 
         # Then
         # Do nothing, if exception has not been thrown, everything is fine
+
+    def test_user_provided_documents_upsert_invalid_document_type(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        random_string_generator: Callable,
+        vantage_vme_documents: List[VantageManagedEmbeddingsDocument],
+    ):
+        # Given
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=random_string_generator(10),
+            embeddings_dimension=3,
+            collection_name=random_string_generator(10),
+        )
+        client.create_collection(
+            account_id=account_params["id"],
+            collection=collection,
+        )
+
+        # When
+        with pytest.raises(ValueError) as exception:
+            client.upsert_documents(
+                collection_id=collection.collection_id,
+                documents=vantage_vme_documents,
+                account_id=account_params["id"],
+            )
+
+        # Then
+        assert exception.type is ValueError
 
     def test_documents_upsert_from_jsonl_file(
         self,
