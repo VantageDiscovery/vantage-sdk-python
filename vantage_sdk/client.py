@@ -1528,6 +1528,9 @@ class VantageClient:
             UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
         ],
     ) -> None:
+        """
+        Checks if a document is compatible with the type of the specified collection.
+        """
         if collection.user_provided_embeddings and isinstance(
             document, VantageManagedEmbeddingsDocument
         ):
@@ -1546,6 +1549,9 @@ class VantageClient:
         browser_upload_url: str,
         upload_content,
     ) -> int:
+        """
+        Uploads content to a specified collection using a browser upload URL.
+        """
         response = requests.put(
             browser_upload_url,
             data=upload_content,
@@ -1565,30 +1571,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Upserts documents as bytes to a user-provided embeddings collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection embeddings are being uploaded.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-        content: bytes
-            Documents content as bytes.
-        file_size: int
-            Size of contents being uploaded, in bytes.
-        batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-            Identifier needs to end with '.parquet',if it doesn't, it will be
-            automatically added.
-            If none is provided, it will be generated automatically.
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
+        Upserts documents as bytes to a collection.
         """
 
         if batch_identifier is None:
@@ -1763,7 +1746,7 @@ class VantageClient:
         Example
         -------
         >>> vantage_client = VantageClient()
-        >>> vantage_client.upsert_documents_from_jsonl_fil(
+        >>> vantage_client.upsert_documents_from_jsonl_file(
                 collection_id="my-collection",
                 jsonl_file_path="/path/to/documents.jsonl",
             )
