@@ -627,6 +627,18 @@ class VantageClient:
     ) -> List[str]:
         """
         Retrieves a list of existing collection IDs associated with a given account.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The account identifier under which to look for collections.
+            If not provided, the default account ID associated with the user is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[str]
+            A list of collection IDs that are available under the specified or default account.
         """
 
         collections = self.list_collections(
@@ -643,6 +655,24 @@ class VantageClient:
     ) -> CollectionUploadURL:
         """
         Retrieves a browser upload URL for uploading files to a specified collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The identifier of the collection to which the file is being uploaded.
+        file_size : int
+            The size of the file to be uploaded, in bytes.
+        parquet_file_name : str
+            The name of the parquet file being uploaded, used as a customer batch identifier.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists.
+            If not provided, the default account associated with the user is used.
+            Defaults to None.
+
+        Returns
+        -------
+        CollectionUploadURL
+            An object representing the upload URL and any other relevant data needed for the upload process.
         """
 
         url = self.management_api.collection_api.get_browser_upload_url(
@@ -662,6 +692,19 @@ class VantageClient:
     ) -> None:
         """
         Validates the parameters required for creating a collection based on the specified LLM provider.
+
+        Parameters
+        ----------
+        llm_provider : str
+            The name of the LLM provider, which dictates the specific parameters required for the collection.
+        url : Optional[str], optional
+            Endpoint of the HuggingFace model.
+            Required if the LLM provider is HuggingFace and not provided otherwise.
+            Defaults to None.
+        llm : Optional[str], optional
+            OpenAI model identifier.
+            Required if the LLM provider is OpenAI and not provided otherwise.
+            Defaults to None.
         """
         if llm_provider == LLMProvider.HuggingFace.value and not url:
             raise ValueError(
@@ -1403,6 +1446,15 @@ class VantageClient:
     ) -> None:
         """
         Checks if a document is compatible with the type of the specified collection.
+
+        Parameters
+        ----------
+        collection : Collection
+            The collection to which the document is intended to be added. This object should specify whether it
+            expects user-provided embeddings or Vantage-managed embeddings.
+        document : Union[UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument]
+            The document to be checked for compatibility with the collection. This must be an instance of either
+            UserProvidedEmbeddingsDocument or VantageManagedEmbeddingsDocument.
         """
         if collection.user_provided_embeddings and isinstance(
             document, VantageManagedEmbeddingsDocument
@@ -1424,6 +1476,19 @@ class VantageClient:
     ) -> int:
         """
         Uploads content to a specified collection using a browser upload URL.
+
+        Parameters
+        ----------
+        browser_upload_url : str
+            The URL to which the content should be uploaded. This URL should be pre-configured to
+            accept uploads for a specific collection.
+        upload_content
+            The content to be uploaded.
+
+        Returns
+        -------
+        int
+            The HTTP status code returned by the server after attempting the upload.
         """
         response = requests.put(
             browser_upload_url,
@@ -1445,6 +1510,26 @@ class VantageClient:
     ) -> int:
         """
         Upserts documents as bytes to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The identifier of the collection to which the documents are being upserted.
+        content : bytes
+            The binary content (documents in bytes) to be uploaded.
+        file_size : int
+            The size of the content to be uploaded, in bytes.
+        batch_identifier : Optional[str], optional
+            An optional identifier for the batch upload. If not provided, a unique identifier is generated.
+            If provided without a '.parquet' extension, it will be appended. Defaults to None.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists. If not provided, the default account
+            associated with the user is used. Defaults to None.
+
+        Returns
+        -------
+        int
+            The HTTP status code returned by the server after attempting the upload.
         """
 
         if batch_identifier is None:
