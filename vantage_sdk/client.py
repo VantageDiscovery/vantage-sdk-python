@@ -297,12 +297,7 @@ class VantageClient:
         Account
             An Account object containing the details of the requested account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> account = vantage_client.get_account()
-        >>> print(account.name)
-        "Example Account Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         result = self.management_api.account_api.get_account(
@@ -336,12 +331,7 @@ class VantageClient:
         Account
             An updated Account object reflecting the changes made.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_account = vantage_client.update_account(account_name="New Account Name")
-        >>> print(updated_account.name)
-        "New Account Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         account_modifiable = AccountModifiable(account_name=account_name)
@@ -379,14 +369,7 @@ class VantageClient:
         List[VantageAPIKey]
             A list of VantageAPIKey objects, each representing a Vantage API key associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_api_keys = vantage_client.get_vantage_api_keys()
-        >>> for key in vantage_api_keys:
-        ...     print(key.value)
-        "12345"
-        "54321"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         keys = self.management_api.vantage_api_keys_api.get_vantage_api_keys(
@@ -422,12 +405,7 @@ class VantageClient:
         VantageAPIKey
             A VantageAPIKey object containing the details of the requested API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_api_key = vantage_client.get_vantage_api_key(vantage_api_key_id="api_key_12345")
-        >>> print(vantage_api_key.value)
-        "12345"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         key = self.management_api.vantage_api_keys_api.get_vantage_api_key(
@@ -463,14 +441,7 @@ class VantageClient:
         List[ExternalAPIKey]
             A list of ExternalAPIKey objects, each representing an external API key associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_keys = vantage_client.get_external_api_keys()
-        >>> for key in external_api_keys:
-        ...     print(key.id)
-        "external_key_123"
-        "external_key_321"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         keys = self.management_api.external_api_keys_api.get_external_api_keys(
@@ -508,12 +479,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the requested external API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_key = vantage_client.get_external_api_key(external_key_id="external_key_123")
-        >>> print(external_api_key.llm_provider)
-        "OpenAI"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         key = self.management_api.external_api_keys_api.get_external_api_key(
@@ -555,15 +521,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the newly created API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_key = vantage_client.create_external_api_key(
-        ...     llm_provider="OpenAI",
-        ...     llm_secret="secret123",
-        ... )
-        >>> print(external_api_key.id)
-        "external_key_123"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
@@ -612,16 +570,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the updated details of the external API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_external_api_key = vantage_client.update_external_api_key(
-        ...     external_key_id="external_key_123",
-        ...     llm_provider="OpenAI",
-        ...     llm_secret="new_secret_123",
-        ... )
-        >>> print(updated_external_api_key.llm_secret)
-        "new_secret_123"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
@@ -660,10 +609,7 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         self.management_api.external_api_keys_api.delete_external_api_key(
@@ -673,7 +619,7 @@ class VantageClient:
 
     # endregion
 
-    # region Collections
+    # region Collections Helper Functions
 
     def _existing_collection_ids(
         self,
@@ -681,21 +627,6 @@ class VantageClient:
     ) -> List[str]:
         """
         Retrieves a list of existing collection IDs associated with a given account.
-
-        This private method fetches the IDs of all collections linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-
-        Parameters
-        ----------
-        account_id : Optional[str], optional
-            The unique identifier of the account for which the collection IDs are to be retrieved.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        List[str]
-            A list of strings, each representing the unique ID of a collection associated with the account.
         """
 
         collections = self.list_collections(
@@ -712,28 +643,6 @@ class VantageClient:
     ) -> CollectionUploadURL:
         """
         Retrieves a browser upload URL for uploading files to a specified collection.
-        It verifies the existence of the collection within the specified account and
-        raises an exception if the collection does not exist.
-        The method generates a URL that can be used to upload files directly from a browser,
-        using specified file sizes and an optional customer batch identifier for tracking.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection to which the file will be uploaded.
-        file_size : int
-            The size of the file to be uploaded, in bytes.
-        parquet_file_name : str
-            Name of the parquet file being uploaded.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Returns
-        -------
-        CollectionUploadURL
-            An object containing the URL for browser-based file uploads.
         """
 
         url = self.management_api.collection_api.get_browser_upload_url(
@@ -744,6 +653,28 @@ class VantageClient:
         )
 
         return CollectionUploadURL.model_validate(url.model_dump())
+
+    def _validate_create_collection_parameters(
+        self,
+        llm_provider: str,
+        url: Optional[str] = None,
+        llm: Optional[str] = None,
+    ) -> None:
+        """
+        Validates the parameters required for creating a collection based on the specified LLM provider.
+        """
+        if llm_provider == LLMProvider.HuggingFace.value and not url:
+            raise ValueError(
+                f"URL parameter is required if {llm_provider} is used as LLM provider."
+            )
+        elif llm_provider == LLMProvider.OpenAI.value and not llm:
+            raise ValueError(
+                f"LLM parameter is required if {llm_provider} is used as LLM provider."
+            )
+
+    # endregion
+
+    # region Collections
 
     def list_collections(
         self,
@@ -769,14 +700,7 @@ class VantageClient:
         List[Collection]
             A list of Collection objects, each representing a collection associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> collections = vantage_client.list_collections(account_id="12345")
-        >>> for collection in collections:
-        ...     print(collection.name)
-        "Collection 1"
-        "Collection 2"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collections = self.management_api.collection_api.list_collections(
@@ -817,12 +741,7 @@ class VantageClient:
         Collection
             A Collection object containing the details of the specified collection.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient()
-        >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
-        >>> print(collection.name)
-        "My Collection"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collection = self.management_api.collection_api.get_collection(
@@ -831,21 +750,6 @@ class VantageClient:
         )
 
         return Collection.model_validate(collection.model_dump())
-
-    def _validate_create_collection_parameters(
-        self,
-        llm_provider: str,
-        url: Optional[str] = None,
-        llm: Optional[str] = None,
-    ) -> None:
-        if llm_provider == LLMProvider.HuggingFace.value and not url:
-            raise ValueError(
-                f"URL parameter is required if {llm_provider} is used as LLM provider."
-            )
-        elif llm_provider == LLMProvider.OpenAI.value and not llm:
-            raise ValueError(
-                f"LLM parameter is required if {llm_provider} is used as LLM provider."
-            )
 
     def create_collection(
         self,
@@ -861,9 +765,7 @@ class VantageClient:
         HuggingFaceCollection,
     ]:
         """
-        Creates a new collection with the specified parameters.
-
-        This method creates a new collection based on the provided collection object.
+        Creates a new collection based on the provided collection object.
 
         Parameters
         ----------
@@ -877,33 +779,7 @@ class VantageClient:
         Collection
             A Collection object representing the newly created collection.
 
-        Example
-        -------
-        User-Provided:
-        >>> vantage_client = VantageClient(...)
-        >>> upe_collection = UserProvidedEmbeddingsCollection(
-                collection_id="upe-test-collection",
-                embeddings_dimension=3,
-            )
-        >>> new_collection = vantage_client.create_collection(
-                collection=upe_collection,
-            )
-        >>> print(new_collection.id)
-        "upe-test-collection"
-
-        Vantage-Managed:
-        >>> vantage_client = VantageClient(...)
-        >>> openai_collection = OpenAICollection(
-            collection_id="openai-test-collection",
-            external_account_id="123_id",
-            llm="text-embedding-ada-002",
-            embeddings_dimension=1536,
-        )
-        >>> new_collection = vantage_client.create_collection(
-                collection=upe_collection,
-            )
-        >>> print(new_collection.id)
-        "openai-test-collection"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         if (
@@ -979,15 +855,7 @@ class VantageClient:
         Collection
             A Collection object representing the updated collection.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_collection = vantage_client.update_collection(
-                collection_id="my-collection",
-                collection_name="Updated Collection Name",
-            )
-        >>> print(updated_collection.name)
-        "Updated Collection Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collection = self.management_api.collection_api.get_collection(
@@ -1052,10 +920,7 @@ class VantageClient:
         Collection
             A Collection object representing the collection that was deleted.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.delete_collection(collection_id="my-collection")
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         self.management_api.collection_api.delete_collection(
@@ -1195,6 +1060,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         collection = self.get_collection(collection_id=collection_id)
@@ -1295,6 +1162,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1388,6 +1257,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results similar to the specified document.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1481,6 +1352,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results similar to the specified document.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1623,17 +1496,7 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> documents = [
-                UserProvidedEmbeddingsDocument(text=text, id=id, embeddings=emb)
-                for id, text, emb in zip(ids, texts, embeddings)
-            ]
-        >>> vantage_client.upsert_documents(
-                collection_id="my-collection",
-                documents=documents,
-            )
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
         if not documents:
             raise ValueError("Documents object can't be empty.")
@@ -1686,28 +1549,7 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}' # noqa: E501
-        >>> vantage_client.upsert_documents_from_jsonl_string(
-                collection_id="my-collection",
-                documents_jsonl=documents_jsonl,
-            )
-        # This will upload two documents to "my-collection".
-
-        Note
-        -------
-        Documents in the JSONL file should be in the right format:
-
-        Uploading to user-provided collection (`embeddings` field is included):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}
-
-
-        Uploading to vantage-managed collection (`embeddings` field is excluded):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
-
-        Metadata fields should all have `meta_` prefix.
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         self.management_api.documents_api.upload_documents(
@@ -1743,27 +1585,7 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient()
-        >>> vantage_client.upsert_documents_from_jsonl_file(
-                collection_id="my-collection",
-                jsonl_file_path="/path/to/documents.jsonl",
-            )
-        # This will upload documents from "/path/to/documents.jsonl" to "my-collection".
-
-        Note
-        -------
-        Documents in the JSONL file should be in the right format:
-
-        Uploading to user-provided collection (`embeddings` field is included):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]} # noqa: E501
-
-
-        Uploading to vantage-managed collection (`embeddings` field is excluded):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
-
-        Metadata fields should all have `meta_` prefix.
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         if not exists(jsonl_file_path):
@@ -1805,13 +1627,7 @@ class VantageClient:
         int
             HTTP status of upload execution.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upsert_documents_from_parquet_file(
-            collection_id="my-upe-collection",
-            parquet_file_path="my_documents.parquet",
-        )
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collection = self.get_collection(collection_id=collection_id)
@@ -1849,6 +1665,22 @@ class VantageClient:
         document_ids: List[str],
         account_id: Optional[str] = None,
     ) -> None:
+        """
+        Deletes a list of documents from a specified collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection from which documents are to be deleted.
+        document_ids : List[str]
+            A list of document IDs that need to be deleted from the collection.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
 
         documents_to_delete = [
             {"id": id, "operation": "delete"} for id in document_ids
