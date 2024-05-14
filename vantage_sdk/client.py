@@ -297,12 +297,7 @@ class VantageClient:
         Account
             An Account object containing the details of the requested account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> account = vantage_client.get_account()
-        >>> print(account.name)
-        "Example Account Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         result = self.management_api.account_api.get_account(
@@ -336,12 +331,7 @@ class VantageClient:
         Account
             An updated Account object reflecting the changes made.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_account = vantage_client.update_account(account_name="New Account Name")
-        >>> print(updated_account.name)
-        "New Account Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         account_modifiable = AccountModifiable(account_name=account_name)
@@ -379,14 +369,7 @@ class VantageClient:
         List[VantageAPIKey]
             A list of VantageAPIKey objects, each representing a Vantage API key associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_api_keys = vantage_client.get_vantage_api_keys()
-        >>> for key in vantage_api_keys:
-        ...     print(key.value)
-        "12345"
-        "54321"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         keys = self.management_api.vantage_api_keys_api.get_vantage_api_keys(
@@ -422,12 +405,7 @@ class VantageClient:
         VantageAPIKey
             A VantageAPIKey object containing the details of the requested API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_api_key = vantage_client.get_vantage_api_key(vantage_api_key_id="api_key_12345")
-        >>> print(vantage_api_key.value)
-        "12345"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         key = self.management_api.vantage_api_keys_api.get_vantage_api_key(
@@ -463,14 +441,7 @@ class VantageClient:
         List[ExternalAPIKey]
             A list of ExternalAPIKey objects, each representing an external API key associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_keys = vantage_client.get_external_api_keys()
-        >>> for key in external_api_keys:
-        ...     print(key.id)
-        "external_key_123"
-        "external_key_321"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         keys = self.management_api.external_api_keys_api.get_external_api_keys(
@@ -508,12 +479,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the requested external API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_key = vantage_client.get_external_api_key(external_key_id="external_key_123")
-        >>> print(external_api_key.llm_provider)
-        "OpenAI"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         key = self.management_api.external_api_keys_api.get_external_api_key(
@@ -555,15 +521,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the newly created API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> external_api_key = vantage_client.create_external_api_key(
-        ...     llm_provider="OpenAI",
-        ...     llm_secret="secret123",
-        ... )
-        >>> print(external_api_key.id)
-        "external_key_123"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
@@ -612,16 +570,7 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the updated details of the external API key.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_external_api_key = vantage_client.update_external_api_key(
-        ...     external_key_id="external_key_123",
-        ...     llm_provider="OpenAI",
-        ...     llm_secret="new_secret_123",
-        ... )
-        >>> print(updated_external_api_key.llm_secret)
-        "new_secret_123"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         external_api_key_modifiable = ExternalAPIKeyModifiable(
@@ -660,10 +609,7 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.delete_external_api_key(external_key_id="external_key_123")
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         self.management_api.external_api_keys_api.delete_external_api_key(
@@ -673,7 +619,7 @@ class VantageClient:
 
     # endregion
 
-    # region Collections
+    # region Collections Helper Functions
 
     def _existing_collection_ids(
         self,
@@ -682,20 +628,17 @@ class VantageClient:
         """
         Retrieves a list of existing collection IDs associated with a given account.
 
-        This private method fetches the IDs of all collections linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-
         Parameters
         ----------
         account_id : Optional[str], optional
-            The unique identifier of the account for which the collection IDs are to be retrieved.
-            If not provided, the instance's account ID is used.
+            The account identifier under which to look for collections.
+            If not provided, the default account ID associated with the user is used.
             Defaults to None.
 
         Returns
         -------
         List[str]
-            A list of strings, each representing the unique ID of a collection associated with the account.
+            A list of collection IDs that are available under the specified or default account.
         """
 
         collections = self.list_collections(
@@ -712,28 +655,24 @@ class VantageClient:
     ) -> CollectionUploadURL:
         """
         Retrieves a browser upload URL for uploading files to a specified collection.
-        It verifies the existence of the collection within the specified account and
-        raises an exception if the collection does not exist.
-        The method generates a URL that can be used to upload files directly from a browser,
-        using specified file sizes and an optional customer batch identifier for tracking.
 
         Parameters
         ----------
         collection_id : str
-            The unique identifier of the collection to which the file will be uploaded.
+            The identifier of the collection to which the file is being uploaded.
         file_size : int
             The size of the file to be uploaded, in bytes.
         parquet_file_name : str
-            Name of the parquet file being uploaded.
+            The name of the parquet file being uploaded, used as a customer batch identifier.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
+            The account identifier under which the collection exists.
+            If not provided, the default account associated with the user is used.
             Defaults to None.
 
         Returns
         -------
         CollectionUploadURL
-            An object containing the URL for browser-based file uploads.
+            An object representing the upload URL and any other relevant data needed for the upload process.
         """
 
         url = self.management_api.collection_api.get_browser_upload_url(
@@ -744,6 +683,41 @@ class VantageClient:
         )
 
         return CollectionUploadURL.model_validate(url.model_dump())
+
+    def _validate_create_collection_parameters(
+        self,
+        llm_provider: str,
+        url: Optional[str] = None,
+        llm: Optional[str] = None,
+    ) -> None:
+        """
+        Validates the parameters required for creating a collection based on the specified LLM provider.
+
+        Parameters
+        ----------
+        llm_provider : str
+            The name of the LLM provider, which dictates the specific parameters required for the collection.
+        url : Optional[str], optional
+            Endpoint of the HuggingFace model.
+            Required if the LLM provider is HuggingFace and not provided otherwise.
+            Defaults to None.
+        llm : Optional[str], optional
+            OpenAI model identifier.
+            Required if the LLM provider is OpenAI and not provided otherwise.
+            Defaults to None.
+        """
+        if llm_provider == LLMProvider.HuggingFace.value and not url:
+            raise ValueError(
+                f"URL parameter is required if {llm_provider} is used as LLM provider."
+            )
+        elif llm_provider == LLMProvider.OpenAI.value and not llm:
+            raise ValueError(
+                f"LLM parameter is required if {llm_provider} is used as LLM provider."
+            )
+
+    # endregion
+
+    # region Collections
 
     def list_collections(
         self,
@@ -769,14 +743,7 @@ class VantageClient:
         List[Collection]
             A list of Collection objects, each representing a collection associated with the account.
 
-        Examples
-        --------
-        >>> vantage_client = VantageClient(...)
-        >>> collections = vantage_client.list_collections(account_id="12345")
-        >>> for collection in collections:
-        ...     print(collection.name)
-        "Collection 1"
-        "Collection 2"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collections = self.management_api.collection_api.list_collections(
@@ -817,12 +784,7 @@ class VantageClient:
         Collection
             A Collection object containing the details of the specified collection.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient()
-        >>> collection = vantage_client.get_collection(collection_id="unique_collection_id")
-        >>> print(collection.name)
-        "My Collection"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collection = self.management_api.collection_api.get_collection(
@@ -831,21 +793,6 @@ class VantageClient:
         )
 
         return Collection.model_validate(collection.model_dump())
-
-    def _validate_create_collection_parameters(
-        self,
-        llm_provider: str,
-        url: Optional[str] = None,
-        llm: Optional[str] = None,
-    ) -> None:
-        if llm_provider == LLMProvider.HuggingFace.value and not url:
-            raise ValueError(
-                f"URL parameter is required if {llm_provider} is used as LLM provider."
-            )
-        elif llm_provider == LLMProvider.OpenAI.value and not llm:
-            raise ValueError(
-                f"LLM parameter is required if {llm_provider} is used as LLM provider."
-            )
 
     def create_collection(
         self,
@@ -861,9 +808,7 @@ class VantageClient:
         HuggingFaceCollection,
     ]:
         """
-        Creates a new collection with the specified parameters.
-
-        This method creates a new collection based on the provided collection object.
+        Creates a new collection based on the provided collection object.
 
         Parameters
         ----------
@@ -877,33 +822,7 @@ class VantageClient:
         Collection
             A Collection object representing the newly created collection.
 
-        Example
-        -------
-        User-Provided:
-        >>> vantage_client = VantageClient(...)
-        >>> upe_collection = UserProvidedEmbeddingsCollection(
-                collection_id="upe-test-collection",
-                embeddings_dimension=3,
-            )
-        >>> new_collection = vantage_client.create_collection(
-                collection=upe_collection,
-            )
-        >>> print(new_collection.id)
-        "upe-test-collection"
-
-        Vantage-Managed:
-        >>> vantage_client = VantageClient(...)
-        >>> openai_collection = OpenAICollection(
-            collection_id="openai-test-collection",
-            external_account_id="123_id",
-            llm="text-embedding-ada-002",
-            embeddings_dimension=1536,
-        )
-        >>> new_collection = vantage_client.create_collection(
-                collection=upe_collection,
-            )
-        >>> print(new_collection.id)
-        "openai-test-collection"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         if (
@@ -979,15 +898,7 @@ class VantageClient:
         Collection
             A Collection object representing the updated collection.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> updated_collection = vantage_client.update_collection(
-                collection_id="my-collection",
-                collection_name="Updated Collection Name",
-            )
-        >>> print(updated_collection.name)
-        "Updated Collection Name"
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         collection = self.management_api.collection_api.get_collection(
@@ -1052,10 +963,7 @@ class VantageClient:
         Collection
             A Collection object representing the collection that was deleted.
 
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.delete_collection(collection_id="my-collection")
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
         self.management_api.collection_api.delete_collection(
@@ -1065,7 +973,7 @@ class VantageClient:
 
     # endregion
 
-    # region Search
+    # region Search Helper Functions
 
     def _prepare_search_query(
         self,
@@ -1131,6 +1039,10 @@ class VantageClient:
 
         return vantage_api_key
 
+    # endregion
+
+    # region Search
+
     def semantic_search(
         self,
         text: str,
@@ -1191,6 +1103,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         collection = self.get_collection(collection_id=collection_id)
@@ -1291,6 +1205,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1384,6 +1300,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results similar to the specified document.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1477,6 +1395,8 @@ class VantageClient:
         -------
         SearchResult
             An object containing the search results similar to the specified document.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
@@ -1515,160 +1435,63 @@ class VantageClient:
 
     # endregion
 
-    # region Documents - Upload
+    # region Documents - Upsert Helper Functions
 
-    def upload_documents_from_jsonl(
+    def _document_to_collection_compatibility_check(
         self,
-        collection_id: str,
-        documents: str,
-        batch_identifier: Optional[str] = None,
-        account_id: Optional[str] = None,
+        collection: Collection,
+        document: Union[
+            UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
+        ],
     ) -> None:
         """
-        Uploads documents to a specified collection from a string containing JSONL-formatted documents.
-        The `documents` string is expected to be in JSONL format, where each line is a valid JSON
-        document.
+        Checks if a document is compatible with the type of the specified collection.
 
         Parameters
         ----------
-        collection_id : str
-            The unique identifier of the collection to which the documents will be uploaded.
-        documents : str
-            A string containing the documents to be uploaded, formatted as JSONL.
-        batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> documents_jsonl = '{"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}\\n{"id": "2", "text": "Lorem ipsum", "meta_color": "blue", "meta_something": "value", "embeddings": [4,5,6, ...]}' # noqa: E501
-        >>> vantage_client.upload_documents_from_jsonl(
-                collection_id="my-collection",
-                documents=documents_jsonl,
+        collection : Collection
+            The collection to which the document is intended to be added. This object should specify whether it
+            expects user-provided embeddings or Vantage-managed embeddings.
+        document : Union[UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument]
+            The document to be checked for compatibility with the collection. This must be an instance of either
+            UserProvidedEmbeddingsDocument or VantageManagedEmbeddingsDocument.
+        """
+        if collection.user_provided_embeddings and isinstance(
+            document, VantageManagedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
-        # This will upload two documents to "my-collection".
+        elif not collection.user_provided_embeddings and isinstance(
+            document, UserProvidedEmbeddingsDocument
+        ):
+            raise ValueError(
+                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
+            )
 
-        Note
-        -------
-        Documents in the JSONL file should be in the right format:
-
-        Uploading to user-provided collection (`embeddings` field is included):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]}
-
-
-        Uploading to vantage-managed collection (`embeddings` field is excluded):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
-
-        Metadata fields should all have `meta_` prefix.
-        """
-
-        self.management_api.documents_api.upload_documents(
-            body=documents,
-            account_id=account_id if account_id else self.account_id,
-            collection_id=collection_id,
-            customer_batch_identifier=batch_identifier,
-        )
-
-    def upload_documents_from_path(
+    def _upsert_documents_using_browser_upload_url(
         self,
-        collection_id: str,
-        file_path: str,
-        batch_identifier: Optional[str] = None,
-        account_id: Optional[str] = None,
-    ) -> None:
+        browser_upload_url: str,
+        upload_content,
+    ) -> int:
         """
-        Uploads documents to a specified collection from a JSONL file located at a given file path.
-        This method checks if the file exists at the specified path and raises a FileNotFoundError if it does not.
-        It then reads the file and uploads the documents contained within the file to the specified
-        collection using the `upload_documents_from_jsonl` method.
+        Uploads content to a specified collection using a browser upload URL.
 
         Parameters
         ----------
-        collection_id : str
-            The unique identifier of the collection to which the documents will be uploaded.
-        file_path : str
-            The path to the JSONL file containing the documents to be uploaded.
-        batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
+        browser_upload_url : str
+            The URL to which the content should be uploaded. This URL should be pre-configured to
+            accept uploads for a specific collection.
+        upload_content
+            The content to be uploaded.
 
-        Example
+        Returns
         -------
-        >>> vantage_client = VantageClient()
-        >>> vantage_client.upload_documents_from_path(
-                collection_id="my-collection",
-                file_path="/path/to/documents.jsonl",
-            )
-        # This will upload documents from "/path/to/documents.jsonl" to "my-collection".
-
-        Note
-        -------
-        Documents in the JSONL file should be in the right format:
-
-        Uploading to user-provided collection (`embeddings` field is included):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value", "embeddings": [1,2,3, ...]} # noqa: E501
-
-
-        Uploading to vantage-managed collection (`embeddings` field is excluded):
-        {"id": "1", "text": "Example text", "meta_color": "green", "meta_something": "value"}
-
-        Metadata fields should all have `meta_` prefix.
+        int
+            The HTTP status code returned by the server after attempting the upload.
         """
-
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
-
-        file = open(file_path, "rb")
-        file_content = file.read().decode(self._default_encoding)
-        self.upload_documents_from_jsonl(
-            collection_id=collection_id,
-            documents=file_content,
-            batch_identifier=batch_identifier,
-            account_id=account_id,
-        )
-
-    # endregion
-
-    # region Documents - Delete
-
-    def delete_documents(
-        self,
-        collection_id: str,
-        document_ids: List[str],
-        account_id: Optional[str] = None,
-    ) -> None:
-
-        documents_to_delete = [
-            {"id": id, "operation": "delete"} for id in document_ids
-        ]
-
-        vantage_documents_jsonl = "\n".join(
-            map(
-                json.dumps,
-                [document for document in documents_to_delete],
-            )
-        )
-
-        self.upload_documents_from_jsonl(
-            collection_id=collection_id,
-            documents=vantage_documents_jsonl,
-            account_id=account_id or self.account_id,
-        )
-
-    # endregion
-
-    # region Documents with Embeddings - Upload
-
-    def _upload_embedding(self, upload_url: str, upload_content) -> int:
         response = requests.put(
-            upload_url,
+            browser_upload_url,
             data=upload_content,
         )
 
@@ -1677,7 +1500,7 @@ class VantageClient:
 
         return response.status_code
 
-    def upload_embeddings_from_bytes(
+    def _upsert_documents_from_bytes(
         self,
         collection_id: str,
         content: bytes,
@@ -1686,41 +1509,27 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Uploads embeddings in parquet format to a collection.
+        Upserts documents as bytes to a collection.
 
         Parameters
         ----------
         collection_id : str
-            The unique identifier of the collection embeddings are being uploaded.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-        content: bytes
-            Embeddings content as bytes.
-        file_size: int
-            Size of contents being uploaded, in bytes.
-        parquet_file_name: str
+            The identifier of the collection to which the documents are being upserted.
+        content : bytes
+            The binary content (documents in bytes) to be uploaded.
+        file_size : int
+            The size of the content to be uploaded, in bytes.
         batch_identifier : Optional[str], optional
-            An optional identifier provided by the user to track the batch of document uploads.
-            Identifier needs to end with '.parquet',if it doesn't, it will be
-            automatically added.
-            If none is provided, it will be generated automatically.
+            An optional identifier for the batch upload. If not provided, a unique identifier is generated.
+            If provided without a '.parquet' extension, it will be appended. Defaults to None.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists. If not provided, the default account
+            associated with the user is used. Defaults to None.
 
         Returns
         -------
         int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
+            The HTTP status code returned by the server after attempting the upload.
         """
 
         if batch_identifier is None:
@@ -1735,89 +1544,16 @@ class VantageClient:
             account_id=account_id,
         )
 
-        return self._upload_embedding(
-            upload_url=browser_upload_url.upload_url,
+        return self._upsert_documents_using_browser_upload_url(
+            browser_upload_url=browser_upload_url.upload_url,
             upload_content=content,
-        )
-
-    def upload_embeddings_from_parquet(
-        self,
-        collection_id: str,
-        file_path: str,
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Uploads embeddings from a parquet file to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection
-            embeddings are being uploaded to.
-        file_path : str, optional
-            Path to the parquet file in a filesystem.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Example
-        -------
-        >>> vantage_client = VantageClient(...)
-        >>> vantage_client.upload_parquet_embedding(
-            collection_id="my-collection",
-            content=parquet_content_as_bytes,
-            file_size=1000,
-            batch_identifier="my-embeddings.parquet"
-        )
-        """
-
-        if not exists(file_path):
-            raise FileNotFoundError(f"File \"{file_path}\" not found.")
-        file_name = ntpath.basename(file_path)
-
-        if not file_path.endswith(".parquet"):
-            raise ValueError("File mast be a parquet file.")
-
-        file_size = Path(file_path).stat().st_size
-        file = open(file_path, "rb")
-        file_content = file.read()
-        return self.upload_embeddings_from_bytes(
-            collection_id=collection_id,
-            content=file_content,
-            file_size=file_size,
-            batch_identifier=file_name,
-            account_id=account_id,
         )
 
     # endregion
 
-    def _document_to_collection_compatibility_check(
-        self,
-        collection: Collection,
-        document: Union[
-            UserProvidedEmbeddingsDocument, VantageManagedEmbeddingsDocument
-        ],
-    ) -> None:
-        if collection.user_provided_embeddings and isinstance(
-            document, VantageManagedEmbeddingsDocument
-        ):
-            raise ValueError(
-                f"Embeddings are required for User-provided embeddings collection. Please provide a list of {UserProvidedEmbeddingsDocument.__name__} objects."  # noqa: E501
-            )
-        elif not collection.user_provided_embeddings and isinstance(
-            document, UserProvidedEmbeddingsDocument
-        ):
-            raise ValueError(
-                f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
-            )
+    # region Documents - Upsert
 
-    def upsert(
+    def upsert_documents(
         self,
         collection_id: str,
         documents: Union[
@@ -1826,6 +1562,27 @@ class VantageClient:
         ],
         account_id: Optional[str] = None,
     ):
+        """
+        Upserts documents to a specified collection from a list of Vantage
+        documents. The `documents` object should be a list of one type of Vantage
+        document objects—either VantageManagedEmbeddingsDocument or UserProvidedEmbeddingsDocument,
+        depending on the type of the collection to which you are upserting.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier for the collection to which the documents will be upserted.
+        documents : Union[List[VantageManagedEmbeddingsDocument], List[UserProvidedEmbeddingsDocument]]
+            A list of documents to upsert. This list should contain only one type of document,
+            either VantageManagedEmbeddingsDocument or UserProvidedEmbeddingsDocument,
+            depending on the collection's type.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
         if not documents:
             raise ValueError("Documents object can't be empty.")
 
@@ -1846,8 +1603,185 @@ class VantageClient:
             )
         )
 
-        self.upload_documents_from_jsonl(
+        self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
-            documents=vantage_documents_jsonl,
+            documents_jsonl=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
         )
+
+    def upsert_documents_from_jsonl_string(
+        self,
+        collection_id: str,
+        documents_jsonl: str,
+        batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Upserts documents to a specified collection from a string containing JSONL-formatted documents.
+        The `documents` string is expected to be in JSONL format, where each line is a valid JSON
+        document.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the documents will be uploaded.
+        documents_jsonl : str
+            A string containing the documents to be uploaded, formatted as JSONL.
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        self.management_api.documents_api.upload_documents(
+            body=documents_jsonl,
+            account_id=account_id if account_id else self.account_id,
+            collection_id=collection_id,
+            customer_batch_identifier=batch_identifier,
+        )
+
+    def upsert_documents_from_jsonl_file(
+        self,
+        collection_id: str,
+        jsonl_file_path: str,
+        batch_identifier: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Upserts documents to a specified collection from a JSONL file located at a given file path.
+        This method checks if the file exists at the specified path and raises a FileNotFoundError if it does not.
+        It then reads the file and uploads the documents contained within the file to the specified
+        collection using the `upsert_documents_from_jsonl_string` method.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the documents will be uploaded.
+        file_path : str
+            The path to the JSONL file containing the documents to be uploaded.
+        batch_identifier : Optional[str], optional
+            An optional identifier provided by the user to track the batch of document uploads.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        if not exists(jsonl_file_path):
+            raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
+
+        file = open(jsonl_file_path, "rb")
+        file_content = file.read().decode(self._default_encoding)
+        self.upsert_documents_from_jsonl_string(
+            collection_id=collection_id,
+            documents_jsonl=file_content,
+            batch_identifier=batch_identifier,
+            account_id=account_id,
+        )
+
+    def upsert_documents_from_parquet_file(
+        self,
+        collection_id: str,
+        parquet_file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Upserts embeddings from a parquet file to a collection.
+        This upsert method is available for user-provided embeddings collections only.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        parquet_file_path : str, optional
+            Path to the parquet file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        collection = self.get_collection(collection_id=collection_id)
+
+        if not collection.user_provided_embeddings:
+            raise ValueError(
+                "Upsert using parquet file is available only for user-provided embeddings (UPE) collections."
+            )
+
+        if not exists(parquet_file_path):
+            raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
+        file_name = ntpath.basename(parquet_file_path)
+
+        if not parquet_file_path.endswith(".parquet"):
+            raise ValueError("File mast be a parquet file.")
+
+        file_size = Path(parquet_file_path).stat().st_size
+        file = open(parquet_file_path, "rb")
+        file_content = file.read()
+        return self._upsert_documents_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            batch_identifier=file_name,
+            account_id=account_id,
+        )
+
+    # endregion
+
+    # region Documents - Delete
+
+    def delete_documents(
+        self,
+        collection_id: str,
+        document_ids: List[str],
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes a list of documents from a specified collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection from which documents are to be deleted.
+        document_ids : List[str]
+            A list of document IDs that need to be deleted from the collection.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        documents_to_delete = [
+            {"id": id, "operation": "delete"} for id in document_ids
+        ]
+
+        vantage_documents_jsonl = "\n".join(
+            map(
+                json.dumps,
+                [document for document in documents_to_delete],
+            )
+        )
+
+        self.upsert_documents_from_jsonl_string(
+            collection_id=collection_id,
+            documents_jsonl=vantage_documents_jsonl,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion

@@ -35,9 +35,9 @@ class TestDocuments:
         )
 
         # When
-        client.upload_documents_from_path(
+        client.upsert_documents_from_jsonl_file(
             collection_id=collection.collection_id,
-            file_path=jsonl_documents_path,
+            jsonl_file_path=jsonl_documents_path,
             batch_identifier=batch_identifier,
             account_id=account_params["id"],
         )
@@ -67,9 +67,9 @@ class TestDocuments:
         )
 
         # When
-        result = client.upload_embeddings_from_parquet(
+        result = client.upsert_documents_from_parquet_file(
             collection_id=collection.collection_id,
-            file_path=parquet_file_path,
+            parquet_file_path=parquet_file_path,
             account_id=account_params["id"],
         )
 

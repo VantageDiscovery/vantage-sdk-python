@@ -67,9 +67,9 @@ class TestCollections:
         )
 
         # When
-        status = client.upload_embeddings_from_parquet(
+        status = client.upsert_documents_from_parquet_file(
             collection_id=collection_id,
-            file_path=test_parquet_file_path,
+            parquet_file_path=test_parquet_file_path,
             account_id=account_params["id"],
         )
 
@@ -91,9 +91,9 @@ class TestCollections:
         collection_id = random_string_generator(10)
 
         with pytest.raises(NotFoundException) as exception:
-            client.upload_embeddings_from_parquet(
+            client.upsert_documents_from_parquet_file(
                 collection_id=collection_id,
-                file_path=test_parquet_file_path,
+                parquet_file_path=test_parquet_file_path,
                 account_id=account_params["id"],
             )
 
@@ -116,9 +116,9 @@ class TestCollections:
         non_existing_file_path = random_string_generator(10)
 
         with pytest.raises(FileNotFoundError) as exception:
-            client.upload_embeddings_from_parquet(
+            client.upsert_documents_from_parquet_file(
                 collection_id=collection_id,
-                file_path=non_existing_file_path,
+                parquet_file_path=non_existing_file_path,
                 account_id=account_params["id"],
             )
 
@@ -152,7 +152,7 @@ class TestCollections:
 
         # When
         with pytest.raises(VantageFileUploadError) as exception:
-            client.upload_embeddings_from_bytes(
+            client._upsert_documents_from_bytes(
                 collection_id=collection_id,
                 content=file_content,
                 file_size=file_size,
