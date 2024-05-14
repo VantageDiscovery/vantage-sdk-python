@@ -42,7 +42,9 @@ The Vantage Discovery Python SDK is divided into several modules, allowing you t
 
 ### Creating a Collection
 
-To create a new collection for storing documents, specify the collection ID, the dimension of the embeddings, and the LLM (language learning model) details. Here, we use `text-embedding-ada-002` from OpenAI with the necessary secret key. Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more options and details described.
+To create a new collection for storing documents, specify the collection ID, the dimension of the embeddings, and the LLM (language learning model) details. Here, we use `text-embedding-ada-002` from OpenAI with the necessary secret key. 
+
+📚 Visit [management-api](https://docs.vantagediscovery.com/docs/management-api) documentation for more details.
 
 ```python
 collection = OpenAICollection(
@@ -59,7 +61,9 @@ print(f"Created collection: {created_collection.collection_name}")
 
 ### Uploading Documents
 
-To upload documents to your collection, provide a list of document IDs and corresponding text. Each document is wrapped in a `VantageManagedEmbeddingsDocument` object. This example demonstrates uploading a batch of documents. Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more data upload options and details described.
+To upload documents to your collection, provide a list of document IDs and corresponding text. Each document is wrapped in a `VantageManagedEmbeddingsDocument` object. This example demonstrates uploading a batch of documents. 
+
+📚 Visit [management-api](https://docs.vantagediscovery.com/docs/management-api) documentation for more details.
 
 ```python
 ids = [
@@ -89,7 +93,9 @@ instance.upsert_documents(
 
 ### Performing a Search
 
-To perform a semantic search within your collection, specify the text you want to find similar documents for. This example retrieves documents similar to the provided text, printing out each document's ID and its similarity score. Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more search options and details described.
+To perform a semantic search within your collection, specify the text you want to find similar documents for. This example retrieves documents similar to the provided text, printing out each document's ID and its similarity score. 
+
+📚 Visit [search-api](https://docs.vantagediscovery.com/docs/search-api) documentation for more details.
 
 ```python
 search_result = vantage_client.semantic_search(
