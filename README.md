@@ -6,7 +6,7 @@ The Vantage Discovery Python SDK provides an easy-to-use interface to interact w
 
 ## Installation
 
-To install the Vantage Python SDK, run the following command:
+To install the [Vantage Python SDK](https://pypi.org/project/vantage-sdk/), run the following command:
 
 ```bash
 pip install vantage-sdk
@@ -38,40 +38,68 @@ The Vantage Discovery Python SDK is divided into several modules, allowing you t
 - __Search__: Perform semantic, embedding and "more like this/these" searches within your collections.
 - __LLM Keys Management__: Keep your LLM provider secrets safe and up-to-date.
 
-## Examples
+## 🔍 Examples
 
 ### Creating a Collection
 
+To create a new collection for storing documents, specify the collection ID, the dimension of the embeddings, and the LLM (language learning model) details. Here, we use `text-embedding-ada-002` from OpenAI with the necessary secret key. Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more options and details described.
+
 ```python
-collection = vantage_client.create_collection(
-    collection_id="my_collection",
-    collection_name="My Test Collection",
+collection = OpenAICollection(
+    collection_id="my-collection",
     embeddings_dimension=1536,
     llm="text-embedding-ada-002",
-    external_key_id="YOUR_EXTERNAL_KEY_ID" # Get from Vantage Console UI or using the SDK
+    llm_secret="YOUR_OPENAI_SECRET_KEY",
 )
-print(f"Created collection: {collection.name}")
+
+created_collection = vantage_client.create_collection(collection=collection)
+
+print(f"Created collection: {created_collection.collection_name}")
 ```
 
 ### Uploading Documents
+
+To upload documents to your collection, provide a list of document IDs and corresponding text. Each document is wrapped in a `VantageManagedEmbeddingsDocument` object. This example demonstrates uploading a batch of documents. Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more data upload options and details described.
+
 ```python
-documents_jsonl = '{"id": "1", "text": "Example text"}\\n{"id": "2", "text": "Another example"}'
-vantage_client.upload_documents_from_jsonl(
-    collection_id="my_collection",
-    documents=documents_jsonl
+ids = [
+    "1",
+    "2",
+    "3",
+    "4",
+]
+
+texts = [
+    "First text",
+    "Second text",
+    "Third text",
+    "Fourth text",
+]
+
+documents = [
+    VantageManagedEmbeddingsDocument(text=text, id=id)
+    for id, text in zip(ids, texts)
+]
+
+instance.upsert_documents(
+    collection_id="my-collection",
+    documents=documents,
 )
 ```
 
 ### Performing a Search
+
+To perform a semantic search within your collection, specify the text you want to find similar documents for. This example retrieves documents similar to the provided text, printing out each document's ID and its similarity score. Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more search options and details described.
+
 ```python
 search_result = vantage_client.semantic_search(
     text="Find documents similar to this text",
-    collection_id="my_collection"
+    collection_id="my-collection"
 )
 for result in search_result.results:
     print(result.id, result.score)
 ```
 
-## Documentation
+## 📚 Documentation
 
 For detailed documentation on all methods and their parameters, please refer to the [Vantage Discovery official documentation](https://docs.vantagediscovery.com/docs/concepts).
