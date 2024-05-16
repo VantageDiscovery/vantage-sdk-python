@@ -331,6 +331,8 @@ class VantageClient:
         Account
             An updated Account object reflecting the changes made.
 
+        Notes
+        --------
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
