@@ -332,7 +332,7 @@ class VantageClient:
             An updated Account object reflecting the changes made.
 
         Notes
-        --------
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -371,6 +371,8 @@ class VantageClient:
         List[VantageAPIKey]
             A list of VantageAPIKey objects, each representing a Vantage API key associated with the account.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -407,6 +409,8 @@ class VantageClient:
         VantageAPIKey
             A VantageAPIKey object containing the details of the requested API key.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -443,6 +447,8 @@ class VantageClient:
         List[ExternalAPIKey]
             A list of ExternalAPIKey objects, each representing an external API key associated with the account.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -481,6 +487,8 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the requested external API key.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -523,6 +531,8 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the details of the newly created API key.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -572,6 +582,8 @@ class VantageClient:
         ExternalAPIKey
             An ExternalAPIKey object containing the updated details of the external API key.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -611,6 +623,8 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -745,6 +759,8 @@ class VantageClient:
         List[Collection]
             A list of Collection objects, each representing a collection associated with the account.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -786,6 +802,8 @@ class VantageClient:
         Collection
             A Collection object containing the details of the specified collection.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -824,6 +842,8 @@ class VantageClient:
         Collection
             A Collection object representing the newly created collection.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -900,6 +920,8 @@ class VantageClient:
         Collection
             A Collection object representing the updated collection.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -965,6 +987,8 @@ class VantageClient:
         Collection
             A Collection object representing the collection that was deleted.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -1106,6 +1130,8 @@ class VantageClient:
         SearchResult
             An object containing the search results.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
@@ -1208,6 +1234,8 @@ class VantageClient:
         SearchResult
             An object containing the search results.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
@@ -1303,6 +1331,8 @@ class VantageClient:
         SearchResult
             An object containing the search results similar to the specified document.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
@@ -1398,6 +1428,8 @@ class VantageClient:
         SearchResult
             An object containing the search results similar to the specified document.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
@@ -1583,6 +1615,9 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
+
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
         if not documents:
@@ -1636,6 +1671,8 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -1672,6 +1709,8 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -1713,6 +1752,8 @@ class VantageClient:
         int
             HTTP status of upload execution.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -1758,6 +1799,8 @@ class VantageClient:
             If not provided, the instance's account ID is used.
             Defaults to None.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
