@@ -60,6 +60,7 @@ markdown_extensions:
           case: lower
   - meta
 plugins:
+  - mkdocstrings
   - include-markdown
   - search:
       lang: en
