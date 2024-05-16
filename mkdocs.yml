@@ -60,7 +60,12 @@ markdown_extensions:
           case: lower
   - meta
 plugins:
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            extensions:
+              - griffe_fieldz
   - include-markdown
   - search:
       lang: en
