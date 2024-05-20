@@ -1695,7 +1695,6 @@ class VantageClient:
     ) -> int:
         """
         Upserts embeddings from a parquet file to a collection.
-        This upsert method is available for user-provided embeddings collections only.
 
         Parameters
         ----------
@@ -1716,13 +1715,6 @@ class VantageClient:
 
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
-
-        collection = self.get_collection(collection_id=collection_id)
-
-        if not collection.user_provided_embeddings:
-            raise ValueError(
-                "Upsert using parquet file is available only for user-provided embeddings (UPE) collections."
-            )
 
         if not exists(parquet_file_path):
             raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
