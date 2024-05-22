@@ -5,7 +5,7 @@ repo_name: VantageDiscovery/vantage-sdk-python
 #strict: true
 nav:
   - Home: index.md
-  - Modules: api.md
+  - Reference: api.md
 theme:
   name: material
   language: en
