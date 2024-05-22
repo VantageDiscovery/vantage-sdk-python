@@ -1135,13 +1135,6 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
         """
 
-        collection = self.get_collection(collection_id=collection_id)
-
-        if collection.user_provided_embeddings:
-            raise ValueError(
-                "Semantic search is not possible on a collection of user-provided embeddings (UPE)."
-            )
-
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
