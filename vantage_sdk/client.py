@@ -631,31 +631,6 @@ class VantageClient:
 
     # region Collections Helper Functions
 
-    def _existing_collection_ids(
-        self,
-        account_id: Optional[str] = None,
-    ) -> List[str]:
-        """
-        Retrieves a list of existing collection IDs associated with a given account.
-
-        Parameters
-        ----------
-        account_id : Optional[str], optional
-            The account identifier under which to look for collections.
-            If not provided, the default account ID associated with the user is used.
-            Defaults to None.
-
-        Returns
-        -------
-        List[str]
-            A list of collection IDs that are available under the specified or default account.
-        """
-
-        collections = self.list_collections(
-            account_id=account_id or self.account_id
-        )
-        return [col.model_dump()["collection_id"] for col in collections]
-
     def _get_browser_upload_url(
         self,
         collection_id: str,
