@@ -51,7 +51,7 @@ from vantage_sdk.model.document import (
     VantageManagedEmbeddingsDocument,
 )
 from vantage_sdk.model.keys import (
-    ExternalAPIKey,
+    ExternalKey,
     LLMProvider,
     SecondaryExternalAccount,
     VantageAPIKey,
@@ -424,14 +424,14 @@ class VantageClient:
 
     # region External API keys
 
-    def get_external_api_keys(
+    def get_external_keys(
         self,
         account_id: Optional[str] = None,
-    ) -> List[ExternalAPIKey]:
+    ) -> List[ExternalKey]:
         """
-        Retrieves a list of external API keys associated with a given account.
+        Retrieves a list of external keys associated with a given account.
 
-        This method fetches all external API keys linked to the account specified by `account_id`.
+        This method fetches all external keys linked to the account specified by `account_id`.
         If `account_id` is not provided, it defaults to the account ID of the current instance.
         It uses the Management API to obtain the keys and returns a list of ExternalAPIKey objects upon success.
 
@@ -444,8 +444,8 @@ class VantageClient:
 
         Returns
         -------
-        List[ExternalAPIKey]
-            A list of ExternalAPIKey objects, each representing an external API key associated with the account.
+        List[ExternalKey]
+            A list of ExternalKey objects, each representing an external key associated with the account.
 
         Notes
         -----
@@ -455,19 +455,17 @@ class VantageClient:
         keys = self.management_api.external_api_keys_api.get_external_api_keys(
             account_id=account_id or self.account_id,
         )
-        return [
-            ExternalAPIKey.model_validate(key.model_dump()) for key in keys
-        ]
+        return [ExternalKey.model_validate(key.model_dump()) for key in keys]
 
-    def get_external_api_key(
+    def get_external_key(
         self,
         external_key_id: str,
         account_id: Optional[str] = None,
-    ) -> ExternalAPIKey:
+    ) -> ExternalKey:
         """
-        Retrieves a specific external API key associated with a given account.
+        Retrieves a specific external key associated with a given account.
 
-        This method fetches the details of an external API key identified
+        This method fetches the details of an external key identified
         by `external_key_id` for the account specified by `account_id`.
         If `account_id` is not provided, it defaults to the account ID of the current instance.
         It uses the Management API to perform the retrieval and returns an ExternalAPIKey
@@ -484,8 +482,8 @@ class VantageClient:
 
         Returns
         -------
-        ExternalAPIKey
-            An ExternalAPIKey object containing the details of the requested external API key.
+        ExternalKey
+            An ExternalKey object containing the details of the requested external key.
 
         Notes
         -----
@@ -497,20 +495,20 @@ class VantageClient:
             external_key_id=external_key_id,
         )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+        return ExternalKey.model_validate(key.model_dump())
 
-    def create_external_api_key(
+    def create_external_key(
         self,
         llm_provider: str,
         llm_secret: str,
         account_id: Optional[str] = None,
-    ) -> ExternalAPIKey:
+    ) -> ExternalKey:
         """
-        Creates a new external API key associated with a given account.
+        Creates a new external key associated with a given account.
 
-        This method generates a new external API key for integrating with external services, specified by the
+        This method generates a new external key for integrating with external services, specified by the
         URL, LLM (Large Language Model) provider, and a secret for the LLM.
-        The API key is associated with the account identified by `account_id`.
+        The key is associated with the account identified by `account_id`.
         If `account_id` is not provided, it defaults to the account ID of the current instance.
         It uses the Management API for the creation operation and returns an ExternalAPIKey object upon success.
 
@@ -528,8 +526,8 @@ class VantageClient:
 
         Returns
         -------
-        ExternalAPIKey
-            An ExternalAPIKey object containing the details of the newly created API key.
+        ExternalKey
+            An ExternalKey object containing the details of the newly created key.
 
         Notes
         -----
@@ -547,40 +545,40 @@ class VantageClient:
             )
         )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+        return ExternalKey.model_validate(key.model_dump())
 
-    def update_external_api_key(
+    def update_external_key(
         self,
         external_key_id: str,
         llm_provider: str,
         llm_secret: str,
         account_id: Optional[str] = None,
-    ) -> ExternalAPIKey:
+    ) -> ExternalKey:
         """
-        Updates the details of a specific external API key associated with a given account.
+        Updates the details of a specific external key associated with a given account.
 
         This method allows for updating the URL, LLM (Large Language Model) provider, and LLM secret of an
-        external API key identified by `external_key_id`.
+        external key identified by `external_key_id`.
         If `account_id` is not specified, it defaults to using the account ID of the current instance.
-        It uses the Management API to perform the update and returns an updated ExternalAPIKey object upon success.
+        It uses the Management API to perform the update and returns an updated ExternalKey object upon success.
 
         Parameters
         ----------
         external_key_id : str
-            The unique identifier of the external API key to be updated.
+            The unique identifier of the external key to be updated.
         llm_provider : str
             The new provider of the Large Language Model (LLM).
         llm_secret : str
             The new secret key for accessing the LLM.
         account_id : Optional[str], optional
-            The unique identifier of the account to which the external API key is associated.
+            The unique identifier of the account to which the external key is associated.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
         Returns
         -------
-        ExternalAPIKey
-            An ExternalAPIKey object containing the updated details of the external API key.
+        ExternalKey
+            An ExternalKey object containing the updated details of the external key.
 
         Notes
         -----
@@ -599,17 +597,17 @@ class VantageClient:
             )
         )
 
-        return ExternalAPIKey.model_validate(key.model_dump())
+        return ExternalKey.model_validate(key.model_dump())
 
-    def delete_external_api_key(
+    def delete_external_key(
         self,
         external_key_id: str,
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Deletes a specific external API key associated with a given account.
+        Deletes a specific external key associated with a given account.
 
-        This method removes an external API key identified by `external_key_id`
+        This method removes an external key identified by `external_key_id`
         from the account specified by `account_id`.
         If `account_id` is not provided, it defaults to the account ID of the current instance.
         It uses the Management API to perform the deletion.
@@ -617,7 +615,7 @@ class VantageClient:
         Parameters
         ----------
         external_key_id : str
-            The unique identifier of the external API key to be deleted.
+            The unique identifier of the external key to be deleted.
         account_id : Optional[str], optional
             The unique identifier of the account to which the external API key is associated.
             If not provided, the instance's account ID is used.
