@@ -35,7 +35,7 @@ class SecondaryExternalAccount(BaseModel):
     """  # noqa: E501
 
     external_account_id: Optional[StrictStr] = Field(
-        default=None, description="The external API key ID"
+        default=None, description="The external key ID"
     )
     external_type: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [

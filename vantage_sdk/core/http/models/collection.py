@@ -66,7 +66,7 @@ class Collection(BaseModel):
     )
     external_key_id: Optional[StrictStr] = Field(
         default=None,
-        description="The external API key, for the llm_provider to use for the collection",
+        description="The external key, for the llm_provider to use for the collection",
     )
     secondary_external_accounts: Optional[
         List[SecondaryExternalAccount]

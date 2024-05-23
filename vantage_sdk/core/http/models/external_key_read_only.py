@@ -14,48 +14,34 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import BaseModel, StrictStr, field_validator
-
-
+from pydantic import BaseModel, StrictStr
+from pydantic import Field
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class ExternalAPIKeyModifiable(BaseModel):
+class ExternalKeyReadOnly(BaseModel):
     """
-    ExternalAPIKeyModifiable
-    """  # noqa: E501
-
-    llm_provider: Optional[StrictStr] = None
-    llm_secret: Optional[StrictStr] = None
-    state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["llm_provider", "llm_secret", "state"]
-
-    @field_validator('llm_provider')
-    def llm_provider_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('OpenAI', 'Hugging'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging')"
-            )
-        return value
+    ExternalKeyReadOnly
+    """ # noqa: E501
+    external_key_id: Optional[StrictStr] = Field(default=None, description="The unique id of the key")
+    account_id: Optional[StrictStr] = Field(default=None, description="The account this key is contained within")
+    external_key_created_date: Optional[StrictStr] = Field(default=None, description="date this key was created")
+    __properties: ClassVar[List[str]] = ["external_key_id", "account_id", "external_key_created_date"]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -68,7 +54,7 @@ class ExternalAPIKeyModifiable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ExternalAPIKeyModifiable from a JSON string"""
+        """Create an instance of ExternalKeyReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,28 +66,35 @@ class ExternalAPIKeyModifiable(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+                "external_key_id",
+                "account_id",
+                "external_key_created_date",
+            },
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ExternalAPIKeyModifiable from a dict"""
+        """Create an instance of ExternalKeyReadOnly from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "state": obj.get("state"),
-            }
-        )
+        _obj = cls.model_validate({
+            "external_key_id": obj.get("external_key_id"),
+            "account_id": obj.get("account_id"),
+            "external_key_created_date": obj.get("external_key_created_date")
+        })
         return _obj
+
+

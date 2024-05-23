@@ -14,46 +14,30 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import BaseModel, Field, StrictStr, field_validator
-
-
+from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import Field
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class ExternalAPIKey(BaseModel):
+class ExternalKey(BaseModel):
     """
-    ExternalAPIKey
-    """  # noqa: E501
-
-    external_key_id: Optional[StrictStr] = Field(
-        default=None, description="The unique id of the key"
-    )
-    account_id: Optional[StrictStr] = Field(
-        default=None, description="The account this key is contained within"
-    )
-    external_key_created_date: Optional[StrictStr] = Field(
-        default=None, description="date this key was created"
-    )
+    ExternalKey
+    """ # noqa: E501
+    external_key_id: Optional[StrictStr] = Field(default=None, description="The unique id of the key")
+    account_id: Optional[StrictStr] = Field(default=None, description="The account this key is contained within")
+    external_key_created_date: Optional[StrictStr] = Field(default=None, description="date this key was created")
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "external_key_id",
-        "account_id",
-        "external_key_created_date",
-        "llm_provider",
-        "llm_secret",
-        "state",
-    ]
+    __properties: ClassVar[List[str]] = ["external_key_id", "account_id", "external_key_created_date", "llm_provider", "llm_secret", "state"]
 
     @field_validator('llm_provider')
     def llm_provider_validate_enum(cls, value):
@@ -62,9 +46,7 @@ class ExternalAPIKey(BaseModel):
             return value
 
         if value not in ('OpenAI', 'Hugging'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging')"
-            )
+            raise ValueError("must be one of enum values ('OpenAI', 'Hugging')")
         return value
 
     model_config = {
@@ -72,6 +54,7 @@ class ExternalAPIKey(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -84,7 +67,7 @@ class ExternalAPIKey(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ExternalAPIKey from a JSON string"""
+        """Create an instance of ExternalKey from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -113,23 +96,21 @@ class ExternalAPIKey(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ExternalAPIKey from a dict"""
+        """Create an instance of ExternalKey from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "external_key_id": obj.get("external_key_id"),
-                "account_id": obj.get("account_id"),
-                "external_key_created_date": obj.get(
-                    "external_key_created_date"
-                ),
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "state": obj.get("state"),
-            }
-        )
+        _obj = cls.model_validate({
+            "external_key_id": obj.get("external_key_id"),
+            "account_id": obj.get("account_id"),
+            "external_key_created_date": obj.get("external_key_created_date"),
+            "llm_provider": obj.get("llm_provider"),
+            "llm_secret": obj.get("llm_secret"),
+            "state": obj.get("state")
+        })
         return _obj
+
+
