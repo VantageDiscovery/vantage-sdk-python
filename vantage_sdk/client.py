@@ -22,7 +22,7 @@ from vantage_sdk.core.http.models import (
     CollectionModifiable,
     CreateCollectionRequest,
     EmbeddingSearchQuery,
-    ExternalAPIKeyModifiable,
+    ExternalKeyModifiable,
     GlobalSearchPropertiesCollection,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
@@ -452,7 +452,7 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        keys = self.management_api.external_api_keys_api.get_external_api_keys(
+        keys = self.management_api.external_keys_api.get_external_keys(
             account_id=account_id or self.account_id,
         )
         return [ExternalKey.model_validate(key.model_dump()) for key in keys]
@@ -490,7 +490,7 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        key = self.management_api.external_api_keys_api.get_external_api_key(
+        key = self.management_api.external_keys_api.get_external_key(
             account_id=account_id or self.account_id,
             external_key_id=external_key_id,
         )
@@ -534,15 +534,13 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        external_api_key_modifiable = ExternalAPIKeyModifiable(
+        external_api_key_modifiable = ExternalKeyModifiable(
             llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = (
-            self.management_api.external_api_keys_api.create_external_api_key(
-                account_id=account_id or self.account_id,
-                external_api_key_modifiable=external_api_key_modifiable,
-            )
+        key = self.management_api.external_keys_api.create_external_key(
+            account_id=account_id or self.account_id,
+            external_api_key_modifiable=external_api_key_modifiable,
         )
 
         return ExternalKey.model_validate(key.model_dump())
@@ -585,16 +583,14 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        external_api_key_modifiable = ExternalAPIKeyModifiable(
+        external_api_key_modifiable = ExternalKeyModifiable(
             llm_provider=llm_provider, llm_secret=llm_secret
         )
 
-        key = (
-            self.management_api.external_api_keys_api.update_external_api_key(
-                account_id=account_id or self.account_id,
-                external_key_id=external_key_id,
-                external_api_key_modifiable=external_api_key_modifiable,
-            )
+        key = self.management_api.external_keys_api.update_external_key(
+            account_id=account_id or self.account_id,
+            external_key_id=external_key_id,
+            external_api_key_modifiable=external_api_key_modifiable,
         )
 
         return ExternalKey.model_validate(key.model_dump())
@@ -626,7 +622,7 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        self.management_api.external_api_keys_api.delete_external_api_key(
+        self.management_api.external_keys_api.delete_external_key(
             account_id=account_id or self.account_id,
             external_key_id=external_key_id,
         )
@@ -862,7 +858,7 @@ class VantageClient:
             collection_name=collection.collection_name,
             user_provided_embeddings=bool(collection.user_provided_embeddings),
             embeddings_dimension=int(collection.embeddings_dimension),
-            external_key_id=getattr(collection, 'external_account_id', None),
+            external_key_id=getattr(collection, 'external_key_id', None),
             secondary_external_accounts=getattr(
                 collection, 'secondary_external_accounts', None
             ),
