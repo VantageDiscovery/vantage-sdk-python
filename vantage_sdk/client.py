@@ -534,13 +534,13 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        external_api_key_modifiable = ExternalKeyModifiable(
+        external_key_modifiable = ExternalKeyModifiable(
             llm_provider=llm_provider, llm_secret=llm_secret
         )
 
         key = self.management_api.external_keys_api.create_external_key(
             account_id=account_id or self.account_id,
-            external_api_key_modifiable=external_api_key_modifiable,
+            external_key_modifiable=external_key_modifiable,
         )
 
         return ExternalKey.model_validate(key.model_dump())
@@ -583,14 +583,14 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        external_api_key_modifiable = ExternalKeyModifiable(
+        external_key_modifiable = ExternalKeyModifiable(
             llm_provider=llm_provider, llm_secret=llm_secret
         )
 
         key = self.management_api.external_keys_api.update_external_key(
             account_id=account_id or self.account_id,
             external_key_id=external_key_id,
-            external_api_key_modifiable=external_api_key_modifiable,
+            external_key_modifiable=external_key_modifiable,
         )
 
         return ExternalKey.model_validate(key.model_dump())
