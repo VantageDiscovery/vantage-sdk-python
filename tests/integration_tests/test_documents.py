@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 from typing import Callable, List
+
 import pytest
 
 from vantage_sdk.client import VantageClient
@@ -15,7 +16,6 @@ from vantage_sdk.model.document import (
 
 
 class TestDocuments:
-
     def test_user_provided_documents_upsert(
         self,
         client: VantageClient,

@@ -122,13 +122,13 @@ class TestApiKeys:
         # Given
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
-        given_key = client.create_external_api_key(
+        given_key = client.create_external_key(
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
         )
         # When
-        keys = client.get_external_api_keys(account_id=account_params["id"])
+        keys = client.get_external_keys(account_id=account_params["id"])
 
         # Then
         assert len(keys) > 0
@@ -163,14 +163,14 @@ class TestApiKeys:
         # Given
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
-        given_key = client.create_external_api_key(
+        given_key = client.create_external_key(
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
         )
 
         # When
-        api_key = client.get_external_api_key(
+        api_key = client.get_external_key(
             account_id=account_params["id"],
             external_key_id=given_key.external_key_id,
         )
@@ -198,7 +198,7 @@ class TestApiKeys:
         """
         # When
         with pytest.raises(NotFoundException) as exception:
-            client.get_external_api_key(
+            client.get_external_key(
                 account_id=account_params["id"],
                 external_key_id=random_uuid,
             )
@@ -227,7 +227,7 @@ class TestApiKeys:
         llm_secret = random_string_generator(10)
 
         # When
-        response = client.create_external_api_key(
+        response = client.create_external_key(
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -257,7 +257,7 @@ class TestApiKeys:
         # Given
         llm_provider = "OpenAI"
         llm_secret = random_string_generator(10)
-        test_api_key = client.create_external_api_key(
+        test_api_key = client.create_external_key(
             llm_provider=llm_provider,
             llm_secret=llm_secret,
             account_id=account_params["id"],
@@ -272,7 +272,7 @@ class TestApiKeys:
             account_id=account_params["id"],
         )
         # When
-        api_key = client.get_external_api_key(
+        api_key = client.get_external_key(
             account_id=account_params["id"],
             external_key_id=external_api_key_id,
         )
@@ -284,7 +284,7 @@ class TestApiKeys:
         assert api_key.llm_secret == _mask_secret(llm_secret)
 
         # After
-        client.delete_external_api_key(api_key.external_key_id)
+        client.delete_external_key(api_key.external_key_id)
 
     @pytest.mark.skip(
         reason=(
@@ -331,7 +331,7 @@ class TestApiKeys:
         Tests deleting an existing external API key on users' account.
         """
         # When
-        api_key = client.delete_external_api_key(
+        api_key = client.delete_external_key(
             external_key_id=external_api_key_id,
             account_id=account_params["id"],
         )
@@ -339,7 +339,7 @@ class TestApiKeys:
         # Then
         assert api_key is None
         with pytest.raises(NotFoundException) as exception:
-            client.get_external_api_key(
+            client.get_external_key(
                 external_key_id=external_api_key_id,
                 account_id=account_params["id"],
             )
@@ -362,7 +362,7 @@ class TestApiKeys:
         """
         # When
         with pytest.raises(NotFoundException) as exception:
-            client.delete_external_api_key(
+            client.delete_external_key(
                 external_key_id=random_uuid,
                 account_id=account_params["id"],
             )

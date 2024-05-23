@@ -38,12 +38,12 @@ from vantage_sdk.core.http.models.document_batch import DocumentBatch
 from vantage_sdk.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
 )
-from vantage_sdk.core.http.models.external_api_key import ExternalAPIKey
-from vantage_sdk.core.http.models.external_api_key_modifiable import (
-    ExternalAPIKeyModifiable,
+from vantage_sdk.core.http.models.external_key import ExternalKey
+from vantage_sdk.core.http.models.external_key_modifiable import (
+    ExternalKeyModifiable,
 )
-from vantage_sdk.core.http.models.external_api_key_read_only import (
-    ExternalAPIKeyReadOnly,
+from vantage_sdk.core.http.models.external_key_read_only import (
+    ExternalKeyReadOnly,
 )
 from vantage_sdk.core.http.models.global_search_properties import (
     GlobalSearchProperties,

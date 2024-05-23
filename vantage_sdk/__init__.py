@@ -3,7 +3,7 @@
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.account import Account
 from vantage_sdk.model.collection import Collection, CollectionUploadURL
-from vantage_sdk.model.keys import ExternalAPIKey, VantageAPIKey
+from vantage_sdk.model.keys import ExternalKey, VantageAPIKey
 from vantage_sdk.model.search import (
     MoreLikeTheseItem,
     SearchResult,
@@ -20,7 +20,7 @@ __all__ = [
     "CollectionUploadURL",
     "Account",
     "VantageAPIKey",
-    "ExternalAPIKey",
+    "ExternalKey",
     "SearchResult",
     "SearchResultItem",
     "MoreLikeTheseItem",

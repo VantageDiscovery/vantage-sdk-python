@@ -17,7 +17,7 @@ class LLMProvider(Enum):
     OpenAI = "OpenAI"
 
 
-class ExternalAPIKey(BaseModel):
+class ExternalKey(BaseModel):
     external_key_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
     external_key_created_date: Optional[StrictStr] = None

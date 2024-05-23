@@ -45,13 +45,13 @@ class VantageManagedEmbeddingsCollection(Collection):
     llm_provider: StrictStr
     user_provided_embeddings: StrictBool = False
     llm_secret: Optional[StrictStr] = None
-    external_account_id: Optional[StrictStr] = None
+    external_key_id: Optional[StrictStr] = None
 
     @model_validator(mode="after")
     def check_extrnal_authentication_method_exists(cls, values):
-        if not values.llm_secret and not values.external_account_id:
+        if not values.llm_secret and not values.external_key_id:
             raise ValueError(
-                "Please provide either `llm_secret` or `external_account_id` to authenticate with the LLM provider."
+                "Please provide either `llm_secret` or `external_key_id` to authenticate with the LLM provider."
             )
 
 
