@@ -1100,12 +1100,16 @@ class VantageClient:
         sort_mode: Optional[str], optional
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
-        ...
-            ...
-        ...
-            ...
-        ...
-            ...
+        query_key_word_max_overall_weight: Optional[float], optional
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            Defaults to None.
+        query_key_word_weighting_mode: Optional[str], optional
+            A field which instructs Vantage how to do weighting on keywords.
+            Possible values [none, uniform, weighted].
+            Defaults to None.
+        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
+            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1210,6 +1214,16 @@ class VantageClient:
         sort_mode: Optional[str], optional
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
+        query_key_word_max_overall_weight: Optional[float], optional
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            Defaults to None.
+        query_key_word_weighting_mode: Optional[str], optional
+            A field which instructs Vantage how to do weighting on keywords.
+            Possible values [none, uniform, weighted].
+            Defaults to None.
+        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
+            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1314,6 +1328,16 @@ class VantageClient:
         sort_mode: Optional[str], optional
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
+        query_key_word_max_overall_weight: Optional[float], optional
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            Defaults to None.
+        query_key_word_weighting_mode: Optional[str], optional
+            A field which instructs Vantage how to do weighting on keywords.
+            Possible values [none, uniform, weighted].
+            Defaults to None.
+        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
+            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1418,6 +1442,16 @@ class VantageClient:
         sort_mode: Optional[str], optional
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
+        query_key_word_max_overall_weight: Optional[float], optional
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            Defaults to None.
+        query_key_word_weighting_mode: Optional[str], optional
+            A field which instructs Vantage how to do weighting on keywords.
+            Possible values [none, uniform, weighted].
+            Defaults to None.
+        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
+            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
