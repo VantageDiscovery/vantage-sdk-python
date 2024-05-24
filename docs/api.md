@@ -1,10 +1,8 @@
 # Vantage client
 
-This is a main class of interest for SDK users.
-
 ::: vantage_sdk.client
     options:
-        show_root_heading: false
+        show_root_heading: true
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
@@ -13,43 +11,59 @@ This is a main class of interest for SDK users.
         show_docstring_classes: true
         show_docstring_examples: true
 
-::: vantage_sdk.model
+::: vantage_sdk.model.collection
     options:
-        show_root_heading: false
+        show_root_heading: true
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
         merge_init_into_class: true
         show_docstring_attributes: true
+        show_docstring_parameters: false
         show_docstring_classes: true
         show_docstring_examples: true
         show_submodules: true
 
-::: vantage_sdk.core.management
+::: vantage_sdk.model.keys
     options:
-        show_root_heading: false
+        show_root_heading: true
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
         merge_init_into_class: true
         show_docstring_attributes: true
+        show_docstring_parameters: false
         show_docstring_classes: true
         show_docstring_examples: true
         show_submodules: true
-        show_if_no_docstring: true
 
-::: vantage_sdk.core.search
+::: vantage_sdk.core.management.management
     options:
-        show_root_heading: false
+        show_root_heading: true
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
-        merge_init_into_class: true
+        merge_init_into_class: false
         show_docstring_attributes: true
         show_docstring_classes: true
         show_docstring_examples: true
         show_submodules: true
-        show_if_no_docstring: true
+        show_if_no_docstring: false
+
+
+
+::: vantage_sdk.core.search.search
+    options:
+        show_root_heading: true
+        show_source: false
+        docstring_style: numpy
+        docstring_section_style: table
+        merge_init_into_class: false
+        show_docstring_attributes: true
+        show_docstring_classes: true
+        show_docstring_examples: true
+        show_submodules: true
+        show_if_no_docstring: false
 
 # Exceptions
 

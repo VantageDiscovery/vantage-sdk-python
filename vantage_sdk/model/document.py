@@ -1,3 +1,7 @@
+"""
+Models for the Documents API.
+"""
+
 from typing import Dict, List, Optional, Union
 from uuid import uuid4
 

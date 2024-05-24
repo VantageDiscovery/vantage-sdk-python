@@ -1,3 +1,10 @@
+"""
+Contains VantageClient class.
+
+This module contains VantageClient class,
+which is a main entry point for users using the SDK.
+"""
+
 from __future__ import annotations
 
 import json

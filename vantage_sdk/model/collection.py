@@ -1,3 +1,7 @@
+"""
+Models for the Collection API.
+"""
+
 from typing import List, Optional
 
 from pydantic import (
@@ -12,6 +16,29 @@ from vantage_sdk.model.keys import LLMProvider, SecondaryExternalAccount
 
 
 class Collection(BaseModel):
+    """
+    A collection of documents.
+
+    Attributes
+    ----------
+    collection_id: str
+        ID of the collection.
+    embeddings_dimension: int
+        Dimension of embeddings in the collection documents.
+    user_provided_embeddings: bool
+        If the collection uses user-provided embeddings.
+    collection_name: Optional[StrictStr]
+        Name of the collection.
+    collection_state: Optional[StrictStr]
+        Current state of the collection.
+    collection_status: Optional[StrictStr]
+        Current status of the collection.
+    collection_created_time: Optional[StrictStr]
+        When the collection was created.
+    collection_preview_url_pattern: Optional[StrictStr]
+        Preview URL pattern of the collection.
+    """
+
     collection_id: StrictStr
     embeddings_dimension: StrictInt
     user_provided_embeddings: StrictBool

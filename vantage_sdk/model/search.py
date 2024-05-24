@@ -1,3 +1,7 @@
+"""
+Models for the Search API.
+"""
+
 from typing import Any, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
