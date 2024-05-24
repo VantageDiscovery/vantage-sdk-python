@@ -24,6 +24,7 @@ from vantage_sdk.core.http.models import (
     EmbeddingSearchQuery,
     ExternalKeyModifiable,
     GlobalSearchPropertiesCollection,
+    GlobalSearchPropertiesFieldValueWeighting,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
     GlobalSearchPropertiesSort,
@@ -60,6 +61,7 @@ from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
+    WeightedFieldValueItem,
 )
 
 
@@ -980,6 +982,9 @@ class VantageClient:
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
         sort_mode: Optional[str] = None,
+        query_key_word_max_overall_weight: Optional[str] = None,
+        query_key_word_weighting_mode: Optional[str] = None,
+        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
         account_id: Optional[str] = None,
     ) -> GlobalSearchProperties:
         collection = GlobalSearchPropertiesCollection(
@@ -1015,11 +1020,18 @@ class VantageClient:
             else None
         )
 
+        field_value_weighting = GlobalSearchPropertiesFieldValueWeighting(
+            query_key_word_max_overall_weight=query_key_word_max_overall_weight,
+            query_key_word_weighting_mode=query_key_word_weighting_mode,
+            weighted_field_values=weighted_field_values,
+        )
+
         return GlobalSearchProperties(
             collection=collection,
             filter=search_filter,
             pagination=pagination,
             sort=sort,
+            field_value_weighting=field_value_weighting,
         )
 
     def _vantage_api_key_check(self, vantage_api_key: str) -> str:
@@ -1049,6 +1061,9 @@ class VantageClient:
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
         sort_mode: Optional[str] = None,
+        query_key_word_max_overall_weight: Optional[str] = None,
+        query_key_word_weighting_mode: Optional[str] = None,
+        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1085,6 +1100,12 @@ class VantageClient:
         sort_mode: Optional[str], optional
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
+        ...
+            ...
+        ...
+            ...
+        ...
+            ...
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1115,6 +1136,9 @@ class VantageClient:
             sort_field,
             sort_order,
             sort_mode,
+            query_key_word_max_overall_weight,
+            query_key_word_weighting_mode,
+            weighted_field_values,
             account_id,
         )
 
@@ -1124,6 +1148,7 @@ class VantageClient:
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
         )
 
         result = self.search_api.api.semantic_search(
@@ -1146,6 +1171,9 @@ class VantageClient:
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
         sort_mode: Optional[str] = None,
+        query_key_word_max_overall_weight: Optional[str] = None,
+        query_key_word_weighting_mode: Optional[str] = None,
+        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1212,6 +1240,9 @@ class VantageClient:
             sort_field,
             sort_order,
             sort_mode,
+            query_key_word_max_overall_weight,
+            query_key_word_weighting_mode,
+            weighted_field_values,
             account_id,
         )
 
@@ -1221,6 +1252,7 @@ class VantageClient:
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1243,6 +1275,9 @@ class VantageClient:
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
         sort_mode: Optional[str] = None,
+        query_key_word_max_overall_weight: Optional[str] = None,
+        query_key_word_weighting_mode: Optional[str] = None,
+        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1309,6 +1344,9 @@ class VantageClient:
             sort_field,
             sort_order,
             sort_mode,
+            query_key_word_max_overall_weight,
+            query_key_word_weighting_mode,
+            weighted_field_values,
             account_id,
         )
 
@@ -1318,6 +1356,7 @@ class VantageClient:
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1340,6 +1379,9 @@ class VantageClient:
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
         sort_mode: Optional[str] = None,
+        query_key_word_max_overall_weight: Optional[str] = None,
+        query_key_word_weighting_mode: Optional[str] = None,
+        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1406,6 +1448,9 @@ class VantageClient:
             sort_field,
             sort_order,
             sort_mode,
+            query_key_word_max_overall_weight,
+            query_key_word_weighting_mode,
+            weighted_field_values,
             account_id,
         )
 
@@ -1418,6 +1463,7 @@ class VantageClient:
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
         )
 
         result = self.search_api.api.more_like_these_search(

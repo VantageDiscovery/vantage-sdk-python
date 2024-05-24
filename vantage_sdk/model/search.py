@@ -4,6 +4,7 @@ from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
 from vantage_sdk.core.http.models import (
     GlobalSearchPropertiesCollection,
+    GlobalSearchPropertiesFieldValueWeighting,
     GlobalSearchPropertiesFilter,
     GlobalSearchPropertiesPagination,
     GlobalSearchPropertiesSort,
@@ -35,3 +36,12 @@ class GlobalSearchProperties(BaseModel):
     filter: Optional[GlobalSearchPropertiesFilter] = None
     pagination: Optional[GlobalSearchPropertiesPagination] = None
     sort: Optional[GlobalSearchPropertiesSort] = None
+    field_value_weighting: Optional[
+        GlobalSearchPropertiesFieldValueWeighting
+    ] = None
+
+
+class WeightedFieldValueItem(BaseModel):
+    field: StrictStr
+    value: StrictStr
+    weight: StrictFloat
