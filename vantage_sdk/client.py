@@ -31,6 +31,7 @@ from vantage_sdk.core.http.models import (
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
+    WeightedFieldValues,
 )
 from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
@@ -61,7 +62,6 @@ from vantage_sdk.model.search import (
     GlobalSearchProperties,
     MoreLikeTheseItem,
     SearchResult,
-    WeightedFieldValueItem,
 )
 
 
@@ -984,7 +984,7 @@ class VantageClient:
         sort_mode: Optional[str] = None,
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
+        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
         account_id: Optional[str] = None,
     ) -> GlobalSearchProperties:
         collection = GlobalSearchPropertiesCollection(
@@ -1063,7 +1063,7 @@ class VantageClient:
         sort_mode: Optional[str] = None,
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
+        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1107,8 +1107,8 @@ class VantageClient:
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
-            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+        weighted_field_values: Optional[List[WeightedFieldValues], optional
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1177,7 +1177,7 @@ class VantageClient:
         sort_mode: Optional[str] = None,
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
+        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1221,8 +1221,8 @@ class VantageClient:
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
-            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+        weighted_field_values: Optional[List[WeightedFieldValues], optional
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1291,7 +1291,7 @@ class VantageClient:
         sort_mode: Optional[str] = None,
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
+        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1335,8 +1335,8 @@ class VantageClient:
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
-            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+        weighted_field_values: Optional[List[WeightedFieldValues], optional
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1405,7 +1405,7 @@ class VantageClient:
         sort_mode: Optional[str] = None,
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValueItem]] = [],
+        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1449,8 +1449,8 @@ class VantageClient:
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValueItem], optional
-            An array of WeightedFieldValueItem objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+        weighted_field_values: Optional[List[WeightedFieldValues], optional
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.

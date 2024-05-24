@@ -39,9 +39,3 @@ class GlobalSearchProperties(BaseModel):
     field_value_weighting: Optional[
         GlobalSearchPropertiesFieldValueWeighting
     ] = None
-
-
-class WeightedFieldValueItem(BaseModel):
-    field: StrictStr
-    value: StrictStr
-    weight: StrictFloat
