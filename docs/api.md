@@ -43,7 +43,7 @@
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
-        merge_init_into_class: false
+        merge_init_into_class: true
         show_docstring_attributes: true
         show_docstring_classes: true
         show_docstring_examples: true
@@ -58,7 +58,7 @@
         show_source: false
         docstring_style: numpy
         docstring_section_style: table
-        merge_init_into_class: false
+        merge_init_into_class: true
         show_docstring_attributes: true
         show_docstring_classes: true
         show_docstring_examples: true
@@ -77,8 +77,8 @@
         show_docstring_attributes: true
         show_docstring_classes: true
         show_docstring_examples: true
-        show_submodules: true
-        show_if_no_docstring: true
+        show_submodules: false
+        show_if_no_docstring: false
 
 # Models generated from OpenAPI specification
 
