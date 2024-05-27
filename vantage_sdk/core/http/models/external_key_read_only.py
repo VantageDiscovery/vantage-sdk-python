@@ -14,34 +14,46 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
+
+from pydantic import BaseModel, Field, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class ExternalKeyReadOnly(BaseModel):
     """
     ExternalKeyReadOnly
-    """ # noqa: E501
-    external_key_id: Optional[StrictStr] = Field(default=None, description="The unique id of the key")
-    account_id: Optional[StrictStr] = Field(default=None, description="The account this key is contained within")
-    external_key_created_date: Optional[StrictStr] = Field(default=None, description="date this key was created")
-    __properties: ClassVar[List[str]] = ["external_key_id", "account_id", "external_key_created_date"]
+    """  # noqa: E501
+
+    external_key_id: Optional[StrictStr] = Field(
+        default=None, description="The unique id of the key"
+    )
+    account_id: Optional[StrictStr] = Field(
+        default=None, description="The account this key is contained within"
+    )
+    external_key_created_date: Optional[StrictStr] = Field(
+        default=None, description="date this key was created"
+    )
+    __properties: ClassVar[List[str]] = [
+        "external_key_id",
+        "account_id",
+        "external_key_created_date",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -90,11 +102,13 @@ class ExternalKeyReadOnly(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "external_key_id": obj.get("external_key_id"),
-            "account_id": obj.get("account_id"),
-            "external_key_created_date": obj.get("external_key_created_date")
-        })
+        _obj = cls.model_validate(
+            {
+                "external_key_id": obj.get("external_key_id"),
+                "account_id": obj.get("account_id"),
+                "external_key_created_date": obj.get(
+                    "external_key_created_date"
+                ),
+            }
+        )
         return _obj
-
-

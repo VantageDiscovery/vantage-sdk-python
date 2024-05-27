@@ -119,9 +119,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     llm: StrictStr
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
-        None
-    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):

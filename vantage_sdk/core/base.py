@@ -16,10 +16,6 @@ from vantage_sdk.core.http.exceptions import UnauthorizedException
 
 
 class AuthorizationClient:
-    """
-    ...
-    """
-
     _DAY_IN_SECONDS = 86400
 
     def __init__(
@@ -160,10 +156,6 @@ class AuthorizationClient:
 
 
 class AuthorizedApiClient(ApiClient):
-    """
-    ...
-    """
-
     def __init__(
         self,
         authorization_client: AuthorizationClient,
@@ -210,7 +202,7 @@ class AuthorizedApiClient(ApiClient):
             return super().call_api(*args)
         except UnauthorizedException:
             self.authorization_client.authenticate()
-            header_params["authorization"] = (
-                f"Bearer {self.authorization_client.jwt_token}"
-            )
+            header_params[
+                "authorization"
+            ] = f"Bearer {self.authorization_client.jwt_token}"
             return super().call_api(*args)
