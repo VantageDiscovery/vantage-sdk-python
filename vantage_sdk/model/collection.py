@@ -61,16 +61,37 @@ class Collection(BaseModel):
 
 
 class UserProvidedEmbeddingsCollection(Collection):
-    """User-provided embeddings collection"""
+    """
+    A collection of documents with user-provided embeddings.
+
+    Attributes
+    ----------
+    user_provided_embeddings : StrictBool
+        Indicates that the embeddings in this collection are provided by the user.
+
+    """
 
     user_provided_embeddings: StrictBool = True
 
 
 class VantageManagedEmbeddingsCollection(Collection):
-    """Vantage-managed embeddings collection"""
+    """
+    A collection of documents with Vantage-managed embeddings.
 
-    llm_provider: StrictStr
+    Attributes
+    ----------
+    user_provided_embeddings : StrictBool
+        Indicates that the embeddings in this collection are managed by Vantage.
+    llm_provider : StrictStr
+        The provider of the embedding model used to generate embeddings.
+    llm_secret : Optional[StrictStr], optional
+        The secret key used to authenticate with the model provider.
+    external_key_id : Optional[StrictStr], optional
+        The external key ID used to authenticate with the model provider.
+    """
+
     user_provided_embeddings: StrictBool = False
+    llm_provider: StrictStr
     llm_secret: Optional[StrictStr] = None
     external_key_id: Optional[StrictStr] = None
 
@@ -83,23 +104,58 @@ class VantageManagedEmbeddingsCollection(Collection):
 
 
 class OpenAICollection(VantageManagedEmbeddingsCollection):
-    """Vantage-managed embeddings collection which uses OpenAI as LLM provider"""
+    """
+    Vantage-managed embeddings collection which uses OpenAI as LLM provider.
+
+    Attributes
+    ----------
+    llm_provider : StrictStr
+        The provider of the embedding model, set to OpenAI.
+    llm : StrictStr
+        The specific embedding model used from OpenAI.
+    secondary_external_accounts : Optional[List[SecondaryExternalAccount]], optional
+        A list of secondary external accounts associated with the collection.
+    """
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     llm: StrictStr
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
-    """Vantage-managed embeddings collection which uses HuggingFace as LLM provider"""
+    """
+    Vantage-managed embeddings collection which uses HuggingFace as LLM provider.
+
+    Attributes
+    ----------
+    llm_provider : StrictStr
+        The provider of the embedding model, set to HuggingFace.
+    external_url : StrictStr
+        The external URL for the HuggingFace model.
+    """
 
     llm_provider: StrictStr = LLMProvider.HuggingFace.value
     external_url: StrictStr = None
 
 
 class CollectionUploadURL(BaseModel):
+    """
+    Represents the upload URL details for a collection.
+
+    Attributes
+    ----------
+    collection_id : Optional[StrictStr], optional
+        The unique identifier for the collection.
+    customer_batch_identifier : Optional[StrictStr], optional
+        The identifier for the customer batch.
+    upload_url_type : Optional[StrictStr], optional
+        The type of the upload URL.
+    upload_url : Optional[StrictStr], optional
+        The URL used for uploading to the collection.
+    """
+
     collection_id: Optional[StrictStr] = None
     customer_batch_identifier: Optional[StrictStr] = None
     upload_url_type: Optional[StrictStr] = None

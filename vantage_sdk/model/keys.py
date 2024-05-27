@@ -38,7 +38,7 @@ class LLMProvider(Enum):
     OpenAI = "OpenAI"
 
 
-class ExternalAPIKey(BaseModel):
+class ExternalKey(BaseModel):
     """
     Key for accessing one of the external APIs.
 
