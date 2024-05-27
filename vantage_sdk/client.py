@@ -1,3 +1,10 @@
+"""
+Contains VantageClient class.
+
+This module contains VantageClient class,
+which is a main entry point for users using the SDK.
+"""
+
 from __future__ import annotations
 
 import json
@@ -31,12 +38,14 @@ from vantage_sdk.core.http.models import (
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
-    WeightedFieldValues,
 )
 from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
-from vantage_sdk.core.http.models import SemanticSearchQuery
+from vantage_sdk.core.http.models import (
+    SemanticSearchQuery,
+    WeightedFieldValues,
+)
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
@@ -1101,14 +1110,14 @@ class VantageClient:
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
         query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
             Defaults to None.
         query_key_word_weighting_mode: Optional[str], optional
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
         weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1215,14 +1224,14 @@ class VantageClient:
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
         query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
             Defaults to None.
         query_key_word_weighting_mode: Optional[str], optional
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
         weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1329,14 +1338,14 @@ class VantageClient:
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
         query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
             Defaults to None.
         query_key_word_weighting_mode: Optional[str], optional
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
         weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1443,14 +1452,14 @@ class VantageClient:
             Sort mode. Possible values [semantic_threshold, field_selection].
             Defaults to field_selection.
         query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.
+            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
             Defaults to None.
         query_key_word_weighting_mode: Optional[str], optional
             A field which instructs Vantage how to do weighting on keywords.
             Possible values [none, uniform, weighted].
             Defaults to None.
         weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.
+            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
             Defaults to [].
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
