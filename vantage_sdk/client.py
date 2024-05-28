@@ -987,6 +987,7 @@ class VantageClient:
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
+        page_threshold: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
@@ -1014,6 +1015,7 @@ class VantageClient:
             GlobalSearchPropertiesPagination(
                 page=page,
                 count=page_count,
+                threshold=page_threshold,
             )
             if page
             else None
@@ -1066,6 +1068,7 @@ class VantageClient:
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
+        page_threshold: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
@@ -1095,6 +1098,10 @@ class VantageClient:
             Defaults to None.
         page_count : Optional[int], optional
             The number of results per page for pagination.
+            Defaults to None.
+        page_threshold: Optional[int], optional
+            Determines the "pool" of records to match before sorting.
+            Applicable during sorting, if sort_mode is set to semantic_threshold.
             Defaults to None.
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
@@ -1145,6 +1152,7 @@ class VantageClient:
             accuracy,
             page,
             page_count,
+            page_threshold,
             boolean_filter,
             sort_field,
             sort_order,
@@ -1180,6 +1188,7 @@ class VantageClient:
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
+        page_threshold: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
@@ -1209,6 +1218,10 @@ class VantageClient:
             Defaults to None.
         page_count : Optional[int], optional
             The number of results per page for pagination.
+            Defaults to None.
+        page_threshold: Optional[int], optional
+            Determines the "pool" of records to match before sorting.
+            Applicable during sorting, if sort_mode is set to semantic_threshold.
             Defaults to None.
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
@@ -1259,6 +1272,7 @@ class VantageClient:
             accuracy,
             page,
             page_count,
+            page_threshold,
             boolean_filter,
             sort_field,
             sort_order,
@@ -1294,6 +1308,7 @@ class VantageClient:
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
+        page_threshold: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
@@ -1323,6 +1338,10 @@ class VantageClient:
             Defaults to None.
         page_count : Optional[int], optional
             The number of results per page for pagination.
+            Defaults to None.
+        page_threshold: Optional[int], optional
+            Determines the "pool" of records to match before sorting.
+            Applicable during sorting, if sort_mode is set to semantic_threshold.
             Defaults to None.
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
@@ -1373,6 +1392,7 @@ class VantageClient:
             accuracy,
             page,
             page_count,
+            page_threshold,
             boolean_filter,
             sort_field,
             sort_order,
@@ -1408,6 +1428,7 @@ class VantageClient:
         accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
+        page_threshold: Optional[int] = None,
         boolean_filter: Optional[str] = None,
         sort_field: Optional[str] = None,
         sort_order: Optional[str] = None,
@@ -1437,6 +1458,10 @@ class VantageClient:
             Defaults to None.
         page_count : Optional[int], optional
             The number of results per page for pagination.
+            Defaults to None.
+        page_threshold: Optional[int], optional
+            Determines the "pool" of records to match before sorting.
+            Applicable during sorting, if sort_mode is set to semantic_threshold.
             Defaults to None.
         boolean_filter : Optional[str], optional
             A boolean filter string for refining search results.
@@ -1487,6 +1512,7 @@ class VantageClient:
             accuracy,
             page,
             page_count,
+            page_threshold,
             boolean_filter,
             sort_field,
             sort_order,
