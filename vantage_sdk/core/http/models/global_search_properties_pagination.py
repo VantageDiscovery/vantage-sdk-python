@@ -36,7 +36,8 @@ class GlobalSearchPropertiesPagination(BaseModel):
 
     page: Optional[StrictInt] = None
     count: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["page", "count"]
+    threshold: Optional[StrictInt] = None
+    __properties: ClassVar[List[str]] = ["page", "count", "threshold"]
 
     model_config = {
         "populate_by_name": True,
@@ -85,6 +86,10 @@ class GlobalSearchPropertiesPagination(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {"page": obj.get("page"), "count": obj.get("count")}
+            {
+                "page": obj.get("page"),
+                "count": obj.get("count"),
+                "threshold": obj.get("threshold"),
+            }
         )
         return _obj

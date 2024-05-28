@@ -72,10 +72,6 @@ class Collection(BaseModel):
         List[SecondaryExternalAccount]
     ] = None
     collection_name: Optional[StrictStr] = None
-    collection_preview_url_pattern: Optional[StrictStr] = Field(
-        default=None,
-        description="To be able to preview items in test on the test collection page, enter in a URL that supports the open graph extensions for previewing links.",
-    )
     __properties: ClassVar[List[str]] = [
         "collection_created_time",
         "collection_status",
@@ -90,7 +86,6 @@ class Collection(BaseModel):
         "external_key_id",
         "secondary_external_accounts",
         "collection_name",
-        "collection_preview_url_pattern",
     ]
 
     @field_validator('collection_status')
@@ -217,9 +212,6 @@ class Collection(BaseModel):
                 if obj.get("secondary_external_accounts") is not None
                 else None,
                 "collection_name": obj.get("collection_name"),
-                "collection_preview_url_pattern": obj.get(
-                    "collection_preview_url_pattern"
-                ),
             }
         )
         return _obj
