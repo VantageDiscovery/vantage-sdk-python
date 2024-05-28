@@ -104,6 +104,36 @@ class MoreLikeTheseItem(BaseModel):
         return values
 
 
+class Filter(BaseModel):
+    boolean_filter: Optional[str] = None
+
+
+class Pagination(BaseModel):
+    page: Optional[int] = None
+    count: Optional[int] = None
+    threshold: Optional[int] = None
+
+
+class Sort(BaseModel):
+    field: Optional[str] = None
+    order: Optional[str] = None
+    mode: Optional[str] = None
+
+
+class WeightedFieldValueItem:
+    field: Optional[str] = None
+    value: Optional[str] = None
+    weight: Optional[float] = None
+
+
+class FieldValueWeighting(BaseModel):
+    query_key_word_max_overall_weight: Optional[float] = None
+    query_key_word_weighting_mode: Optional[str] = None
+    weighted_field_values: Optional[List[WeightedFieldValueItem]] = None
+
+    # TODO: weighted_field_values conversion (WeightedFieldValueItem -> WeightedFieldValues)
+
+
 class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.

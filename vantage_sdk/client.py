@@ -70,6 +70,10 @@ from vantage_sdk.model.search import (
     MoreLikeTheseItem,
     SearchOptions,
     SearchResult,
+    Filter,
+    Pagination,
+    Sort,
+    FieldValueWeighting,
 )
 
 
@@ -982,50 +986,44 @@ class VantageClient:
 
     def _prepare_search_query(
         self,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        page_threshold: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_order: Optional[str] = None,
-        sort_mode: Optional[str] = None,
-        query_key_word_max_overall_weight: Optional[float] = None,
-        query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
     ) -> SearchOptions:
 
         search_filter = (
             SearchOptionsFilter(
-                boolean_filter=boolean_filter,
+                boolean_filter=filter.boolean_filter,
             )
-            if boolean_filter
+            if filter
             else None
         )
 
         pagination = (
             SearchOptionsPagination(
-                page=page,
-                count=page_count,
-                threshold=page_threshold,
+                page=pagination.page,
+                count=pagination.count,
+                threshold=pagination.threshold,
             )
-            if page
+            if pagination
             else None
         )
 
         sort = (
             SearchOptionsSort(
-                field=sort_field,
-                order=sort_order,
-                mode=sort_mode,
+                field=sort.field,
+                order=sort.order,
+                mode=sort.mode,
             )
-            if sort_field
+            if sort
             else None
         )
 
         field_value_weighting = SearchOptionsFieldValueWeighting(
-            query_key_word_max_overall_weight=query_key_word_max_overall_weight,
-            query_key_word_weighting_mode=query_key_word_weighting_mode,
-            weighted_field_values=weighted_field_values,
+            query_key_word_max_overall_weight=field_value_weighting.query_key_word_max_overall_weight,
+            query_key_word_weighting_mode=field_value_weighting.query_key_word_weighting_mode,
+            weighted_field_values=field_value_weighting.weighted_field_values,
         )
 
         return SearchOptions(
@@ -1056,16 +1054,10 @@ class VantageClient:
         text: str,
         collection_id: str,
         accuracy: float = 0.3,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        page_threshold: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_order: Optional[str] = None,
-        sort_mode: Optional[str] = None,
-        query_key_word_max_overall_weight: Optional[float] = None,
-        query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1083,39 +1075,18 @@ class VantageClient:
         accuracy : float, optional
             The accuracy threshold for the search.
             Defaults to 0.3.
-        page : Optional[int], optional
-            The page number for pagination.
-            Defaults to None.
-        page_count : Optional[int], optional
-            The number of results per page for pagination.
-            Defaults to None.
-        page_threshold: Optional[int], optional
-            Determines the "pool" of records to match before sorting.
-            Applicable during sorting, if sort_mode is set to semantic_threshold.
-            Defaults to None.
-        boolean_filter : Optional[str], optional
-            A boolean filter string for refining search results.
-            Defaults to None.
-        sort_field: Optional[str], optional
-            Meta field name for sorting search results on.
-            If set, other sort_ fields will be taken into account.
-            Defaults to None.
-        sort_order: Optional[str], optional
-            Sort order. Possible values [asc, desc].
-            Defaults to desc.
-        sort_mode: Optional[str], optional
-            Sort mode. Possible values [semantic_threshold, field_selection].
-            Defaults to field_selection.
-        query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
-            Defaults to None.
-        query_key_word_weighting_mode: Optional[str], optional
-            A field which instructs Vantage how to do weighting on keywords.
-            Possible values [none, uniform, weighted].
-            Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
-            Defaults to [].
+        pagination: Optional[Pagination], optional
+            ...
+            Defaults to None,
+        filter: Optional[Filter], optional
+            ...
+            Defaults to None,
+        sort: Optional[Sort], optional
+            ...
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            ...
+            Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1138,16 +1109,10 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            page,
-            page_count,
-            page_threshold,
-            boolean_filter,
-            sort_field,
-            sort_order,
-            sort_mode,
-            query_key_word_max_overall_weight,
-            query_key_word_weighting_mode,
-            weighted_field_values,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
         )
 
         query = SemanticSearchQuery(
@@ -1173,16 +1138,10 @@ class VantageClient:
         embedding: List[int],
         collection_id: str,
         accuracy: float = 0.3,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        page_threshold: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_order: Optional[str] = None,
-        sort_mode: Optional[str] = None,
-        query_key_word_max_overall_weight: Optional[float] = None,
-        query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1200,39 +1159,7 @@ class VantageClient:
         accuracy : float, optional
             The accuracy threshold for the search.
             Defaults to 0.3.
-        page : Optional[int], optional
-            The page number for pagination.
-            Defaults to None.
-        page_count : Optional[int], optional
-            The number of results per page for pagination.
-            Defaults to None.
-        page_threshold: Optional[int], optional
-            Determines the "pool" of records to match before sorting.
-            Applicable during sorting, if sort_mode is set to semantic_threshold.
-            Defaults to None.
-        boolean_filter : Optional[str], optional
-            A boolean filter string for refining search results.
-            Defaults to None.
-        sort_field: Optional[str], optional
-            Meta field name for sorting search results on.
-            If set, other sort_ fields will be taken into account.
-            Defaults to None.
-        sort_order: Optional[str], optional
-            Sort order. Possible values [asc, desc].
-            Defaults to desc.
-        sort_mode: Optional[str], optional
-            Sort mode. Possible values [semantic_threshold, field_selection].
-            Defaults to field_selection.
-        query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
-            Defaults to None.
-        query_key_word_weighting_mode: Optional[str], optional
-            A field which instructs Vantage how to do weighting on keywords.
-            Possible values [none, uniform, weighted].
-            Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
-            Defaults to [].
+        TODO: ...
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1255,16 +1182,10 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            page,
-            page_count,
-            page_threshold,
-            boolean_filter,
-            sort_field,
-            sort_order,
-            sort_mode,
-            query_key_word_max_overall_weight,
-            query_key_word_weighting_mode,
-            weighted_field_values,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
         )
 
         query = EmbeddingSearchQuery(
@@ -1290,16 +1211,10 @@ class VantageClient:
         document_id: str,
         collection_id: str,
         accuracy: float = 0.3,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        page_threshold: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_order: Optional[str] = None,
-        sort_mode: Optional[str] = None,
-        query_key_word_max_overall_weight: Optional[float] = None,
-        query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1314,42 +1229,7 @@ class VantageClient:
             The ID of the document to find similar documents to.
         collection_id : str
             The ID of the collection to search within.
-        accuracy : float, optional
-            The accuracy threshold for the search.
-            Defaults to 0.3.
-        page : Optional[int], optional
-            The page number for pagination.
-            Defaults to None.
-        page_count : Optional[int], optional
-            The number of results per page for pagination.
-            Defaults to None.
-        page_threshold: Optional[int], optional
-            Determines the "pool" of records to match before sorting.
-            Applicable during sorting, if sort_mode is set to semantic_threshold.
-            Defaults to None.
-        boolean_filter : Optional[str], optional
-            A boolean filter string for refining search results.
-            Defaults to None.
-        sort_field: Optional[str], optional
-            Meta field name for sorting search results on.
-            If set, other sort_ fields will be taken into account.
-            Defaults to None.
-        sort_order: Optional[str], optional
-            Sort order. Possible values [asc, desc].
-            Defaults to desc.
-        sort_mode: Optional[str], optional
-            Sort mode. Possible values [semantic_threshold, field_selection].
-            Defaults to field_selection.
-        query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
-            Defaults to None.
-        query_key_word_weighting_mode: Optional[str], optional
-            A field which instructs Vantage how to do weighting on keywords.
-            Possible values [none, uniform, weighted].
-            Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
-            Defaults to [].
+        TODO: ...
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1372,16 +1252,10 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            page,
-            page_count,
-            page_threshold,
-            boolean_filter,
-            sort_field,
-            sort_order,
-            sort_mode,
-            query_key_word_max_overall_weight,
-            query_key_word_weighting_mode,
-            weighted_field_values,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
         )
 
         query = MoreLikeThisQuery(
@@ -1407,16 +1281,10 @@ class VantageClient:
         more_like_these: list[MoreLikeTheseItem],
         collection_id: str,
         accuracy: float = 0.3,
-        page: Optional[int] = None,
-        page_count: Optional[int] = None,
-        page_threshold: Optional[int] = None,
-        boolean_filter: Optional[str] = None,
-        sort_field: Optional[str] = None,
-        sort_order: Optional[str] = None,
-        sort_mode: Optional[str] = None,
-        query_key_word_max_overall_weight: Optional[float] = None,
-        query_key_word_weighting_mode: Optional[str] = None,
-        weighted_field_values: Optional[List[WeightedFieldValues]] = [],
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1431,42 +1299,7 @@ class VantageClient:
             The list of "MoreLikeTheseItem" objects to find similar documents to.
         collection_id : str
             The ID of the collection to search within.
-        accuracy : float, optional
-            The accuracy threshold for the search.
-            Defaults to 0.3.
-        page : Optional[int], optional
-            The page number for pagination.
-            Defaults to None.
-        page_count : Optional[int], optional
-            The number of results per page for pagination.
-            Defaults to None.
-        page_threshold: Optional[int], optional
-            Determines the "pool" of records to match before sorting.
-            Applicable during sorting, if sort_mode is set to semantic_threshold.
-            Defaults to None.
-        boolean_filter : Optional[str], optional
-            A boolean filter string for refining search results.
-            Defaults to None.
-        sort_field: Optional[str], optional
-            Meta field name for sorting search results on.
-            If set, other sort_ fields will be taken into account.
-            Defaults to None.
-        sort_order: Optional[str], optional
-            Sort order. Possible values [asc, desc].
-            Defaults to desc.
-        sort_mode: Optional[str], optional
-            Sort mode. Possible values [semantic_threshold, field_selection].
-            Defaults to field_selection.
-        query_key_word_max_overall_weight: Optional[float], optional
-            A number that will represent the largest increase in score with the number of keyword or phrases that were matched.  # noqa: E501
-            Defaults to None.
-        query_key_word_weighting_mode: Optional[str], optional
-            A field which instructs Vantage how to do weighting on keywords.
-            Possible values [none, uniform, weighted].
-            Defaults to None.
-        weighted_field_values: Optional[List[WeightedFieldValues], optional
-            An array of WeightedFieldValues objects, that instruct Vantage to boost the scores for the fields, names and weights specified.  # noqa: E501
-            Defaults to [].
+        TODO: ...
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1489,16 +1322,10 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            page,
-            page_count,
-            page_threshold,
-            boolean_filter,
-            sort_field,
-            sort_order,
-            sort_mode,
-            query_key_word_max_overall_weight,
-            query_key_word_weighting_mode,
-            weighted_field_values,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
         )
 
         query = MoreLikeTheseQuery(
