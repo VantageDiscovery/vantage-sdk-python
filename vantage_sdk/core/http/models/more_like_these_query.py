@@ -18,26 +18,21 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictInt
+from pydantic import BaseModel, StrictFloat, StrictInt
 
-from vantage_sdk.core.http.models.global_search_properties_collection import (
-    GlobalSearchPropertiesCollection,
-)
-from vantage_sdk.core.http.models.global_search_properties_field_value_weighting import (
-    GlobalSearchPropertiesFieldValueWeighting,
-)
-from vantage_sdk.core.http.models.global_search_properties_filter import (
-    GlobalSearchPropertiesFilter,
-)
-from vantage_sdk.core.http.models.global_search_properties_pagination import (
-    GlobalSearchPropertiesPagination,
-)
-from vantage_sdk.core.http.models.global_search_properties_sort import (
-    GlobalSearchPropertiesSort,
-)
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
+from vantage_sdk.core.http.models.search_options_field_value_weighting import (
+    SearchOptionsFieldValueWeighting,
+)
+from vantage_sdk.core.http.models.search_options_filter import (
+    SearchOptionsFilter,
+)
+from vantage_sdk.core.http.models.search_options_pagination import (
+    SearchOptionsPagination,
+)
+from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
 
 
 try:
@@ -52,17 +47,15 @@ class MoreLikeTheseQuery(BaseModel):
     """  # noqa: E501
 
     these: Optional[List[MLTheseTheseInner]] = None
-    collection: Optional[GlobalSearchPropertiesCollection] = None
+    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
     request_id: Optional[StrictInt] = None
-    filter: Optional[GlobalSearchPropertiesFilter] = None
-    field_value_weighting: Optional[
-        GlobalSearchPropertiesFieldValueWeighting
-    ] = None
-    pagination: Optional[GlobalSearchPropertiesPagination] = None
-    sort: Optional[GlobalSearchPropertiesSort] = None
+    filter: Optional[SearchOptionsFilter] = None
+    field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
+    pagination: Optional[SearchOptionsPagination] = None
+    sort: Optional[SearchOptionsSort] = None
     __properties: ClassVar[List[str]] = [
         "these",
-        "collection",
+        "accuracy",
         "request_id",
         "filter",
         "field_value_weighting",
@@ -112,9 +105,6 @@ class MoreLikeTheseQuery(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['these'] = _items
-        # override the default output from pydantic by calling `to_dict()` of collection
-        if self.collection:
-            _dict['collection'] = self.collection.to_dict()
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
@@ -148,28 +138,22 @@ class MoreLikeTheseQuery(BaseModel):
                 ]
                 if obj.get("these") is not None
                 else None,
-                "collection": GlobalSearchPropertiesCollection.from_dict(
-                    obj.get("collection")
-                )
-                if obj.get("collection") is not None
-                else None,
+                "accuracy": obj.get("accuracy"),
                 "request_id": obj.get("request_id"),
-                "filter": GlobalSearchPropertiesFilter.from_dict(
-                    obj.get("filter")
-                )
+                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
                 if obj.get("filter") is not None
                 else None,
-                "field_value_weighting": GlobalSearchPropertiesFieldValueWeighting.from_dict(
+                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
                     obj.get("field_value_weighting")
                 )
                 if obj.get("field_value_weighting") is not None
                 else None,
-                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                "pagination": SearchOptionsPagination.from_dict(
                     obj.get("pagination")
                 )
                 if obj.get("pagination") is not None
                 else None,
-                "sort": GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
+                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
                 if obj.get("sort") is not None
                 else None,
             }

@@ -13,11 +13,10 @@ from pydantic import (
 )
 
 from vantage_sdk.core.http.models import (
-    GlobalSearchPropertiesCollection,
-    GlobalSearchPropertiesFieldValueWeighting,
-    GlobalSearchPropertiesFilter,
-    GlobalSearchPropertiesPagination,
-    GlobalSearchPropertiesSort,
+    SearchOptionsFieldValueWeighting,
+    SearchOptionsFilter,
+    SearchOptionsPagination,
+    SearchOptionsSort,
 )
 
 
@@ -105,28 +104,23 @@ class MoreLikeTheseItem(BaseModel):
         return values
 
 
-class GlobalSearchProperties(BaseModel):
+class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
 
     Attributes
     ----------
-    collection : Optional[GlobalSearchPropertiesCollection], optional
-        The collection properties.
-    filter : Optional[GlobalSearchPropertiesFilter], optional
+    filter : Optional[SearchOptionsFilter], optional
         The filter properties.
-    pagination : Optional[GlobalSearchPropertiesPagination], optional
+    pagination : Optional[SearchOptionsPagination], optional
         The pagination properties.
-    sort : Optional[GlobalSearchPropertiesSort], optional
+    sort : Optional[SearchOptionsSort], optional
         The sort properties.
-    field_value_weighting : Optional[GlobalSearchPropertiesFieldValueWeighting], optional
+    field_value_weighting : Optional[SearchOptionsFieldValueWeighting], optional
         The field value weighting properties.
     """
 
-    collection: Optional[GlobalSearchPropertiesCollection] = None
-    filter: Optional[GlobalSearchPropertiesFilter] = None
-    pagination: Optional[GlobalSearchPropertiesPagination] = None
-    sort: Optional[GlobalSearchPropertiesSort] = None
-    field_value_weighting: Optional[
-        GlobalSearchPropertiesFieldValueWeighting
-    ] = None
+    filter: Optional[SearchOptionsFilter] = None
+    pagination: Optional[SearchOptionsPagination] = None
+    sort: Optional[SearchOptionsSort] = None
+    field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None

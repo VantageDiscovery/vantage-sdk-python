@@ -30,11 +30,10 @@ from vantage_sdk.core.http.models import (
     CreateCollectionRequest,
     EmbeddingSearchQuery,
     ExternalKeyModifiable,
-    GlobalSearchPropertiesCollection,
-    GlobalSearchPropertiesFieldValueWeighting,
-    GlobalSearchPropertiesFilter,
-    GlobalSearchPropertiesPagination,
-    GlobalSearchPropertiesSort,
+    SearchOptionsFieldValueWeighting,
+    SearchOptionsFilter,
+    SearchOptionsPagination,
+    SearchOptionsSort,
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
@@ -68,8 +67,8 @@ from vantage_sdk.model.keys import (
     VantageAPIKey,
 )
 from vantage_sdk.model.search import (
-    GlobalSearchProperties,
     MoreLikeTheseItem,
+    SearchOptions,
     SearchResult,
 )
 
@@ -983,8 +982,6 @@ class VantageClient:
 
     def _prepare_search_query(
         self,
-        collection_id: str,
-        accuracy: float = 0.3,
         page: Optional[int] = None,
         page_count: Optional[int] = None,
         page_threshold: Optional[int] = None,
@@ -995,16 +992,10 @@ class VantageClient:
         query_key_word_max_overall_weight: Optional[float] = None,
         query_key_word_weighting_mode: Optional[str] = None,
         weighted_field_values: Optional[List[WeightedFieldValues]] = [],
-        account_id: Optional[str] = None,
-    ) -> GlobalSearchProperties:
-        collection = GlobalSearchPropertiesCollection(
-            collection_id=collection_id,
-            accuracy=accuracy,
-            account_id=account_id or self.account_id,
-        )
+    ) -> SearchOptions:
 
         search_filter = (
-            GlobalSearchPropertiesFilter(
+            SearchOptionsFilter(
                 boolean_filter=boolean_filter,
             )
             if boolean_filter
@@ -1012,7 +1003,7 @@ class VantageClient:
         )
 
         pagination = (
-            GlobalSearchPropertiesPagination(
+            SearchOptionsPagination(
                 page=page,
                 count=page_count,
                 threshold=page_threshold,
@@ -1022,7 +1013,7 @@ class VantageClient:
         )
 
         sort = (
-            GlobalSearchPropertiesSort(
+            SearchOptionsSort(
                 field=sort_field,
                 order=sort_order,
                 mode=sort_mode,
@@ -1031,14 +1022,13 @@ class VantageClient:
             else None
         )
 
-        field_value_weighting = GlobalSearchPropertiesFieldValueWeighting(
+        field_value_weighting = SearchOptionsFieldValueWeighting(
             query_key_word_max_overall_weight=query_key_word_max_overall_weight,
             query_key_word_weighting_mode=query_key_word_weighting_mode,
             weighted_field_values=weighted_field_values,
         )
 
-        return GlobalSearchProperties(
-            collection=collection,
+        return SearchOptions(
             filter=search_filter,
             pagination=pagination,
             sort=sort,
@@ -1148,8 +1138,6 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            collection_id,
-            accuracy,
             page,
             page_count,
             page_threshold,
@@ -1160,12 +1148,11 @@ class VantageClient:
             query_key_word_max_overall_weight,
             query_key_word_weighting_mode,
             weighted_field_values,
-            account_id,
         )
 
         query = SemanticSearchQuery(
             text=text,
-            collection=search_properties.collection,
+            accuracy=accuracy,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
@@ -1268,8 +1255,6 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            collection_id,
-            accuracy,
             page,
             page_count,
             page_threshold,
@@ -1280,12 +1265,11 @@ class VantageClient:
             query_key_word_max_overall_weight,
             query_key_word_weighting_mode,
             weighted_field_values,
-            account_id,
         )
 
         query = EmbeddingSearchQuery(
             embedding=embedding,
-            collection=search_properties.collection,
+            accuracy=accuracy,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
@@ -1388,8 +1372,6 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            collection_id,
-            accuracy,
             page,
             page_count,
             page_threshold,
@@ -1400,12 +1382,11 @@ class VantageClient:
             query_key_word_max_overall_weight,
             query_key_word_weighting_mode,
             weighted_field_values,
-            account_id,
         )
 
         query = MoreLikeThisQuery(
             document_id=document_id,
-            collection=search_properties.collection,
+            accuracy=accuracy,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,
@@ -1508,8 +1489,6 @@ class VantageClient:
         vantage_api_key = self._vantage_api_key_check(vantage_api_key)
 
         search_properties = self._prepare_search_query(
-            collection_id,
-            accuracy,
             page,
             page_count,
             page_threshold,
@@ -1520,7 +1499,6 @@ class VantageClient:
             query_key_word_max_overall_weight,
             query_key_word_weighting_mode,
             weighted_field_values,
-            account_id,
         )
 
         query = MoreLikeTheseQuery(
@@ -1528,7 +1506,7 @@ class VantageClient:
                 MLTheseTheseInner.model_validate(item.model_dump())
                 for item in more_like_these
             ],
-            collection=search_properties.collection,
+            accuracy=accuracy,
             filter=search_properties.filter,
             pagination=search_properties.pagination,
             sort=search_properties.sort,

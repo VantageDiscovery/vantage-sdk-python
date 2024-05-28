@@ -14,57 +14,45 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional, Union
-
-from pydantic import (
-    BaseModel,
-    StrictFloat,
-    StrictInt,
-    StrictStr,
-    field_validator,
-)
-
-from vantage_sdk.core.http.models.weighted_field_values import (
-    WeightedFieldValues,
-)
+import json
 
 
+from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, StrictStr, field_validator
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class GlobalSearchPropertiesFieldValueWeighting(BaseModel):
+class SearchOptionsSort(BaseModel):
     """
-    GlobalSearchPropertiesFieldValueWeighting
-    """  # noqa: E501
+    SearchOptionsSort
+    """ # noqa: E501
+    field: Optional[StrictStr] = None
+    order: Optional[StrictStr] = None
+    mode: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["field", "order", "mode"]
 
-    query_key_word_max_overall_weight: Optional[
-        Union[StrictFloat, StrictInt]
-    ] = None
-    query_key_word_weighting_mode: Optional[StrictStr] = None
-    weighted_field_values: Optional[List[WeightedFieldValues]] = None
-    __properties: ClassVar[List[str]] = [
-        "query_key_word_max_overall_weight",
-        "query_key_word_weighting_mode",
-        "weighted_field_values",
-    ]
-
-    @field_validator('query_key_word_weighting_mode')
-    def query_key_word_weighting_mode_validate_enum(cls, value):
+    @field_validator('order')
+    def order_validate_enum(cls, value):
         """Validates the enum"""
         if value is None:
             return value
 
-        if value not in ('none', 'uniform', 'weighted'):
-            raise ValueError(
-                "must be one of enum values ('none', 'uniform', 'weighted')"
-            )
+        if value not in ('asc', 'desc'):
+            raise ValueError("must be one of enum values ('asc', 'desc')")
+        return value
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('semantic_threshold', 'field_selection'):
+            raise ValueError("must be one of enum values ('semantic_threshold', 'field_selection')")
         return value
 
     model_config = {
@@ -72,6 +60,7 @@ class GlobalSearchPropertiesFieldValueWeighting(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -84,7 +73,7 @@ class GlobalSearchPropertiesFieldValueWeighting(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of GlobalSearchPropertiesFieldValueWeighting from a JSON string"""
+        """Create an instance of SearchOptionsSort from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -99,41 +88,26 @@ class GlobalSearchPropertiesFieldValueWeighting(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in weighted_field_values (list)
-        _items = []
-        if self.weighted_field_values:
-            for _item in self.weighted_field_values:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['weighted_field_values'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of GlobalSearchPropertiesFieldValueWeighting from a dict"""
+        """Create an instance of SearchOptionsSort from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "query_key_word_max_overall_weight": obj.get(
-                    "query_key_word_max_overall_weight"
-                ),
-                "query_key_word_weighting_mode": obj.get(
-                    "query_key_word_weighting_mode"
-                ),
-                "weighted_field_values": [
-                    WeightedFieldValues.from_dict(_item)
-                    for _item in obj.get("weighted_field_values")
-                ]
-                if obj.get("weighted_field_values") is not None
-                else None,
-            }
-        )
+        _obj = cls.model_validate({
+            "field": obj.get("field"),
+            "order": obj.get("order"),
+            "mode": obj.get("mode")
+        })
         return _obj
+
+

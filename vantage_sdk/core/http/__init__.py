@@ -73,30 +73,23 @@ from vantage_sdk.core.http.models.external_key_modifiable import (
 from vantage_sdk.core.http.models.external_key_read_only import (
     ExternalKeyReadOnly,
 )
-from vantage_sdk.core.http.models.global_search_properties import (
-    GlobalSearchProperties,
-)
-from vantage_sdk.core.http.models.global_search_properties_collection import (
-    GlobalSearchPropertiesCollection,
-)
-from vantage_sdk.core.http.models.global_search_properties_field_value_weighting import (
-    GlobalSearchPropertiesFieldValueWeighting,
-)
-from vantage_sdk.core.http.models.global_search_properties_filter import (
-    GlobalSearchPropertiesFilter,
-)
-from vantage_sdk.core.http.models.global_search_properties_pagination import (
-    GlobalSearchPropertiesPagination,
-)
-from vantage_sdk.core.http.models.global_search_properties_sort import (
-    GlobalSearchPropertiesSort,
-)
 from vantage_sdk.core.http.models.ml_these import MLThese
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage_sdk.core.http.models.more_like_these_query import (
     MoreLikeTheseQuery,
 )
 from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
+from vantage_sdk.core.http.models.search_options import SearchOptions
+from vantage_sdk.core.http.models.search_options_field_value_weighting import (
+    SearchOptionsFieldValueWeighting,
+)
+from vantage_sdk.core.http.models.search_options_filter import (
+    SearchOptionsFilter,
+)
+from vantage_sdk.core.http.models.search_options_pagination import (
+    SearchOptionsPagination,
+)
+from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
 from vantage_sdk.core.http.models.search_result import SearchResult
 from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
