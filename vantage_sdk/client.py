@@ -1020,10 +1020,14 @@ class VantageClient:
             else None
         )
 
-        field_value_weighting = SearchOptionsFieldValueWeighting(
-            query_key_word_max_overall_weight=field_value_weighting.query_key_word_max_overall_weight,
-            query_key_word_weighting_mode=field_value_weighting.query_key_word_weighting_mode,
-            weighted_field_values=field_value_weighting.weighted_field_values,
+        field_value_weighting = (
+            SearchOptionsFieldValueWeighting(
+                query_key_word_max_overall_weight=field_value_weighting.query_key_word_max_overall_weight,
+                query_key_word_weighting_mode=field_value_weighting.query_key_word_weighting_mode,
+                weighted_field_values=field_value_weighting.weighted_field_values,
+            )
+            if field_value_weighting
+            else None
         )
 
         return SearchOptions(
