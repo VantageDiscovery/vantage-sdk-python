@@ -1080,16 +1080,16 @@ class VantageClient:
             The accuracy threshold for the search.
             Defaults to 0.3.
         pagination: Optional[Pagination], optional
-            ...
+            Pagination settings for the search results.
             Defaults to None,
         filter: Optional[Filter], optional
-            ...
+            Filter settings to narrow down the search results.
             Defaults to None,
         sort: Optional[Sort], optional
-            ...
+            Sorting settings for the search results.
             Defaults to None,
         field_value_weighting: Optional[FieldValueWeighting], optional
-            ...
+            Weighting settings for specific field values in the search.
             Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1163,7 +1163,18 @@ class VantageClient:
         accuracy : float, optional
             The accuracy threshold for the search.
             Defaults to 0.3.
-        TODO: ...
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1233,7 +1244,18 @@ class VantageClient:
             The ID of the document to find similar documents to.
         collection_id : str
             The ID of the collection to search within.
-        TODO: ...
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1303,7 +1325,18 @@ class VantageClient:
             The list of "MoreLikeTheseItem" objects to find similar documents to.
         collection_id : str
             The ID of the collection to search within.
-        TODO: ...
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
