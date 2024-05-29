@@ -1873,3 +1873,13 @@ class VantageClient:
         )
 
     # endregion
+
+    # region Documents - Validate
+
+    def validate_documents_from_jsonl(self, jsonl_file_path: str):
+        pass
+
+    def validate_documents_from_parquet(self, parquet_file_path: str):
+        pass
+
+    # endregion
