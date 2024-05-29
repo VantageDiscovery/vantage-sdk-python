@@ -13,11 +13,12 @@ from pydantic import (
 )
 
 from vantage_sdk.core.http.models import (
-    GlobalSearchPropertiesCollection,
-    GlobalSearchPropertiesFieldValueWeighting,
-    GlobalSearchPropertiesFilter,
-    GlobalSearchPropertiesPagination,
-    GlobalSearchPropertiesSort,
+    SearchOptionsCollection,
+    SearchOptionsFieldValueWeighting,
+    SearchOptionsFilter,
+    SearchOptionsPagination,
+    SearchOptionsSort,
+    WeightedFieldValues,
 )
 
 
@@ -105,28 +106,73 @@ class MoreLikeTheseItem(BaseModel):
         return values
 
 
-class GlobalSearchProperties(BaseModel):
+class Filter(BaseModel):
+    boolean_filter: Optional[str] = None
+
+
+class Pagination(BaseModel):
+    page: Optional[int] = None
+    count: Optional[int] = None
+    threshold: Optional[int] = None
+
+
+class Sort(BaseModel):
+    field: Optional[str] = None
+    order: Optional[str] = None
+    mode: Optional[str] = None
+
+
+class WeightedFieldValueItem(BaseModel):
+    field: Optional[str] = None
+    value: Optional[str] = None
+    weight: Optional[float] = None
+
+
+class FieldValueWeighting(BaseModel):
+    query_key_word_max_overall_weight: Optional[float] = None
+    query_key_word_weighting_mode: Optional[str] = None
+    weighted_field_values: Optional[List[WeightedFieldValueItem]] = None
+
+    # Pydantic Config
+    class Config:
+        arbitrary_types_allowed = True
+
+    def pydantic_weighted_field_values(
+        self,
+    ) -> Optional[List[WeightedFieldValues]]:
+        if not self.weighted_field_values:
+            return None
+
+        return [
+            WeightedFieldValues(
+                field=item.field,
+                value=item.value,
+                weight=item.weight,
+            )
+            for item in self.weighted_field_values
+        ]
+
+
+class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
 
     Attributes
     ----------
-    collection : Optional[GlobalSearchPropertiesCollection], optional
+    collection : Optional[SearchOptionsCollection], optional
         The collection properties.
-    filter : Optional[GlobalSearchPropertiesFilter], optional
+    filter : Optional[SearchOptionsFilter], optional
         The filter properties.
-    pagination : Optional[GlobalSearchPropertiesPagination], optional
+    pagination : Optional[SearchOptionsPagination], optional
         The pagination properties.
-    sort : Optional[GlobalSearchPropertiesSort], optional
+    sort : Optional[SearchOptionsSort], optional
         The sort properties.
-    field_value_weighting : Optional[GlobalSearchPropertiesFieldValueWeighting], optional
+    field_value_weighting : Optional[SearchOptionsFieldValueWeighting], optional
         The field value weighting properties.
     """
 
-    collection: Optional[GlobalSearchPropertiesCollection] = None
-    filter: Optional[GlobalSearchPropertiesFilter] = None
-    pagination: Optional[GlobalSearchPropertiesPagination] = None
-    sort: Optional[GlobalSearchPropertiesSort] = None
-    field_value_weighting: Optional[
-        GlobalSearchPropertiesFieldValueWeighting
-    ] = None
+    collection: Optional[SearchOptionsCollection] = None
+    filter: Optional[SearchOptionsFilter] = None
+    pagination: Optional[SearchOptionsPagination] = None
+    sort: Optional[SearchOptionsSort] = None
+    field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None

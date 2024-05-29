@@ -22,21 +22,19 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictInt
 
-from vantage_sdk.core.http.models.global_search_properties_collection import (
-    GlobalSearchPropertiesCollection,
+from vantage_sdk.core.http.models.search_options_collection import (
+    SearchOptionsCollection,
 )
-from vantage_sdk.core.http.models.global_search_properties_field_value_weighting import (
-    GlobalSearchPropertiesFieldValueWeighting,
+from vantage_sdk.core.http.models.search_options_field_value_weighting import (
+    SearchOptionsFieldValueWeighting,
 )
-from vantage_sdk.core.http.models.global_search_properties_filter import (
-    GlobalSearchPropertiesFilter,
+from vantage_sdk.core.http.models.search_options_filter import (
+    SearchOptionsFilter,
 )
-from vantage_sdk.core.http.models.global_search_properties_pagination import (
-    GlobalSearchPropertiesPagination,
+from vantage_sdk.core.http.models.search_options_pagination import (
+    SearchOptionsPagination,
 )
-from vantage_sdk.core.http.models.global_search_properties_sort import (
-    GlobalSearchPropertiesSort,
-)
+from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
 
 
 try:
@@ -45,19 +43,17 @@ except ImportError:
     from typing_extensions import Self
 
 
-class GlobalSearchProperties(BaseModel):
+class SearchOptions(BaseModel):
     """
-    GlobalSearchProperties
+    SearchOptions
     """  # noqa: E501
 
-    collection: Optional[GlobalSearchPropertiesCollection] = None
+    collection: Optional[SearchOptionsCollection] = None
     request_id: Optional[StrictInt] = None
-    filter: Optional[GlobalSearchPropertiesFilter] = None
-    field_value_weighting: Optional[
-        GlobalSearchPropertiesFieldValueWeighting
-    ] = None
-    pagination: Optional[GlobalSearchPropertiesPagination] = None
-    sort: Optional[GlobalSearchPropertiesSort] = None
+    filter: Optional[SearchOptionsFilter] = None
+    field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
+    pagination: Optional[SearchOptionsPagination] = None
+    sort: Optional[SearchOptionsSort] = None
     __properties: ClassVar[List[str]] = [
         "collection",
         "request_id",
@@ -84,7 +80,7 @@ class GlobalSearchProperties(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of GlobalSearchProperties from a JSON string"""
+        """Create an instance of SearchOptions from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -123,7 +119,7 @@ class GlobalSearchProperties(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of GlobalSearchProperties from a dict"""
+        """Create an instance of SearchOptions from a dict"""
         if obj is None:
             return None
 
@@ -132,28 +128,26 @@ class GlobalSearchProperties(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection": GlobalSearchPropertiesCollection.from_dict(
+                "collection": SearchOptionsCollection.from_dict(
                     obj.get("collection")
                 )
                 if obj.get("collection") is not None
                 else None,
                 "request_id": obj.get("request_id"),
-                "filter": GlobalSearchPropertiesFilter.from_dict(
-                    obj.get("filter")
-                )
+                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
                 if obj.get("filter") is not None
                 else None,
-                "field_value_weighting": GlobalSearchPropertiesFieldValueWeighting.from_dict(
+                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
                     obj.get("field_value_weighting")
                 )
                 if obj.get("field_value_weighting") is not None
                 else None,
-                "pagination": GlobalSearchPropertiesPagination.from_dict(
+                "pagination": SearchOptionsPagination.from_dict(
                     obj.get("pagination")
                 )
                 if obj.get("pagination") is not None
                 else None,
-                "sort": GlobalSearchPropertiesSort.from_dict(obj.get("sort"))
+                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
                 if obj.get("sort") is not None
                 else None,
             }
