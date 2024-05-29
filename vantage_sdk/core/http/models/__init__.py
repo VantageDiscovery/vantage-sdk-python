@@ -52,6 +52,9 @@ from vantage_sdk.core.http.models.more_like_these_query import (
 )
 from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
 from vantage_sdk.core.http.models.search_options import SearchOptions
+from vantage_sdk.core.http.models.search_options_collection import (
+    SearchOptionsCollection,
+)
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,
 )

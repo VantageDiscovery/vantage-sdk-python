@@ -22,6 +22,9 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt
 
+from vantage_sdk.core.http.models.search_options_collection import (
+    SearchOptionsCollection,
+)
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,
 )
@@ -45,7 +48,7 @@ class EmbeddingSearchQuery(BaseModel):
     EmbeddingSearchQuery
     """  # noqa: E501
 
-    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
+    collection: Optional[SearchOptionsCollection] = None
     request_id: Optional[StrictInt] = None
     filter: Optional[SearchOptionsFilter] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
@@ -53,7 +56,7 @@ class EmbeddingSearchQuery(BaseModel):
     sort: Optional[SearchOptionsSort] = None
     embedding: Optional[List[Union[StrictFloat, StrictInt]]] = None
     __properties: ClassVar[List[str]] = [
-        "accuracy",
+        "collection",
         "request_id",
         "filter",
         "field_value_weighting",
@@ -97,6 +100,9 @@ class EmbeddingSearchQuery(BaseModel):
             exclude={},
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of collection
+        if self.collection:
+            _dict['collection'] = self.collection.to_dict()
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
@@ -124,7 +130,11 @@ class EmbeddingSearchQuery(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "accuracy": obj.get("accuracy"),
+                "collection": SearchOptionsCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
                 "request_id": obj.get("request_id"),
                 "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
                 if obj.get("filter") is not None

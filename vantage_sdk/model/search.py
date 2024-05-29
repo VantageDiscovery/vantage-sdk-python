@@ -13,10 +13,12 @@ from pydantic import (
 )
 
 from vantage_sdk.core.http.models import (
+    SearchOptionsCollection,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
     SearchOptionsPagination,
     SearchOptionsSort,
+    WeightedFieldValues,
 )
 
 
@@ -120,7 +122,7 @@ class Sort(BaseModel):
     mode: Optional[str] = None
 
 
-class WeightedFieldValueItem:
+class WeightedFieldValueItem(BaseModel):
     field: Optional[str] = None
     value: Optional[str] = None
     weight: Optional[float] = None
@@ -131,7 +133,24 @@ class FieldValueWeighting(BaseModel):
     query_key_word_weighting_mode: Optional[str] = None
     weighted_field_values: Optional[List[WeightedFieldValueItem]] = None
 
-    # TODO: weighted_field_values conversion (WeightedFieldValueItem -> WeightedFieldValues)
+    # Pydantic Config
+    class Config:
+        arbitrary_types_allowed = True
+
+    def pydantic_weighted_field_values(
+        self,
+    ) -> Optional[List[WeightedFieldValues]]:
+        if not self.weighted_field_values:
+            return None
+
+        return [
+            WeightedFieldValues(
+                field=item.field,
+                value=item.value,
+                weight=item.weight,
+            )
+            for item in self.weighted_field_values
+        ]
 
 
 class SearchOptions(BaseModel):
@@ -140,6 +159,8 @@ class SearchOptions(BaseModel):
 
     Attributes
     ----------
+    collection : Optional[SearchOptionsCollection], optional
+        The collection properties.
     filter : Optional[SearchOptionsFilter], optional
         The filter properties.
     pagination : Optional[SearchOptionsPagination], optional
@@ -150,6 +171,7 @@ class SearchOptions(BaseModel):
         The field value weighting properties.
     """
 
+    collection: Optional[SearchOptionsCollection] = None
     filter: Optional[SearchOptionsFilter] = None
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None

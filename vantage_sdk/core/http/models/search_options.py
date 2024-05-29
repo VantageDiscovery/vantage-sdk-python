@@ -14,40 +14,60 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
+from typing import Any, ClassVar, Dict, List, Optional
 
+from pydantic import BaseModel, StrictInt
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from pydantic import BaseModel, StrictFloat, StrictInt
-from vantage_sdk.core.http.models.search_options_field_value_weighting import SearchOptionsFieldValueWeighting
-from vantage_sdk.core.http.models.search_options_filter import SearchOptionsFilter
-from vantage_sdk.core.http.models.search_options_pagination import SearchOptionsPagination
+from vantage_sdk.core.http.models.search_options_collection import (
+    SearchOptionsCollection,
+)
+from vantage_sdk.core.http.models.search_options_field_value_weighting import (
+    SearchOptionsFieldValueWeighting,
+)
+from vantage_sdk.core.http.models.search_options_filter import (
+    SearchOptionsFilter,
+)
+from vantage_sdk.core.http.models.search_options_pagination import (
+    SearchOptionsPagination,
+)
 from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class SearchOptions(BaseModel):
     """
     SearchOptions
-    """ # noqa: E501
-    accuracy: Optional[Union[StrictFloat, StrictInt]] = None
+    """  # noqa: E501
+
+    collection: Optional[SearchOptionsCollection] = None
     request_id: Optional[StrictInt] = None
     filter: Optional[SearchOptionsFilter] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
-    __properties: ClassVar[List[str]] = ["accuracy", "request_id", "filter", "field_value_weighting", "pagination", "sort"]
+    __properties: ClassVar[List[str]] = [
+        "collection",
+        "request_id",
+        "filter",
+        "field_value_weighting",
+        "pagination",
+        "sort",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -75,16 +95,20 @@ class SearchOptions(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of collection
+        if self.collection:
+            _dict['collection'] = self.collection.to_dict()
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of field_value_weighting
         if self.field_value_weighting:
-            _dict['field_value_weighting'] = self.field_value_weighting.to_dict()
+            _dict[
+                'field_value_weighting'
+            ] = self.field_value_weighting.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
@@ -102,14 +126,30 @@ class SearchOptions(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "accuracy": obj.get("accuracy"),
-            "request_id": obj.get("request_id"),
-            "filter": SearchOptionsFilter.from_dict(obj.get("filter")) if obj.get("filter") is not None else None,
-            "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(obj.get("field_value_weighting")) if obj.get("field_value_weighting") is not None else None,
-            "pagination": SearchOptionsPagination.from_dict(obj.get("pagination")) if obj.get("pagination") is not None else None,
-            "sort": SearchOptionsSort.from_dict(obj.get("sort")) if obj.get("sort") is not None else None
-        })
+        _obj = cls.model_validate(
+            {
+                "collection": SearchOptionsCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
+                "request_id": obj.get("request_id"),
+                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
+                if obj.get("filter") is not None
+                else None,
+                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
+                    obj.get("field_value_weighting")
+                )
+                if obj.get("field_value_weighting") is not None
+                else None,
+                "pagination": SearchOptionsPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
+                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
+                if obj.get("sort") is not None
+                else None,
+            }
+        )
         return _obj
-
-
