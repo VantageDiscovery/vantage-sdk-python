@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -7,6 +9,6 @@ class ErrorMessage(BaseModel):
 
 
 class ValidationError(BaseModel):
-    document_id: str
-    line_number: int
+    document_id: Optional[str]
+    line_number: Optional[int]
     errors: list[ErrorMessage]

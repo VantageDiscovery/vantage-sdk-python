@@ -3,6 +3,7 @@ import re
 import string
 from typing import Any, Optional
 
+import pyarrow.parquet as parquet
 import tiktoken
 
 from vantage_sdk.model.validation import ErrorMessage, ValidationError
@@ -14,8 +15,9 @@ _VALID_OPERATIONS = ["add", "delete", "update"]
 _VALID_META_NAME_CHARACTERS = set(
     string.ascii_lowercase + string.ascii_uppercase + string.digits + '-' + '_'
 )
-_VALID_META_ALL_VALUES = (int, float, str)
-_VALID_META_NUMBER_VALUES = (int, float)
+_VALID_META_PRIMITIVE_VALUES = (int, float, str)
+_NUMBERS = (int, float)
+_LIST = list
 
 
 def _validate_id(document: dict[str, Any]) -> Optional[ErrorMessage]:
@@ -107,45 +109,64 @@ def _is_valid_meta_name(name: str) -> bool:
 
 
 def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
-    if key.startswith("meta_ordered") and not isinstance(value, float):
-        return ErrorMessage(
-            field_name=key,
-            error_message="Value must be a float number.",
-        )
+    # If "meta_ordered", check only if it is number.
+    if key.startswith("meta_ordered"):
+        if not isinstance(value, _NUMBERS):
+            return ErrorMessage(
+                field_name=key,
+                error_message="Value must be a number.",
+            )
+        else:
+            return None
 
-    # If meta_ is a list, validate if all items are
-    # either a number or a string.
-    if isinstance(value, list):
-        first_item_type = type(value[0])
-        for item in value:
-            if not isinstance(item, _VALID_META_ALL_VALUES):
+    # If iterable, convert to list.
+    if hasattr(value, '__iter__'):
+        if not isinstance(value, list):
+            try:
+                value = list(value)
+            except Exception:
                 return ErrorMessage(
                     field_name=key,
                     error_message="Meta arrays can contain only "
                     "[str, float, int] values.",
                 )
-            current_item_type = type(item)
-            if first_item_type != current_item_type:
-                if isinstance(
-                    first_item_type,
-                    _VALID_META_NUMBER_VALUES,
-                ) and isinstance(
-                    current_item_type,
-                    _VALID_META_NUMBER_VALUES,
-                ):
-                    continue
 
+    if isinstance(value, _VALID_META_PRIMITIVE_VALUES):
+        return None
+
+    # If meta_ is iterable, validate if all items are
+    # either a number or a string.
+    if isinstance(value, list):
+        if len(value) == 0:
+            return None
+
+        is_string_list = isinstance(value[0], str)
+        for item in value:
+            if not isinstance(item, _VALID_META_PRIMITIVE_VALUES):
                 return ErrorMessage(
                     field_name=key,
-                    error_message="Meta arrays cannot contain mixed values.",
+                    error_message="Meta arrays can contain only "
+                    "[str, float, int] values.",
                 )
+            if is_string_list:
+                if not isinstance(item, str):
+                    return ErrorMessage(
+                        field_name=key,
+                        error_message="Meta arrays cannot contain mixed values.",
+                    )
+            else:
+                if not isinstance(item, _NUMBERS):
+                    return ErrorMessage(
+                        field_name=key,
+                        error_message="Meta arrays cannot contain mixed values.",
+                    )
+        return None
 
-    if not isinstance(value, _VALID_META_ALL_VALUES):
-        return ErrorMessage(
-            field_name=key,
-            error_message="Value must be either [int, str, float], or an "
-            "array of one of those types.",
-        )
+    return ErrorMessage(
+        field_name=key,
+        error_message="Value must be either [int, str, float], or an "
+        "array of one of those types.",
+    )
 
 
 def _validate_meta_fields(document: dict[str, Any]) -> list[ErrorMessage]:
@@ -165,7 +186,8 @@ def _validate_meta_fields(document: dict[str, Any]) -> list[ErrorMessage]:
             errors.append(
                 ErrorMessage(
                     field_name=meta_field,
-                    error_message="Field has invalid suffix. May contain only [a-zA-Z0-9-_] characters.",
+                    error_message="Field has invalid suffix. "
+                    "May contain only [a-zA-Z0-9-_] characters.",
                 )
             )
             continue
@@ -193,10 +215,20 @@ def _validate_embeddings(
 
     embeddings = document["embeddings"]
 
+    if hasattr(embeddings, '__iter__'):
+        if not isinstance(embeddings, list):
+            try:
+                embeddings = list(embeddings)
+            except Exception:
+                return ErrorMessage(
+                    field_name="embeddings",
+                    error_message="Embeddings must be a list of float numbers.",
+                )
+
     if not isinstance(embeddings, list):
         return ErrorMessage(
             field_name="embeddings",
-            error_message="Embeddings must be a list of float numbers",
+            error_message="Embeddings must be a list of float numbers.",
         )
 
     actual_size = len(embeddings)
@@ -207,6 +239,13 @@ def _validate_embeddings(
             f"found {actual_size},"
             f" expected {embeddings_dimension}",
         )
+
+    for item in embeddings:
+        if not isinstance(item, _NUMBERS):
+            return ErrorMessage(
+                field_name="embeddings",
+                error_message="Embeddings must not contain non-number values.",
+            )
 
     return None
 
@@ -229,7 +268,7 @@ class DocumentValidator:
         if id_error is not None:
             error_messages.append(id_error)
         else:
-            document_id = None
+            document_id = document_id
 
         operation_error = _validate_operation(document)
         if operation_error is not None:
@@ -300,3 +339,34 @@ class DocumentValidator:
                 if error is not None:
                     errors.append(error)
                 line_number += 1
+
+    def validate_parquet(
+        self,
+        file_path: str,
+        model: str,
+        is_upe: bool = False,
+        embeddings_dimension=None,
+    ) -> list[ValidationError]:
+        parquet_file = parquet.ParquetFile(file_path)
+        batches = parquet_file.iter_batches(batch_size=4096)
+        # column_names = batches.column_names
+        # table = parquet_file.read()
+        # column_names = table.column_names
+        line_number = 0
+        errors = []
+
+        for batch in batches:
+            items = batch.to_pandas().to_dict(orient="records")
+            for document in items:
+                error = self._validate_document(
+                    document=document,
+                    line_number=line_number,
+                    is_upe=is_upe,
+                    embeddings_dimension=embeddings_dimension,
+                    model=model,
+                )
+                if error is not None:
+                    errors.append(error)
+                line_number += 1
+
+        return errors
