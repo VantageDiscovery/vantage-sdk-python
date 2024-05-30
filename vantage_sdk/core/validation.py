@@ -6,7 +6,11 @@ from typing import Any, Optional
 import pyarrow.parquet as parquet
 import tiktoken
 
-from vantage_sdk.model.validation import ErrorMessage, ValidationError
+from vantage_sdk.model.validation import (
+    CollectionType,
+    ErrorMessage,
+    ValidationError,
+)
 
 
 _MAX_ID_LENGTH = 256
@@ -50,7 +54,7 @@ def _validate_id(document: dict[str, Any]) -> Optional[ErrorMessage]:
 
 def _validate_text(
     document: dict[str, Any],
-    model: str,
+    model: str = None,
     mandatory: bool = True,
 ) -> Optional[ErrorMessage]:
     if "text" not in document.keys():
@@ -65,6 +69,9 @@ def _validate_text(
         return ErrorMessage(
             field_name="text", error_message="Field content must be string."
         )
+
+    if not model:
+        return None
 
     encoding = tiktoken.encoding_for_model(model)
 
@@ -119,24 +126,12 @@ def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
         else:
             return None
 
-    # If iterable, convert to list.
-    if hasattr(value, '__iter__'):
-        if not isinstance(value, list):
-            try:
-                value = list(value)
-            except Exception:
-                return ErrorMessage(
-                    field_name=key,
-                    error_message="Meta arrays can contain only "
-                    "[str, float, int] values.",
-                )
-
     if isinstance(value, _VALID_META_PRIMITIVE_VALUES):
         return None
 
-    # If meta_ is iterable, validate if all items are
+    # If meta_ is a list/array, validate if all items are
     # either a number or a string.
-    if isinstance(value, list):
+    if hasattr(value, '__iter__'):
         if len(value) == 0:
             return None
 
@@ -201,7 +196,7 @@ def _validate_meta_fields(document: dict[str, Any]) -> list[ErrorMessage]:
 
 def _validate_embeddings(
     document: dict[str, Any],
-    embeddings_dimension: int,
+    embeddings_dimension: Optional[int],
     mandatory=False,
 ) -> Optional[ErrorMessage]:
     if "embeddings" not in document.keys():
@@ -215,21 +210,15 @@ def _validate_embeddings(
 
     embeddings = document["embeddings"]
 
-    if hasattr(embeddings, '__iter__'):
-        if not isinstance(embeddings, list):
-            try:
-                embeddings = list(embeddings)
-            except Exception:
-                return ErrorMessage(
-                    field_name="embeddings",
-                    error_message="Embeddings must be a list of float numbers.",
-                )
-
-    if not isinstance(embeddings, list):
+    # Embeddings must be iterable (array/list)
+    if not hasattr(embeddings, '__iter__'):
         return ErrorMessage(
             field_name="embeddings",
             error_message="Embeddings must be a list of float numbers.",
         )
+
+    if not embeddings_dimension:
+        return None
 
     actual_size = len(embeddings)
     if actual_size != embeddings_dimension:
@@ -257,9 +246,9 @@ class DocumentValidator:
         self,
         document: dict[str, Any],
         line_number: int,
-        model: str,
-        is_upe: bool = False,
-        embeddings_dimension=None,
+        collection_type: CollectionType,
+        embeddings_dimension: Optional[int] = None,
+        model: Optional[str] = None,
     ) -> Optional[ValidationError]:
         document_id = None
         error_messages = []
@@ -277,7 +266,9 @@ class DocumentValidator:
         text_error = _validate_text(
             document=document,
             model=model,
-            mandatory=(not is_upe),
+            mandatory=(
+                collection_type == CollectionType.USER_PROVIDED_EMBEDDINGS
+            ),
         )
         if text_error is not None:
             error_messages.append(text_error)
@@ -289,7 +280,9 @@ class DocumentValidator:
         embeddings_error = _validate_embeddings(
             document=document,
             embeddings_dimension=embeddings_dimension,
-            mandatory=is_upe,
+            mandatory=(
+                collection_type == CollectionType.USER_PROVIDED_EMBEDDINGS
+            ),
         )
         if embeddings_error is not None:
             error_messages.append(embeddings_error)
@@ -306,9 +299,9 @@ class DocumentValidator:
     def validate_jsonl(
         self,
         file_path: str,
-        model: str,
-        is_upe: bool = False,
-        embeddings_dimension=None,
+        collection_type: CollectionType,
+        model: Optional[str] = None,
+        embeddings_dimension: Optional[int] = None,
     ) -> list[ValidationError]:
         errors = []
         line_number = 0
@@ -316,25 +309,18 @@ class DocumentValidator:
             document = None
             line = None
             while True:
-                try:
-                    line = file.readline()
-                except Exception as exception:
-                    raise exception
-
+                line = file.readline()
                 if not line:
+                    # Reached end of file.
                     return errors
 
-                try:
-                    document = json.loads(line)
-                except Exception as exception:
-                    raise exception
-
+                document = json.loads(line)
                 error = self._validate_document(
                     document=document,
                     line_number=line_number,
-                    is_upe=is_upe,
-                    embeddings_dimension=embeddings_dimension,
                     model=model,
+                    collection_type=collection_type,
+                    embeddings_dimension=embeddings_dimension,
                 )
                 if error is not None:
                     errors.append(error)
@@ -343,15 +329,12 @@ class DocumentValidator:
     def validate_parquet(
         self,
         file_path: str,
-        model: str,
-        is_upe: bool = False,
-        embeddings_dimension=None,
+        collection_type: CollectionType,
+        model: Optional[str] = None,
+        embeddings_dimension: Optional[int] = None,
     ) -> list[ValidationError]:
         parquet_file = parquet.ParquetFile(file_path)
         batches = parquet_file.iter_batches(batch_size=4096)
-        # column_names = batches.column_names
-        # table = parquet_file.read()
-        # column_names = table.column_names
         line_number = 0
         errors = []
 
@@ -361,9 +344,9 @@ class DocumentValidator:
                 error = self._validate_document(
                     document=document,
                     line_number=line_number,
-                    is_upe=is_upe,
-                    embeddings_dimension=embeddings_dimension,
                     model=model,
+                    collection_type=collection_type,
+                    embeddings_dimension=embeddings_dimension,
                 )
                 if error is not None:
                     errors.append(error)

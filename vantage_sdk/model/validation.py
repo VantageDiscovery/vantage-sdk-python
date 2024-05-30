@@ -1,6 +1,13 @@
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
+
+
+class CollectionType(Enum):
+    USER_PROVIDED_EMBEDDINGS = "UPE"
+    OPEN_AI = "OpenAI"
+    HUGGING_FACE = "HuggingFace"
 
 
 class ErrorMessage(BaseModel):
