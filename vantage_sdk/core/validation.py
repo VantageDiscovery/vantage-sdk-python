@@ -52,6 +52,22 @@ def _validate_id(document: dict[str, Any]) -> Optional[ErrorMessage]:
     return None
 
 
+def _check_for_duplicate(
+    document_id: Optional[str],
+    encountered: set[str],
+) -> Optional[ErrorMessage]:
+    if document_id is None:
+        return None
+
+    if document_id not in encountered:
+        return None
+
+    return ErrorMessage(
+        field_name="id",
+        error_message="Duplicate encountered.",
+    )
+
+
 def _validate_text(
     document: dict[str, Any],
     model: str = None,
@@ -240,7 +256,7 @@ def _validate_embeddings(
 
 
 class DocumentValidator:
-    _encountered_ids: list[str]
+    _encountered_ids: set[str] = set()
 
     def _validate_document(
         self,
@@ -250,14 +266,19 @@ class DocumentValidator:
         embeddings_dimension: Optional[int] = None,
         model: Optional[str] = None,
     ) -> Optional[ValidationError]:
-        document_id = None
+        document_id = document.get("id")
         error_messages = []
 
         id_error = _validate_id(document)
         if id_error is not None:
             error_messages.append(id_error)
-        else:
-            document_id = document_id
+
+        duplicate_document_error = _check_for_duplicate(
+            document_id=document_id,
+            encountered=self._encountered_ids,
+        )
+        if duplicate_document_error is not None:
+            error_messages.append(duplicate_document_error)
 
         operation_error = _validate_operation(document)
         if operation_error is not None:
@@ -287,6 +308,9 @@ class DocumentValidator:
         if embeddings_error is not None:
             error_messages.append(embeddings_error)
 
+        if document_id is not None:
+            self._encountered_ids.add(document_id)
+
         if not any(error_messages):
             return None
 
@@ -312,7 +336,7 @@ class DocumentValidator:
                 line = file.readline()
                 if not line:
                     # Reached end of file.
-                    return errors
+                    break
 
                 document = json.loads(line)
                 error = self._validate_document(
@@ -325,6 +349,8 @@ class DocumentValidator:
                 if error is not None:
                     errors.append(error)
                 line_number += 1
+
+        return errors
 
     def validate_parquet(
         self,
