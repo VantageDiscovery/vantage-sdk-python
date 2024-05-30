@@ -1937,7 +1937,7 @@ class VantageClient:
         List of encountered errors. If file is valid, the list will be empty.
         """
 
-        return validator.validate_jsonl(
+        return validator.validate_parquet(
             file_path=file_path,
             collection_type=collection_type,
             model=model,
