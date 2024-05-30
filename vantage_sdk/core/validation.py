@@ -133,7 +133,7 @@ def _is_valid_meta_name(name: str) -> bool:
 
 def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
     # If "meta_ordered", check only if it is number.
-    if key.startswith("meta_ordered"):
+    if key.startswith("meta_order"):
         if not isinstance(value, _NUMBERS):
             return ErrorMessage(
                 field_name=key,
