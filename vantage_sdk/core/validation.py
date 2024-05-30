@@ -256,6 +256,8 @@ def _validate_embeddings(
 
 
 class DocumentValidator:
+    """Component for validating documents."""
+
     _encountered_ids: set[str] = set()
 
     def _validate_document(
@@ -327,6 +329,24 @@ class DocumentValidator:
         model: Optional[str] = None,
         embeddings_dimension: Optional[int] = None,
     ) -> list[ValidationError]:
+        """
+        Validates documents from a JSONL file.
+
+        Parameters
+        ----------
+        file_path: str
+            Path of the JSONL file in the filesystem.
+        collection_type: CollectionType
+            For what kind of collection are documents from this file intended.
+        model: Optional[str] = None
+            Which model should be used to generate embeddings (if any).
+        embeddings_dimension: Optional[int] = None
+            Dimension of embeddings (if provided in file).
+
+        Returns
+        -------
+        List of encountered errors. If file is valid, the list will be empty.
+        """
         errors = []
         line_number = 0
         with open(file_path, 'r') as file:
@@ -351,6 +371,25 @@ class DocumentValidator:
                 line_number += 1
 
         return errors
+
+    """
+    Validates documents from a Parquet file.
+
+    Parameters
+    ----------
+    file_path: str
+        Path of the Parquet file in the filesystem.
+    collection_type: CollectionType
+        For what kind of collection are documents from this file intended.
+    model: Optional[str] = None
+        Which model should be used to generate embeddings (if any).
+    embeddings_dimension: Optional[int] = None
+        Dimension of embeddings (if provided in file).
+
+    Returns
+    -------
+    List of encountered errors. If file is valid, the list will be empty.
+    """
 
     def validate_parquet(
         self,
@@ -379,3 +418,6 @@ class DocumentValidator:
                 line_number += 1
 
         return errors
+
+
+VALIDATOR = DocumentValidator()
