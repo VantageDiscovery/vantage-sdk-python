@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
@@ -18,13 +18,13 @@ class ErrorMessage(BaseModel):
 
     Arguments
     ---------
-    field_name: str
+    field_name: Optional[str]
         Name of field for which is erroneous.
     error_message: str
         Message describing error details.
     """
 
-    field_name: str
+    field_name: Optional[str]
     error_message: str
 
 
@@ -45,3 +45,10 @@ class ValidationError(BaseModel):
     document_id: Optional[str]
     line_number: Optional[int]
     errors: list[ErrorMessage]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "document_id": self.document_id,
+            "line_number": self.line_number,
+            "errors": [error.__dict__ for error in self.errors],
+        }

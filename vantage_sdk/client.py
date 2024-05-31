@@ -1890,14 +1890,19 @@ class VantageClient:
 
         Parameters
         ----------
-        file_path: str
+        file_path : str
             Path of the JSONL file in the filesystem.
-        collection_type: CollectionType
+        collection_type : CollectionType
             For what kind of collection are documents from this file intended.
-        model: Optional[str] = None
+        model : Optional[str] = None
             Which model should be used to generate embeddings (if any).
-        embeddings_dimension: Optional[int] = None
+        embeddings_dimension : Optional[int] = None
             Dimension of embeddings (if provided in file).
+
+        Raises
+        ------
+        FileNotFoundError
+            If specified file is not found.
 
         Returns
         -------
@@ -1923,14 +1928,19 @@ class VantageClient:
 
         Parameters
         ----------
-        file_path: str
+        file_path : str
             Path of the Parquet file in the filesystem.
-        collection_type: CollectionType
+        collection_type : CollectionType
             For what kind of collection are documents from this file intended.
-        model: Optional[str] = None
+        model : Optional[str] = None
             Which model should be used to generate embeddings (if any).
-        embeddings_dimension: Optional[int] = None
+        embeddings_dimension : Optional[int] = None
             Dimension of embeddings (if provided in file).
+
+        Raises
+        ------
+        FileNotFoundError
+            If specified file is not found.
 
         Returns
         -------

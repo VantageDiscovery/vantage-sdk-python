@@ -1,6 +1,7 @@
 import json
 import re
 import string
+from json.decoder import JSONDecodeError
 from typing import Any, Optional
 
 import pyarrow.parquet as parquet
@@ -115,7 +116,7 @@ def _validate_operation(document: dict[str, Any]) -> Optional[ErrorMessage]:
     if operation not in _VALID_OPERATIONS:
         return ErrorMessage(
             field_name="operation",
-            error_message=f"Unsupported operation {operation}.",
+            error_message=f"Unsupported operation: '{operation}'.",
         )
 
     return None
@@ -183,27 +184,27 @@ def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
 def _validate_meta_fields(document: dict[str, Any]) -> list[ErrorMessage]:
     errors = []
     meta_fields = {
-        key: value
-        for key, value in document.items()
-        if key == "meta" or key.startswith("meta_")
+        name: value
+        for name, value in document.items()
+        if name == "meta" or name.startswith("meta_")
     }
 
     if not any(meta_fields):
-        return None
+        return []
 
     for meta_field in meta_fields.items():
-        key, value = meta_field
-        if not _is_valid_meta_name(key):
+        name, value = meta_field
+        if not _is_valid_meta_name(name):
             errors.append(
                 ErrorMessage(
-                    field_name=meta_field,
-                    error_message="Field has invalid suffix. "
+                    field_name=name,
+                    error_message="Field has invalid name. "
                     "May contain only [a-zA-Z0-9-_] characters.",
                 )
             )
             continue
 
-        meta_error = _validate_meta_value(key, value)
+        meta_error = _validate_meta_value(name, value)
         if meta_error is not None:
             errors.append(meta_error)
 
@@ -255,6 +256,24 @@ def _validate_embeddings(
     return None
 
 
+def _create_json_parsing_error(
+    exception: JSONDecodeError,
+    line_number: int,
+) -> ValidationError:
+    message = f"JSON decoder error: {exception.msg}"
+
+    return ValidationError(
+        document_id=None,
+        line_number=line_number,
+        errors=[
+            ErrorMessage(
+                field_name=None,
+                error_message=message,
+            )
+        ],
+    )
+
+
 class DocumentValidator:
     """Component for validating documents."""
 
@@ -284,7 +303,7 @@ class DocumentValidator:
 
         operation_error = _validate_operation(document)
         if operation_error is not None:
-            error_messages.errors.append(operation_error)
+            error_messages.append(operation_error)
 
         text_error = _validate_text(
             document=document,
@@ -329,19 +348,23 @@ class DocumentValidator:
         model: Optional[str] = None,
         embeddings_dimension: Optional[int] = None,
     ) -> list[ValidationError]:
-        """
-        Validates documents from a JSONL file.
+        """Validates documents from a JSONL file.
 
         Parameters
         ----------
-        file_path: str
+        file_path : str
             Path of the JSONL file in the filesystem.
-        collection_type: CollectionType
+        collection_type : CollectionType
             For what kind of collection are documents from this file intended.
-        model: Optional[str] = None
+        model : Optional[str] = None
             Which model should be used to generate embeddings (if any).
-        embeddings_dimension: Optional[int] = None
+        embeddings_dimension : Optional[int] = None
             Dimension of embeddings (if provided in file).
+
+        Raises
+        ------
+        FileNotFoundError
+            If specified file is not found.
 
         Returns
         -------
@@ -358,7 +381,18 @@ class DocumentValidator:
                     # Reached end of file.
                     break
 
-                document = json.loads(line)
+                document = None
+                try:
+                    document = json.loads(line)
+                except JSONDecodeError as exception:
+                    errors.append(
+                        _create_json_parsing_error(
+                            exception,
+                            line_number,
+                        )
+                    )
+                    continue
+
                 error = self._validate_document(
                     document=document,
                     line_number=line_number,
@@ -377,14 +411,19 @@ class DocumentValidator:
 
     Parameters
     ----------
-    file_path: str
+    file_path : str
         Path of the Parquet file in the filesystem.
-    collection_type: CollectionType
+    collection_type : CollectionType
         For what kind of collection are documents from this file intended.
-    model: Optional[str] = None
+    model : Optional[str] = None
         Which model should be used to generate embeddings (if any).
-    embeddings_dimension: Optional[int] = None
+    embeddings_dimension : Optional[int] = None
         Dimension of embeddings (if provided in file).
+
+    Raises
+    ------
+    FileNotFoundError
+        If specified file is not found.
 
     Returns
     -------
