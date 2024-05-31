@@ -47,6 +47,7 @@ from vantage_sdk.core.http.models import (
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
+from vantage_sdk.core.validation import VALIDATOR as validator
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
 from vantage_sdk.model.account import Account
 from vantage_sdk.model.collection import (
@@ -75,6 +76,7 @@ from vantage_sdk.model.search import (
     SearchResult,
     Sort,
 )
+from vantage_sdk.model.validation import CollectionType, ValidationError
 
 
 class VantageClient:
@@ -1758,6 +1760,86 @@ class VantageClient:
             collection_id=collection_id,
             documents_jsonl=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
+    # region Documents - Validate
+
+    def validate_documents_from_jsonl(
+        self,
+        file_path: str,
+        collection_type: CollectionType,
+        model: Optional[str] = None,
+        embeddings_dimension: Optional[int] = None,
+    ) -> list[ValidationError]:
+        """
+        Validates documents from a JSONL file.
+
+        Parameters
+        ----------
+        file_path : str
+            Path of the JSONL file in the filesystem.
+        collection_type : CollectionType
+            For what kind of collection are documents from this file intended.
+        model : Optional[str] = None
+            Which model should be used to generate embeddings (if any).
+        embeddings_dimension : Optional[int] = None
+            Dimension of embeddings (if provided in file).
+
+        Raises
+        ------
+        FileNotFoundError
+            If specified file is not found.
+
+        Returns
+        -------
+        List of encountered errors. If file is valid, the list will be empty.
+        """
+
+        return validator.validate_jsonl(
+            file_path=file_path,
+            collection_type=collection_type,
+            model=model,
+            embeddings_dimension=embeddings_dimension,
+        )
+
+    def validate_documents_from_parquet(
+        self,
+        file_path: str,
+        collection_type: CollectionType,
+        model: Optional[str] = None,
+        embeddings_dimension: Optional[int] = None,
+    ) -> list[ValidationError]:
+        """
+        Validates documents from a Parquet file.
+
+        Parameters
+        ----------
+        file_path : str
+            Path of the Parquet file in the filesystem.
+        collection_type : CollectionType
+            For what kind of collection are documents from this file intended.
+        model : Optional[str] = None
+            Which model should be used to generate embeddings (if any).
+        embeddings_dimension : Optional[int] = None
+            Dimension of embeddings (if provided in file).
+
+        Raises
+        ------
+        FileNotFoundError
+            If specified file is not found.
+
+        Returns
+        -------
+        List of encountered errors. If file is valid, the list will be empty.
+        """
+
+        return validator.validate_parquet(
+            file_path=file_path,
+            collection_type=collection_type,
+            model=model,
+            embeddings_dimension=embeddings_dimension,
         )
 
     # endregion
