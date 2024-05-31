@@ -133,8 +133,8 @@ def _is_valid_meta_name(name: str) -> bool:
 
 
 def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
-    # If "meta_ordered", check only if it is number.
-    if key.startswith("meta_order"):
+    # Value of "meta_ordered" field must be a number.
+    if key.startswith("meta_ordered"):
         if not isinstance(value, _NUMBERS):
             return ErrorMessage(
                 field_name=key,
@@ -146,7 +146,7 @@ def _validate_meta_value(key: str, value: Any) -> ErrorMessage:
     if isinstance(value, _VALID_META_PRIMITIVE_VALUES):
         return None
 
-    # If meta_ is a list/array, validate if all items are
+    # If meta field is a list/array, check if all items are
     # either a number or a string.
     if hasattr(value, '__iter__'):
         if len(value) == 0:
