@@ -52,6 +52,7 @@ mkdocstrings = {version = ">=0.25.1", extras = ["python"]}
 griffe-fieldz = {version = ">= 0.1.2"}
 tiktoken = {version = ">=0.7.0"}
 pyarrow = {version = ">=16.1.0"}
+pandas = "^2.2.2"
 
 [tool.poetry.extras]
 test = [
