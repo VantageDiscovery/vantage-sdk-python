@@ -1,0 +1,13 @@
+:root {
+  --md-primary-fg-color: #ec2226;
+}
+
+.md-nav
+  .md-nav__list
+  .md-nav__item
+  .md-nav
+  .md-nav__list
+  .md-nav__item
+  .md-nav {
+  display: none !important;
+}
