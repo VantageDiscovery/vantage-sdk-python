@@ -42,11 +42,14 @@ from vantage_sdk.core.http.models import (
 from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
-from vantage_sdk.core.http.models import (
-    SemanticSearchQuery,
-)
+from vantage_sdk.core.http.models import SemanticSearchQuery
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
+from vantage_sdk.core.text_util import (
+    BatchTextFileReader,
+    TextSplitter,
+    count_lines,
+)
 from vantage_sdk.core.validation import VALIDATOR as validator
 from vantage_sdk.exceptions import VantageFileUploadError, VantageValueError
 from vantage_sdk.model.account import Account
@@ -77,6 +80,9 @@ from vantage_sdk.model.search import (
     Sort,
 )
 from vantage_sdk.model.validation import CollectionType, ValidationError
+
+
+_DOCUMENTS_UPLOAD_BATCH_SIZE = 500
 
 
 class VantageClient:
@@ -994,7 +1000,6 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
     ) -> SearchOptions:
-
         collection = (
             SearchOptionsCollection(
                 accuracy=accuracy,
@@ -1617,12 +1622,33 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        self.management_api.documents_api.upload_documents(
-            body=documents_jsonl,
-            account_id=account_id if account_id else self.account_id,
-            collection_id=collection_id,
-            customer_batch_identifier=batch_identifier,
+        lines_count = count_lines(documents_jsonl)
+
+        if lines_count <= _DOCUMENTS_UPLOAD_BATCH_SIZE:
+            self.management_api.documents_api.upload_documents(
+                body=documents_jsonl,
+                account_id=account_id if account_id else self.account_id,
+                collection_id=collection_id,
+                customer_batch_identifier=batch_identifier,
+            )
+            return
+
+        splitter = TextSplitter(
+            text=documents_jsonl,
+            batch_size=_DOCUMENTS_UPLOAD_BATCH_SIZE,
         )
+        for batch in splitter.batch():
+            batch.strip()
+
+            if str.isspace(batch):
+                continue
+
+            self.management_api.documents_api.upload_documents(
+                body=batch,
+                account_id=account_id if account_id else self.account_id,
+                collection_id=collection_id,
+                customer_batch_identifier=batch_identifier,
+            )
 
     def upsert_documents_from_jsonl_file(
         self,
@@ -1658,14 +1684,22 @@ class VantageClient:
         if not exists(jsonl_file_path):
             raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
 
-        file = open(jsonl_file_path, "rb")
-        file_content = file.read().decode(self._default_encoding)
-        self.upsert_documents_from_jsonl_string(
-            collection_id=collection_id,
-            documents_jsonl=file_content,
-            batch_identifier=batch_identifier,
-            account_id=account_id,
-        )
+        with BatchTextFileReader(
+            file_path=jsonl_file_path,
+            batch_size=_DOCUMENTS_UPLOAD_BATCH_SIZE,
+        ) as reader:
+            while True:
+                batch = reader.next()
+
+                if not any(batch):
+                    return
+
+                self.upsert_documents_from_jsonl_string(
+                    collection_id=collection_id,
+                    documents_jsonl=batch,
+                    batch_identifier=batch_identifier,
+                    account_id=account_id,
+                )
 
     def upsert_documents_from_parquet_file(
         self,
