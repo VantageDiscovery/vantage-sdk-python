@@ -64,6 +64,14 @@ _configuration = {
     },
 }
 
+use_mock_api = os.getenv("USE_MOCK_API", "false")
+
+if use_mock_api == "true":
+    from tests.integration_tests.configuration.mock_api import setup_mock
+
+    setup_mock(_configuration["api"]["api_host"])
+
+
 auth_method = os.getenv("VANTAGE_AUTH_METHOD", "client_credentials")
 jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN", None)
 
