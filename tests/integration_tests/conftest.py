@@ -7,7 +7,6 @@ from typing import Callable, List
 import pytest
 
 from vantage_sdk.client import VantageClient
-from vantage_sdk.exceptions import VantageNotFoundError
 from vantage_sdk.model.document import (
     UserProvidedEmbeddingsDocument,
     VantageManagedEmbeddingsDocument,
@@ -144,30 +143,30 @@ def skip_delete_external_api_key_test() -> bool:
 
 
 # Runs after all tests have finished
-def pytest_sessionfinish(session, exitstatus):
-    try:
-        collections = _client.list_collections()
-        for collection in collections:
-            collection_id = collection.collection_id
+# def pytest_sessionfinish(session, exitstatus):
+#     try:
+#         collections = _client.list_collections()
+#         for collection in collections:
+#             collection_id = collection.collection_id
 
-            if collection_id in _protected_collections:
-                continue
+#             if collection_id in _protected_collections:
+#                 continue
 
-            _client.delete_collection(collection_id=collection_id)
-    except VantageNotFoundError:
-        # Do nothing
-        pass
+#             _client.delete_collection(collection_id=collection_id)
+#     except VantageNotFoundError:
+#         # Do nothing
+#         pass
 
-    if DISABLE_EXTERNAL_API_KEYS_TESTS:
-        return
+#     if DISABLE_EXTERNAL_API_KEYS_TESTS:
+#         return
 
-    try:
-        keys = _client.get_external_api_keys()
-        for key in keys:
-            _client.delete_external_api_key(key.external_key_id)
-    except VantageNotFoundError:
-        # Do nothing
-        pass
+#     try:
+#         keys = _client.get_external_api_keys()
+#         for key in keys:
+#             _client.delete_external_api_key(key.external_key_id)
+#     except VantageNotFoundError:
+#         # Do nothing
+#         pass
 
 
 def _random_string(length: int):
