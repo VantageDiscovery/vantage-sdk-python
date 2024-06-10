@@ -6,7 +6,7 @@
       "Authorization": {
         "contains": "Bearer testkey"
       }
-    },
+    }
   },
   "response": {
     "status": 200,
