@@ -1,0 +1,37 @@
+name: PyPI and GitHub Release
+on:
+  push:
+    tags:
+      - 'test*.*.*'
+
+jobs:
+  test_pypi_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Get Poetry
+        run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+      - name: Add Poetry to path
+        run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
+      - name: Install package
+        run: poetry install --all-extras
+      - name: Build SDK Package
+        run: poetry build
+      # - name: Check build packages
+      #   run: twine check dist/* &&
+      # - name: Configure Poetry - Repository and PyPI token
+      # - run: poetry config repositories.testpypi https://test.pypi.org/legacy/ && \
+      #        poetry config pypi-token.testpypi ${{ secrets.TEST_PYPI_API_KEY }}
+      # - name: Publish package
+        # run: poetry publish testpypi
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="Release $GITHUB_REF_NAME" \
+              --notes-file=CHANGELOG.md
