@@ -1,0 +1,7 @@
+services:
+  wiremock:
+    image: "wiremock/wiremock:3x"
+    container_name: wiremock_api_mock
+    ports:
+      - 20001:8080
+    entrypoint: ["/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose"]
