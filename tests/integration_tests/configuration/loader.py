@@ -7,9 +7,7 @@ DISABLE_EXTERNAL_API_KEYS_TESTS = True
 
 
 def _load_env() -> None:
-    dotenv_path = os.path.join(
-        PROJECT_DIR, "tests", "integration_tests", ".env"
-    )
+    dotenv_path = os.path.join(PROJECT_DIR, "integration_tests", ".env")
     if os.path.exists(dotenv_path):
         from dotenv import load_dotenv
 

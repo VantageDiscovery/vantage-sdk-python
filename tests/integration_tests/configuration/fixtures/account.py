@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+from tests.integration_tests.configuration.loader import CONFIGURATION
 from tests.integration_tests.configuration.mock_api import (
     get_request_stub_file_contents,
 )
@@ -45,3 +46,8 @@ def non_existing_account_id(request) -> str:
     stub = get_request_stub_file_contents(request)
 
     return os.path.basename(stub["request"]["urlPath"])
+
+
+@pytest.fixture(scope="module")
+def account_params() -> dict:
+    return CONFIGURATION["account"]
