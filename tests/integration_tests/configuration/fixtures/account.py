@@ -13,15 +13,6 @@ use_mock_api = CONFIGURATION["other"]["is_mock_api"]
 
 
 @pytest.fixture
-def non_existing_user_id(request) -> str:
-    if not use_mock_api:
-        return random_string(10)
-
-    stub = get_request_stub_file_contents(request)
-    return stub["response"]["jsonBody"]["account_name"]
-
-
-@pytest.fixture
 def updated_test_account_name(request) -> str:
     if not use_mock_api:
         return random_string(10)

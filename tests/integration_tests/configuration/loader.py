@@ -47,6 +47,7 @@ def _load_configuration() -> None:
             "external_api_key_provider": os.getenv(
                 "EXTERNAL_API_KEY_PROVIDER"
             ),
+            "llm_secret": os.getenv("LLM_SECRET", None),
         },
         "auth": {
             "auth_method": os.getenv(

@@ -48,13 +48,17 @@ def external_api_key() -> str:
     return external_api_key
 
 
-@pytest.fixture(scope="module")
-def external_api_key_id() -> str:
-    external_api_key_id = CONFIGURATION["keys"].get("external_api_key_id")
-    if external_api_key_id is None:
-        pytest.skip("No external API key ID available.")
+@pytest.fixture(scope="function")
+def external_api_key_id(request) -> str:
+    if not use_mock_api:
+        external_api_key_id = CONFIGURATION["keys"].get("external_api_key_id")
+        if external_api_key_id is None:
+            pytest.skip("No external API key ID available.")
 
-    return external_api_key_id
+        return external_api_key_id
+
+    stub = get_request_stub_file_contents(request)
+    return os.path.basename(stub["request"]["urlPath"])
 
 
 @pytest.fixture(scope="module")
@@ -86,3 +90,36 @@ def nonexisting_api_key_id(request) -> str:
     stub = get_request_stub_file_contents(request)
 
     return os.path.basename(stub["request"]["urlPath"])
+
+
+@pytest.fixture(scope="function")
+def nonexisting_external_api_key_id(request) -> str:
+    if not use_mock_api:
+        return random_string(10)
+
+    stub = get_request_stub_file_contents(request)
+
+    return os.path.basename(stub["request"]["urlPath"])
+
+
+@pytest.fixture(scope="function")
+def external_key_llm_secret(request) -> str:
+    if not use_mock_api:
+        return random_string(10)
+
+    stub = get_request_stub_file_contents(request)
+
+    try:
+        return os.path.basename(stub["response"]["jsonBody"]["llm_secret"])
+    except KeyError:
+        return CONFIGURATION["keys"]["llm_secret"]
+
+
+@pytest.fixture(scope="function")
+def external_key_updated_llm_secret(request) -> str:
+    if not use_mock_api:
+        return random_string(10)
+
+    stub = get_request_stub_file_contents(request)
+
+    return os.path.basename(stub["response"]["jsonBody"]["llm_secret"])
