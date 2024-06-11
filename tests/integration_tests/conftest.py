@@ -6,6 +6,8 @@ from typing import Callable, List
 
 import pytest
 
+from tests.integration_tests.configuration.client import create_client
+from tests.integration_tests.configuration.loader import CONFIGURATION
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.document import (
     UserProvidedEmbeddingsDocument,
@@ -13,115 +15,37 @@ from vantage_sdk.model.document import (
 )
 
 
-ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.abspath(os.path.join(ABS_PATH, os.pardir, os.pardir))
-DISABLE_EXTERNAL_API_KEYS_TESTS = True
+# Import fixtures
+pytest_plugins = [
+    "tests.integration_tests.configuration.fixtures.account",
+]
 
+use_mock_api = True if os.getenv("USE_MOCK_API", "false") == "true" else False
 
-def _load_env() -> None:
-    dotenv_path = os.path.join(
-        PROJECT_DIR, "tests", "integration_tests", ".env"
-    )
-    if os.path.exists(dotenv_path):
-        from dotenv import load_dotenv
-
-        load_dotenv(dotenv_path)
-
-
-_load_env()
-
-_configuration = {
-    "api": {
-        "client_id": os.getenv("VANTAGE_CLIENT_ID"),
-        "client_secret": os.getenv("VANTAGE_CLIENT_SECRET"),
-        "auth_host": os.getenv("VANTAGE_AUTH_HOST"),
-        "api_host": os.getenv("VANTAGE_API_HOST"),
-    },
-    "account": {
-        "id": os.getenv("TEST_ACCOUNT_ID"),
-        "name": os.getenv("TEST_ACCOUNT_NAME"),
-    },
-    "collection": {
-        "embedding_search_test_collection_id": os.getenv(
-            "VANTAGE_EMBEDDING_SEARCH_TEST_COLLECTION_ID"
-        ),
-        "semantic_search_test_collection_id": os.getenv(
-            "VANTAGE_SEMANTIC_SEARCH_TEST_COLLECTION_ID"
-        ),
-        "more_like_this_collection": os.getenv(
-            "VANTAGE_MORE_LIKE_THIS_SEARCH_COLLECTION_ID"
-        ),
-    },
-    "keys": {
-        "vantage_api_key": os.getenv("VANTAGE_API_KEY"),
-        "vantage_api_key_id": os.getenv("VANTAGE_API_KEY_ID"),
-        "open_api_key": os.getenv("OPEN_API_KEY"),
-        "open_api_key_id": os.getenv("OPEN_API_KEY_ID"),
-        "external_api_key": os.getenv("EXTERNAL_API_KEY"),
-        "external_api_key_id": os.getenv("EXTERNAL_API_KEY_ID"),
-        "external_api_key_provider": os.getenv("EXTERNAL_API_KEY_PROVIDER"),
-    },
-}
-
-use_mock_api = os.getenv("USE_MOCK_API", "false")
-
-if use_mock_api == "true":
+if use_mock_api:
     from tests.integration_tests.configuration.mock_api import setup_mock
 
-    setup_mock(_configuration["api"]["api_host"])
+    setup_mock(CONFIGURATION["api"]["api_host"])
 
 
-auth_method = os.getenv("VANTAGE_AUTH_METHOD", "client_credentials")
-jwt_token = os.getenv("VANTAGE_API_JWT_TOKEN", None)
+auth_method = CONFIGURATION["auth"]["auth_method"]
+jwt_token = CONFIGURATION["auth"]["jwt_token"]
 
-if auth_method == "api_key":
-    api_key = _configuration["keys"]["vantage_api_key"]
-
-    if api_key is None:
-        raise ValueError("Vantage API key unspecified.")
-
-    _client = VantageClient.using_vantage_api_key(
-        vantage_api_key=api_key,
-        account_id=_configuration["account"]["id"],
-        api_host=_configuration["api"]["api_host"],
-    )
-elif auth_method == "jwt_token":
-    if jwt_token is None:
-        raise ValueError("JWT token unspecified.")
-
-    _client = VantageClient.using_jwt_token(
-        vantage_api_jwt_token=jwt_token,
-        account_id=_configuration["account"]["id"],
-        api_host=_configuration["api"]["api_host"],
-    )
-elif auth_method == "client_credentials":
-    client_id = _configuration["api"]["client_id"]
-    client_secret = _configuration["api"]["client_secret"]
-
-    if client_id is None or client_secret is None:
-        raise ValueError("Missing client credentials.")
-
-    _client = VantageClient.using_client_credentials(
-        vantage_client_id=_configuration["api"]["client_id"],
-        vantage_client_secret=_configuration["api"]["client_secret"],
-        api_host=_configuration["api"]["api_host"],
-        auth_host=_configuration["api"]["auth_host"],
-        account_id=_configuration["account"]["id"],
-    )
-else:
-    raise ValueError(
-        f"Unknown auth method in $VANTAGE_AUTH_METHOD: {auth_method}"
-    )
+_client = create_client(
+    auth_method=auth_method,
+    jwt_token=jwt_token,
+    configuration=CONFIGURATION,
+)
 
 _protected_collections = []
 
-embedding_collection_id = _configuration["collection"].get(
+embedding_collection_id = CONFIGURATION["collection"].get(
     "embedding_search_test_collection_id"
 )
-semantic_colection_id = _configuration["collection"].get(
+semantic_colection_id = CONFIGURATION["collection"].get(
     "semantic_search_test_collection_id"
 )
-mlt_collection_id = _configuration["collection"].get(
+mlt_collection_id = CONFIGURATION["collection"].get(
     "more_like_this_collection"
 )
 if embedding_collection_id:
@@ -169,29 +93,29 @@ def skip_delete_external_api_key_test() -> bool:
 #         pass
 
 
-def _random_string(length: int):
+def random_string(length: int):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
 
 
 @pytest.fixture(scope="module")
 def api_params() -> dict:
-    return _configuration["api"]
+    return CONFIGURATION["api"]
 
 
 @pytest.fixture(scope="module")
 def account_params() -> dict:
-    return _configuration["account"]
+    return CONFIGURATION["account"]
 
 
 @pytest.fixture(scope="module")
 def collection_params() -> dict:
-    return _configuration["collection"]
+    return CONFIGURATION["collection"]
 
 
 @pytest.fixture(scope="module")
 def vantage_api_key() -> dict:
-    vantage_api_key = _configuration["keys"].get("vantage_api_key")
+    vantage_api_key = CONFIGURATION["keys"].get("vantage_api_key")
     if vantage_api_key is None:
         pytest.skip("No Vantage API key available.")
 
@@ -200,7 +124,7 @@ def vantage_api_key() -> dict:
 
 @pytest.fixture(scope="module")
 def vantage_api_key_id() -> dict:
-    vantage_api_key_id = _configuration["keys"].get("vantage_api_key_id")
+    vantage_api_key_id = CONFIGURATION["keys"].get("vantage_api_key_id")
     if vantage_api_key_id is None:
         pytest.skip("No Vantage API key ID available.")
 
@@ -209,7 +133,7 @@ def vantage_api_key_id() -> dict:
 
 @pytest.fixture(scope="module")
 def open_api_key() -> str:
-    open_api_key = _configuration["keys"].get("open_api_key")
+    open_api_key = CONFIGURATION["keys"].get("open_api_key")
     if open_api_key is None:
         pytest.skip("No OpenAPI key available.")
 
@@ -218,7 +142,7 @@ def open_api_key() -> str:
 
 @pytest.fixture(scope="module")
 def external_api_key() -> str:
-    external_api_key = _configuration["keys"].get("external_api_key")
+    external_api_key = CONFIGURATION["keys"].get("external_api_key")
     if external_api_key is None:
         pytest.skip("No external API key available.")
 
@@ -227,7 +151,7 @@ def external_api_key() -> str:
 
 @pytest.fixture(scope="module")
 def external_api_key_id() -> str:
-    external_api_key_id = _configuration["keys"].get("external_api_key_id")
+    external_api_key_id = CONFIGURATION["keys"].get("external_api_key_id")
     if external_api_key_id is None:
         pytest.skip("No external API key ID available.")
 
@@ -236,7 +160,7 @@ def external_api_key_id() -> str:
 
 @pytest.fixture(scope="module")
 def external_api_key_provider() -> str:
-    external_api_key_provider = _configuration["keys"][
+    external_api_key_provider = CONFIGURATION["keys"][
         "external_api_key_provider"
     ]
     if external_api_key_provider is None:
@@ -252,7 +176,7 @@ def client() -> VantageClient:
 
 @pytest.fixture(scope="module")
 def random_string_generator() -> Callable:
-    return _random_string
+    return random_string
 
 
 @pytest.fixture(scope="module")
@@ -262,7 +186,7 @@ def test_parquet_file_path() -> str:
 
 @pytest.fixture(scope="module")
 def embedding_search_test_collection_id() -> str:
-    embedding_search_test_collection_id = _configuration["collection"][
+    embedding_search_test_collection_id = CONFIGURATION["collection"][
         "embedding_search_test_collection_id"
     ]
 
@@ -274,7 +198,7 @@ def embedding_search_test_collection_id() -> str:
 
 @pytest.fixture(scope="module")
 def semantic_search_test_collection_id() -> str:
-    semantic_search_test_collection_id = _configuration["collection"][
+    semantic_search_test_collection_id = CONFIGURATION["collection"][
         "semantic_search_test_collection_id"
     ]
 
@@ -286,7 +210,7 @@ def semantic_search_test_collection_id() -> str:
 
 @pytest.fixture(scope="module")
 def more_like_this_test_collection_id() -> str:
-    mlt_search_test_collection_id = _configuration["collection"].get(
+    mlt_search_test_collection_id = CONFIGURATION["collection"].get(
         "more_like_this_collection"
     )
 
@@ -298,7 +222,7 @@ def more_like_this_test_collection_id() -> str:
 
 @pytest.fixture(scope="module")
 def embedding_search_test_collection_id_for_setup() -> str:
-    embedding_search_test_collection_id = _configuration["collection"].get(
+    embedding_search_test_collection_id = CONFIGURATION["collection"].get(
         "embedding_search_test_collection_id"
     )
 
@@ -310,7 +234,7 @@ def embedding_search_test_collection_id_for_setup() -> str:
 
 @pytest.fixture(scope="module")
 def semantic_search_test_collection_id_for_setup() -> str:
-    semantic_search_test_collection_id = _configuration["collection"].get(
+    semantic_search_test_collection_id = CONFIGURATION["collection"].get(
         "semantic_search_test_collection_id"
     )
 
