@@ -1,0 +1,30 @@
+{
+    "request": {
+      "method": "POST",
+      "urlPath": "/search/test/test-search-vme-collection/semantic",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      },
+      "jsonBody": {
+        "collection": {
+            "accuracy": 0.2
+        },
+        "text": "short legs and long body"
+      }
+    },
+    "response": {
+      "status": 400,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "instance": "ref:011819f2-afe7-4df1-a3db-b6cadfd947d8",
+        "title": "Bad request",
+        "detail": "Accuracy must be less or equal to 1",
+        "coreSearchStatus": 400,
+        "type": "https://docs.vantagediscovery.com/reference/"
+      }
+    }
+  }
