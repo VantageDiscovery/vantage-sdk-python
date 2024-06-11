@@ -9,15 +9,7 @@ from tests.integration_tests.configuration.mock_api import (
 from tests.integration_tests.conftest import random_string
 
 
-use_mock_api = True if os.getenv("USE_MOCK_API", "false") == "true" else False
-
-
-@pytest.fixture(scope="function")
-def mock_api(request) -> None:
-    if not use_mock_api:
-        return
-    testname = request.node.name
-    assert testname == 'test_name1'
+use_mock_api = CONFIGURATION["other"]["is_mock_api"]
 
 
 @pytest.fixture
@@ -25,8 +17,8 @@ def non_existing_user_id(request) -> str:
     if not use_mock_api:
         return random_string(10)
 
-    testname = request.node.name
-    assert testname == 'xyz'
+    stub = get_request_stub_file_contents(request)
+    return stub["response"]["jsonBody"]["account_name"]
 
 
 @pytest.fixture

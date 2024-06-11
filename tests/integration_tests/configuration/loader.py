@@ -55,6 +55,11 @@ def _load_configuration() -> None:
             ),
             "jwt_token": os.getenv("VANTAGE_API_JWT_TOKEN", None),
         },
+        "other": {
+            "is_mock_api": (
+                True if os.getenv("USE_MOCK_API", "false") == "true" else False
+            )
+        },
     }
 
 

@@ -5,6 +5,8 @@ from typing import Any
 
 import requests
 
+from tests.integration_tests.configuration.loader import CONFIGURATION
+
 
 _MAPPINGS_DIR = "tests/data/mock_api"
 
@@ -32,3 +34,7 @@ def get_request_stub_file_contents(request: Any) -> dict[str, Any]:
     module_name_decomposed = request.module.__name__.split(".")
     module_name = module_name_decomposed[len(module_name_decomposed) - 1]
     return get_mock_request_for(module_name, test_name)
+
+
+def is_mock_api() -> bool:
+    return CONFIGURATION["other"]["is_mock_api"]

@@ -11,9 +11,7 @@ from tests.integration_tests.configuration.loader import CONFIGURATION
 from vantage_sdk.client import VantageClient
 
 
-use_mock_api = True if os.getenv("USE_MOCK_API", "false") == "true" else False
-
-if use_mock_api:
+if CONFIGURATION["other"]["is_mock_api"]:
     from tests.integration_tests.configuration.mock_api import setup_mock
 
     setup_mock(CONFIGURATION["api"]["api_host"])

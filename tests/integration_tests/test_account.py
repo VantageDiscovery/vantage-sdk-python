@@ -45,14 +45,11 @@ class TestAccount:
         self,
         client: VantageClient,
         account_params: dict,
-        random_string_generator: Callable,
+        non_existing_account_id: str,
     ) -> None:
         """
         Tests if retrieving non-existing user account throws an exception.
         """
-        # Given
-        # non_existing_account_id = random_string_generator(10)
-        non_existing_account_id = "xyz"
 
         # When
         with pytest.raises(ForbiddenException) as exception:

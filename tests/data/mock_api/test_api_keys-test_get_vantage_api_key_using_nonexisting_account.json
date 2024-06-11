@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/v1/account/nonexisting/vantage_api_key/testkeyid",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "type": "about:blank",
+      "title": "Insufficient Permissions",
+      "status": 403,
+      "detail": "Forbidden",
+      "instance": "/v1/account/nonexisting/vantage_api_key",
+      "properties": {
+        "timestamp": "2024-06-11T12:41:45.717712713Z"
+      }
+    }
+  }
+}
