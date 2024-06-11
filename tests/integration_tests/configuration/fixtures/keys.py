@@ -48,6 +48,7 @@ def external_api_key() -> str:
     return external_api_key
 
 
+<<<<<<< HEAD
 @pytest.fixture(scope="function")
 def external_api_key_id(request) -> str:
     if not use_mock_api:
@@ -59,6 +60,15 @@ def external_api_key_id(request) -> str:
 
     stub = get_request_stub_file_contents(request)
     return os.path.basename(stub["request"]["urlPath"])
+=======
+@pytest.fixture(scope="module")
+def external_api_key_id() -> str:
+    external_api_key_id = CONFIGURATION["keys"].get("external_api_key_id")
+    if external_api_key_id is None:
+        pytest.skip("No external API key ID available.")
+
+    return external_api_key_id
+>>>>>>> 8dea61f ([LAB-282] More refactoring)
 
 
 @pytest.fixture(scope="module")
@@ -70,6 +80,7 @@ def external_api_key_provider() -> str:
         pytest.skip("No external API key provider available.")
 
     return external_api_key_provider
+<<<<<<< HEAD
 
 
 @pytest.fixture(scope="function")
@@ -123,3 +134,5 @@ def external_key_updated_llm_secret(request) -> str:
     stub = get_request_stub_file_contents(request)
 
     return os.path.basename(stub["response"]["jsonBody"]["llm_secret"])
+=======
+>>>>>>> 8dea61f ([LAB-282] More refactoring)
