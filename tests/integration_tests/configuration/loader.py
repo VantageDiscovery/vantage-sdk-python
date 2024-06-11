@@ -71,10 +71,10 @@ def _load_configuration() -> None:
             )
         },
     }
-    configuration["other"][
-        "enable_external_api_tests"
-    ] = should_enable_external_api_key_tests(
-        configuration["other"]["is_mock_api"]
+    configuration["other"]["enable_external_api_tests"] = (
+        should_enable_external_api_key_tests(
+            configuration["other"]["is_mock_api"]
+        )
     )
     return configuration
 

@@ -2,7 +2,10 @@ import os
 
 import pytest
 
+<<<<<<< HEAD
 from tests.integration_tests.configuration.loader import CONFIGURATION
+=======
+>>>>>>> 87dd9fe ([LAB-282] Refactor code for account tests)
 from tests.integration_tests.configuration.mock_api import (
     get_request_stub_file_contents,
 )
