@@ -5,4 +5,5 @@ pytest_plugins = [
     "tests.integration_tests.configuration.fixtures.keys",
     "tests.integration_tests.configuration.fixtures.search",
     "tests.integration_tests.configuration.fixtures.collection",
+    "tests.integration_tests.configuration.fixtures.documents",
 ]

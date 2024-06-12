@@ -296,9 +296,6 @@ class TestApiKeys:
             external_key_updated_llm_secret
         )
 
-        # After
-        client.delete_external_key(api_key.external_key_id)
-
     @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
