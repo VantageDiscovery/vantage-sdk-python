@@ -14,8 +14,17 @@ def _load_env() -> None:
         load_dotenv(dotenv_path)
 
 
+def should_enable_external_api_key_tests(is_mock_api: bool) -> bool:
+    enable_tests_env = (
+        True
+        if os.getenv("DISABLE_EXTERNAL_API_KEYS_TESTS", "true") == "true"
+        else False
+    )
+    return enable_tests_env or is_mock_api
+
+
 def _load_configuration() -> None:
-    return {
+    configuration = {
         "api": {
             "client_id": os.getenv("VANTAGE_CLIENT_ID"),
             "client_secret": os.getenv("VANTAGE_CLIENT_SECRET"),
@@ -62,6 +71,12 @@ def _load_configuration() -> None:
             )
         },
     }
+    configuration["other"][
+        "enable_external_api_tests"
+    ] = should_enable_external_api_key_tests(
+        configuration["other"]["is_mock_api"]
+    )
+    return configuration
 
 
 _load_env()
