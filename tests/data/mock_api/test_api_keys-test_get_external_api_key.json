@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/v1/account/test/external_keys/externalapikeyid",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "external_key_id": "externalapikeyid",
+      "account_id": "test",
+      "external_key_created_date": "2024-03-06T10:52:53",
+      "llm_provider": "OpenAI",
+      "llm_secret": "tests*****",
+      "url": null,
+      "url_type": null,
+      "max_tokens_per_batch": null,
+      "max_tokens_rpm_indexing": null,
+      "max_tokens_rpm_search": null,
+      "state": "Active",
+      "customer_provided": null
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/v1/account/test/vantage_api_key/testkeyid",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "vantage_api_key_id": "852fb690-70ac-4bbd-bef1-b663c69ac39e",
+      "account_id": "test",
+      "vantage_api_key_created_date": "2024-03-06T10:45:35",
+      "status": "Active",
+      "vantage_api_key_obfuscated": "$2a$10$ns/CfOauDlB1AN4y9mkdjO94hVnTkBLZIkSPK1tv8OnnDUYWzFvu."
+    }
+  }
+}

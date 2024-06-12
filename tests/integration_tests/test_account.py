@@ -45,13 +45,11 @@ class TestAccount:
         self,
         client: VantageClient,
         account_params: dict,
-        random_string_generator: Callable,
+        non_existing_account_id: str,
     ) -> None:
         """
         Tests if retrieving non-existing user account throws an exception.
         """
-        # Given
-        non_existing_account_id = random_string_generator(10)
 
         # When
         with pytest.raises(ForbiddenException) as exception:
@@ -64,14 +62,13 @@ class TestAccount:
         self,
         client: VantageClient,
         account_params: dict,
-        random_string_generator: Callable,
+        updated_test_account_name,
     ) -> None:
         """
         Tests if updating user account is working correctly.
         """
         # Given
         test_account_id = account_params["id"]
-        updated_test_account_name = random_string_generator(10)
 
         # When
         client.update_account(
@@ -86,14 +83,15 @@ class TestAccount:
         self,
         client: VantageClient,
         account_params: dict,
+        non_existing_account_id: str,
         random_string_generator: Callable,
     ) -> None:
         """
         Tests if updating non-existing user account throws an exception.
         """
         # Given
-        non_existing_account_id = random_string_generator(10)
-        non_existing_account_name = random_string_generator(10)
+        non_existing_account_id = non_existing_account_id
+        non_existing_account_name = non_existing_account_id
 
         # When
         with pytest.raises(ForbiddenException) as exception:

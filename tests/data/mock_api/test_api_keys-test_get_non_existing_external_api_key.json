@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/v1/account/test/external_keys/nonexisting",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "type": "about:blank",
+      "title": "Resource not found",
+      "status": 404,
+      "detail": "External account for customer test with id nonexisting not found",
+      "instance": "/external/test/nonexisting",
+      "properties": {
+        "timestamp": "2024-06-11T14:20:03.293013266Z"
+      }
+    }
+  }
+}

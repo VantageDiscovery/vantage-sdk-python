@@ -2,6 +2,7 @@ from typing import Callable
 
 import pytest
 
+from tests.integration_tests.configuration.mock_api import is_mock_api
 from vantage_sdk.client import VantageClient
 from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
@@ -36,14 +37,16 @@ class TestApiKeys:
         assert api_key.vantage_api_key_obfuscated is not None
         assert api_key.account_id == account_params["id"]
 
-    def test_get_vantage_api_keys_using_wrong_account(
+    def test_get_vantage_api_keys_using_nonexisting_account(
         self,
         client: VantageClient,
-        random_string_generator: Callable,
+        api_key_nonexisting_account_id: str,
     ):
         # When
         with pytest.raises(ForbiddenException) as exception:
-            client.get_vantage_api_keys(account_id=random_string_generator(10))
+            client.get_vantage_api_keys(
+                account_id=api_key_nonexisting_account_id
+            )
 
         # Then
         assert exception.type == ForbiddenException
@@ -68,11 +71,11 @@ class TestApiKeys:
         assert api_key.vantage_api_key_obfuscated is not None
         api_key.vantage_api_key_id == vantage_api_key_id
 
-    def test_get_vantage_api_key_using_wrong_account(
+    def test_get_vantage_api_key_using_nonexisting_account(
         self,
         client: VantageClient,
         vantage_api_key_id: str,
-        random_string_generator: Callable,
+        api_key_nonexisting_account_id: str,
     ):
         """
         Tests fetching a single Vantage API key using non-existing account ID.
@@ -81,7 +84,7 @@ class TestApiKeys:
         with pytest.raises(ForbiddenException) as exception:
             client.get_vantage_api_key(
                 vantage_api_key_id=vantage_api_key_id,
-                account_id=random_string_generator(10),
+                account_id=api_key_nonexisting_account_id,
             )
 
         # Then
@@ -92,23 +95,26 @@ class TestApiKeys:
         client: VantageClient,
         account_params: dict,
         vantage_api_key_id: str,
-        random_uuid: str,
+        nonexisting_api_key_id: str,
     ):
         """
         Tests fetching a non-existing Vantage API key from a user account.
         """
         # When
         with pytest.raises(NotFoundException) as exception:
-            client.get_vantage_api_key(vantage_api_key_id=random_uuid)
+            client.get_vantage_api_key(
+                vantage_api_key_id=nonexisting_api_key_id
+            )
 
         # Then
         assert exception.type is NotFoundException
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_get_external_api_keys(
         self,
@@ -145,11 +151,12 @@ class TestApiKeys:
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_get_external_api_key(
         self,
@@ -181,17 +188,18 @@ class TestApiKeys:
         assert api_key.llm_provider == given_key.llm_provider
         assert api_key.llm_secret == _mask_secret(given_key.llm_secret)
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_get_non_existing_external_api_key(
         self,
         client: VantageClient,
         account_params: dict,
-        random_uuid: str,
+        nonexisting_external_api_key_id: str,
     ):
         """
         Tests fetching a non-existing external API key from a users' account.
@@ -200,31 +208,32 @@ class TestApiKeys:
         with pytest.raises(NotFoundException) as exception:
             client.get_external_key(
                 account_id=account_params["id"],
-                external_key_id=random_uuid,
+                external_key_id=nonexisting_external_api_key_id,
             )
 
         # Then
         assert exception.type is NotFoundException
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_create_external_api_key(
         self,
         client: VantageClient,
         account_params: dict,
         external_api_key_id: str,
-        random_string_generator: str,
+        external_key_llm_secret: str,
     ):
         """
         Tests creating an external API key on a users' account.
         """
         # Given
         llm_provider = "OpenAI"
-        llm_secret = random_string_generator(10)
+        llm_secret = external_key_llm_secret
 
         # When
         response = client.create_external_key(
@@ -239,24 +248,26 @@ class TestApiKeys:
         assert response.llm_provider == llm_provider
         assert response.llm_secret == llm_secret
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_update_external_api_key(
         self,
         client: VantageClient,
         account_params: dict,
-        random_string_generator: str,
+        external_key_llm_secret: str,
+        external_key_updated_llm_secret: str,
     ):
         """
         Tests updating an external API key present on a users' account.
         """
         # Given
         llm_provider = "OpenAI"
-        llm_secret = random_string_generator(10)
+        llm_secret = external_key_llm_secret
         test_api_key = client.create_external_key(
             llm_provider=llm_provider,
             llm_secret=llm_secret,
@@ -265,10 +276,10 @@ class TestApiKeys:
         external_api_key_id = test_api_key.external_key_id
 
         # When
-        client.update_external_api_key(
+        client.update_external_key(
             external_key_id=external_api_key_id,
             llm_provider=llm_provider,
-            llm_secret=llm_secret,
+            llm_secret=external_key_updated_llm_secret,
             account_id=account_params["id"],
         )
         # When
@@ -281,23 +292,23 @@ class TestApiKeys:
         assert api_key.account_id == account_params["id"]
         assert api_key.external_key_id == external_api_key_id
         assert api_key.llm_provider == llm_provider
-        assert api_key.llm_secret == _mask_secret(llm_secret)
+        assert api_key.llm_secret == _mask_secret(
+            external_key_updated_llm_secret
+        )
 
-        # After
-        client.delete_external_key(api_key.external_key_id)
-
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_update_non_existing_external_api_key(
         self,
         client: VantageClient,
         account_params: dict,
-        random_uuid: str,
-        random_string_generator: Callable,
+        nonexisting_external_api_key_id: str,
+        external_key_llm_secret: str,
     ):
         """
         Tests updating a non-existing external API key
@@ -305,21 +316,22 @@ class TestApiKeys:
         """
         # When
         with pytest.raises(NotFoundException) as exception:
-            client.update_external_api_key(
-                external_key_id=random_uuid,
+            client.update_external_key(
+                external_key_id=nonexisting_external_api_key_id,
                 llm_provider="OpenAI",
-                llm_secret=random_string_generator(10),
+                llm_secret=external_key_llm_secret,
                 account_id=account_params["id"],
             )
 
         # Then
         assert exception.type is NotFoundException
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api()),
     )
     def test_delete_external_api_key(
         self,
@@ -345,11 +357,12 @@ class TestApiKeys:
             )
         assert exception.type is NotFoundException
 
-    @pytest.mark.skip(
+    @pytest.mark.skipif(
         reason=(
             "Cannot test with mock keys "
             "because of external API Key validation"
-        )
+        ),
+        condition=(not is_mock_api),
     )
     def test_delete_non_existing_external_api_key(
         self,
