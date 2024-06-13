@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/search/test/test-search-vme-collection/semantic",
+      "urlPath": "/v1/search/test/test-search-vme-collection/semantic",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"

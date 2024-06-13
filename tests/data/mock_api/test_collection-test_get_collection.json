@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "GET",
-      "urlPath": "/account/test/collection/test-collection",
+      "urlPath": "/v1/account/test/collection/test-collection",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
@@ -23,7 +23,7 @@
         "llm": null,
         "sequence_length": null,
         "secondary_external_accounts": [],
-        "collection_name": "Test Collection",
+        "collection_name": "test-collection",
         "external_url": null,
         "embeddings_dimension": 1536,
         "collection_preview_url_pattern": "test/test-collection",

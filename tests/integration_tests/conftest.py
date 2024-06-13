@@ -57,30 +57,30 @@ def skip_delete_external_api_key_test() -> bool:
 
 
 # Runs after all tests have finished
-def pytest_sessionfinish(session, exitstatus):
-    try:
-        collections = _client.list_collections()
-        for collection in collections:
-            collection_id = collection.collection_id
+# def pytest_sessionfinish(session, exitstatus):
+#     try:
+#         collections = _client.list_collections()
+#         for collection in collections:
+#             collection_id = collection.collection_id
 
-            if collection_id in _protected_collections:
-                continue
+#             if collection_id in _protected_collections:
+#                 continue
 
-            _client.delete_collection(collection_id=collection_id)
-    except VantageNotFoundError:
-        # Do nothing
-        pass
+#             _client.delete_collection(collection_id=collection_id)
+#     except VantageNotFoundError:
+#         # Do nothing
+#         pass
 
-    if not CONFIGURATION["other"]["enable_external_api_tests"]:
-        return
+#     if not CONFIGURATION["other"]["enable_external_api_tests"]:
+#         return
 
-    try:
-        keys = _client.get_external_api_keys()
-        for key in keys:
-            _client.delete_external_api_key(key.external_key_id)
-    except VantageNotFoundError:
-        # Do nothing
-        pass
+#     try:
+#         keys = _client.get_external_api_keys()
+#         for key in keys:
+#             _client.delete_external_api_key(key.external_key_id)
+#     except VantageNotFoundError:
+#         # Do nothing
+#         pass
 
 
 def random_string(length: int):

@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "POST",
-        "urlPath": "/search/test/test-search-upe-collection/embedding",
+        "urlPath": "/v1/search/test/test-collection/embedding",
         "headers": {
           "Authorization": {
             "contains": "Bearer testkey"
@@ -11,7 +11,7 @@
           "collection": {
               "accuracy": 800
           },
-          "embedding": [0.123, 0.234, 0.345, 0.456, 0.567]
+          "embedding": [1, 1, 1, 1, 1]
         }
     },
     "response": {

@@ -1,15 +1,15 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/account/test/collection",
+      "urlPath": "/v1/account/test/collection",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
         }
       },
       "jsonBody": {
-        "collection_id": "new-test-upe-collection",
-        "collection_name": "New UPE Collection",
+        "collection_id": "test-collection",
+        "collection_name": "test-collection",
         "user_provided_embeddings": true,
         "embeddings_dimension": 1536
       }
@@ -20,7 +20,7 @@
         "Content-Type": "application/json"
       },
       "jsonBody": {
-        "collection_id": "new-test-upe-collection",
+        "collection_id": "test-collection",
         "collection_created_time": null,
         "collection_state": null,
         "collection_status": "Pending",
@@ -29,7 +29,7 @@
         "llm": null,
         "sequence_length": null,
         "secondary_external_accounts": null,
-        "collection_name": "New UPE Collection",
+        "collection_name": "test-collection",
         "external_url": null,
         "embeddings_dimension": 1536,
         "collection_preview_url_pattern": null,

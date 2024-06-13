@@ -1,17 +1,14 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/search/test/non-existing-collection/embedding",
+      "urlPath": "/v1/search/test/non-existing-collection/embedding",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
         }
       },
       "jsonBody": {
-        "collection": {
-            "accuracy": 0.2
-        },
-        "embedding": [0.123, 0.234, 0.345, 0.456, 0.567]
+        "embedding": [1, 1, 1, 1, 1]
       }
     },
     "response": {

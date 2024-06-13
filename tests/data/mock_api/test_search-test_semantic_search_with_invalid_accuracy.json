@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/search/test/test-search-vme-collection/semantic",
+      "urlPath": "/v1/search/test/test-collection/semantic",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
@@ -9,9 +9,9 @@
       },
       "jsonBody": {
         "collection": {
-            "accuracy": 0.2
+            "accuracy": 800
         },
-        "text": "short legs and long body"
+        "text": "Test search"
       }
     },
     "response": {

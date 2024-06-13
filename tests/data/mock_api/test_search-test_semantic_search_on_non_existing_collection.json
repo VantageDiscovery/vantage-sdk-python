@@ -1,17 +1,14 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/search/test/non-existing-collection/semantic",
+      "urlPath": "/v1/search/test/non-existing-collection/semantic",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
         }
       },
       "jsonBody": {
-        "collection": {
-            "accuracy": 0.2
-        },
-        "text": "short legs and long body"
+        "text": "Test search"
       }
     },
     "response": {

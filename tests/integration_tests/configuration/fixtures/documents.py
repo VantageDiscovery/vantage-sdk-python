@@ -10,7 +10,7 @@ from vantage_sdk.model.document import (
 
 @pytest.fixture(scope="module")
 def jsonl_documents_path() -> str:
-    return "tests/data/documents.jsonl"
+    return "tests/data/small_documents.jsonl"
 
 
 @pytest.fixture(scope="module")

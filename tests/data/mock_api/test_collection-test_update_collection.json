@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "PATCH",
-      "urlPath": "/account/test/collection/collection-to-update",
+      "urlPath": "/v1/account/test/collection/collection-to-update",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"

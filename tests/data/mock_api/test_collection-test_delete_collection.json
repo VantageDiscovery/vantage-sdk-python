@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "DELETE",
-      "urlPath": "/account/test/collection/non-existing-collection",
+      "urlPath": "/v1/account/test/collection/collection-to-delete",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"

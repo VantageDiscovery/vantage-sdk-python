@@ -19,23 +19,28 @@ class TestDocuments:
     def test_user_provided_documents_upsert(
         self,
         client: VantageClient,
+        api_params: dict,
         account_params: dict,
-        random_string_generator: Callable,
+        collection_params: dict,
         vantage_upe_documents: List[UserProvidedEmbeddingsDocument],
     ):
         """
         TODO: docstring
         """
         # Given
-        collection = UserProvidedEmbeddingsCollection(
-            collection_id=random_string_generator(10),
-            embeddings_dimension=3,
-            collection_name=random_string_generator(10),
-        )
-        client.create_collection(
-            account_id=account_params["id"],
-            collection=collection,
-        )
+        collection_id = collection_params["collection_id"]
+        collection_name = collection_params["collection_name"]
+
+        if not api_params["is_mock"]:
+            collection = UserProvidedEmbeddingsCollection(
+                collection_id=collection_id,
+                collection_name=collection_name,
+                embeddings_dimension=3,
+            )
+            client.create_collection(
+                account_id=account_params["id"],
+                collection=collection,
+            )
 
         # When
         client.upsert_documents(
@@ -50,20 +55,25 @@ class TestDocuments:
     def test_user_provided_documents_upsert_invalid_document_type(
         self,
         client: VantageClient,
+        api_params: dict,
         account_params: dict,
-        random_string_generator: Callable,
+        collection_params: dict,
         vantage_vme_documents: List[VantageManagedEmbeddingsDocument],
     ):
         # Given
-        collection = UserProvidedEmbeddingsCollection(
-            collection_id=random_string_generator(10),
-            embeddings_dimension=3,
-            collection_name=random_string_generator(10),
-        )
-        client.create_collection(
-            account_id=account_params["id"],
-            collection=collection,
-        )
+        collection_id = collection_params["collection_id"]
+        collection_name = collection_params["collection_name"]
+
+        if not api_params["is_mock"]:
+            collection = UserProvidedEmbeddingsCollection(
+                collection_id=collection_id,
+                collection_name=collection_name,
+                embeddings_dimension=3,
+            )
+            client.create_collection(
+                account_id=account_params["id"],
+                collection=collection,
+            )
 
         # When
         with pytest.raises(ValueError) as exception:
@@ -79,32 +89,33 @@ class TestDocuments:
     def test_documents_upsert_from_jsonl_file(
         self,
         client: VantageClient,
+        api_params: dict,
         account_params: dict,
-        random_string_generator: Callable,
+        collection_params: dict,
         jsonl_documents_path: str,
     ):
         """
         TODO: docstring
         """
         # Given
-        batch_identifier = (
-            f"test_documents_upload-{random_string_generator(6)}"
-        )
-        collection = UserProvidedEmbeddingsCollection(
-            collection_id=random_string_generator(10),
-            embeddings_dimension=1536,
-            collection_name=random_string_generator(10),
-        )
-        client.create_collection(
-            account_id=account_params["id"],
-            collection=collection,
-        )
+        collection_id = collection_params["collection_id"]
+        collection_name = collection_params["collection_name"]
+
+        if not api_params["is_mock"]:
+            collection = UserProvidedEmbeddingsCollection(
+                collection_id=collection_id,
+                collection_name=collection_name,
+                embeddings_dimension=3,
+            )
+            client.create_collection(
+                account_id=account_params["id"],
+                collection=collection,
+            )
 
         # When
         client.upsert_documents_from_jsonl_file(
             collection_id=collection.collection_id,
             jsonl_file_path=jsonl_documents_path,
-            batch_identifier=batch_identifier,
             account_id=account_params["id"],
         )
 
