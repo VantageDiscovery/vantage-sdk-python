@@ -10,8 +10,8 @@ from vantage_sdk.client import VantageClient
 from vantage_sdk.core.exceptions import VantageFileUploadError
 from vantage_sdk.core.http.exceptions import NotFoundException
 from vantage_sdk.model.collection import (
-    UserProvidedEmbeddingsCollection,
     OpenAICollection,
+    UserProvidedEmbeddingsCollection,
 )
 
 
@@ -47,7 +47,7 @@ class TestCollections:
         assert collection.collection_id == collection_id
         assert collection.collection_name == collection_name
         assert collection.collection_status == "Pending"
-        assert collection.collection_state == "Active"
+        assert collection.collection_state is None
 
     def test_upload_user_embeddings_to_a_collection(
         self,
@@ -182,7 +182,7 @@ class TestCollections:
         assert collection.collection_id == collection_id
         assert collection.collection_name == collection_name
         assert collection.collection_status == "Pending"
-        assert collection.collection_state == "Active"
+        assert collection.collection_state is None
         assert collection.llm_provider == "OpenAI"
         assert collection.llm == "text-embedding-ada-002"
 

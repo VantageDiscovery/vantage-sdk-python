@@ -1,26 +1,23 @@
 {
-    "request": {
-      "method": "GET",
-      "urlPath": "/v1/account/test/collection/test-collection/get_upload_url?file_size==2971&customer_batch_identifier=hello_world.parquet",
-      "headers": {
-        "Authorization": {
-          "contains": "Bearer testkey"
-        }
-      },
-      "jsonBody": {
-        "file_size": 300
-      }
-    },
-    "response": {
-      "status": 200,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "jsonBody": {
-        "collection_id": "test-collection",
-        "customer_batch_identifier": "2189688a-8a07-4931-94a1-1472badb9500",
-        "upload_url_type": "PUT",
-        "upload_url": "https://vec2vantage-prod-a-customer-data.s3.us-east-2.amazonaws.com/ingest/test/test-collection/2189688a-8a07-4931-94a1-1472badb9500?X-Amz-Security-Token=IQoJb3JpZ2luX2VjENz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMiJGMEQCIEgaZgy0sm3s9pPEgocngI5WCVViuYla0hvJt06Of2GRAiAyRbXdSjLr8GNYIV2RcObGZbwefM98GyQBLiqc0zbcziqPBQh1EAEaDDEzODU0NjU3NTM3NCIMi1yQwwWvWsV0s11uKuwEhEYKdL20wK8kz0AVRq3LZEmabFwZb2YQRoCcNRUn0JXqsnVd29nLOKrmH7D3vy87TbBxGnwfx2GqM0RVFHTQ%2FOkwsGzwRo98yeI5MikF%2BRcOFHuPeVEsu8ICBz2ML%2BfdD2%2FUGEmEOLx6xVkpNRq0cTxX%2FF1LwGDUnYRikWXpY6%2FeVXienTGs%2Bs47A8J6QOr0vpyD4UjY0l04pZBR9%2FlF1caZc%2FUuajDnNYUVmXILSSWE63igtBOrKsn12IXTx4zFKhVPdQipUo02bkeMVxPF%2BrO4twuU7tXeAkHCviL350%2Bf9w9O6jLkwjjJL2xyQp0wEhI4YSgLuAJZV1HdNPkYQe5zTrtwxmV3oTDpLTkqTIhWFQDp2L4wilJzMFF%2BNAjEAMXButNvOKpilB0UW8WgBALP%2BuL3xKWMoibgPu5S%2FR4r6dqWt5KZxwQ4t8S3v1j3jID9kKzEGg4U7nd1n%2FWK3I14M1mxnUOI0P30yD1NL8wO8bvT7FGme2duLlyA1IbOlA2uV88aZIZJ22zz1MrLgnBheu%2BRIYCX%2BlFdwcgaE%2BgD55Uk%2Fav47TJ2M1xFaeEqGcb2V2qXjA7o2SFal%2Ffg864xOnjmMgAfUQRtvQwaLuo64SdB0K1HEdVARo6Qd4NMglgtGwmaXbT96EGMyg8Nr6MessFefHguYF39ubYa1E1fKPV6jlCF6KN%2Bs%2Bn7HXhFAuaC5F0elp%2FDDYdVeXEqk5%2BRYS4j7xtIPTUoBIazCanBcMlxqMpf7c%2FLUHz4dcFJ6JZadnGwADPzUiWlsjHHSeGHZAgVMOs30D6gKczSB1tpMBJ9n9hYu9EU%2F%2Fsw7J6mswY6nAH0hyirTilqT6bB%2FITeXe%2BqcCOYnH2VoUwQhkHRKgO%2Bcnro77Dy6REeQm1RcMB0kf1ybxFX0LRH%2BEbKFpQkYdYsNCLw7ztKe4R9%2FWpbHOfDFj6k4y1OvdvOJi2evJOq4PRhMq0f8zl%2Fx95gyMbqMv8KTumMNA81Hfol24FC%2FT2Emo6t1Os5XuXKjlpJTSWpav2U%2FN4Fo63NLtIGyPs%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240612T120708Z&X-Amz-SignedHeaders=content-length%3Bhost&X-Amz-Expires=43200&X-Amz-Credential=ASIASAQQE7AHAKLWCPPA%2F20240612%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=62ae26d34e0dd432450818f4c405ddf014f1ca19452d2e61bfeb1ef2dc2760c5"
+  "request": {
+    "method": "GET",
+    "url": "/v1/account/test/collection/test-collection/get_upload_url?file_size=2971&customer_batch_identifier=hello_world.parquet",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
       }
     }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "test-collection",
+      "customer_batch_identifier": "2189688a-8a07-4931-94a1-1472badb9500",
+      "upload_url_type": "PUT",
+      "upload_url": "http://localhost:20001/ingest/test/test-collection/2189688a-8a07-4931-94a1-1472badb9500"
+    }
   }
+}

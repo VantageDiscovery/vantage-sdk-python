@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/ingest/test/test-collection/2189688a-8a07-4931-94a1-1472badb9500"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

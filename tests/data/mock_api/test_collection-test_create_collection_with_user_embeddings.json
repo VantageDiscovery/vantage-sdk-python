@@ -1,49 +1,33 @@
 {
-    "request": {
-      "method": "POST",
-      "urlPath": "/v1/account/test/collection",
-      "headers": {
-        "Authorization": {
-          "contains": "Bearer testkey"
-        }
-      },
-      "jsonBody": {
-        "collection_id": "test-collection",
-        "collection_name": "test-collection",
-        "user_provided_embeddings": true,
-        "embeddings_dimension": 1536,
-        "external_key_id": null,
-        "secondary_external_accounts": null,
-        "llm": null,
-        "llm_provider": null,
-        "external_url": null,
-        "collection_state": null,
-        "collection_status": null,
-        "collection_created_time": null,
-        "collection_preview_url_pattern": null
-      }
-    },
-    "response": {
-      "status": 200,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "jsonBody": {
-        "collection_id": "test-collection",
-        "collection_created_time": null,
-        "collection_state": null,
-        "collection_status": "Pending",
-        "user_provided_embeddings": true,
-        "llm_provider": null,
-        "llm": null,
-        "sequence_length": null,
-        "secondary_external_accounts": null,
-        "collection_name": "test-collection",
-        "external_url": null,
-        "embeddings_dimension": 1536,
-        "collection_preview_url_pattern": null,
-        "external_key_id": null
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/collection",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
       }
     }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "test-collection",
+      "collection_created_time": null,
+      "collection_state": null,
+      "collection_status": "Pending",
+      "user_provided_embeddings": true,
+      "llm_provider": null,
+      "llm": null,
+      "sequence_length": null,
+      "secondary_external_accounts": null,
+      "collection_name": "test-collection",
+      "external_url": null,
+      "embeddings_dimension": 1536,
+      "collection_preview_url_pattern": null,
+      "external_key_id": null
+    }
   }
-  
+}
