@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from typing import Callable
-
 import pytest
 
 from vantage_sdk.client import VantageClient
@@ -26,7 +24,9 @@ class TestSearch:
         Tests if embedding search will return correct result.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = collection_params[
+            "embedding_search_test_collection_id"
+        ]
         search_embedding = [1, 1, 1, 1, 1]
 
         # When
