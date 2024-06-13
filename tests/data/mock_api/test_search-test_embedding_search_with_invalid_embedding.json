@@ -7,9 +7,13 @@
         "contains": "Bearer testkey"
       }
     },
-    "jsonBody": {
-      "embedding": []
-    }
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "embedding": []
+        }
+      }
+    ]
   },
   "response": {
     "status": 400,
