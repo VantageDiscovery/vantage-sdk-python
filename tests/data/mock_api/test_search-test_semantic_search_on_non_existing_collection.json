@@ -7,9 +7,13 @@
         "contains": "Bearer testkey"
       }
     },
-    "jsonBody": {
-      "text": "Test search"
-    }
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "text": "Test search"
+        }
+      }
+    ]
   },
   "response": {
     "status": 401,

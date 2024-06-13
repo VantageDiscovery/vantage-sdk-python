@@ -125,7 +125,7 @@ class TestSearch:
         Tests if semantic search will return correct result.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = collection_params["semantic_search_test_collection_id"]
         accuracy = 0.2
         search_text = "short legs and long body"
 

@@ -7,12 +7,16 @@
         "contains": "Bearer testkey"
       }
     },
-    "jsonBody": {
-      "collection": {
-        "accuracy": 0.2
-      },
-      "text": "short legs and long body"
-    }
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection": {
+            "accuracy": 0.2
+          },
+          "text": "short legs and long body"
+        }
+      }
+    ]
   },
   "response": {
     "status": 200,
