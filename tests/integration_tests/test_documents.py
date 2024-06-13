@@ -44,7 +44,7 @@ class TestDocuments:
 
         # When
         client.upsert_documents(
-            collection_id=collection.collection_id,
+            collection_id=collection_id,
             documents=vantage_upe_documents,
             account_id=account_params["id"],
         )
@@ -78,7 +78,7 @@ class TestDocuments:
         # When
         with pytest.raises(ValueError) as exception:
             client.upsert_documents(
-                collection_id=collection.collection_id,
+                collection_id=collection_id,
                 documents=vantage_vme_documents,
                 account_id=account_params["id"],
             )
@@ -114,7 +114,7 @@ class TestDocuments:
 
         # When
         client.upsert_documents_from_jsonl_file(
-            collection_id=collection.collection_id,
+            collection_id=collection_id,
             jsonl_file_path=jsonl_documents_path,
             account_id=account_params["id"],
         )
@@ -126,26 +126,31 @@ class TestDocuments:
         self,
         client: VantageClient,
         account_params: dict,
-        random_string_generator: Callable,
+        api_params: dict,
+        collection_params: dict,
         parquet_file_path: str,
     ):
         """
         TODO: docstring
         """
         # Given
-        collection = UserProvidedEmbeddingsCollection(
-            collection_id=random_string_generator(10),
-            embeddings_dimension=1536,
-            collection_name=random_string_generator(10),
-        )
-        client.create_collection(
-            account_id=account_params["id"],
-            collection=collection,
-        )
+        collection_id = collection_params["collection_id"]
+        collection_name = collection_params["collection_name"]
+
+        if not api_params["is_mock"]:
+            collection = UserProvidedEmbeddingsCollection(
+                collection_id=collection_id,
+                collection_name=collection_name,
+                embeddings_dimension=3,
+            )
+            client.create_collection(
+                account_id=account_params["id"],
+                collection=collection,
+            )
 
         # When
         result = client.upsert_documents_from_parquet_file(
-            collection_id=collection.collection_id,
+            collection_id=collection_id,
             parquet_file_path=parquet_file_path,
             account_id=account_params["id"],
         )

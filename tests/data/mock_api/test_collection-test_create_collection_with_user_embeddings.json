@@ -11,7 +11,16 @@
         "collection_id": "test-collection",
         "collection_name": "test-collection",
         "user_provided_embeddings": true,
-        "embeddings_dimension": 1536
+        "embeddings_dimension": 1536,
+        "external_key_id": null,
+        "secondary_external_accounts": null,
+        "llm": null,
+        "llm_provider": null,
+        "external_url": null,
+        "collection_state": null,
+        "collection_status": null,
+        "collection_created_time": null,
+        "collection_preview_url_pattern": null
       }
     },
     "response": {
