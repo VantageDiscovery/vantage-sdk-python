@@ -7,12 +7,16 @@
         "contains": "Bearer testkey"
       }
     },
-    "jsonBody": {
-      "collection": {
-        "accuracy": 800
-      },
-      "text": "Test search"
-    }
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection": {
+            "accuracy": 800
+          },
+          "text": "Test search"
+        }
+      }
+    ]
   },
   "response": {
     "status": 400,
