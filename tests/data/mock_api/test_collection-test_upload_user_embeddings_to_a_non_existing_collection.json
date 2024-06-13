@@ -1,30 +1,30 @@
 {
-    "request": {
-      "method": "GET",
-      "urlPath": "/v1/account/test/collection/test-collection/get_upload_url",
-      "headers": {
-        "Authorization": {
-          "contains": "Bearer testkey"
-        }
-      },
-      "jsonBody": {
-        "file_size": 300
+  "request": {
+    "method": "GET",
+    "url": "'http://localhost:20001/v1/account/test/collection/test-nonexisting-collection/get_upload_url?file_size=2971&customer_batch_identifier=hello_world.parquet'",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
       }
     },
-    "response": {
+    "jsonBody": {
+      "file_size": 300
+    }
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "type": "about:blank",
+      "title": "Resource not found",
       "status": 404,
-      "headers": {
-        "Content-Type": "application/json"
-      },
-      "jsonBody": {
-        "type": "about:blank",
-        "title": "Resource not found",
-        "status": 404,
-        "detail": "collection with id test-collection for customer test not found",
-        "instance": "/collection-metadata/presigned-url/test/test-collection/2e81666e-fd20-4419-9d07-83f7b83db6ed",
-        "properties": {
-          "timestamp": "2024-06-12T12:14:08.593170733Z"
-        }
+      "detail": "collection with id test-collection for customer test not found",
+      "instance": "/collection-metadata/presigned-url/test/test-collection/2e81666e-fd20-4419-9d07-83f7b83db6ed",
+      "properties": {
+        "timestamp": "2024-06-12T12:14:08.593170733Z"
       }
     }
   }
+}

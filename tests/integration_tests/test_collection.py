@@ -84,7 +84,7 @@ class TestCollections:
         Tests uploading user embeddings to a non-existing collection.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = collection_params["non_existing_collection_id"]
 
         with pytest.raises(NotFoundException) as exception:
             client.upsert_documents_from_parquet_file(
