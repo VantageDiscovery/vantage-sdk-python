@@ -1,19 +1,19 @@
 {
-    "request": {
-      "method": "POST",
-      "urlPath": "/v1/account/test/collection/test-collection/documents",
-      "headers": {
-        "Content-Type": "text/plain",
-        "Authorization": {
-          "contains": "Bearer testkey"
-        }
-      },
-      "jsonBody": "{\"id\":\"id-1\", \"text\": \"Some text 1\", \"embeddings\": \"[1, 1, 1]\"}\n{\"id\":\"id-2\", \"text\":\"Some text 2\", \"embeddings\": \"[1, 1, 1]\"}"
-    },
-    "response": {
-      "status": 200,
-      "headers": {
-        "Content-Type": "application/json"
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/collection/test-collection/documents",
+    "headers": {
+      "Content-Type": "text/plain",
+      "Authorization": {
+        "contains": "Bearer testkey"
       }
+    },
+    "jsonBody": "{\"id\":\"id-1\", \"text\": \"Some text 1\", \"embeddings\": \"[1, 1, 1]\"}\n{\"id\":\"id-2\", \"text\":\"Some text 2\", \"embeddings\": \"[1, 1, 1]\"}"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
     }
   }
+}

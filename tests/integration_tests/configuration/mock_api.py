@@ -30,10 +30,13 @@ def get_mock_request_for(module_name: str, test_name: str) -> dict[str, Any]:
 
 
 def get_request_stub_file_contents(request: Any) -> dict[str, Any]:
-    test_name = request.node.name
-    module_name_decomposed = request.module.__name__.split(".")
-    module_name = module_name_decomposed[len(module_name_decomposed) - 1]
-    return get_mock_request_for(module_name, test_name)
+    try:
+        test_name = request.node.name
+        module_name_decomposed = request.module.__name__.split(".")
+        module_name = module_name_decomposed[len(module_name_decomposed) - 1]
+        return get_mock_request_for(module_name, test_name)
+    except Exception as exception:
+        raise exception
 
 
 def is_mock_api() -> bool:
