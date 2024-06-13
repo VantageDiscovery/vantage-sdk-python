@@ -6,15 +6,6 @@
       "Authorization": {
         "contains": "Bearer testkey"
       }
-    },
-    "jsonBody": {
-      "embedding": [
-        1,
-        1,
-        1,
-        1,
-        1
-      ]
     }
   },
   "response": {

@@ -50,7 +50,7 @@ class TestSearch:
         Tests if searching a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = collection_params["non_existing_collection_id"]
         search_embedding = [1, 1, 1, 1, 1]
 
         # When
