@@ -26,14 +26,14 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests creating an empty collection with user embeddings in given account.
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -57,7 +57,7 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         test_parquet_file_path: str,
     ) -> None:
         """
@@ -65,7 +65,7 @@ class TestCollections:
         """
 
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
 
         # When
         status = client.upsert_documents_from_parquet_file(
@@ -81,14 +81,14 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         test_parquet_file_path: str,
     ) -> None:
         """
         Tests uploading user embeddings to a non-existing collection.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
 
         with pytest.raises(NotFoundException) as exception:
             client.upsert_documents_from_parquet_file(
@@ -104,14 +104,14 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         random_string_generator: Callable,
     ) -> None:
         """
         Tests uploading non existing user embeddings file.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         non_existing_file_path = random_string_generator(10)
 
         with pytest.raises(FileNotFoundError) as exception:
@@ -128,7 +128,7 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         test_parquet_file_path: str,
     ):
         """
@@ -138,7 +138,7 @@ class TestCollections:
         file_size = Path(test_parquet_file_path).stat().st_size + 1
         file = open(test_parquet_file_path, "rb")
         file_content = file.read()
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
 
         # When
         with pytest.raises(VantageFileUploadError) as exception:
@@ -158,15 +158,15 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests creating an empty collection with vantage managed
         embeddings in given account.
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = OpenAICollection(
             collection_id=collection_id,
@@ -239,14 +239,14 @@ class TestCollections:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if it can retrieve a single collection.
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -274,13 +274,13 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if fetching a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
 
         # When
         with pytest.raises(NotFoundException) as exception:
@@ -296,13 +296,13 @@ class TestCollections:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if an existing collection can be updated.
         """
         # Given
-        collection_id = collection_params["collection_to_update_id"]
+        collection_id = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -332,13 +332,13 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if updating a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
         updated_collection_name = "Updated Name"
 
         # When
@@ -357,13 +357,13 @@ class TestCollections:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if an existing collection can be deleted.
         """
         # Given
-        collection_id = collection_params["collection_to_delete_id"]
+        collection_id = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -401,13 +401,13 @@ class TestCollections:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         Tests if deleting a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
 
         # When
         with pytest.raises(NotFoundException) as exception:

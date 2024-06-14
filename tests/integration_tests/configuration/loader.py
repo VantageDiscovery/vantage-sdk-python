@@ -4,6 +4,7 @@ import os
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(ABS_PATH, os.pardir, os.pardir))
 DISABLE_EXTERNAL_API_KEYS_TESTS = True
+MOCK_DOTENV_FILE = os.path.join(PROJECT_DIR, "integration_tests", "mock-env")
 
 
 def _load_env() -> None:
@@ -12,6 +13,12 @@ def _load_env() -> None:
         from dotenv import load_dotenv
 
         load_dotenv(dotenv_path)
+    elif os.path.exists(MOCK_DOTENV_FILE):
+        from dotenv import load_dotenv
+
+        load_dotenv(MOCK_DOTENV_FILE)
+    else:
+        raise FileNotFoundError("Could not find valid environment file.")
 
 
 def should_enable_external_api_key_tests(is_mock_api: bool) -> bool:
@@ -81,10 +88,10 @@ def _load_configuration() -> None:
             )
         },
     }
-    configuration["other"]["enable_external_api_tests"] = (
-        should_enable_external_api_key_tests(
-            configuration["other"]["is_mock_api"]
-        )
+    configuration["other"][
+        "enable_external_api_tests"
+    ] = should_enable_external_api_key_tests(
+        configuration["other"]["is_mock_api"]
     )
     return configuration
 

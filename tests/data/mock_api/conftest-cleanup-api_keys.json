@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "DELETE",
-    "urlPath": "/v1/account/test/external_keys/^(?!(nonexistingexternalapikeyid)$).*$",
+    "urlPath": "/v1/account/test/external_keys/^(?!(nonexistingexternalapikeyid|delexternalapikeyid)$).*$",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"

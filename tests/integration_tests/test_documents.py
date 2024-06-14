@@ -22,15 +22,15 @@ class TestDocuments:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         vantage_upe_documents: List[UserProvidedEmbeddingsDocument],
     ):
         """
         TODO: docstring
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -58,12 +58,12 @@ class TestDocuments:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         vantage_vme_documents: List[VantageManagedEmbeddingsDocument],
     ):
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -92,15 +92,15 @@ class TestDocuments:
         client: VantageClient,
         api_params: dict,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         jsonl_documents_path: str,
     ):
         """
         TODO: docstring
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,
@@ -128,15 +128,15 @@ class TestDocuments:
         client: VantageClient,
         account_params: dict,
         api_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
         parquet_file_path: str,
     ):
         """
         TODO: docstring
         """
         # Given
-        collection_id = collection_params["collection_id"]
-        collection_name = collection_params["collection_name"]
+        collection_id = test_collection_id
+        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,

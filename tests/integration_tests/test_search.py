@@ -18,15 +18,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if embedding search will return correct result.
         """
         # Given
-        collection_id = collection_params[
-            "embedding_search_test_collection_id"
-        ]
+        collection_id = test_collection_id
         search_embedding = [1, 1, 1, 1, 1]
 
         # When
@@ -44,13 +42,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if searching a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
         search_embedding = [1, 1, 1, 1, 1]
 
         # When
@@ -68,13 +66,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if searching using an empty embedding will raise an exception.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         search_embedding = []
 
         # When
@@ -92,14 +90,14 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if searching using invalid accuracy parameter
         will raise an exception.
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         search_embedding = [1, 1, 1, 1, 1]
         accuracy = 800
 
@@ -119,13 +117,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if semantic search will return correct result.
         """
         # Given
-        collection_id = collection_params["semantic_search_test_collection_id"]
+        collection_id = test_collection_id
         accuracy = 0.2
         search_text = "short legs and long body"
 
@@ -145,14 +143,14 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if performing a semantic search on an non-existing collection
         will raise an exception.
         """
         # Given
-        collection_id = collection_params["non_existing_collection_id"]
+        collection_id = test_collection_id
         search_text = "Test search"
 
         # When
@@ -170,7 +168,7 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ):
         """
         Tests if performing a semantic search with an invalid
@@ -178,7 +176,7 @@ class TestSearch:
         """
 
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         search_text = "Test search"
         accuracy = 800
 
@@ -198,13 +196,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         TODO: docstring
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         expected_results = {
             "en_0370917": {"score": 0.907},
             'en_0127807': {"score": 0.904},
@@ -233,13 +231,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        collection_params: dict,
+        test_collection_id: str,
     ) -> None:
         """
         TODO: docstring
         """
         # Given
-        collection_id = collection_params["collection_id"]
+        collection_id = test_collection_id
         more_like_these = [
             MoreLikeTheseItem(
                 weight=1.0,
