@@ -75,9 +75,9 @@ def pytest_sessionfinish(session, exitstatus):
         return
 
     try:
-        keys = _client.get_external_api_keys()
+        keys = _client.get_external_keys()
         for key in keys:
-            _client.delete_external_api_key(key.external_key_id)
+            _client.delete_external_key(key.external_key_id)
     except VantageNotFoundError:
         # Do nothing
         pass
@@ -101,3 +101,7 @@ def random_string_generator() -> Callable:
 @pytest.fixture(scope="module")
 def random_uuid() -> str:
     return str(uuid.uuid4())
+
+
+def disable_external_api_keys_tests() -> bool:
+    return not CONFIGURATION["other"]["is_mock_api"]

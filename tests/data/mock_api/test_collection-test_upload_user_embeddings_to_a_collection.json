@@ -1,0 +1,23 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/v1/account/test/collection/test-collection/get_upload_url?file_size=2971&customer_batch_identifier=hello_world.parquet",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "test-collection",
+      "customer_batch_identifier": "2189688a-8a07-4931-94a1-1472badb9500",
+      "upload_url_type": "PUT",
+      "upload_url": "http://localhost:20001/ingest/test/test-collection/2189688a-8a07-4931-94a1-1472badb9500"
+    }
+  }
+}

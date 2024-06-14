@@ -1,0 +1,33 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/v1/account/test/collection/collection-to-update",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "collection-to-update",
+      "collection_created_time": "2024-06-11T09:59:54",
+      "collection_state": "Active",
+      "collection_status": "Online",
+      "user_provided_embeddings": true,
+      "llm_provider": null,
+      "llm": null,
+      "sequence_length": null,
+      "secondary_external_accounts": null,
+      "collection_name": "test",
+      "external_url": null,
+      "embeddings_dimension": 1536,
+      "collection_preview_url_pattern": "test/collection-to-update",
+      "external_key_id": null
+    }
+  }
+}

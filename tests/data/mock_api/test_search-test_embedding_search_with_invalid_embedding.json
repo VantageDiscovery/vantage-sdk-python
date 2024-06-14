@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/embedding",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "embedding": []
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "instance": "ref:df349afe-0b2e-45aa-8c2f-ec87e1175d46",
+      "title": "Bad request",
+      "detail": "Embedding must be provided",
+      "coreSearchStatus": 400,
+      "type": "https://docs.vantagediscovery.com/reference/"
+    }
+  }
+}

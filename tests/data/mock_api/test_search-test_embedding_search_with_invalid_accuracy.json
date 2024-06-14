@@ -1,0 +1,40 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/embedding",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection": {
+            "accuracy": 800
+          },
+          "embedding": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "instance": "ref:011819f2-afe7-4df1-a3db-b6cadfd947d8",
+      "title": "Bad request",
+      "detail": "Accuracy must be less or equal to 1",
+      "coreSearchStatus": 400,
+      "type": "https://docs.vantagediscovery.com/reference/"
+    }
+  }
+}

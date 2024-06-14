@@ -1,0 +1,30 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPath": "/v1/account/test/collection/non-existing-collection",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "jsonBody": {
+      "collection_name": "Updated Name"
+    }
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "type": "about:blank",
+      "title": "Resource not found",
+      "status": 404,
+      "detail": "collection with id non-existing-collection for customer test not found",
+      "instance": "/collection-metadata/test/non-existing-collection",
+      "properties": {
+        "timestamp": "2024-06-11T10:26:14.520222837Z"
+      }
+    }
+  }
+}

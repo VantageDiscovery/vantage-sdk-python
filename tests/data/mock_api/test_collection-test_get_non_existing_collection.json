@@ -1,7 +1,7 @@
 {
   "request": {
-    "method": "DELETE",
-    "urlPath": "/v1/account/test/external_keys/nonexistingexternalapikeyid",
+    "method": "GET",
+    "urlPath": "/v1/account/test/collection/non-existing-collection",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"
@@ -17,10 +17,10 @@
       "type": "about:blank",
       "title": "Resource not found",
       "status": 404,
-      "detail": "External account for customer test with id nonexistingexternalapikeyid not found",
-      "instance": "/external/test/dexternal_keys/nonexistingexternalapikeyid",
+      "detail": "collection with id non-existing-collection for customer test not found",
+      "instance": "/collection-metadata/test/non-existing-collection",
       "properties": {
-        "timestamp": "2024-06-11T14:20:03.293013266Z"
+        "timestamp": "2024-06-11T10:09:36.696560235Z"
       }
     }
   }

@@ -1,0 +1,46 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/collection",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection_id": "test-collection",
+          "user_provided_embeddings": false,
+          "llm": "text-embedding-ada-002",
+          "llm_provider": "OpenAI",
+          "llm_secret": "llmsecret",
+          "embeddings_dimension": 1536,
+          "collection_name": "test-collection"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "test-collection",
+      "collection_created_time": null,
+      "collection_state": null,
+      "collection_status": "Pending",
+      "user_provided_embeddings": false,
+      "llm_provider": "OpenAI",
+      "llm": "text-embedding-ada-002",
+      "sequence_length": null,
+      "secondary_external_accounts": null,
+      "collection_name": "test-collection",
+      "external_url": null,
+      "embeddings_dimension": 1536,
+      "collection_preview_url_pattern": null,
+      "external_key_id": null
+    }
+  }
+}

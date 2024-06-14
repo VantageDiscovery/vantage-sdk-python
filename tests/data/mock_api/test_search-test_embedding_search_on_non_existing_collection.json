@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/non-existing-collection/embedding",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "instance": "ref:8b7f5567-ebd2-4cc7-9a72-9791e4e82632",
+      "title": "Unauthorized",
+      "detail": "API key or account [accountId:test|collectionId:non-existing-collection] is not valid, please double check your api key or account and collection id and try again. This incident has been logged.",
+      "coreSearchStatus": 401,
+      "type": "https://docs.vantagediscovery.com/reference/"
+    }
+  }
+}

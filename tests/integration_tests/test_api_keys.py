@@ -2,7 +2,7 @@ from typing import Callable
 
 import pytest
 
-from tests.integration_tests.configuration.mock_api import is_mock_api
+from tests.integration_tests.conftest import disable_external_api_keys_tests
 from vantage_sdk.client import VantageClient
 from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
@@ -114,7 +114,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_get_external_api_keys(
         self,
@@ -156,7 +156,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_get_external_api_key(
         self,
@@ -193,7 +193,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_get_non_existing_external_api_key(
         self,
@@ -219,7 +219,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_create_external_api_key(
         self,
@@ -253,7 +253,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_update_external_api_key(
         self,
@@ -301,7 +301,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_update_non_existing_external_api_key(
         self,
@@ -331,7 +331,7 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api()),
+        condition=disable_external_api_keys_tests(),
     )
     def test_delete_external_api_key(
         self,
@@ -362,13 +362,13 @@ class TestApiKeys:
             "Cannot test with mock keys "
             "because of external API Key validation"
         ),
-        condition=(not is_mock_api),
+        condition=disable_external_api_keys_tests(),
     )
     def test_delete_non_existing_external_api_key(
         self,
         client: VantageClient,
         account_params: dict,
-        random_uuid: str,
+        nonexisting_external_api_key_id: str,
     ):
         """
         Tests deleting a non-existing external API key on users' account.
@@ -376,7 +376,7 @@ class TestApiKeys:
         # When
         with pytest.raises(NotFoundException) as exception:
             client.delete_external_key(
-                external_key_id=random_uuid,
+                external_key_id=nonexisting_external_api_key_id,
                 account_id=account_params["id"],
             )
 

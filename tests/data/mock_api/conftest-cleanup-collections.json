@@ -1,7 +1,7 @@
 {
   "request": {
-    "method": "POST",
-    "urlPath": "/v1/account/test/collection/test-collection/documents",
+    "method": "DELETE",
+    "urlPattern": "/v1/account/test/collection/^(?!(non-existing-collection)$).*$",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"
@@ -12,6 +12,7 @@
     "status": 200,
     "headers": {
       "Content-Type": "application/json"
-    }
+    },
+    "jsonBody": {}
   }
 }

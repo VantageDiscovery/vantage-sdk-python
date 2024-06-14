@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from typing import Callable
-
 import pytest
 
 from vantage_sdk.client import VantageClient
@@ -20,23 +18,19 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        embedding_search_test_collection_id: str,
+        test_collection_id: str,
     ):
         """
         Tests if embedding search will return correct result.
         """
         # Given
-        collection_id = embedding_search_test_collection_id
-        search_embedding = [1 for col in range(1536)]
-        accuracy = 0.5
+        collection_id = test_collection_id
+        search_embedding = [1, 1, 1, 1, 1]
 
         # When
         result = client.embedding_search(
             embedding=search_embedding,
             collection_id=collection_id,
-            accuracy=accuracy,
-            vantage_api_key=vantage_api_key,
             account_id=account_params["id"],
         )
 
@@ -48,24 +42,20 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        random_string_generator: Callable,
+        test_collection_id: str,
     ):
         """
         Tests if searching a non-existing collection will raise an exception.
         """
         # Given
-        collection_id = random_string_generator(10)
-        search_embedding = [1 for col in range(1536)]
-        accuracy = 0.5
+        collection_id = test_collection_id
+        search_embedding = [1, 1, 1, 1, 1]
 
         # When
         with pytest.raises(UnauthorizedException) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
-                accuracy=accuracy,
-                vantage_api_key=vantage_api_key,
                 account_id=account_params["id"],
             )
 
@@ -76,27 +66,23 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        embedding_search_test_collection_id: str,
+        test_collection_id: str,
     ):
         """
         Tests if searching using an empty embedding will raise an exception.
         """
         # Given
-        collection_id = embedding_search_test_collection_id
+        collection_id = test_collection_id
         search_embedding = []
-        accuracy = 0.5
 
         # When
         with pytest.raises(BadRequestException) as exception:
             client.embedding_search(
                 embedding=search_embedding,
                 collection_id=collection_id,
-                accuracy=accuracy,
-                vantage_api_key=vantage_api_key,
                 account_id=account_params["id"],
             )
-        search_embedding = [1 for col in range(1536)]
+
         # Then
         assert exception.type is BadRequestException
 
@@ -104,16 +90,15 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        embedding_search_test_collection_id: str,
+        test_collection_id: str,
     ):
         """
         Tests if searching using invalid accuracy parameter
         will raise an exception.
         """
         # Given
-        collection_id = embedding_search_test_collection_id
-        search_embedding = [1 for col in range(1536)]
+        collection_id = test_collection_id
+        search_embedding = [1, 1, 1, 1, 1]
         accuracy = 800
 
         # When
@@ -122,7 +107,6 @@ class TestSearch:
                 embedding=search_embedding,
                 collection_id=collection_id,
                 accuracy=accuracy,
-                vantage_api_key=vantage_api_key,
                 account_id=account_params["id"],
             )
 
@@ -133,23 +117,21 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        semantic_search_test_collection_id: str,
+        test_collection_id: str,
     ):
         """
         Tests if semantic search will return correct result.
         """
         # Given
-        collection_id = semantic_search_test_collection_id
-        accuracy = 0.3
-        search_text = "Book's my daughter would find inspiring with coming of age and empowerment"
+        collection_id = test_collection_id
+        accuracy = 0.2
+        search_text = "short legs and long body"
 
         # When
         result = client.semantic_search(
             text=search_text,
             collection_id=collection_id,
             accuracy=accuracy,
-            vantage_api_key=vantage_api_key,
             account_id=account_params["id"],
         )
 
@@ -161,25 +143,21 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        random_string_generator: Callable,
+        test_collection_id: str,
     ):
         """
         Tests if performing a semantic search on an non-existing collection
         will raise an exception.
         """
         # Given
-        collection_id = random_string_generator(10)
+        collection_id = test_collection_id
         search_text = "Test search"
-        accuracy = 0.5
 
         # When
         with pytest.raises(UnauthorizedException) as exception:
             client.semantic_search(
                 text=search_text,
                 collection_id=collection_id,
-                accuracy=accuracy,
-                vantage_api_key=vantage_api_key,
                 account_id=account_params["id"],
             )
 
@@ -190,8 +168,7 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        embedding_search_test_collection_id: str,
+        test_collection_id: str,
     ):
         """
         Tests if performing a semantic search with an invalid
@@ -199,7 +176,7 @@ class TestSearch:
         """
 
         # Given
-        collection_id = embedding_search_test_collection_id
+        collection_id = test_collection_id
         search_text = "Test search"
         accuracy = 800
 
@@ -209,7 +186,6 @@ class TestSearch:
                 text=search_text,
                 collection_id=collection_id,
                 accuracy=accuracy,
-                vantage_api_key=vantage_api_key,
                 account_id=account_params["id"],
             )
 
@@ -220,13 +196,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        more_like_this_test_collection_id: str,
+        test_collection_id: str,
     ) -> None:
         """
         TODO: docstring
         """
         # Given
+        collection_id = test_collection_id
         expected_results = {
             "en_0370917": {"score": 0.907},
             'en_0127807': {"score": 0.904},
@@ -235,13 +211,9 @@ class TestSearch:
 
         # When
         response = client.more_like_this_search(
-            collection_id=more_like_this_test_collection_id,
-            accuracy=0.3,
+            collection_id=collection_id,
             document_id="en_0530926",
-            page=1,
-            page_count=3,
             account_id=account_params["id"],
-            vantage_api_key=vantage_api_key,
         )
 
         # Then
@@ -259,13 +231,13 @@ class TestSearch:
         self,
         client: VantageClient,
         account_params: dict,
-        vantage_api_key: str,
-        more_like_this_test_collection_id: str,
+        test_collection_id: str,
     ) -> None:
         """
         TODO: docstring
         """
         # Given
+        collection_id = test_collection_id
         more_like_these = [
             MoreLikeTheseItem(
                 weight=1.0,
@@ -285,12 +257,8 @@ class TestSearch:
         }
 
         response = client.more_like_these_search(
-            collection_id=more_like_this_test_collection_id,
-            accuracy=0.3,
-            page=1,
-            page_count=5,
+            collection_id=collection_id,
             account_id=account_params["id"],
-            vantage_api_key=vantage_api_key,
             more_like_these=more_like_these,
         )
 

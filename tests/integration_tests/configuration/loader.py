@@ -4,6 +4,7 @@ import os
 ABS_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.abspath(os.path.join(ABS_PATH, os.pardir, os.pardir))
 DISABLE_EXTERNAL_API_KEYS_TESTS = True
+MOCK_DOTENV_FILE = os.path.join(PROJECT_DIR, "integration_tests", "mock-env")
 
 
 def _load_env() -> None:
@@ -12,6 +13,12 @@ def _load_env() -> None:
         from dotenv import load_dotenv
 
         load_dotenv(dotenv_path)
+    elif os.path.exists(MOCK_DOTENV_FILE):
+        from dotenv import load_dotenv
+
+        load_dotenv(MOCK_DOTENV_FILE)
+    else:
+        raise FileNotFoundError("Could not find valid environment file.")
 
 
 def should_enable_external_api_key_tests(is_mock_api: bool) -> bool:
@@ -30,6 +37,9 @@ def _load_configuration() -> None:
             "client_secret": os.getenv("VANTAGE_CLIENT_SECRET"),
             "auth_host": os.getenv("VANTAGE_AUTH_HOST"),
             "api_host": os.getenv("VANTAGE_API_HOST"),
+            "is_mock": (
+                True if os.getenv("USE_MOCK_API", "false") == "true" else False
+            ),
         },
         "account": {
             "id": os.getenv("TEST_ACCOUNT_ID"),
@@ -45,6 +55,13 @@ def _load_configuration() -> None:
             "more_like_this_collection": os.getenv(
                 "VANTAGE_MORE_LIKE_THIS_SEARCH_COLLECTION_ID"
             ),
+            "non_existing_collection_id": os.getenv(
+                "NON_EXISTING_COLLECTION_ID"
+            ),
+            "collection_to_update_id": os.getenv("COLLECTION_TO_UPDATE_ID"),
+            "collection_to_delete_id": os.getenv("COLLECTION_TO_DELETE_ID"),
+            "collection_id": os.getenv("GENERAL_COLLECTION_ID"),
+            "collection_name": os.getenv("GENERAL_COLLECTION_NAME"),
         },
         "keys": {
             "vantage_api_key": os.getenv("VANTAGE_API_KEY"),

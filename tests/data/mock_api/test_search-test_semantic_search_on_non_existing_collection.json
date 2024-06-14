@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/non-existing-collection/semantic",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "text": "Test search"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "instance": "ref:870e67d4-f70d-4973-a047-714a9bc42df4",
+      "title": "Unauthorized",
+      "detail": "API key or account [accountId:text|collectionId:non-existing-collection] is not valid, please double check your api key or account and collection id and try again. This incident has been logged.",
+      "coreSearchStatus": 401,
+      "type": "https://docs.vantagediscovery.com/reference/"
+    }
+  }
+}
