@@ -368,7 +368,7 @@ class TestApiKeys:
         self,
         client: VantageClient,
         account_params: dict,
-        random_uuid: str,
+        nonexisting_external_api_key_id: str,
     ):
         """
         Tests deleting a non-existing external API key on users' account.
@@ -376,7 +376,7 @@ class TestApiKeys:
         # When
         with pytest.raises(NotFoundException) as exception:
             client.delete_external_key(
-                external_key_id=random_uuid,
+                external_key_id=nonexisting_external_api_key_id,
                 account_id=account_params["id"],
             )
 
