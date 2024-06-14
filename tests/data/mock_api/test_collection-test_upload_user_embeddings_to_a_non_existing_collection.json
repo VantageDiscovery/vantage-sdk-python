@@ -6,9 +6,6 @@
       "Authorization": {
         "contains": "Bearer testkey"
       }
-    },
-    "jsonBody": {
-      "file_size": 300
     }
   },
   "response": {
