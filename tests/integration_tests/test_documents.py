@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-from typing import Callable, List
+from typing import List
 
 import pytest
 
+from tests.integration_tests.utilities import create_temporary_upe_collection
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.collection import UserProvidedEmbeddingsCollection
 from vantage_sdk.model.document import (
@@ -31,16 +32,16 @@ class TestDocuments:
         collection_id = collection_params["collection_id"]
         collection_name = collection_params["collection_name"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                collection_name=collection_name,
-                embeddings_dimension=3,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=3,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         client.upsert_documents(
@@ -64,16 +65,16 @@ class TestDocuments:
         collection_id = collection_params["collection_id"]
         collection_name = collection_params["collection_name"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                collection_name=collection_name,
-                embeddings_dimension=3,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=3,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         with pytest.raises(ValueError) as exception:
@@ -101,16 +102,16 @@ class TestDocuments:
         collection_id = collection_params["collection_id"]
         collection_name = collection_params["collection_name"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                collection_name=collection_name,
-                embeddings_dimension=3,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=3,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         client.upsert_documents_from_jsonl_file(
@@ -137,16 +138,16 @@ class TestDocuments:
         collection_id = collection_params["collection_id"]
         collection_name = collection_params["collection_name"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                collection_name=collection_name,
-                embeddings_dimension=3,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=3,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         result = client.upsert_documents_from_parquet_file(

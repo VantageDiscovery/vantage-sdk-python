@@ -6,6 +6,10 @@ from typing import Callable
 
 import pytest
 
+from tests.integration_tests.utilities import (
+    create_temporary_collection,
+    create_temporary_upe_collection,
+)
 from vantage_sdk.client import VantageClient
 from vantage_sdk.core.exceptions import VantageFileUploadError
 from vantage_sdk.core.http.exceptions import NotFoundException
@@ -203,15 +207,15 @@ class TestCollections:
             "test-collection-2",
         ]
 
-        if not api_params["is_mock"]:
-            for collection_id in collection_ids:
-                client.create_collection(
-                    account_id=account_params["id"],
-                    collection_id=collection_id,
-                    collection_name=collection_id,
-                    user_provided_embeddings=True,
-                    embeddings_dimension=1536,
-                )
+        for collection_id in collection_ids:
+            create_temporary_collection(
+                client=client,
+                account_id=account_params["id"],
+                collection_id=collection_id,
+                collection_name=collection_id,
+                user_provided_embeddings=True,
+                embeddings_dimension=1536,
+            )
 
         # When
         collections = client.list_collections()
@@ -244,15 +248,15 @@ class TestCollections:
         collection_id = collection_params["collection_id"]
         collection_name = collection_params["collection_name"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                embeddings_dimension=1536,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            embeddings_dimension=1536,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         collection = client.get_collection(
@@ -300,15 +304,15 @@ class TestCollections:
         # Given
         collection_id = collection_params["collection_to_update_id"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                embeddings_dimension=1536,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            embeddings_dimension=1536,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         updated_collection_name = "Updated Name"
         # Take a nap while API sets up a collection.
@@ -361,15 +365,15 @@ class TestCollections:
         # Given
         collection_id = collection_params["collection_to_delete_id"]
 
-        if not api_params["is_mock"]:
-            collection = UserProvidedEmbeddingsCollection(
-                collection_id=collection_id,
-                embeddings_dimension=1536,
-            )
-            client.create_collection(
-                account_id=account_params["id"],
-                collection=collection,
-            )
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            embeddings_dimension=1536,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
 
         # When
         client.delete_collection(
