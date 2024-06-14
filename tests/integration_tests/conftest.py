@@ -9,7 +9,6 @@ import pytest
 from tests.integration_tests.configuration.client import create_client
 from tests.integration_tests.configuration.loader import CONFIGURATION
 from vantage_sdk.client import VantageClient
-from vantage_sdk.core.exceptions import VantageNotFoundError
 
 
 if CONFIGURATION["other"]["is_mock_api"]:
@@ -67,7 +66,7 @@ def pytest_sessionfinish(session, exitstatus):
                 continue
 
             _client.delete_collection(collection_id=collection_id)
-    except VantageNotFoundError:
+    except Exception:
         # Do nothing
         pass
 
@@ -78,7 +77,7 @@ def pytest_sessionfinish(session, exitstatus):
         keys = _client.get_external_keys()
         for key in keys:
             _client.delete_external_key(key.external_key_id)
-    except VantageNotFoundError:
+    except Exception:
         # Do nothing
         pass
 
