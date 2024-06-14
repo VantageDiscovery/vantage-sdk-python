@@ -1449,7 +1449,7 @@ class VantageClient:
                 f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
 
-    def _upsert_documents_using_browser_upload_url(
+    def _upload_documents_using_browser_upload_url(
         self,
         browser_upload_url: str,
         upload_content,
@@ -1524,7 +1524,7 @@ class VantageClient:
             account_id=account_id,
         )
 
-        return self._upsert_documents_using_browser_upload_url(
+        return self._upload_documents_using_browser_upload_url(
             browser_upload_url=browser_upload_url.upload_url,
             upload_content=content,
         )
@@ -1742,6 +1742,27 @@ class VantageClient:
         file_size = Path(parquet_file_path).stat().st_size
         file = open(parquet_file_path, "rb")
         file_content = file.read()
+        return self._upsert_documents_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            batch_identifier=file_name,
+            account_id=account_id,
+        )
+
+    def upload_documents_from_jsonl_file(
+        self,
+        collection_id: str,
+        jsonl_file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        if not exists(jsonl_file_path):
+            raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
+        file_name = ntpath.basename(jsonl_file_path)
+        file_size = Path(jsonl_file_path).stat().st_size
+        file = open(jsonl_file_path, "rb")
+        file_content = file.read()
+
         return self._upsert_documents_from_bytes(
             collection_id=collection_id,
             content=file_content,

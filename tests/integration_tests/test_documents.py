@@ -157,3 +157,38 @@ class TestDocuments:
         )
 
         assert result == 200
+
+    def test_documents_upload_from_jsonl_file(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        api_params: dict,
+        test_collection_id: str,
+        jsonl_documents_path: str,
+    ):
+        """
+        TODO: docstring
+        """
+        # Given
+        collection_id = test_collection_id
+        collection_name = test_collection_id
+
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            collection_name=collection_name,
+            embeddings_dimension=3,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
+
+        # When
+        result = client.upload_documents_from_jsonl_file(
+            collection_id=collection_id,
+            jsonl_file_path=jsonl_documents_path,
+            account_id=account_params["id"],
+        )
+
+        assert result == 200
