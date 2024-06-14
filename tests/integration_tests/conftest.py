@@ -9,7 +9,9 @@ import pytest
 from tests.integration_tests.configuration.client import create_client
 from tests.integration_tests.configuration.loader import CONFIGURATION
 from vantage_sdk.client import VantageClient
-from vantage_sdk.core.exceptions import VantageNotFoundError
+
+
+# from vantage_sdk.core.exceptions import VantageNotFoundError
 
 
 if CONFIGURATION["other"]["is_mock_api"]:
@@ -101,3 +103,7 @@ def random_string_generator() -> Callable:
 @pytest.fixture(scope="module")
 def random_uuid() -> str:
     return str(uuid.uuid4())
+
+
+def disable_external_api_keys_tests() -> bool:
+    return not CONFIGURATION["other"]["is_mock_api"]

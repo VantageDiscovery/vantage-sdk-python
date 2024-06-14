@@ -5,8 +5,6 @@ from typing import Any
 
 import requests
 
-from tests.integration_tests.configuration.loader import CONFIGURATION
-
 
 _MAPPINGS_DIR = "tests/data/mock_api"
 
@@ -37,7 +35,3 @@ def get_request_stub_file_contents(request: Any) -> dict[str, Any]:
         return get_mock_request_for(module_name, test_name)
     except Exception as exception:
         raise exception
-
-
-def is_mock_api() -> bool:
-    return CONFIGURATION["other"]["is_mock_api"]
