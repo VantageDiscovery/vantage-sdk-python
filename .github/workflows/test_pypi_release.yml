@@ -1,8 +1,9 @@
 name: Test PyPI Release
 on:
   push:
-    tags:
-      - 'test*.*.*'
+    push:
+      branches:
+        - "actions/LAB-291-automated-release"
 
 jobs:
   test_pypi_release:
