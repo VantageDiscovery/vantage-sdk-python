@@ -14,6 +14,7 @@ from os.path import exists
 from pathlib import Path
 from typing import List, Optional, Union
 
+import magic
 import requests
 
 from vantage_sdk.config import (
@@ -83,6 +84,8 @@ from vantage_sdk.model.validation import CollectionType, ValidationError
 
 
 _DOCUMENTS_UPLOAD_BATCH_SIZE = 500
+_PARQUET_FILE_TYPE = "Apache Parquet"
+_JSONL_MIME_TYPE = "application/x-ndjson"
 
 
 class VantageClient:
@@ -1514,7 +1517,12 @@ class VantageClient:
 
         if batch_identifier is None:
             batch_identifier = f"{uuid.uuid4}.parquet"
-        elif not batch_identifier.endswith(".parquet"):
+        elif not (
+            batch_identifier.endswith(".parquet")
+            or batch_identifier.endswith(".jsonl")
+        ):
+            # Add ".parquet" extension to batch identifier,
+            # so the document ingestion step won't ignore it.
             batch_identifier = f"{batch_identifier}.parquet"
 
         browser_upload_url = self._get_browser_upload_url(
@@ -1734,10 +1742,16 @@ class VantageClient:
 
         if not exists(parquet_file_path):
             raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
-        file_name = ntpath.basename(parquet_file_path)
 
-        if not parquet_file_path.endswith(".parquet"):
-            raise ValueError("File mast be a parquet file.")
+        file_name = ntpath.basename(parquet_file_path)
+        file_type = magic.from_file(parquet_file_path)
+        batch_identifier = file_name
+
+        if file_type != _PARQUET_FILE_TYPE:
+            raise ValueError("File must be a valid parquet file.")
+
+        if not batch_identifier.endswith(".parquet"):
+            batch_identifier = f"{batch_identifier}.parquet"
 
         file_size = Path(parquet_file_path).stat().st_size
         file = open(parquet_file_path, "rb")
@@ -1758,7 +1772,17 @@ class VantageClient:
     ) -> int:
         if not exists(jsonl_file_path):
             raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
+
         file_name = ntpath.basename(jsonl_file_path)
+        mime_type = magic.from_file(jsonl_file_path, mime=True)
+        batch_identifier = file_name
+
+        if mime_type != _JSONL_MIME_TYPE:
+            raise ValueError("File must be a valid JSONL file.")
+
+        if not batch_identifier.endswith(".jsonl"):
+            batch_identifier = f"{batch_identifier}.jsonl"
+
         file_size = Path(jsonl_file_path).stat().st_size
         file = open(jsonl_file_path, "rb")
         file_content = file.read()
