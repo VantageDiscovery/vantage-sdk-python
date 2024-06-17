@@ -1748,7 +1748,7 @@ class VantageClient:
         batch_identifier = file_name
 
         if file_type != _PARQUET_FILE_TYPE:
-            raise ValueError("File mast be a valid parquet file.")
+            raise ValueError("File must be a valid parquet file.")
 
         if not batch_identifier.endswith(".parquet"):
             batch_identifier = f"{batch_identifier}.parquet"
@@ -1778,7 +1778,7 @@ class VantageClient:
         batch_identifier = file_name
 
         if mime_type != _JSONL_MIME_TYPE:
-            raise ValueError("File mast be a valid JSONL file.")
+            raise ValueError("File must be a valid JSONL file.")
 
         if not batch_identifier.endswith(".jsonl"):
             batch_identifier = f"{batch_identifier}.jsonl"
