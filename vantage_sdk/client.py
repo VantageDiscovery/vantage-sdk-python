@@ -1766,14 +1766,14 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> int:
         """
-        Upserts embeddings from a parquet file to a collection.
+        Uploads documents from a parquet file to a collection.
 
         Parameters
         ----------
         collection_id : str
             The unique identifier of the collection
             embeddings are being uploaded to.
-        parquet_file_path : str, optional
+        parquet_file_path : str
             Path to the parquet file in a filesystem.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
@@ -1820,6 +1820,30 @@ class VantageClient:
         jsonl_file_path: str,
         account_id: Optional[str] = None,
     ) -> int:
+        """
+        Uploads documents from a parquet file to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        jsonl_file_path : str
+            Path to the JSONL file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
         if not exists(jsonl_file_path):
             raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
 
