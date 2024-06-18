@@ -1533,7 +1533,7 @@ class VantageClient:
         )
 
         return self._upload_documents_using_direct_upload_url(
-            browser_upload_url=direct_upload_url.upload_url,
+            direct_upload_url=direct_upload_url.upload_url,
             upload_content=content,
         )
 
