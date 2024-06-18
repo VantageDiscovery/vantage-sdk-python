@@ -18,12 +18,12 @@ def _get_collection_id_for_mock_api(request) -> str:
     test_name = request.node.name
 
     if test_name in (
-        "test_documents_upsert_from_parquet_file",
+        "test_documents_upload_from_parquet_file",
         "test_documents_upload_from_jsonl_file",
     ):
         stub = get_mock_request_for(
             module_name="test_documents",
-            test_name="test_documents_upsert_from_parquet_file-upload_url",
+            test_name="test_documents_upload_from_parquet_file-upload_url",
         )
     else:
         stub = get_request_stub_file_contents(request)
