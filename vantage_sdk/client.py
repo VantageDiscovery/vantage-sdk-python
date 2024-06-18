@@ -664,7 +664,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> CollectionUploadURL:
         """
-        Retrieves a browser upload URL for uploading files to a specified collection.
+        Retrieves a direct upload URL for uploading files to a specified collection.
 
         Parameters
         ----------
@@ -1452,17 +1452,17 @@ class VantageClient:
                 f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
 
-    def _upload_documents_using_browser_upload_url(
+    def _upload_documents_using_direct_upload_url(
         self,
-        browser_upload_url: str,
+        direct_upload_url: str,
         upload_content,
     ) -> int:
         """
-        Uploads content to a specified collection using a browser upload URL.
+        Uploads content to a specified collection using a direct upload URL.
 
         Parameters
         ----------
-        browser_upload_url : str
+        direct_upload_url : str
             The URL to which the content should be uploaded. This URL should be pre-configured to
             accept uploads for a specific collection.
         upload_content
@@ -1474,7 +1474,7 @@ class VantageClient:
             The HTTP status code returned by the server after attempting the upload.
         """
         response = requests.put(
-            browser_upload_url,
+            direct_upload_url,
             data=upload_content,
         )
 
@@ -1525,15 +1525,15 @@ class VantageClient:
             # so the document ingestion step won't ignore it.
             batch_identifier = f"{batch_identifier}.parquet"
 
-        browser_upload_url = self._get_browser_upload_url(
+        direct_upload_url = self._get_direct_upload_url(
             collection_id=collection_id,
             file_size=file_size,
             parquet_file_name=batch_identifier,
             account_id=account_id,
         )
 
-        return self._upload_documents_using_browser_upload_url(
-            browser_upload_url=browser_upload_url.upload_url,
+        return self._upload_documents_using_direct_upload_url(
+            browser_upload_url=direct_upload_url.upload_url,
             upload_content=content,
         )
 
