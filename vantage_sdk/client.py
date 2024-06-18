@@ -656,7 +656,7 @@ class VantageClient:
 
     # region Collections Helper Functions
 
-    def _get_browser_upload_url(
+    def _get_direct_upload_url(
         self,
         collection_id: str,
         file_size: int,
@@ -1709,6 +1709,56 @@ class VantageClient:
                     account_id=account_id,
                 )
 
+    # endregion
+
+    # region Documents - Delete
+
+    def delete_documents(
+        self,
+        collection_id: str,
+        document_ids: List[str],
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes a list of documents from a specified collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection from which documents are to be deleted.
+        document_ids : List[str]
+            A list of document IDs that need to be deleted from the collection.
+        account_id : Optional[str], optional
+            The account identifier under which the collection exists.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        documents_to_delete = [
+            {"id": id, "operation": "delete"} for id in document_ids
+        ]
+
+        vantage_documents_jsonl = "\n".join(
+            map(
+                json.dumps,
+                [document for document in documents_to_delete],
+            )
+        )
+
+        self.upload_documents_from_jsonl_string(
+            collection_id=collection_id,
+            documents_jsonl=vantage_documents_jsonl,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
+    # region Documents - Upload File
+
     def upsert_documents_from_parquet_file(
         self,
         collection_id: str,
@@ -1797,53 +1847,7 @@ class VantageClient:
 
     # endregion
 
-    # region Documents - Delete
-
-    def delete_documents(
-        self,
-        collection_id: str,
-        document_ids: List[str],
-        account_id: Optional[str] = None,
-    ) -> None:
-        """
-        Deletes a list of documents from a specified collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection from which documents are to be deleted.
-        document_ids : List[str]
-            A list of document IDs that need to be deleted from the collection.
-        account_id : Optional[str], optional
-            The account identifier under which the collection exists.
-            If not provided, the instance's account ID is used.
-            Defaults to None.
-
-        Notes
-        -----
-        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
-        """
-
-        documents_to_delete = [
-            {"id": id, "operation": "delete"} for id in document_ids
-        ]
-
-        vantage_documents_jsonl = "\n".join(
-            map(
-                json.dumps,
-                [document for document in documents_to_delete],
-            )
-        )
-
-        self.upsert_documents_from_jsonl_string(
-            collection_id=collection_id,
-            documents_jsonl=vantage_documents_jsonl,
-            account_id=account_id or self.account_id,
-        )
-
-    # endregion
-
-    # region Documents - Validate
+    # region Documents - Validate File
 
     def validate_documents_from_jsonl(
         self,
