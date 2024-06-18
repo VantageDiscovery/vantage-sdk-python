@@ -1483,7 +1483,7 @@ class VantageClient:
 
         return response.status_code
 
-    def _upsert_documents_from_bytes(
+    def _upload_documents_from_bytes(
         self,
         collection_id: str,
         content: bytes,
@@ -1806,7 +1806,7 @@ class VantageClient:
         file_size = Path(parquet_file_path).stat().st_size
         file = open(parquet_file_path, "rb")
         file_content = file.read()
-        return self._upsert_documents_from_bytes(
+        return self._upload_documents_from_bytes(
             collection_id=collection_id,
             content=file_content,
             file_size=file_size,
@@ -1837,7 +1837,7 @@ class VantageClient:
         file = open(jsonl_file_path, "rb")
         file_content = file.read()
 
-        return self._upsert_documents_from_bytes(
+        return self._upload_documents_from_bytes(
             collection_id=collection_id,
             content=file_content,
             file_size=file_size,

@@ -142,7 +142,7 @@ class TestCollections:
 
         # When
         with pytest.raises(VantageFileUploadError) as exception:
-            client._upsert_documents_from_bytes(
+            client._upload_documents_from_bytes(
                 collection_id=collection_id,
                 content=file_content,
                 file_size=file_size,
