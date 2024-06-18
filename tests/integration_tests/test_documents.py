@@ -123,7 +123,7 @@ class TestDocuments:
         # Then
         # Do nothing, if exception has not been thrown, everything is fine
 
-    def test_documents_upsert_from_parquet_file(
+    def test_documents_upload_from_parquet_file(
         self,
         client: VantageClient,
         account_params: dict,
@@ -150,7 +150,7 @@ class TestDocuments:
         )
 
         # When
-        result = client.upsert_documents_from_parquet_file(
+        result = client.upload_documents_from_parquet_file(
             collection_id=collection_id,
             parquet_file_path=parquet_file_path,
             account_id=account_params["id"],

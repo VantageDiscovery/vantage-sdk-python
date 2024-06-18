@@ -1759,7 +1759,7 @@ class VantageClient:
 
     # region Documents - Upload File
 
-    def upsert_documents_from_parquet_file(
+    def upload_documents_from_parquet_file(
         self,
         collection_id: str,
         parquet_file_path: str,
