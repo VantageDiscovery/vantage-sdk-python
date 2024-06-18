@@ -1749,7 +1749,7 @@ class VantageClient:
             )
         )
 
-        self.upload_documents_from_jsonl_string(
+        self.upsert_documents_from_jsonl_string(
             collection_id=collection_id,
             documents_jsonl=vantage_documents_jsonl,
             account_id=account_id or self.account_id,
