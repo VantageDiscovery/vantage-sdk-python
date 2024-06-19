@@ -1,0 +1,29 @@
+name: Integration Tests - WireMock
+on:
+  pull_request:
+      branches: ['develop']
+  push:
+    branches: ['develop', 'main']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.8.2
+        virtualenvs-create: true
+    - name: Install dependencies
+      run: poetry install --all-extras
+    - name: Build the WireMock Docker container
+      run: docker-compose -f tests/docker-compose.yml up -d
+    - name: Run tests
+      run: |
+        source $(poetry env info -p)/bin/activate
+        pytest
