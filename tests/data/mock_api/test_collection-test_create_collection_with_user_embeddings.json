@@ -6,7 +6,17 @@
       "Authorization": {
         "contains": "Bearer testkey"
       }
-    }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection_id": "test-collection",
+          "user_provided_embeddings": true,
+          "embeddings_dimension": 1536,
+          "collection_name": "test-collection"
+        }
+      }
+    ]
   },
   "response": {
     "status": 200,
