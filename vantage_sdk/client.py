@@ -85,7 +85,7 @@ from vantage_sdk.model.validation import CollectionType, ValidationError
 
 _DOCUMENTS_UPLOAD_BATCH_SIZE = 500
 _PARQUET_FILE_TYPE = "Apache Parquet"
-_JSONL_MIME_TYPE = "application/x-ndjson"
+_JSONL_FILE_TYPE = "New Line Delimited JSON text data"
 
 
 class VantageClient:
@@ -1848,10 +1848,10 @@ class VantageClient:
             raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
 
         file_name = ntpath.basename(jsonl_file_path)
-        mime_type = magic.from_file(jsonl_file_path, mime=True)
+        mime_type = magic.from_file(jsonl_file_path)
         batch_identifier = file_name
 
-        if mime_type != _JSONL_MIME_TYPE:
+        if mime_type != _JSONL_FILE_TYPE:
             raise ValueError("File must be a valid JSONL file.")
 
         if not batch_identifier.endswith(".jsonl"):
