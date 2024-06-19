@@ -656,7 +656,7 @@ class VantageClient:
 
     # region Collections Helper Functions
 
-    def _get_browser_upload_url(
+    def _get_direct_upload_url(
         self,
         collection_id: str,
         file_size: int,
@@ -664,7 +664,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> CollectionUploadURL:
         """
-        Retrieves a browser upload URL for uploading files to a specified collection.
+        Retrieves a direct upload URL for uploading files to a specified collection.
 
         Parameters
         ----------
@@ -1452,17 +1452,17 @@ class VantageClient:
                 f"Embeddings are not required for Vantage-managed embeddings collection. Please provide a list of {VantageManagedEmbeddingsDocument.__name__} objects."  # noqa: E501
             )
 
-    def _upload_documents_using_browser_upload_url(
+    def _upload_documents_using_direct_upload_url(
         self,
-        browser_upload_url: str,
+        direct_upload_url: str,
         upload_content,
     ) -> int:
         """
-        Uploads content to a specified collection using a browser upload URL.
+        Uploads content to a specified collection using a direct upload URL.
 
         Parameters
         ----------
-        browser_upload_url : str
+        direct_upload_url : str
             The URL to which the content should be uploaded. This URL should be pre-configured to
             accept uploads for a specific collection.
         upload_content
@@ -1474,7 +1474,7 @@ class VantageClient:
             The HTTP status code returned by the server after attempting the upload.
         """
         response = requests.put(
-            browser_upload_url,
+            direct_upload_url,
             data=upload_content,
         )
 
@@ -1483,7 +1483,7 @@ class VantageClient:
 
         return response.status_code
 
-    def _upsert_documents_from_bytes(
+    def _upload_documents_from_bytes(
         self,
         collection_id: str,
         content: bytes,
@@ -1525,15 +1525,15 @@ class VantageClient:
             # so the document ingestion step won't ignore it.
             batch_identifier = f"{batch_identifier}.parquet"
 
-        browser_upload_url = self._get_browser_upload_url(
+        direct_upload_url = self._get_direct_upload_url(
             collection_id=collection_id,
             file_size=file_size,
             parquet_file_name=batch_identifier,
             account_id=account_id,
         )
 
-        return self._upload_documents_using_browser_upload_url(
-            browser_upload_url=browser_upload_url.upload_url,
+        return self._upload_documents_using_direct_upload_url(
+            direct_upload_url=direct_upload_url.upload_url,
             upload_content=content,
         )
 
@@ -1709,92 +1709,6 @@ class VantageClient:
                     account_id=account_id,
                 )
 
-    def upsert_documents_from_parquet_file(
-        self,
-        collection_id: str,
-        parquet_file_path: str,
-        account_id: Optional[str] = None,
-    ) -> int:
-        """
-        Upserts embeddings from a parquet file to a collection.
-
-        Parameters
-        ----------
-        collection_id : str
-            The unique identifier of the collection
-            embeddings are being uploaded to.
-        parquet_file_path : str, optional
-            Path to the parquet file in a filesystem.
-        account_id : Optional[str], optional
-            The account ID to which the collection belongs.
-            If not provided, the instance's account ID is used.
-            Defaults to None
-
-        Returns
-        -------
-        int
-            HTTP status of upload execution.
-
-        Notes
-        -----
-        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
-        """
-
-        if not exists(parquet_file_path):
-            raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
-
-        file_name = ntpath.basename(parquet_file_path)
-        file_type = magic.from_file(parquet_file_path)
-        batch_identifier = file_name
-
-        if file_type != _PARQUET_FILE_TYPE:
-            raise ValueError("File must be a valid parquet file.")
-
-        if not batch_identifier.endswith(".parquet"):
-            batch_identifier = f"{batch_identifier}.parquet"
-
-        file_size = Path(parquet_file_path).stat().st_size
-        file = open(parquet_file_path, "rb")
-        file_content = file.read()
-        return self._upsert_documents_from_bytes(
-            collection_id=collection_id,
-            content=file_content,
-            file_size=file_size,
-            batch_identifier=file_name,
-            account_id=account_id,
-        )
-
-    def upload_documents_from_jsonl_file(
-        self,
-        collection_id: str,
-        jsonl_file_path: str,
-        account_id: Optional[str] = None,
-    ) -> int:
-        if not exists(jsonl_file_path):
-            raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
-
-        file_name = ntpath.basename(jsonl_file_path)
-        mime_type = magic.from_file(jsonl_file_path, mime=True)
-        batch_identifier = file_name
-
-        if mime_type != _JSONL_MIME_TYPE:
-            raise ValueError("File must be a valid JSONL file.")
-
-        if not batch_identifier.endswith(".jsonl"):
-            batch_identifier = f"{batch_identifier}.jsonl"
-
-        file_size = Path(jsonl_file_path).stat().st_size
-        file = open(jsonl_file_path, "rb")
-        file_content = file.read()
-
-        return self._upsert_documents_from_bytes(
-            collection_id=collection_id,
-            content=file_content,
-            file_size=file_size,
-            batch_identifier=file_name,
-            account_id=account_id,
-        )
-
     # endregion
 
     # region Documents - Delete
@@ -1843,7 +1757,121 @@ class VantageClient:
 
     # endregion
 
-    # region Documents - Validate
+    # region Documents - Upload File
+
+    def upload_documents_from_parquet_file(
+        self,
+        collection_id: str,
+        parquet_file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads documents from a parquet file to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        parquet_file_path : str
+            Path to the parquet file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        if not exists(parquet_file_path):
+            raise FileNotFoundError(f"File \"{parquet_file_path}\" not found.")
+
+        file_name = ntpath.basename(parquet_file_path)
+        file_type = magic.from_file(parquet_file_path)
+        batch_identifier = file_name
+
+        if file_type != _PARQUET_FILE_TYPE:
+            raise ValueError("File must be a valid parquet file.")
+
+        if not batch_identifier.endswith(".parquet"):
+            batch_identifier = f"{batch_identifier}.parquet"
+
+        file_size = Path(parquet_file_path).stat().st_size
+        file = open(parquet_file_path, "rb")
+        file_content = file.read()
+        return self._upload_documents_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            batch_identifier=file_name,
+            account_id=account_id,
+        )
+
+    def upload_documents_from_jsonl_file(
+        self,
+        collection_id: str,
+        jsonl_file_path: str,
+        account_id: Optional[str] = None,
+    ) -> int:
+        """
+        Uploads documents from a parquet file to a collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection
+            embeddings are being uploaded to.
+        jsonl_file_path : str
+            Path to the JSONL file in a filesystem.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None
+
+        Returns
+        -------
+        int
+            HTTP status of upload execution.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        if not exists(jsonl_file_path):
+            raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
+
+        file_name = ntpath.basename(jsonl_file_path)
+        mime_type = magic.from_file(jsonl_file_path, mime=True)
+        batch_identifier = file_name
+
+        if mime_type != _JSONL_MIME_TYPE:
+            raise ValueError("File must be a valid JSONL file.")
+
+        if not batch_identifier.endswith(".jsonl"):
+            batch_identifier = f"{batch_identifier}.jsonl"
+
+        file_size = Path(jsonl_file_path).stat().st_size
+        file = open(jsonl_file_path, "rb")
+        file_content = file.read()
+
+        return self._upload_documents_from_bytes(
+            collection_id=collection_id,
+            content=file_content,
+            file_size=file_size,
+            batch_identifier=file_name,
+            account_id=account_id,
+        )
+
+    # endregion
+
+    # region Documents - Validate File
 
     def validate_documents_from_jsonl(
         self,
