@@ -1848,11 +1848,13 @@ class VantageClient:
             raise FileNotFoundError(f"File \"{jsonl_file_path}\" not found.")
 
         file_name = ntpath.basename(jsonl_file_path)
-        mime_type = magic.from_file(jsonl_file_path)
+        file_type = magic.from_file(jsonl_file_path)
         batch_identifier = file_name
 
-        if mime_type != _JSONL_FILE_TYPE:
-            raise ValueError("File must be a valid JSONL file.")
+        if file_type != _JSONL_FILE_TYPE:
+            raise ValueError(
+                f"File must be a valid JSONL file, not. {file_type}"
+            )
 
         if not batch_identifier.endswith(".jsonl"):
             batch_identifier = f"{batch_identifier}.jsonl"
