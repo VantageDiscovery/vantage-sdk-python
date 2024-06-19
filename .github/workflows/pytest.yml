@@ -1,0 +1,51 @@
+name: Integration Tests - WireMock
+on:
+  push:
+    branch:
+      - 'fix/lab-294-be-more-specific-with-collection-stub'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      USE_MOCK_API: true
+      VANTAGE_API_HOST: http://localhost:20001
+      VANTAGE_AUTH_HOST: http://localhost:20001
+      VANTAGE_API_KEY: testkey
+      VANTAGE_API_KEY_ID: testkeyid
+      VANTAGE_AUTH_METHOD: api_key
+      VANTAGE_EMBEDDING_SEARCH_TEST_COLLECTION_ID: test-search-upe-collection
+      VANTAGE_MORE_LIKE_THIS_SEARCH_COLLECTION_ID: test-collection-more-like-this
+      VANTAGE_SEMANTIC_SEARCH_TEST_COLLECTION_ID: test-collection-semantic
+      EXTERNAL_API_KEY_ID: externalapikeyid
+      EXTERNAL_API_KEY: testkey
+      EXTERNAL_API_KEY_PROVIDER: OpenAI
+      LLM_SECRET: llmsecret
+      ENABLE_DELETE_KEY_TEST: true
+      TEST_ACCOUNT_ID: test
+      TEST_ACCOUNT_NAME: test
+      COLLECTION_TO_UPDATE_ID: collection-to-update
+      COLLECTION_TO_DELETE_ID: collection-to-delete
+      NON_EXISTING_COLLECTION_ID: non-existing-collection
+      GENERAL_COLLECTION_ID: test-collection
+      GENERAL_COLLECTION_NAME: test-collection
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: Install and configure Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: 1.8.2
+        virtualenvs-create: true
+    - name: Install dependencies
+      run: poetry install --all-extras
+    - name: Build the WireMock Docker container
+      run: docker-compose -f tests/docker-compose.yml up -d
+    - name: Run tests
+      run: |
+        source $(poetry env info -p)/bin/activate
+        pytest
