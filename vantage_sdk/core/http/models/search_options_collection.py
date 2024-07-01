@@ -14,22 +14,26 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional, Union
+
 from pydantic import BaseModel, StrictFloat, StrictInt
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class SearchOptionsCollection(BaseModel):
     """
     SearchOptionsCollection
-    """ # noqa: E501
+    """  # noqa: E501
+
     accuracy: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["accuracy"]
 
@@ -38,7 +42,6 @@ class SearchOptionsCollection(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -66,8 +69,7 @@ class SearchOptionsCollection(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -81,9 +83,5 @@ class SearchOptionsCollection(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "accuracy": obj.get("accuracy")
-        })
+        _obj = cls.model_validate({"accuracy": obj.get("accuracy")})
         return _obj
-
-
