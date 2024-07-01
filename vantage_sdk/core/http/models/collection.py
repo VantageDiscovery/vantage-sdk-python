@@ -100,9 +100,10 @@ class Collection(BaseModel):
             'Online',
             'Degraded',
             'Offline',
+            'Empty',
         ):
             raise ValueError(
-                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline')"
+                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')"
             )
         return value
 
