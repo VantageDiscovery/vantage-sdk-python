@@ -1015,6 +1015,7 @@ class VantageClient:
         search_filter = (
             SearchOptionsFilter(
                 boolean_filter=filter.boolean_filter,
+                variant_filter=filter.variant_filter,
             )
             if filter
             else None
