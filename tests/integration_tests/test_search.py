@@ -7,7 +7,7 @@ from vantage_sdk.core.http.exceptions import (
     BadRequestException,
     UnauthorizedException,
 )
-from vantage_sdk.model.search import MoreLikeTheseItem
+from vantage_sdk.model.search import MoreLikeTheseItem, Filter
 
 
 """Integration tests for search endpoints"""
@@ -272,3 +272,38 @@ class TestSearch:
             assert expected_results[result.id]["score"] == round(
                 result.score, 3
             )
+
+    # region Variants
+
+    def test_semantic_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+
+    # endregion

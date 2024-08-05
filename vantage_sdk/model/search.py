@@ -36,6 +36,8 @@ class SearchResultItem(BaseModel):
 
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
+    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
+    variants: Optional[List[StrictStr]] = None
 
 
 class SearchResult(BaseModel):
@@ -108,6 +110,7 @@ class MoreLikeTheseItem(BaseModel):
 
 class Filter(BaseModel):
     boolean_filter: Optional[str] = None
+    variant_filter: Optional[str] = None
 
 
 class Pagination(BaseModel):

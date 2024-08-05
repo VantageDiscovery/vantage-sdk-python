@@ -35,7 +35,8 @@ class SearchOptionsFilter(BaseModel):
     """  # noqa: E501
 
     boolean_filter: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["boolean_filter"]
+    variant_filter: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
 
     model_config = {
         "populate_by_name": True,
@@ -84,6 +85,9 @@ class SearchOptionsFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {"boolean_filter": obj.get("boolean_filter")}
+            {
+                "boolean_filter": obj.get("boolean_filter"),
+                "variant_filter": obj.get("variant_filter"),
+            }
         )
         return _obj
