@@ -14,46 +14,43 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional, Union
-
-from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
-
-from vantage_sdk.core.http.models.facet_result import FacetResult
+import json
 
 
+from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, StrictStr, field_validator
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class SearchResultResultsInner(BaseModel):
+class FacetResult(BaseModel):
     """
-    SearchResultResultsInner
-    """  # noqa: E501
+    FacetResult
+    """ # noqa: E501
+    facet: Optional[StrictStr] = None
+    type: Optional[StrictStr] = None
+    values: Optional[List[Dict[str, Any]]] = None
+    __properties: ClassVar[List[str]] = ["facet", "type", "values"]
 
-    id: Optional[StrictStr] = None
-    score: Optional[Union[StrictFloat, StrictInt]] = None
-    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
-    variants: Optional[List[StrictStr]] = None
-    facets: Optional[List[FacetResult]] = None
-    __properties: ClassVar[List[str]] = [
-        "id",
-        "score",
-        "sort_score",
-        "variants",
-        "facets",
-    ]
+    @field_validator('type')
+    def type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('count', 'range'):
+            raise ValueError("must be one of enum values ('count', 'range')")
+        return value
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -66,7 +63,7 @@ class SearchResultResultsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchResultResultsInner from a JSON string"""
+        """Create an instance of FacetResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,41 +78,26 @@ class SearchResultResultsInner(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
-        _items = []
-        if self.facets:
-            for _item in self.facets:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['facets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchResultResultsInner from a dict"""
+        """Create an instance of FacetResult from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "id": obj.get("id"),
-                "score": obj.get("score"),
-                "sort_score": obj.get("sort_score"),
-                "variants": obj.get("variants"),
-                "facets": (
-                    [
-                        FacetResult.from_dict(_item)
-                        for _item in obj.get("facets")
-                    ]
-                    if obj.get("facets") is not None
-                    else None
-                ),
-            }
-        )
+        _obj = cls.model_validate({
+            "facet": obj.get("facet"),
+            "type": obj.get("type"),
+            "values": obj.get("values")
+        })
         return _obj
+
+
