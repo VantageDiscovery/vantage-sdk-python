@@ -1,11 +1,7 @@
 # coding: utf-8
 
 """
-<<<<<<< HEAD
-    Vantage Management API
-=======
     Vantage API
->>>>>>> 7b2f77c ([VAN-2924] Add SQS support)
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -22,13 +18,9 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel
-
-from vantage_sdk.core.http.models.total_counts_options_total_counts import (
-    TotalCountsOptionsTotalCounts,
-)
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
 
 try:
@@ -37,13 +29,14 @@ except ImportError:
     from typing_extensions import Self
 
 
-class TotalCountsOptions(BaseModel):
+class SemanticQuerySuggestionsQuery(BaseModel):
     """
-    TotalCountsOptions
+    SemanticQuerySuggestionsQuery
     """  # noqa: E501
 
-    total_counts: Optional[TotalCountsOptionsTotalCounts] = None
-    __properties: ClassVar[List[str]] = ["total_counts"]
+    text: Optional[StrictStr] = None
+    max_results: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = ["text", "max_results"]
 
     model_config = {
         "populate_by_name": True,
@@ -62,7 +55,7 @@ class TotalCountsOptions(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TotalCountsOptions from a JSON string"""
+        """Create an instance of SemanticQuerySuggestionsQuery from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,14 +73,11 @@ class TotalCountsOptions(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of total_counts
-        if self.total_counts:
-            _dict['total_counts'] = self.total_counts.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of TotalCountsOptions from a dict"""
+        """Create an instance of SemanticQuerySuggestionsQuery from a dict"""
         if obj is None:
             return None
 
@@ -95,12 +85,6 @@ class TotalCountsOptions(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {
-                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
-                    obj.get("total_counts")
-                )
-                if obj.get("total_counts") is not None
-                else None
-            }
+            {"text": obj.get("text"), "max_results": obj.get("max_results")}
         )
         return _obj

@@ -1,0 +1,37 @@
+{
+    "request": {
+      "method": "POST",
+      "urlPath": "/v1/search/test/test-collection/semantic_query_suggestions",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      },
+      "bodyPatterns": [
+        {
+          "equalToJson": {
+            "text": "Test query text",
+            "max_results": 3
+          }
+        }
+      ]
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "request_id": 1718109280970,
+        "status": 200,
+        "message": "Success.",
+        "suggestions": [
+          "Test suggestion 1",
+          "Test suggestion 2",
+          "Test suggestion 3"
+        ],
+        "execution_time": 7
+      }
+    }
+  }
+  

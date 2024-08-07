@@ -46,6 +46,8 @@ from vantage_sdk.core.http.models import (
 )
 from vantage_sdk.core.http.models import (
     SemanticSearchQuery,
+    SemanticQuerySuggestionsResult,
+    SemanticQuerySuggestionsQuery,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
     ShoppingAssistantQuery,
@@ -2019,6 +2021,62 @@ class VantageClient:
         )
 
         return SearchResult.model_validate(result.model_dump())
+
+    def get_semantic_query_suggestions(
+        self,
+        collection_id: str,
+        text: str,
+        max_results: Optional[int] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsResult:
+        """
+        Returns semantic suggestions based on the provided query.
+
+        Parameters
+        ----------
+        collection_id : str
+            The ID of the collection to search within.
+        text : str
+            The text input used to generate and return relevant suggestions
+        max_results : Optional[int], optional
+            The maximum number of results to return. Defaults to 10.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestionsResult
+            An object containing the suggestions array.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
+        """
+
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        semantic_query_suggestions_query = SemanticQuerySuggestionsQuery(
+            text=text,
+            max_results=max_results,
+        )
+
+        result = self.search_api.api.semantic_query_suggestions(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            semantic_query_suggestions_query=semantic_query_suggestions_query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+        return SemanticQuerySuggestionsResult.model_validate(
+            result.model_dump()
+        )
 
     def shopping_assistant_search(
         self,

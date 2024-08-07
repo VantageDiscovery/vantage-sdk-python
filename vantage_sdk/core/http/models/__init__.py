@@ -77,6 +77,12 @@ from vantage_sdk.core.http.models.search_result_results_inner import (
 from vantage_sdk.core.http.models.secondary_external_account import (
     SecondaryExternalAccount,
 )
+from vantage_sdk.core.http.models.semantic_query_suggestions_query import (
+    SemanticQuerySuggestionsQuery,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_result import (
+    SemanticQuerySuggestionsResult,
+)
 from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
 )
