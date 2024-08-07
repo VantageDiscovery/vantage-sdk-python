@@ -7,7 +7,12 @@ from vantage_sdk.core.http.exceptions import (
     BadRequestException,
     UnauthorizedException,
 )
-from vantage_sdk.model.search import Filter, MoreLikeTheseItem
+from vantage_sdk.model.search import (
+    Facet,
+    FacetType,
+    Filter,
+    MoreLikeTheseItem,
+)
 
 
 """Integration tests for search endpoints"""
@@ -415,5 +420,170 @@ class TestSearch:
             assert "variants" in r.model_dump().keys()
         for r in result.results:
             assert "variants_full_list" in r.model_dump().keys()
+
+    # endregion
+
+    # region Facets
+
+    def test_semantic_search_with_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result with facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
+
+    def test_embedding_search_with_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if embedding search will return correct result with facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        embedding = [1, 1, 1, 1, 1]
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.embedding_search(
+            embedding=embedding,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
+
+    def test_more_like_this_search_with_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThis search will return correct result with facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        document_id = "en_0530926"
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.more_like_this_search(
+            document_id=document_id,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
+
+    def test_more_like_these_search_with_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThese search will return correct result with facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        these = [
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="other text",
+            ),
+        ]
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.more_like_these_search(
+            more_like_these=these,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
 
     # endregion

@@ -25,6 +25,9 @@ from pydantic import BaseModel, StrictInt, StrictStr
 from vantage_sdk.core.http.models.search_options_collection import (
     SearchOptionsCollection,
 )
+from vantage_sdk.core.http.models.search_options_facets_inner import (
+    SearchOptionsFacetsInner,
+)
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,
 )
@@ -54,6 +57,7 @@ class MoreLikeThisQuery(BaseModel):
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
+    facets: Optional[List[SearchOptionsFacetsInner]] = None
     document_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection",
@@ -62,6 +66,7 @@ class MoreLikeThisQuery(BaseModel):
         "field_value_weighting",
         "pagination",
         "sort",
+        "facets",
         "document_id",
     ]
 
@@ -117,6 +122,13 @@ class MoreLikeThisQuery(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of sort
         if self.sort:
             _dict['sort'] = self.sort.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
+        _items = []
+        if self.facets:
+            for _item in self.facets:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['facets'] = _items
         return _dict
 
     @classmethod
@@ -151,6 +163,12 @@ class MoreLikeThisQuery(BaseModel):
                 else None,
                 "sort": SearchOptionsSort.from_dict(obj.get("sort"))
                 if obj.get("sort") is not None
+                else None,
+                "facets": [
+                    SearchOptionsFacetsInner.from_dict(_item)
+                    for _item in obj.get("facets")
+                ]
+                if obj.get("facets") is not None
                 else None,
                 "document_id": obj.get("document_id"),
             }
