@@ -1,0 +1,58 @@
+{
+    "request": {
+      "method": "POST",
+      "urlPath": "/v1/search/test/test-collection/semantic",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      },
+      "bodyPatterns": [
+        {
+          "equalToJson": {
+            "text": "Test search",
+            "facets": [
+              {"name": "color", "type": "count", "values": []},
+              {"name": "size", "type": "count", "values": ["sm", "md"]}
+            ]
+          }
+        }
+      ]
+    },
+    "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109280970,
+      "status": 200,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "id_28",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": []
+        },
+        {
+          "id": "id_15",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": []
+        },
+        {
+          "id": "id_22",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": []
+        }
+      ],
+      "facets": [
+        {"facet": "color", "type": "count", "values": {"red": 2, "blue": 1}},
+        {"facet": "size", "type": "count", "values": {"sm": 1, "md": 2}}
+      ],
+      "execution_time": 7
+    }
+  }
+  }

@@ -14,35 +14,45 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import BaseModel, StrictStr
-
-
+from pydantic import BaseModel, StrictStr, field_validator
+from vantage_sdk.core.http.models.facet_range import FacetRange
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class SearchOptionsFilter(BaseModel):
+class SearchOptionsFacetsInner(BaseModel):
     """
-    SearchOptionsFilter
-    """  # noqa: E501
+    SearchOptionsFacetsInner
+    """ # noqa: E501
+    name: Optional[StrictStr] = None
+    type: Optional[StrictStr] = None
+    values: Optional[List[StrictStr]] = None
+    ranges: Optional[List[FacetRange]] = None
+    __properties: ClassVar[List[str]] = ["name", "type", "values", "ranges"]
 
-    boolean_filter: Optional[StrictStr] = None
-    variant_filter: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
+    @field_validator('type')
+    def type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('count', 'range'):
+            raise ValueError("must be one of enum values ('count', 'range')")
+        return value
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -55,7 +65,7 @@ class SearchOptionsFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFilter from a JSON string"""
+        """Create an instance of SearchOptionsFacetsInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,24 +80,34 @@ class SearchOptionsFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in ranges (list)
+        _items = []
+        if self.ranges:
+            for _item in self.ranges:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['ranges'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFilter from a dict"""
+        """Create an instance of SearchOptionsFacetsInner from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "boolean_filter": obj.get("boolean_filter"),
-                "variant_filter": obj.get("variant_filter"),
-            }
-        )
+        _obj = cls.model_validate({
+            "name": obj.get("name"),
+            "type": obj.get("type"),
+            "values": obj.get("values"),
+            "ranges": [FacetRange.from_dict(_item) for _item in obj.get("ranges")] if obj.get("ranges") is not None else None
+        })
         return _obj
+
+

@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictStr, field_validator
 
 
 try:
@@ -29,14 +29,25 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchOptionsFilter(BaseModel):
+class FacetResult(BaseModel):
     """
-    SearchOptionsFilter
+    FacetResult
     """  # noqa: E501
 
-    boolean_filter: Optional[StrictStr] = None
-    variant_filter: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
+    facet: Optional[StrictStr] = None
+    type: Optional[StrictStr] = None
+    values: Optional[Dict[str, Any]] = None
+    __properties: ClassVar[List[str]] = ["facet", "type", "values"]
+
+    @field_validator('type')
+    def type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('count', 'range'):
+            raise ValueError("must be one of enum values ('count', 'range')")
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +66,7 @@ class SearchOptionsFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFilter from a JSON string"""
+        """Create an instance of FacetResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +88,7 @@ class SearchOptionsFilter(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFilter from a dict"""
+        """Create an instance of FacetResult from a dict"""
         if obj is None:
             return None
 
@@ -86,8 +97,9 @@ class SearchOptionsFilter(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "boolean_filter": obj.get("boolean_filter"),
-                "variant_filter": obj.get("variant_filter"),
+                "facet": obj.get("facet"),
+                "type": obj.get("type"),
+                "values": obj.get("values"),
             }
         )
         return _obj

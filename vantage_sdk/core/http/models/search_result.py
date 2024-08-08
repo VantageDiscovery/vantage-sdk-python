@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictInt, StrictStr
 
+from vantage_sdk.core.http.models.facet_result import FacetResult
 from vantage_sdk.core.http.models.search_result_results_inner import (
     SearchResultResultsInner,
 )
@@ -42,11 +43,13 @@ class SearchResult(BaseModel):
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
     results: Optional[List[SearchResultResultsInner]] = None
+    facets: Optional[List[FacetResult]] = None
     __properties: ClassVar[List[str]] = [
         "request_id",
         "status",
         "message",
         "results",
+        "facets",
     ]
 
     model_config = {
@@ -91,6 +94,13 @@ class SearchResult(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['results'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
+        _items = []
+        if self.facets:
+            for _item in self.facets:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['facets'] = _items
         return _dict
 
     @classmethod
@@ -112,6 +122,11 @@ class SearchResult(BaseModel):
                     for _item in obj.get("results")
                 ]
                 if obj.get("results") is not None
+                else None,
+                "facets": [
+                    FacetResult.from_dict(_item) for _item in obj.get("facets")
+                ]
+                if obj.get("facets") is not None
                 else None,
             }
         )

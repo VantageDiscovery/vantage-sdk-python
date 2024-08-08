@@ -35,6 +35,7 @@ from vantage_sdk.core.http.models import (
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
     SearchOptionsCollection,
+    SearchOptionsFacetsInner,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
     SearchOptionsPagination,
@@ -72,6 +73,7 @@ from vantage_sdk.model.keys import (
     VantageAPIKey,
 )
 from vantage_sdk.model.search import (
+    Facet,
     FieldValueWeighting,
     Filter,
     MoreLikeTheseItem,
@@ -1003,6 +1005,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
     ) -> SearchOptions:
         collection = (
             SearchOptionsCollection(
@@ -1015,6 +1018,7 @@ class VantageClient:
         search_filter = (
             SearchOptionsFilter(
                 boolean_filter=filter.boolean_filter,
+                variant_filter=filter.variant_filter,
             )
             if filter
             else None
@@ -1050,12 +1054,24 @@ class VantageClient:
             else None
         )
 
+        facets = (
+            [
+                SearchOptionsFacetsInner(
+                    name=f.name, type=f.type.value, values=f.values
+                )
+                for f in facets
+            ]
+            if facets
+            else None
+        )
+
         return SearchOptions(
             collection=collection,
             filter=search_filter,
             pagination=pagination,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
     def _vantage_api_key_check(self, vantage_api_key: str) -> str:
@@ -1083,6 +1099,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1112,6 +1129,8 @@ class VantageClient:
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
             Defaults to None,
+        facets: Optional[List[Facet]], optional
+            TODO,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1139,6 +1158,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         query = SemanticSearchQuery(
@@ -1148,6 +1168,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.semantic_search(
@@ -1168,6 +1189,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1197,6 +1219,8 @@ class VantageClient:
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
             Defaults to None,
+        facets: Optional[List[Facet]], optional
+            TODO,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1224,6 +1248,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         query = EmbeddingSearchQuery(
@@ -1233,6 +1258,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1253,6 +1279,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1282,6 +1309,8 @@ class VantageClient:
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
             Defaults to None,
+        facets: Optional[List[Facet]], optional
+            TODO,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1309,6 +1338,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         query = MoreLikeThisQuery(
@@ -1318,6 +1348,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1338,6 +1369,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1367,6 +1399,8 @@ class VantageClient:
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
             Defaults to None,
+        facets: Optional[List[Facet]], optional
+            TODO,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1394,6 +1428,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         query = MoreLikeTheseQuery(
@@ -1406,6 +1441,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.more_like_these_search(

@@ -2,7 +2,8 @@
 Models for the Search API.
 """
 
-from typing import Any, List, Optional, Union
+from typing import Any, List, Dict, Optional, Union
+from enum import Enum
 
 from pydantic import (
     BaseModel,
@@ -14,6 +15,7 @@ from pydantic import (
 
 from vantage_sdk.core.http.models import (
     SearchOptionsCollection,
+    SearchOptionsFacetsInner,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
     SearchOptionsPagination,
@@ -36,6 +38,14 @@ class SearchResultItem(BaseModel):
 
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
+    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
+    variants: Optional[List[StrictStr]] = None
+
+
+class FacetResultItem(BaseModel):
+    facet: Optional[StrictStr] = None
+    type: Optional[StrictStr] = None
+    values: Optional[Dict[str, Any]] = None
 
 
 class SearchResult(BaseModel):
@@ -52,12 +62,15 @@ class SearchResult(BaseModel):
         A message providing additional information about the search response.
     results : Optional[List[SearchResultItem]], optional
         A list of search result items returned by the search method.
+    facets:
+        TODO
     """
 
     request_id: Optional[StrictInt] = None
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
     results: Optional[List[SearchResultItem]] = None
+    facets: Optional[List[FacetResultItem]] = None
 
 
 class MoreLikeTheseItem(BaseModel):
@@ -108,6 +121,7 @@ class MoreLikeTheseItem(BaseModel):
 
 class Filter(BaseModel):
     boolean_filter: Optional[str] = None
+    variant_filter: Optional[str] = None
 
 
 class Pagination(BaseModel):
@@ -153,6 +167,16 @@ class FieldValueWeighting(BaseModel):
         ]
 
 
+class FacetType(Enum):
+    COUNT = "count"
+
+
+class Facet(BaseModel):
+    name: str
+    type: FacetType
+    values: Optional[List[str]] = []
+
+
 class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
@@ -169,6 +193,8 @@ class SearchOptions(BaseModel):
         The sort properties.
     field_value_weighting : Optional[SearchOptionsFieldValueWeighting], optional
         The field value weighting properties.
+    facets: TODO
+        TODO
     """
 
     collection: Optional[SearchOptionsCollection] = None
@@ -176,3 +202,4 @@ class SearchOptions(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
+    facets: Optional[List[SearchOptionsFacetsInner]] = None

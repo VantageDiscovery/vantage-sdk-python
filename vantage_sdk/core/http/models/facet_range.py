@@ -18,9 +18,9 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
 
 try:
@@ -29,14 +29,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchOptionsFilter(BaseModel):
+class FacetRange(BaseModel):
     """
-    SearchOptionsFilter
+    FacetRange
     """  # noqa: E501
 
-    boolean_filter: Optional[StrictStr] = None
-    variant_filter: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
+    value: Optional[StrictStr] = None
+    min: Optional[Union[StrictFloat, StrictInt]] = None
+    max: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = ["value", "min", "max"]
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +56,7 @@ class SearchOptionsFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFilter from a JSON string"""
+        """Create an instance of FacetRange from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +78,7 @@ class SearchOptionsFilter(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFilter from a dict"""
+        """Create an instance of FacetRange from a dict"""
         if obj is None:
             return None
 
@@ -86,8 +87,9 @@ class SearchOptionsFilter(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "boolean_filter": obj.get("boolean_filter"),
-                "variant_filter": obj.get("variant_filter"),
+                "value": obj.get("value"),
+                "min": obj.get("min"),
+                "max": obj.get("max"),
             }
         )
         return _obj
