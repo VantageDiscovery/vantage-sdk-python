@@ -45,6 +45,7 @@ from vantage_sdk.core.http.models.external_key_modifiable import (
 from vantage_sdk.core.http.models.external_key_read_only import (
     ExternalKeyReadOnly,
 )
+from vantage_sdk.core.http.models.facet import Facet
 from vantage_sdk.core.http.models.facet_range import FacetRange
 from vantage_sdk.core.http.models.facet_result import FacetResult
 from vantage_sdk.core.http.models.ml_these import MLThese
@@ -56,9 +57,6 @@ from vantage_sdk.core.http.models.more_like_this_query import MoreLikeThisQuery
 from vantage_sdk.core.http.models.search_options import SearchOptions
 from vantage_sdk.core.http.models.search_options_collection import (
     SearchOptionsCollection,
-)
-from vantage_sdk.core.http.models.search_options_facets import (
-    SearchOptionsFacets,
 )
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,

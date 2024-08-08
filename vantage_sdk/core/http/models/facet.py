@@ -27,9 +27,9 @@ try:
 except ImportError:
     from typing_extensions import Self
 
-class SearchOptionsFacets(BaseModel):
+class Facet(BaseModel):
     """
-    SearchOptionsFacets
+    Facet
     """ # noqa: E501
     name: Optional[StrictStr] = None
     type: Optional[StrictStr] = None
@@ -65,7 +65,7 @@ class SearchOptionsFacets(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFacets from a JSON string"""
+        """Create an instance of Facet from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -95,7 +95,7 @@ class SearchOptionsFacets(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFacets from a dict"""
+        """Create an instance of Facet from a dict"""
         if obj is None:
             return None
 
