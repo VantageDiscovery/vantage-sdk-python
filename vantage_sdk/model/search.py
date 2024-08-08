@@ -14,6 +14,7 @@ from pydantic import (
 
 from vantage_sdk.core.http.models import (
     SearchOptionsCollection,
+    SearchOptionsFacetsInner,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
     SearchOptionsPagination,
@@ -156,6 +157,12 @@ class FieldValueWeighting(BaseModel):
         ]
 
 
+class Facet:
+    name: str
+    type: str
+    values: Optional[List[str]]
+
+
 class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
@@ -172,6 +179,8 @@ class SearchOptions(BaseModel):
         The sort properties.
     field_value_weighting : Optional[SearchOptionsFieldValueWeighting], optional
         The field value weighting properties.
+    facets: TODO
+        TODO
     """
 
     collection: Optional[SearchOptionsCollection] = None
@@ -179,3 +188,4 @@ class SearchOptions(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
+    facets: Optional[List[SearchOptionsFacetsInner]] = None
