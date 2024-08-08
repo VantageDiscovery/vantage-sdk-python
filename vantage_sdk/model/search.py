@@ -2,7 +2,8 @@
 Models for the Search API.
 """
 
-from typing import Any, List, Optional, Union
+from typing import Any, List, Dict, Optional, Union
+from enum import Enum
 
 from pydantic import (
     BaseModel,
@@ -41,6 +42,12 @@ class SearchResultItem(BaseModel):
     variants: Optional[List[StrictStr]] = None
 
 
+class FacetResultItem(BaseModel):
+    facet: Optional[StrictStr] = None
+    type: Optional[StrictStr] = None
+    values: Optional[Dict[str, Any]] = None
+
+
 class SearchResult(BaseModel):
     """
     Represents the result received from all search methods.
@@ -55,12 +62,15 @@ class SearchResult(BaseModel):
         A message providing additional information about the search response.
     results : Optional[List[SearchResultItem]], optional
         A list of search result items returned by the search method.
+    facets:
+        TODO
     """
 
     request_id: Optional[StrictInt] = None
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
     results: Optional[List[SearchResultItem]] = None
+    facets: Optional[List[FacetResultItem]] = None
 
 
 class MoreLikeTheseItem(BaseModel):
@@ -157,10 +167,14 @@ class FieldValueWeighting(BaseModel):
         ]
 
 
-class Facet:
+class FacetType(Enum):
+    COUNT = "count"
+
+
+class Facet(BaseModel):
     name: str
-    type: str
-    values: Optional[List[str]]
+    type: FacetType
+    values: Optional[List[str]] = []
 
 
 class SearchOptions(BaseModel):
