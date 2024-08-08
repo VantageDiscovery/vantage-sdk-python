@@ -22,10 +22,12 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictInt
 
-from vantage_sdk.core.http.models.facet import Facet
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage_sdk.core.http.models.search_options_collection import (
     SearchOptionsCollection,
+)
+from vantage_sdk.core.http.models.search_options_facets_inner import (
+    SearchOptionsFacetsInner,
 )
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,
@@ -57,7 +59,7 @@ class MoreLikeTheseQuery(BaseModel):
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
-    facets: Optional[List[Facet]] = None
+    facets: Optional[List[SearchOptionsFacetsInner]] = None
     __properties: ClassVar[List[str]] = [
         "these",
         "collection",
@@ -177,7 +179,8 @@ class MoreLikeTheseQuery(BaseModel):
                 if obj.get("sort") is not None
                 else None,
                 "facets": [
-                    Facet.from_dict(_item) for _item in obj.get("facets")
+                    SearchOptionsFacetsInner.from_dict(_item)
+                    for _item in obj.get("facets")
                 ]
                 if obj.get("facets") is not None
                 else None,
