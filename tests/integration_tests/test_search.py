@@ -7,7 +7,12 @@ from vantage_sdk.core.http.exceptions import (
     BadRequestException,
     UnauthorizedException,
 )
-from vantage_sdk.model.search import MoreLikeTheseItem, Filter
+from vantage_sdk.model.search import (
+    Facet,
+    FacetType,
+    Filter,
+    MoreLikeTheseItem,
+)
 
 
 """Integration tests for search endpoints"""
@@ -305,5 +310,47 @@ class TestSearch:
         assert len(result.results) == 3
         for r in result.results:
             assert "variants" in r.model_dump().keys()
+
+    # endregion
+
+    # region Facets
+
+    def test_semantic_search_with_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result with facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
 
     # endregion
