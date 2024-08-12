@@ -306,4 +306,106 @@ class TestSearch:
         for r in result.results:
             assert "variants" in r.model_dump().keys()
 
+    def test_embedding_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if embedding search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        embedding = [1, 1, 1, 1, 1]
+
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+
+        # When
+        result = client.embedding_search(
+            embedding=embedding,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+
+    def test_more_like_this_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThis search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        document_id = "en_0530926"
+
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+
+        # When
+        result = client.more_like_this_search(
+            document_id=document_id,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+
+    def test_more_like_these_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThese search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        these = [
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="other text",
+            ),
+        ]
+
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+
+        # When
+        result = client.more_like_these_search(
+            more_like_these=these,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+
     # endregion
