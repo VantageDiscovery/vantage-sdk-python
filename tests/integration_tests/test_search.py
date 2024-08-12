@@ -199,7 +199,7 @@ class TestSearch:
         test_collection_id: str,
     ) -> None:
         """
-        TODO: docstring
+        Tests if MoreLikeThis search will return correct result.
         """
         # Given
         collection_id = test_collection_id
@@ -234,18 +234,18 @@ class TestSearch:
         test_collection_id: str,
     ) -> None:
         """
-        TODO: docstring
+        Tests if MoreLikeThese search will return correct result.
         """
         # Given
         collection_id = test_collection_id
         more_like_these = [
             MoreLikeTheseItem(
                 weight=1.0,
-                query_text="bla",
+                query_text="some text",
             ),
             MoreLikeTheseItem(
                 weight=1.0,
-                query_text="bla bla",
+                query_text="other text",
             ),
         ]
         expected_results = {

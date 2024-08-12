@@ -13,11 +13,11 @@
           "these": [
             {
               "weight": 1.0,
-              "query_text": "bla"
+              "query_text": "some text"
             },
             {
               "weight": 1.0,
-              "query_text": "bla bla"
+              "query_text": "other text"
             }
           ]
         }
