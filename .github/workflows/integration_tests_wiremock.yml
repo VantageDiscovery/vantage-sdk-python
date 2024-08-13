@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: poetry install --all-extras
     - name: Build the WireMock Docker container
-      run: docker-compose -f tests/docker-compose.yml up -d
+      run: docker compose -f tests/docker-compose.yml up -d
     - name: Run tests
       run: |
         source $(poetry env info -p)/bin/activate

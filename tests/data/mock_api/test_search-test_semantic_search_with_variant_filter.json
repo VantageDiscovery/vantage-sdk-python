@@ -1,0 +1,56 @@
+{
+    "request": {
+      "method": "POST",
+      "urlPath": "/v1/search/test/test-collection/semantic",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      },
+      "bodyPatterns": [
+        {
+          "equalToJson": {
+            "filter": {
+                "variant_filter": "(color:\"black\" OR color:\"brown\")"
+            },
+            "text": "Test search"
+          }
+        }
+      ]
+    },
+    "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109280970,
+      "status": 200,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "id_28",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": ["id_15", "id_18"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+        },
+        {
+          "id": "id_15",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": ["id_17", "id_20"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+        },
+        {
+          "id": "id_22",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": ["id_24", "id_25"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+        }
+      ],
+      "execution_time": 7
+    }
+  }
+  }

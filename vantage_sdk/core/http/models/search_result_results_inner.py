@@ -36,7 +36,16 @@ class SearchResultResultsInner(BaseModel):
 
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["id", "score"]
+    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
+    variants: Optional[List[StrictStr]] = None
+    variants_full_list: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = [
+        "id",
+        "score",
+        "sort_score",
+        "variants",
+        "variants_full_list",
+    ]
 
     model_config = {
         "populate_by_name": True,
@@ -85,6 +94,12 @@ class SearchResultResultsInner(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {"id": obj.get("id"), "score": obj.get("score")}
+            {
+                "id": obj.get("id"),
+                "score": obj.get("score"),
+                "sort_score": obj.get("sort_score"),
+                "variants": obj.get("variants"),
+                "variants_full_list": obj.get("variants_full_list"),
+            }
         )
         return _obj
