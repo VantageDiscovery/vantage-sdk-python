@@ -7,7 +7,7 @@ from vantage_sdk.core.http.exceptions import (
     BadRequestException,
     UnauthorizedException,
 )
-from vantage_sdk.model.search import MoreLikeTheseItem, Filter
+from vantage_sdk.model.search import Filter, MoreLikeTheseItem
 
 
 """Integration tests for search endpoints"""
@@ -305,6 +305,8 @@ class TestSearch:
         assert len(result.results) == 3
         for r in result.results:
             assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
     def test_embedding_search_with_variant_filter(
         self,
@@ -336,6 +338,8 @@ class TestSearch:
         assert len(result.results) == 3
         for r in result.results:
             assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
     def test_more_like_this_search_with_variant_filter(
         self,
@@ -367,6 +371,8 @@ class TestSearch:
         assert len(result.results) == 3
         for r in result.results:
             assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
     def test_more_like_these_search_with_variant_filter(
         self,
@@ -407,5 +413,7 @@ class TestSearch:
         assert len(result.results) == 3
         for r in result.results:
             assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
     # endregion

@@ -32,23 +32,25 @@
           "id": "id_28",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_15", "id_18"]
+          "variants": ["id_15", "id_18"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
         },
         {
           "id": "id_15",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_17", "id_20"]
+          "variants": ["id_17", "id_20"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
         },
         {
           "id": "id_22",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_24", "id_25"]
+          "variants": ["id_24", "id_25"],
+          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
         }
       ],
       "execution_time": 7
     }
   }
   }
-  

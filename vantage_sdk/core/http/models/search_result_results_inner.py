@@ -38,11 +38,13 @@ class SearchResultResultsInner(BaseModel):
     score: Optional[Union[StrictFloat, StrictInt]] = None
     sort_score: Optional[Union[StrictFloat, StrictInt]] = None
     variants: Optional[List[StrictStr]] = None
+    variants_full_list: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = [
         "id",
         "score",
         "sort_score",
         "variants",
+        "variants_full_list",
     ]
 
     model_config = {
@@ -97,6 +99,7 @@ class SearchResultResultsInner(BaseModel):
                 "score": obj.get("score"),
                 "sort_score": obj.get("sort_score"),
                 "variants": obj.get("variants"),
+                "variants_full_list": obj.get("variants_full_list"),
             }
         )
         return _obj

@@ -32,12 +32,19 @@ class SearchResultItem(BaseModel):
         The unique identifier of the document in the collection.
     score : Optional[Union[StrictFloat, StrictInt]], optional
         The similarity score associated with the document.
+    sort_score : Optional[Union[StrictFloat, StrictInt]], optional
+        The sort score associated with the document.
+    variants : Optional[Union[StrictFloat, StrictInt]], optional
+        The top variants of the document.
+    variants_full_list : Optional[Union[StrictFloat, StrictInt]], optional
+        All variants of the document.
     """
 
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
     sort_score: Optional[Union[StrictFloat, StrictInt]] = None
     variants: Optional[List[StrictStr]] = None
+    variants_full_list: Optional[List[StrictStr]] = None
 
 
 class SearchResult(BaseModel):
