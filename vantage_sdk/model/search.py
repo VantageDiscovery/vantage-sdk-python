@@ -69,8 +69,8 @@ class SearchResult(BaseModel):
         A message providing additional information about the search response.
     results : Optional[List[SearchResultItem]], optional
         A list of search result items returned by the search method.
-    facets:
-        TODO
+    facets: Optional[List[FacetResultItem]], optional
+        A list of facet result items returned by the search method.
     """
 
     request_id: Optional[StrictInt] = None
@@ -184,6 +184,21 @@ class Facet(BaseModel):
     values: Optional[List[str]] = []
 
 
+class VantageVibeImageAllFields(BaseModel):
+    url: Optional[str] = None
+    base64: Optional[str] = None
+
+
+class VantageVibeImageUrl(VantageVibeImageAllFields):
+    def __init__(self, url):
+        super().__init__(url=url)
+
+
+class VantageVibeImageBase64(VantageVibeImageAllFields):
+    def __init__(self, base64):
+        super().__init__(base64=base64)
+
+
 class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
@@ -200,8 +215,8 @@ class SearchOptions(BaseModel):
         The sort properties.
     field_value_weighting : Optional[SearchOptionsFieldValueWeighting], optional
         The field value weighting properties.
-    facets: TODO
-        TODO
+    facets: Optional[List[SearchOptionsFacetsInner]], optional
+        An array of objects that define the facets you want to use in your query.
     """
 
     collection: Optional[SearchOptionsCollection] = None

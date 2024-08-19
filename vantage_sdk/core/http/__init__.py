@@ -109,6 +109,10 @@ from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
+from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage
+from vantage_sdk.core.http.models.vantage_vibe_search_query import (
+    VantageVibeSearchQuery,
+)
 from vantage_sdk.core.http.models.weighted_field_values import (
     WeightedFieldValues,
 )
