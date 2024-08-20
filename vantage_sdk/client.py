@@ -48,6 +48,10 @@ from vantage_sdk.core.http.models import (
     SemanticSearchQuery,
     VantageVibeSearchQuery,
     VantageVibeImage,
+    ShoppingAssistant,
+    ShoppingAssistantModifiable,
+    ShoppingAssistantQuery,
+    ShoppingAssistantResult,
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
@@ -1002,6 +1006,228 @@ class VantageClient:
 
     # endregion
 
+    # region Shopping Assistant
+
+    def list_shopping_assistants(
+        self,
+        account_id: Optional[str] = None,
+    ) -> List[ShoppingAssistant]:
+        """
+        Retrieves a list of shopping assistants associated with a given account.
+
+        This method fetches all shopping assistants linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to obtain the list of assistants and
+        returns a list of ShoppingAssistant objects upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the shopping assistants are to be retrieved.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[ShoppingAssistant]
+            A list of ShoppingAssistant objects.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        shopping_assistants = self.management_api.shopping_assistant_api.list_shopping_assistants(
+            account_id=account_id or self.account_id,
+        )
+
+        return [
+            ShoppingAssistant.model_validate(assistant.model_dump())
+            for assistant in shopping_assistants
+        ]
+
+    def get_shopping_assistant(
+        self,
+        shopping_assistant_id: str,
+        account_id: Optional[str] = None,
+    ) -> ShoppingAssistant:
+        """
+        Retrieves the details of a specified shopping assistant.
+
+        This method fetches the details of a shopping assistent identified
+        by its unique ID within a specified collection and account.
+
+        Parameters
+        ----------
+        shopping_assistant_id : str
+            The unique identifier of the shopping assistant to be retrieved.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        ShoppingAssistant
+            A ShoppingAssistant object containing the details of the specified assistant.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        shopping_assistant = (
+            self.management_api.shopping_assistant_api.get_shopping_assistant(
+                shopping_assistant_id=shopping_assistant_id,
+                account_id=account_id or self.account_id,
+            )
+        )
+
+        return ShoppingAssistant.model_validate(
+            shopping_assistant.model_dump()
+        )
+
+    def create_shopping_assistant(
+        self,
+        name: Optional[str] = None,
+        groups: Optional[List[str]] = None,
+        external_account_id: Optional[str] = None,
+        llm_model_name: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> ShoppingAssistant:
+        """
+        Creates a new shopping assistant based on the provided parameters.
+
+        Parameters
+        ----------
+        name: Optional[str], optional
+            A string representing the name of the shopping assistant configuration.
+            Must be unique based on account_id and collection_id.
+        groups: Optional[List[str]], optional
+            A list of strings representing the product groups associated with the shopping assistant configuration.
+        external_account_id: Optional[str], optional
+            The id of the valid external account which contains the LLM API key.
+            This has to be OpenAI account for now.
+        llm_model_name: Optional[str], optional
+            A string representing the model name that the user wishes to use for the prompts.
+            This has to be OpenAI model for now.
+        account_id: Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        ShoppingAssistant
+            A ShoppingAssistant object representing the newly created shopping assistant.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        shopping_assistant_modifiable = ShoppingAssistantModifiable(
+            name=name,
+            groups=groups,
+            external_account_id=external_account_id,
+            llm_model_name=llm_model_name,
+        )
+
+        result = self.management_api.shopping_assistant_api.create_shopping_assistant(
+            shopping_assistant_modifiable=shopping_assistant_modifiable,
+            account_id=account_id or self.account_id,
+        )
+
+        return ShoppingAssistant.model_validate(result.model_dump())
+
+    def update_shopping_assistant(
+        self,
+        shopping_assistant_id: str,
+        name: Optional[str] = None,
+        groups: Optional[List[str]] = None,
+        external_account_id: Optional[str] = None,
+        llm_model_name: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> ShoppingAssistant:
+        """
+        Updates specified shopping assistant based on the provided parameters.
+
+        Parameters
+        ----------
+        shopping_assistant_id: str
+            The unique identifier of the shopping assistant to be updated.
+        name: Optional[str], optional
+            A string representing the name of the shopping assistant configuration.
+            Must be unique based on account_id and collection_id.
+        groups: Optional[List[str]], optional
+            A list of strings representing the product groups associated with the shopping assistant configuration.
+        external_account_id: Optional[str], optional
+            The id of the valid external account which contains the LLM API key.
+            This has to be OpenAI account for now.
+        llm_model_name: Optional[str], optional
+            A string representing the model name that the user wishes to use for the prompts.
+            This has to be OpenAI model for now.
+        account_id: Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        ShoppingAssistant
+            A ShoppingAssistant object representing the newly created shopping assistant.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        shopping_assistant_modifiable = ShoppingAssistantModifiable(
+            name=name,
+            groups=groups,
+            external_account_id=external_account_id,
+            llm_model_name=llm_model_name,
+        )
+
+        result = self.management_api.shopping_assistant_api.update_shopping_assistant(
+            shopping_assistant_id=shopping_assistant_id,
+            shopping_assistant_modifiable=shopping_assistant_modifiable,
+            account_id=account_id or self.account_id,
+        )
+
+        return ShoppingAssistant.model_validate(result.model_dump())
+
+    def delete_shopping_assistant(
+        self,
+        shopping_assistant_id: str,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes a specific shopping assistant identified by its unique ID within a specified collection and account.
+
+        Parameters
+        ----------
+        shopping_assistant_id : str
+            The unique identifier of the shopping assistant to be deleted.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        self.management_api.shopping_assistant_api.delete_shopping_assistant(
+            shopping_assistant_id=shopping_assistant_id,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
     # region Search Helper Functions
 
     def _prepare_search_query(
@@ -1568,6 +1794,99 @@ class VantageClient:
         )
 
         return SearchResult.model_validate(result.model_dump())
+
+    def shopping_assistant_search(
+        self,
+        collection_id: str,
+        text: str,
+        shopping_assistant_id: str,
+        max_groups: Optional[int] = 5,
+        accuracy: Optional[float] = None,
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> ShoppingAssistantResult:
+        """
+        Performs a Shopping Assistant search to find documents ...
+         objects within a specified collection using optional parameters for
+        accuracy, pagination, and a boolean filter for refined search criteria.
+
+        Parameters
+        ----------
+        collection_id : str
+            The ID of the collection to search within.
+        text: str
+            Query for the LLM to parse into groups based on the predefined system prompt.
+        shopping_assistant_id: str
+            The ID of the shopping assistant configuration linked to specified collection.
+        max_groups: Optional[int], optional
+            Max number of groups the user wants to give back.
+            Defaults to 5.
+        accuracy : Optional[float], optional
+            The accuracy threshold for the search.
+            Defaults to None.
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        ShoppingAssistantResult
+            An object containing the search results, grouped as configured in the shopping assistant.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
+        """
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        search_properties = self._prepare_search_query(
+            accuracy=accuracy,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
+        )
+
+        query = ShoppingAssistantQuery(
+            text=text,
+            max_groups=max_groups,
+            shopping_assistant_id=shopping_assistant_id,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+            sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
+        )
+
+        result = self.search_api.api.shopping_assistant(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            shopping_assistant_query=query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+        return ShoppingAssistantResult.model_validate(result.model_dump())
 
     # endregion
 

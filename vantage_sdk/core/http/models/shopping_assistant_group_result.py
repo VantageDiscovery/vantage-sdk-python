@@ -20,9 +20,11 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel, StrictStr
 
-from vantage_sdk.core.http.models.facet_range import FacetRange
+from vantage_sdk.core.http.models.shopping_assistant_group_result_results_inner import (
+    ShoppingAssistantGroupResultResultsInner,
+)
 
 
 try:
@@ -31,26 +33,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchOptionsFacetsInner(BaseModel):
+class ShoppingAssistantGroupResult(BaseModel):
     """
-    SearchOptionsFacetsInner
+    ShoppingAssistantGroupResult
     """  # noqa: E501
 
-    name: Optional[StrictStr] = None
-    type: Optional[StrictStr] = None
-    values: Optional[List[StrictStr]] = None
-    ranges: Optional[List[FacetRange]] = None
-    __properties: ClassVar[List[str]] = ["name", "type", "values", "ranges"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('count', 'range'):
-            raise ValueError("must be one of enum values ('count', 'range')")
-        return value
+    group_id: Optional[StrictStr] = None
+    group_name: Optional[StrictStr] = None
+    results: Optional[List[ShoppingAssistantGroupResultResultsInner]] = None
+    __properties: ClassVar[List[str]] = ["group_id", "group_name", "results"]
 
     model_config = {
         "populate_by_name": True,
@@ -69,7 +60,7 @@ class SearchOptionsFacetsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFacetsInner from a JSON string"""
+        """Create an instance of ShoppingAssistantGroupResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,18 +78,18 @@ class SearchOptionsFacetsInner(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in ranges (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
         _items = []
-        if self.ranges:
-            for _item in self.ranges:
+        if self.results:
+            for _item in self.results:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['ranges'] = _items
+            _dict['results'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFacetsInner from a dict"""
+        """Create an instance of ShoppingAssistantGroupResult from a dict"""
         if obj is None:
             return None
 
@@ -107,17 +98,14 @@ class SearchOptionsFacetsInner(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "name": obj.get("name"),
-                "type": obj.get("type"),
-                "values": obj.get("values"),
-                "ranges": (
-                    [
-                        FacetRange.from_dict(_item)
-                        for _item in obj.get("ranges")
-                    ]
-                    if obj.get("ranges") is not None
-                    else None
-                ),
+                "group_id": obj.get("group_id"),
+                "group_name": obj.get("group_name"),
+                "results": [
+                    ShoppingAssistantGroupResultResultsInner.from_dict(_item)
+                    for _item in obj.get("results")
+                ]
+                if obj.get("results") is not None
+                else None,
             }
         )
         return _obj

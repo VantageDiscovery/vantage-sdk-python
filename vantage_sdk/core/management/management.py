@@ -10,6 +10,9 @@ from vantage_sdk.core.http.api.collection_management_api import (
 )
 from vantage_sdk.core.http.api.documents_api import DocumentsApi
 from vantage_sdk.core.http.api.external_keys_api import ExternalKeysApi
+from vantage_sdk.core.http.api.shopping_assistant_api import (
+    ShoppingAssistantApi,
+)
 from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
 from vantage_sdk.core.http.api_client import ApiClient
 
@@ -28,6 +31,8 @@ class ManagementAPI:
         External API keys management API component.
     vantage_api_keys_api: VantageAPIKeysApi
         Vantage API keys management API component.
+    shopping_assistant_api: ShoppingAssistantApi
+        ...
     documents_api: DocumentsApi
         Documents management API component.
     """
@@ -38,6 +43,7 @@ class ManagementAPI:
         collection_api: CollectionManagementApi,
         external_keys_api: ExternalKeysApi,
         vantage_api_keys_api: VantageAPIKeysApi,
+        shopping_assistant_api: ShoppingAssistantApi,
         documents_api: DocumentsApi,
     ):
         """
@@ -53,6 +59,8 @@ class ManagementAPI:
             External API keys management API component.
         vantage_api_keys_api: VantageAPIKeysApi
             Vantage API keys management API component.
+        shopping_assistant_api: ShoppingAssistantApi
+            ...
         documents_api: DocumentsApi
             Documents management API component.
         """
@@ -60,6 +68,7 @@ class ManagementAPI:
         self.collection_api = collection_api
         self.external_keys_api = external_keys_api
         self.vantage_api_keys_api = vantage_api_keys_api
+        self.shopping_assistant_api = shopping_assistant_api
         self.documents_api = documents_api
 
     @classmethod
@@ -83,11 +92,13 @@ class ManagementAPI:
         collection_api = CollectionManagementApi(api_client=api_client)
         external_keys_api = ExternalKeysApi(api_client=api_client)
         vantage_api_keys_api = VantageAPIKeysApi(api_client=api_client)
+        shopping_assistant_api = ShoppingAssistantApi(api_client=api_client)
         documents_api = DocumentsApi(api_client=api_client)
         return cls(
             account_api=account_api,
             collection_api=collection_api,
             external_keys_api=external_keys_api,
             vantage_api_keys_api=vantage_api_keys_api,
+            shopping_assistant_api=shopping_assistant_api,
             documents_api=documents_api,
         )

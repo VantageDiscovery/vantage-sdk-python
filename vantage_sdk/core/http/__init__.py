@@ -27,6 +27,9 @@ from vantage_sdk.core.http.api.collection_management_api import (
 from vantage_sdk.core.http.api.documents_api import DocumentsApi
 from vantage_sdk.core.http.api.external_keys_api import ExternalKeysApi
 from vantage_sdk.core.http.api.search_api import SearchApi
+from vantage_sdk.core.http.api.shopping_assistant_api import (
+    ShoppingAssistantApi,
+)
 from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
 from vantage_sdk.core.http.api_client import ApiClient
 
@@ -107,6 +110,25 @@ from vantage_sdk.core.http.models.secondary_external_account import (
 )
 from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
+)
+from vantage_sdk.core.http.models.shopping_assistant import ShoppingAssistant
+from vantage_sdk.core.http.models.shopping_assistant_group_result import (
+    ShoppingAssistantGroupResult,
+)
+from vantage_sdk.core.http.models.shopping_assistant_group_result_results_inner import (
+    ShoppingAssistantGroupResultResultsInner,
+)
+from vantage_sdk.core.http.models.shopping_assistant_modifiable import (
+    ShoppingAssistantModifiable,
+)
+from vantage_sdk.core.http.models.shopping_assistant_query import (
+    ShoppingAssistantQuery,
+)
+from vantage_sdk.core.http.models.shopping_assistant_read_only import (
+    ShoppingAssistantReadOnly,
+)
+from vantage_sdk.core.http.models.shopping_assistant_result import (
+    ShoppingAssistantResult,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
 from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage
