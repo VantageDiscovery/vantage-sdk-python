@@ -44,7 +44,11 @@ from vantage_sdk.core.http.models import (
 from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
-from vantage_sdk.core.http.models import SemanticSearchQuery
+from vantage_sdk.core.http.models import (
+    SemanticSearchQuery,
+    VantageVibeSearchQuery,
+    VantageVibeImage,
+)
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.core.text_util import (
@@ -81,6 +85,8 @@ from vantage_sdk.model.search import (
     SearchOptions,
     SearchResult,
     Sort,
+    VantageVibeImageUrl,
+    VantageVibeImageBase64,
 )
 from vantage_sdk.model.validation import CollectionType, ValidationError
 
@@ -1452,6 +1458,112 @@ class VantageClient:
             collection_id=collection_id,
             account_id=account_id or self.account_id,
             more_like_these_query=query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+        return SearchResult.model_validate(result.model_dump())
+
+    # endregion
+
+    # region Search - Additional
+
+    def vantage_vibe_search(
+        self,
+        collection_id: str,
+        images: List[Union[VantageVibeImageUrl, VantageVibeImageBase64]],
+        text: Optional[str],
+        accuracy: Optional[float] = None,
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> SearchResult:
+        """
+        Performs a Vantage Vibe search to find documents with the vibe similar to a specified list
+        of image objects and text within a specified collection using optional parameters for
+        accuracy, pagination, and a boolean filter for refined search criteria.
+
+        Parameters
+        ----------
+        collection_id : str
+            The ID of the collection to search within.
+        images : list[Union[VantageVibeImageUrl, VantageVibeImageBase64]]
+            The images to find documents with the same vibe.
+        text: Optional[sting], optional
+            The text query for the search.
+        accuracy : Optional[float], optional
+            The accuracy threshold for the search.
+            Defaults to None.
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results similar to the specified document.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
+        """
+
+        if len(images) > 10 or len(images) < 1:
+            raise VantageValueError(
+                "The images array should contain at least one and up to 10 elements."
+            )
+
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        search_properties = self._prepare_search_query(
+            accuracy=accuracy,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
+        )
+
+        prepared_images = [
+            VantageVibeImage(
+                url=image.url,
+                image=image.base64,
+            )
+            for image in images
+        ]
+
+        vantage_vibe_search_query = VantageVibeSearchQuery(
+            text=text,
+            images=prepared_images,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+            sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
+        )
+
+        result = self.search_api.api.vantage_vibe_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            vantage_vibe_search_query=vantage_vibe_search_query,
             _headers={"authorization": f"Bearer {vantage_api_key}"},
         )
 

@@ -12,6 +12,8 @@ from vantage_sdk.model.search import (
     FacetType,
     Filter,
     MoreLikeTheseItem,
+    VantageVibeImageBase64,
+    VantageVibeImageUrl,
 )
 
 
@@ -585,5 +587,39 @@ class TestSearch:
         assert result.status == 200
         assert len(result.results) == 3
         assert len(result.facets) == len(facets)
+
+    # endregion
+
+    # region Additional
+
+    def test_vantage_vibe_search(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if Vantage Vibe search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        test_images = [
+            VantageVibeImageUrl(url="https://www.someimageurl.com"),
+            VantageVibeImageBase64(base64="imagebase64"),
+        ]
+        test_text = "test search"
+
+        # When
+        response = client.vantage_vibe_search(
+            collection_id=collection_id,
+            images=test_images,
+            text=test_text,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert response is not None
+        assert response.status == 200
+        assert len(response.results) == 3
 
     # endregion
