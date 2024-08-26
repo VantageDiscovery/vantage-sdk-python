@@ -26,6 +26,9 @@ from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage_sdk.core.http.models.search_options_collection import (
     SearchOptionsCollection,
 )
+from vantage_sdk.core.http.models.search_options_facets_inner import (
+    SearchOptionsFacetsInner,
+)
 from vantage_sdk.core.http.models.search_options_field_value_weighting import (
     SearchOptionsFieldValueWeighting,
 )
@@ -56,6 +59,7 @@ class MoreLikeTheseQuery(BaseModel):
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
+    facets: Optional[List[SearchOptionsFacetsInner]] = None
     __properties: ClassVar[List[str]] = [
         "these",
         "collection",
@@ -64,6 +68,7 @@ class MoreLikeTheseQuery(BaseModel):
         "field_value_weighting",
         "pagination",
         "sort",
+        "facets",
     ]
 
     model_config = {
@@ -125,6 +130,13 @@ class MoreLikeTheseQuery(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of sort
         if self.sort:
             _dict['sort'] = self.sort.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
+        _items = []
+        if self.facets:
+            for _item in self.facets:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['facets'] = _items
         return _dict
 
     @classmethod
@@ -165,6 +177,12 @@ class MoreLikeTheseQuery(BaseModel):
                 else None,
                 "sort": SearchOptionsSort.from_dict(obj.get("sort"))
                 if obj.get("sort") is not None
+                else None,
+                "facets": [
+                    SearchOptionsFacetsInner.from_dict(_item)
+                    for _item in obj.get("facets")
+                ]
+                if obj.get("facets") is not None
                 else None,
             }
         )

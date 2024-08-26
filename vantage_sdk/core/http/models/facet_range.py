@@ -22,29 +22,22 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
 
-class SearchResultResultsInner(BaseModel):
+class FacetRange(BaseModel):
     """
-    SearchResultResultsInner
+    FacetRange
     """  # noqa: E501
 
-    id: Optional[StrictStr] = None
-    score: Optional[Union[StrictFloat, StrictInt]] = None
-    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
-    variants: Optional[List[StrictStr]] = None
-    variants_full_list: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = [
-        "id",
-        "score",
-        "sort_score",
-        "variants",
-        "variants_full_list",
-    ]
+    value: Optional[StrictStr] = None
+    min: Optional[Union[StrictFloat, StrictInt]] = None
+    max: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = ["value", "min", "max"]
 
     model_config = {
         "populate_by_name": True,
@@ -63,7 +56,7 @@ class SearchResultResultsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchResultResultsInner from a JSON string"""
+        """Create an instance of FacetRange from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -85,7 +78,7 @@ class SearchResultResultsInner(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchResultResultsInner from a dict"""
+        """Create an instance of FacetRange from a dict"""
         if obj is None:
             return None
 
@@ -94,11 +87,9 @@ class SearchResultResultsInner(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "id": obj.get("id"),
-                "score": obj.get("score"),
-                "sort_score": obj.get("sort_score"),
-                "variants": obj.get("variants"),
-                "variants_full_list": obj.get("variants_full_list"),
+                "value": obj.get("value"),
+                "min": obj.get("min"),
+                "max": obj.get("max"),
             }
         )
         return _obj
