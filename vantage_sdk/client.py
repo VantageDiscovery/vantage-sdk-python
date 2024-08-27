@@ -1703,6 +1703,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1733,6 +1734,9 @@ class VantageClient:
             Defaults to None,
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
+            Defaults to None,
+        facets: Optional[List[Facet]], optional
+            Array of objects defining specific attributes of the data.
             Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1766,6 +1770,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         prepared_images = [
@@ -1784,6 +1789,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.vantage_vibe_search(
@@ -1806,6 +1812,7 @@ class VantageClient:
         filter: Optional[Filter] = None,
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> ShoppingAssistantResult:
@@ -1840,6 +1847,9 @@ class VantageClient:
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
             Defaults to None,
+        facets: Optional[List[Facet]], optional
+            Array of objects defining specific attributes of the data.
+            Defaults to None,
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1866,6 +1876,7 @@ class VantageClient:
             filter=filter,
             sort=sort,
             field_value_weighting=field_value_weighting,
+            facets=facets,
         )
 
         query = ShoppingAssistantQuery(
@@ -1877,6 +1888,7 @@ class VantageClient:
             pagination=search_properties.pagination,
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
         )
 
         result = self.search_api.api.shopping_assistant(
