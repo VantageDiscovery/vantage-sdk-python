@@ -1231,7 +1231,7 @@ class VantageClient:
     def list_vibe_configurations(
         self,
         account_id: Optional[str] = None,
-    ) -> VantageVibe:
+    ) -> List[VantageVibe]:
         """
         Retrieves a list of Vantage vibe configurations associated with a given account.
 

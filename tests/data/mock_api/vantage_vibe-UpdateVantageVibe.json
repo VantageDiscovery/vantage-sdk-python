@@ -1,0 +1,36 @@
+{
+    "request": {
+      "method": "PATCH",
+      "urlPath": "/v1/account/test/vibe/test_vibe_id",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      },
+      "bodyPatterns": [
+        {
+          "equalToJson": {
+            "name": "test-vibe",
+            "external_account_id": "test_external_account_id",
+            "llm_model_name": "text-embeddings-ada-002",
+            "system_prompt": "test system prompt"
+          }
+        }
+      ]
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "id": "test_vibe_id",
+        "account_id": "test",
+        "name": "test-vibe",
+        "external_account_id": "test_external_account_id",
+        "llm_model_name": "text-embeddings-ada-002",
+        "system_prompt": "test system prompt"
+      }
+    }
+  }
+  

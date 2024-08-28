@@ -1,0 +1,18 @@
+{
+    "request": {
+      "method": "DELETE",
+      "urlPath": "/v1/account/test/vibe/test-vibe-id",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+  

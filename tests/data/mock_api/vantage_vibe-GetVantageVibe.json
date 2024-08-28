@@ -1,0 +1,25 @@
+{
+    "request": {
+      "method": "GET",
+      "urlPath": "/v1/account/test/vibe/test-vibe-id",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "id": "test-vibe-id",
+        "account_id": "test",
+        "name": "test-vibe",
+        "external_account_id": "test-external-account-id",
+        "llm_model_name": "text-embeddings-ada-002"
+      }
+    }
+  }
+  
