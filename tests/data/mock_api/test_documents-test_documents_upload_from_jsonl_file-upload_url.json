@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/v1/account/test/collection/test-collection/get_upload_url?file_size=123&customer_batch_identifier=small_documents.jsonl",
+    "url": "/v1/account/test/collection/test-collection/get_upload_url?file_size=124&customer_batch_identifier=small_documents.jsonl",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"
