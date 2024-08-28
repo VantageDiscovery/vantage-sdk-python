@@ -110,14 +110,11 @@ class SearchOptionsFacetsInner(BaseModel):
                 "name": obj.get("name"),
                 "type": obj.get("type"),
                 "values": obj.get("values"),
-                "ranges": (
-                    [
-                        FacetRange.from_dict(_item)
-                        for _item in obj.get("ranges")
-                    ]
-                    if obj.get("ranges") is not None
-                    else None
-                ),
+                "ranges": [
+                    FacetRange.from_dict(_item) for _item in obj.get("ranges")
+                ]
+                if obj.get("ranges") is not None
+                else None,
             }
         )
         return _obj

@@ -46,12 +46,12 @@ from vantage_sdk.core.http.models import (
 )
 from vantage_sdk.core.http.models import (
     SemanticSearchQuery,
-    VantageVibeSearchQuery,
-    VantageVibeImage,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
     ShoppingAssistantQuery,
     ShoppingAssistantResult,
+    VantageVibeImage,
+    VantageVibeSearchQuery,
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
@@ -89,8 +89,8 @@ from vantage_sdk.model.search import (
     SearchOptions,
     SearchResult,
     Sort,
-    VantageVibeImageUrl,
     VantageVibeImageBase64,
+    VantageVibeImageUrl,
 )
 from vantage_sdk.model.validation import CollectionType, ValidationError
 

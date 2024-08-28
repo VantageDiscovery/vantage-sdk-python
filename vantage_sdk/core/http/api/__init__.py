@@ -14,3 +14,4 @@ from vantage_sdk.core.http.api.shopping_assistant_api import (
     ShoppingAssistantApi,
 )
 from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage_sdk.core.http.api.vantage_vibe_api import VantageVibeApi

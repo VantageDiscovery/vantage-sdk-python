@@ -59,6 +59,7 @@ class VantageVibeSearchQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    vibe_id: Optional[StrictStr] = None
     text: Optional[StrictStr] = None
     images: Optional[List[VantageVibeImage]] = None
     __properties: ClassVar[List[str]] = [
@@ -69,6 +70,7 @@ class VantageVibeSearchQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "vibe_id",
         "text",
         "images",
     ]
@@ -180,6 +182,7 @@ class VantageVibeSearchQuery(BaseModel):
                 ]
                 if obj.get("facets") is not None
                 else None,
+                "vibe_id": obj.get("vibe_id"),
                 "text": obj.get("text"),
                 "images": [
                     VantageVibeImage.from_dict(_item)
