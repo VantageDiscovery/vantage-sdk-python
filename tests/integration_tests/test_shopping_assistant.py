@@ -1,17 +1,11 @@
 #!/usr/bin/env python
-from typing import Callable
-
-import pytest
-
 from vantage_sdk.client import VantageClient
-from vantage_sdk.core.http.exceptions import ForbiddenException
 
 
 """ Integration tests for shopping assistant endpoints."""
 
 
 class TestShoppingAssistant:
-
     def test_list_shopping_assistants(
         self, client: VantageClient, account_params: dict
     ) -> None:

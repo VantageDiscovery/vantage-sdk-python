@@ -603,6 +603,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
+        vibe_id = "test-vibe-id"
         test_images = [
             VantageVibeImageUrl(url="https://www.someimageurl.com"),
             VantageVibeImageBase64(base64="imagebase64"),
@@ -611,6 +612,7 @@ class TestSearch:
 
         # When
         response = client.vantage_vibe_search(
+            vibe_id=vibe_id,
             collection_id=collection_id,
             images=test_images,
             text=test_text,

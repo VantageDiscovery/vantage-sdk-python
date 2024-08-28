@@ -1,0 +1,54 @@
+{
+    "request": {
+      "method": "GET",
+      "urlPath": "/v1/account/test/shopping_assistants",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": [
+        {
+          "shopping_assistant_id": "test-shopping-assistant-id1",
+          "account_id": "test",
+          "name": "test-assistant",
+          "groups": [
+              "group 1",
+              "group 2",
+              "group 3"
+          ],
+          "external_account_id": "test-external-account-id",
+          "llm_model_name": "text-embeddings-ada-002"
+        },
+        {
+          "shopping_assistant_id": "test-shopping-assistant-id2",
+          "account_id": "test",
+          "name": "test-assistant",
+          "groups": [
+              "group A",
+              "group B"
+          ],
+          "external_account_id": "test-external-account-id",
+          "llm_model_name": "text-embeddings-ada-002"
+        },
+        {
+          "shopping_assistant_id": "test-shopping-assistant-id3",
+          "account_id": "test",
+          "name": "test-assistant",
+          "groups": [
+              "group x",
+              "group y",
+              "group z"
+          ],
+          "external_account_id": "test-external-account-id",
+          "llm_model_name": "text-embeddings-ada-002"
+        }
+      ]
+    }
+  }

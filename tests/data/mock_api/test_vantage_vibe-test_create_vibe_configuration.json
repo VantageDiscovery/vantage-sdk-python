@@ -1,12 +1,21 @@
 {
     "request": {
-      "method": "GET",
-      "urlPath": "/v1/account/test/shopping_assistants/test-shopping-assistant-id",
+      "method": "POST",
+      "urlPath": "/v1/account/test/vibe",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
         }
-      }
+      },
+      "bodyPatterns": [
+        {
+          "equalToJson": {
+            "llm_model_name": "text-embeddings-ada-002",
+            "name": "test-vibe",
+            "external_account_id": "test-external-account-id"
+          }
+        }
+      ]
     },
     "response": {
       "status": 200,
@@ -14,14 +23,9 @@
         "Content-Type": "application/json"
       },
       "jsonBody": {
-        "shopping_assistant_id": "test-shopping-assistant-id",
+        "id": "test_vibe_id",
         "account_id": "test",
-        "name": "test-assistant",
-        "groups": [
-            "group 1",
-            "group 2",
-            "group 3"
-        ],
+        "name": "test-vibe",
         "external_account_id": "test-external-account-id",
         "llm_model_name": "text-embeddings-ada-002"
       }

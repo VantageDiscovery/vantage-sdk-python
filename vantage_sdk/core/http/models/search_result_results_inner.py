@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
+
 try:
     from typing import Self
 except ImportError:

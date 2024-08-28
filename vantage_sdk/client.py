@@ -40,18 +40,16 @@ from vantage_sdk.core.http.models import (
     SearchOptionsFilter,
     SearchOptionsPagination,
     SearchOptionsSort,
-)
-from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
-)
-from vantage_sdk.core.http.models import (
     SemanticSearchQuery,
-    VantageVibeSearchQuery,
-    VantageVibeImage,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
     ShoppingAssistantQuery,
     ShoppingAssistantResult,
+    VantageVibe,
+    VantageVibeImage,
+    VantageVibeModifiable,
+    VantageVibeSearchQuery,
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
@@ -89,8 +87,8 @@ from vantage_sdk.model.search import (
     SearchOptions,
     SearchResult,
     Sort,
-    VantageVibeImageUrl,
     VantageVibeImageBase64,
+    VantageVibeImageUrl,
 )
 from vantage_sdk.model.validation import CollectionType, ValidationError
 
@@ -1055,7 +1053,7 @@ class VantageClient:
         Retrieves the details of a specified shopping assistant.
 
         This method fetches the details of a shopping assistent identified
-        by its unique ID within a specified collection and account.
+        by its unique ID within a specified account.
 
         Parameters
         ----------
@@ -1102,7 +1100,7 @@ class VantageClient:
         ----------
         name: Optional[str], optional
             A string representing the name of the shopping assistant configuration.
-            Must be unique based on account_id and collection_id.
+            Must be unique based on account_id.
         groups: Optional[List[str]], optional
             A list of strings representing the product groups associated with the shopping assistant configuration.
         external_account_id: Optional[str], optional
@@ -1157,7 +1155,7 @@ class VantageClient:
             The unique identifier of the shopping assistant to be updated.
         name: Optional[str], optional
             A string representing the name of the shopping assistant configuration.
-            Must be unique based on account_id and collection_id.
+            Must be unique based on account_id.
         groups: Optional[List[str]], optional
             A list of strings representing the product groups associated with the shopping assistant configuration.
         external_account_id: Optional[str], optional
@@ -1174,7 +1172,7 @@ class VantageClient:
         Returns
         -------
         ShoppingAssistant
-            A ShoppingAssistant object representing the newly created shopping assistant.
+            A ShoppingAssistant object representing the updated shopping assistant.
 
         Notes
         -----
@@ -1201,7 +1199,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Deletes a specific shopping assistant identified by its unique ID within a specified collection and account.
+        Deletes a specific shopping assistant identified by its unique ID within a specified account.
 
         Parameters
         ----------
@@ -1223,6 +1221,218 @@ class VantageClient:
 
         self.management_api.shopping_assistant_api.delete_shopping_assistant(
             shopping_assistant_id=shopping_assistant_id,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
+    # region Vantage Vibe
+
+    def list_vibe_configurations(
+        self,
+        account_id: Optional[str] = None,
+    ) -> List[VantageVibe]:
+        """
+        Retrieves a list of Vantage vibe configurations associated with a given account.
+
+        This method fetches all vibe configurations linked to the account specified by `account_id`.
+        If `account_id` is not provided, it defaults to the account ID of the current instance.
+        It uses the Management API to obtain the list of vibes and
+        returns a list of VantageVibe objects upon success.
+
+        Parameters
+        ----------
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the vibes are to be retrieved.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[VantageVibe]
+            A list of VantageVibe objects.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        vantage_vibes = self.management_api.vantage_vibe_api.list_vantage_vibe(
+            account_id=account_id or self.account_id,
+        )
+
+        return [
+            VantageVibe.model_validate(vibe.model_dump())
+            for vibe in vantage_vibes
+        ]
+
+    def get_vibe_configuration(
+        self,
+        vibe_id: str,
+        account_id: Optional[str] = None,
+    ) -> VantageVibe:
+        """
+        Retrieves the details of a specified Vantage vibe configuration.
+
+        This method fetches the details of a Vantage vibe identified
+        by its unique ID within a specified account.
+
+        Parameters
+        ----------
+        vibe_id : str
+            The unique identifier of the Vantage vibe to be retrieved.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        VantageVibe
+            A VantageVibe object containing the details of the specified vibe.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        vibe = self.management_api.vantage_vibe_api.get_vantage_vibe(
+            vibe_id=vibe_id,
+            account_id=account_id or self.account_id,
+        )
+
+        return VantageVibe.model_validate(vibe.model_dump())
+
+    def create_vibe_configuration(
+        self,
+        name: str,
+        llm_model_name: str,
+        external_account_id: str,
+        account_id: Optional[str] = None,
+    ) -> VantageVibe:
+        """
+        Creates a new Vantage vibe configuration based on the provided parameters.
+
+        Parameters
+        ----------
+        name: Optional[str], optional
+            A string representing the name of the Vantage vibe configuration.
+            Must be unique based on account_id.
+        llm_model_name: Optional[str], optional
+            A string representing the model name that the user wishes to use for the prompts.
+            This has to be OpenAI model for now.
+        external_account_id: Optional[str], optional
+            The id of the valid external account which contains the LLM API key.
+            This has to be OpenAI account for now.
+        account_id: Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        VantageVibe
+            A VantageVibe object representing the newly created vibe configuration.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        vibe_modifiable = VantageVibeModifiable(
+            llm_model_name=llm_model_name,
+            name=name,
+            external_account_id=external_account_id,
+        )
+
+        result = self.management_api.vantage_vibe_api.create_vantage_vibe(
+            vantage_vibe_modifiable=vibe_modifiable,
+            account_id=account_id or self.account_id,
+        )
+
+        return VantageVibe.model_validate(result.model_dump())
+
+    def update_vibe_configuration(
+        self,
+        vibe_id: str,
+        name: Optional[str] = None,
+        llm_model_name: Optional[str] = None,
+        external_account_id: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> VantageVibe:
+        """
+        Updates specified Vantage vibe configuration based on the provided parameters.
+
+        Parameters
+        ----------
+        vibe_id: str
+            The unique identifier of the Vantage vibe to be updated.
+        name: Optional[str], optional
+            A string representing the name of the vibe configuration.
+            Must be unique based on account_id.
+        llm_model_name: Optional[str], optional
+            A string representing the model name that the user wishes to use for the prompts.
+            This has to be OpenAI model for now.
+        external_account_id: Optional[str], optional
+            The id of the valid external account which contains the LLM API key.
+            This has to be OpenAI account for now.
+        account_id: Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        VantageVibe
+            A VantageVibe object representing the updated vibe configuration.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        vibe_modifiable = VantageVibeModifiable(
+            llm_model_name=llm_model_name,
+            name=name,
+            external_account_id=external_account_id,
+        )
+
+        result = self.management_api.vantage_vibe_api.update_vantage_vibe(
+            vibe_id=vibe_id,
+            vantage_vibe_modifiable=vibe_modifiable,
+            account_id=account_id or self.account_id,
+        )
+
+        return VantageVibe.model_validate(result.model_dump())
+
+    def delete_vibe_configuration(
+        self,
+        vibe_id: str,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes a specific vibe configuration identified by its unique ID within a specified account.
+
+        Parameters
+        ----------
+        vibe_id : str
+            The unique identifier of the Vantage vibe to be deleted.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        self.management_api.vantage_vibe_api.delete_vantage_vibe(
+            vibe_id=vibe_id,
             account_id=account_id or self.account_id,
         )
 
@@ -1696,6 +1906,7 @@ class VantageClient:
     def vantage_vibe_search(
         self,
         collection_id: str,
+        vibe_id: str,
         images: List[Union[VantageVibeImageUrl, VantageVibeImageBase64]],
         text: Optional[str],
         accuracy: Optional[float] = None,
@@ -1716,6 +1927,8 @@ class VantageClient:
         ----------
         collection_id : str
             The ID of the collection to search within.
+        vibe_id : str
+            The ID of the Vantage vibe.
         images : list[Union[VantageVibeImageUrl, VantageVibeImageBase64]]
             The images to find documents with the same vibe.
         text: Optional[sting], optional
@@ -1782,6 +1995,7 @@ class VantageClient:
         ]
 
         vantage_vibe_search_query = VantageVibeSearchQuery(
+            vibe_id=vibe_id,
             text=text,
             images=prepared_images,
             collection=search_properties.collection,

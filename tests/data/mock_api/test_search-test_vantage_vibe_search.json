@@ -10,6 +10,7 @@
       "bodyPatterns": [
         {
           "equalToJson": {
+            "vibe_id": "test-vibe-id",
             "text": "test search",
             "images": [
                 {
@@ -53,4 +54,3 @@
       }
     }
   }
-  

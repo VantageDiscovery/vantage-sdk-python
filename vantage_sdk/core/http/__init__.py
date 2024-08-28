@@ -31,6 +31,7 @@ from vantage_sdk.core.http.api.shopping_assistant_api import (
     ShoppingAssistantApi,
 )
 from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage_sdk.core.http.api.vantage_vibe_api import VantageVibeApi
 from vantage_sdk.core.http.api_client import ApiClient
 
 # import ApiClient
@@ -131,7 +132,14 @@ from vantage_sdk.core.http.models.shopping_assistant_result import (
     ShoppingAssistantResult,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
+from vantage_sdk.core.http.models.vantage_vibe import VantageVibe
 from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage
+from vantage_sdk.core.http.models.vantage_vibe_modifiable import (
+    VantageVibeModifiable,
+)
+from vantage_sdk.core.http.models.vantage_vibe_read_only import (
+    VantageVibeReadOnly,
+)
 from vantage_sdk.core.http.models.vantage_vibe_search_query import (
     VantageVibeSearchQuery,
 )

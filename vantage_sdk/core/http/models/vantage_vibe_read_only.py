@@ -14,34 +14,32 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
 from pydantic import BaseModel, StrictStr
-
-
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
-class VantageVibeImageBase64(BaseModel):
+class VantageVibeReadOnly(BaseModel):
     """
-    VantageVibeImageBase64
-    """  # noqa: E501
-
-    image: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["image"]
+    VantageVibeReadOnly
+    """ # noqa: E501
+    id: Optional[StrictStr] = None
+    account_id: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "account_id"]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -54,7 +52,7 @@ class VantageVibeImageBase64(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of VantageVibeImageBase64 from a JSON string"""
+        """Create an instance of VantageVibeReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,22 +64,32 @@ class VantageVibeImageBase64(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+                "id",
+                "account_id",
+            },
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of VantageVibeImageBase64 from a dict"""
+        """Create an instance of VantageVibeReadOnly from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({"image": obj.get("image")})
+        _obj = cls.model_validate({
+            "id": obj.get("id"),
+            "account_id": obj.get("account_id")
+        })
         return _obj
+
+

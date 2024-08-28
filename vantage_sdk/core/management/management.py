@@ -14,6 +14,7 @@ from vantage_sdk.core.http.api.shopping_assistant_api import (
     ShoppingAssistantApi,
 )
 from vantage_sdk.core.http.api.vantage_api_keys_api import VantageAPIKeysApi
+from vantage_sdk.core.http.api.vantage_vibe_api import VantageVibeApi
 from vantage_sdk.core.http.api_client import ApiClient
 
 
@@ -32,7 +33,9 @@ class ManagementAPI:
     vantage_api_keys_api: VantageAPIKeysApi
         Vantage API keys management API component.
     shopping_assistant_api: ShoppingAssistantApi
-        ...
+        Shopping Assistant management API component.
+    vantage_vibe_api: ShoppingAssistantApi
+        Vantage Vibe management API component.
     documents_api: DocumentsApi
         Documents management API component.
     """
@@ -44,6 +47,7 @@ class ManagementAPI:
         external_keys_api: ExternalKeysApi,
         vantage_api_keys_api: VantageAPIKeysApi,
         shopping_assistant_api: ShoppingAssistantApi,
+        vantage_vibe_api: VantageVibeApi,
         documents_api: DocumentsApi,
     ):
         """
@@ -60,7 +64,9 @@ class ManagementAPI:
         vantage_api_keys_api: VantageAPIKeysApi
             Vantage API keys management API component.
         shopping_assistant_api: ShoppingAssistantApi
-            ...
+            Shopping Assistant management API component.
+        vantage_vibe_api: ShoppingAssistantApi
+            Vantage Vibe management API component.
         documents_api: DocumentsApi
             Documents management API component.
         """
@@ -69,6 +75,7 @@ class ManagementAPI:
         self.external_keys_api = external_keys_api
         self.vantage_api_keys_api = vantage_api_keys_api
         self.shopping_assistant_api = shopping_assistant_api
+        self.vantage_vibe_api = vantage_vibe_api
         self.documents_api = documents_api
 
     @classmethod
@@ -93,6 +100,7 @@ class ManagementAPI:
         external_keys_api = ExternalKeysApi(api_client=api_client)
         vantage_api_keys_api = VantageAPIKeysApi(api_client=api_client)
         shopping_assistant_api = ShoppingAssistantApi(api_client=api_client)
+        vantage_vibe_api = VantageVibeApi(api_client=api_client)
         documents_api = DocumentsApi(api_client=api_client)
         return cls(
             account_api=account_api,
@@ -100,5 +108,6 @@ class ManagementAPI:
             external_keys_api=external_keys_api,
             vantage_api_keys_api=vantage_api_keys_api,
             shopping_assistant_api=shopping_assistant_api,
+            vantage_vibe_api=vantage_vibe_api,
             documents_api=documents_api,
         )
