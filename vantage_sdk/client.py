@@ -1906,6 +1906,7 @@ class VantageClient:
     def vantage_vibe_search(
         self,
         collection_id: str,
+        vibe_id: str,
         images: List[Union[VantageVibeImageUrl, VantageVibeImageBase64]],
         text: Optional[str],
         accuracy: Optional[float] = None,
@@ -1926,6 +1927,8 @@ class VantageClient:
         ----------
         collection_id : str
             The ID of the collection to search within.
+        vibe_id : str
+            The ID of the Vantage vibe.
         images : list[Union[VantageVibeImageUrl, VantageVibeImageBase64]]
             The images to find documents with the same vibe.
         text: Optional[sting], optional
@@ -1992,6 +1995,7 @@ class VantageClient:
         ]
 
         vantage_vibe_search_query = VantageVibeSearchQuery(
+            vibe_id=vibe_id,
             text=text,
             images=prepared_images,
             collection=search_properties.collection,
