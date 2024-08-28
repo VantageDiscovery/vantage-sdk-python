@@ -20,9 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr, field_validator
-
-from vantage_sdk.core.http.models.facet_range import FacetRange
+from pydantic import BaseModel, StrictStr
 
 
 try:
@@ -31,26 +29,27 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchOptionsFacetsInner(BaseModel):
+class ShoppingAssistant(BaseModel):
     """
-    SearchOptionsFacetsInner
+    ShoppingAssistant
     """  # noqa: E501
 
+    shopping_assistant_id: Optional[StrictStr] = None
+    account_id: Optional[StrictStr] = None
     name: Optional[StrictStr] = None
-    type: Optional[StrictStr] = None
-    values: Optional[List[StrictStr]] = None
-    ranges: Optional[List[FacetRange]] = None
-    __properties: ClassVar[List[str]] = ["name", "type", "values", "ranges"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('count', 'range'):
-            raise ValueError("must be one of enum values ('count', 'range')")
-        return value
+    groups: Optional[List[StrictStr]] = None
+    external_account_id: Optional[StrictStr] = None
+    llm_model_name: Optional[StrictStr] = None
+    system_prompt_id: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = [
+        "shopping_assistant_id",
+        "account_id",
+        "name",
+        "groups",
+        "external_account_id",
+        "llm_model_name",
+        "system_prompt_id",
+    ]
 
     model_config = {
         "populate_by_name": True,
@@ -69,7 +68,7 @@ class SearchOptionsFacetsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchOptionsFacetsInner from a JSON string"""
+        """Create an instance of ShoppingAssistant from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,24 +80,22 @@ class SearchOptionsFacetsInner(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+                "shopping_assistant_id",
+                "account_id",
+            },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in ranges (list)
-        _items = []
-        if self.ranges:
-            for _item in self.ranges:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['ranges'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchOptionsFacetsInner from a dict"""
+        """Create an instance of ShoppingAssistant from a dict"""
         if obj is None:
             return None
 
@@ -107,17 +104,13 @@ class SearchOptionsFacetsInner(BaseModel):
 
         _obj = cls.model_validate(
             {
+                "shopping_assistant_id": obj.get("shopping_assistant_id"),
+                "account_id": obj.get("account_id"),
                 "name": obj.get("name"),
-                "type": obj.get("type"),
-                "values": obj.get("values"),
-                "ranges": (
-                    [
-                        FacetRange.from_dict(_item)
-                        for _item in obj.get("ranges")
-                    ]
-                    if obj.get("ranges") is not None
-                    else None
-                ),
+                "groups": obj.get("groups"),
+                "external_account_id": obj.get("external_account_id"),
+                "llm_model_name": obj.get("llm_model_name"),
+                "system_prompt_id": obj.get("system_prompt_id"),
             }
         )
         return _obj
