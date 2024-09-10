@@ -40,7 +40,11 @@ from vantage_sdk.core.http.models import (
     SearchOptionsFilter,
     SearchOptionsPagination,
     SearchOptionsSort,
+)
+from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
+)
+from vantage_sdk.core.http.models import (
     SemanticSearchQuery,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
@@ -552,7 +556,7 @@ class VantageClient:
         ----------
         llm_provider : str
             The provider of the Large Language Model (LLM).
-            Supported options are: OpenAI and HuggingFace (Hugging)
+            Supported options are: OpenAI, HuggingFace (Hugging), and Anthropic
         llm_secret : str
             The secret key for accessing the LLM.
         account_id : Optional[str], optional
@@ -602,6 +606,7 @@ class VantageClient:
             The unique identifier of the external key to be updated.
         llm_provider : str
             The new provider of the Large Language Model (LLM).
+            Supported options are: OpenAI, HuggingFace (Hugging), and Anthropic
         llm_secret : str
             The new secret key for accessing the LLM.
         account_id : Optional[str], optional
@@ -1323,7 +1328,7 @@ class VantageClient:
             This has to be OpenAI model for now.
         external_account_id: Optional[str], optional
             The id of the valid external account which contains the LLM API key.
-            This has to be OpenAI account for now.
+            This can be OpenAI or Anthropic LLM key.
         account_id: Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.

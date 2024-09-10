@@ -36,6 +36,7 @@ class LLMProvider(Enum):
 
     HuggingFace = "Hugging"
     OpenAI = "OpenAI"
+    Anthropic = "Anthropic"
 
 
 class ExternalKey(BaseModel):

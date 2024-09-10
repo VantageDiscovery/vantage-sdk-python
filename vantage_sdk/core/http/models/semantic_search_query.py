@@ -38,6 +38,9 @@ from vantage_sdk.core.http.models.search_options_pagination import (
     SearchOptionsPagination,
 )
 from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
+from vantage_sdk.core.http.models.total_counts_options_total_counts import (
+    TotalCountsOptionsTotalCounts,
+)
 
 
 try:
@@ -58,6 +61,7 @@ class SemanticSearchQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    total_counts: Optional[TotalCountsOptionsTotalCounts] = None
     text: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection",
@@ -67,6 +71,7 @@ class SemanticSearchQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "total_counts",
         "text",
     ]
 
@@ -129,6 +134,9 @@ class SemanticSearchQuery(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['facets'] = _items
+        # override the default output from pydantic by calling `to_dict()` of total_counts
+        if self.total_counts:
+            _dict['total_counts'] = self.total_counts.to_dict()
         return _dict
 
     @classmethod
@@ -169,6 +177,11 @@ class SemanticSearchQuery(BaseModel):
                     for _item in obj.get("facets")
                 ]
                 if obj.get("facets") is not None
+                else None,
+                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
+                    obj.get("total_counts")
+                )
+                if obj.get("total_counts") is not None
                 else None,
                 "text": obj.get("text"),
             }
