@@ -59,7 +59,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service"),
         ],
         _request_timeout: Union[
             None,
@@ -80,7 +80,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -134,7 +134,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service"),
         ],
         _request_timeout: Union[
             None,
@@ -155,7 +155,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -209,7 +209,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service"),
         ],
         _request_timeout: Union[
             None,
@@ -230,7 +230,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1133,7 +1133,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service."),
         ],
         _request_timeout: Union[
             None,
@@ -1156,7 +1156,7 @@ class ExternalKeysApi:
         :type account_id: str
         :param external_key_id: The external key id (required)
         :type external_key_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service. (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1214,7 +1214,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service."),
         ],
         _request_timeout: Union[
             None,
@@ -1237,7 +1237,7 @@ class ExternalKeysApi:
         :type account_id: str
         :param external_key_id: The external key id (required)
         :type external_key_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service. (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1295,7 +1295,7 @@ class ExternalKeysApi:
         ],
         external_key_modifiable: Annotated[
             ExternalKeyModifiable,
-            Field(description="Key for OpenAI or HuggingFace"),
+            Field(description="Key for accessing LLM provider service."),
         ],
         _request_timeout: Union[
             None,
@@ -1318,7 +1318,7 @@ class ExternalKeysApi:
         :type account_id: str
         :param external_key_id: The external key id (required)
         :type external_key_id: str
-        :param external_key_modifiable: Key for OpenAI or HuggingFace (required)
+        :param external_key_modifiable: Key for accessing LLM provider service. (required)
         :type external_key_modifiable: ExternalKeyModifiable
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

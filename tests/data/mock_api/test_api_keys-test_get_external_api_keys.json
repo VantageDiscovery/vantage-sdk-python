@@ -27,6 +27,20 @@
         "max_tokens_rpm_search": null,
         "state": "Active",
         "customer_provided": null
+      },
+      {
+        "external_key_id": "3f25ca7d-0514-4e5f-8346-9e6733267ce3",
+        "account_id": "test",
+        "external_key_created_date": "2024-03-06T10:53:50",
+        "llm_provider": "Anthropic",
+        "llm_secret": "testf...st6",
+        "url": null,
+        "url_type": null,
+        "max_tokens_per_batch": null,
+        "max_tokens_rpm_indexing": null,
+        "max_tokens_rpm_search": null,
+        "state": "Active",
+        "customer_provided": null
       }
     ]
   }

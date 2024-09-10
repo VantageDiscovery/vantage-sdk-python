@@ -61,9 +61,9 @@ class ExternalKey(BaseModel):
         if value is None:
             return value
 
-        if value not in ('OpenAI', 'Hugging'):
+        if value not in ('OpenAI', 'Hugging', 'Anthropic'):
             raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging')"
+                "must be one of enum values ('OpenAI', 'Hugging', 'Anthropic')"
             )
         return value
 

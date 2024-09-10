@@ -131,6 +131,15 @@ from vantage_sdk.core.http.models.shopping_assistant_read_only import (
 from vantage_sdk.core.http.models.shopping_assistant_result import (
     ShoppingAssistantResult,
 )
+from vantage_sdk.core.http.models.total_count_response import (
+    TotalCountResponse,
+)
+from vantage_sdk.core.http.models.total_counts_options import (
+    TotalCountsOptions,
+)
+from vantage_sdk.core.http.models.total_counts_options_total_counts import (
+    TotalCountsOptionsTotalCounts,
+)
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
 from vantage_sdk.core.http.models.vantage_vibe import VantageVibe
 from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage

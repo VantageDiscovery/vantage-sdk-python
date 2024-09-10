@@ -20,7 +20,11 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel
+
+from vantage_sdk.core.http.models.total_counts_options_total_counts import (
+    TotalCountsOptionsTotalCounts,
+)
 
 
 try:
@@ -29,27 +33,13 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ExternalKeyModifiable(BaseModel):
+class TotalCountsOptions(BaseModel):
     """
-    ExternalKeyModifiable
+    TotalCountsOptions
     """  # noqa: E501
 
-    llm_provider: Optional[StrictStr] = None
-    llm_secret: Optional[StrictStr] = None
-    state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["llm_provider", "llm_secret", "state"]
-
-    @field_validator('llm_provider')
-    def llm_provider_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('OpenAI', 'Hugging', 'Anthropic'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging', 'Anthropic')"
-            )
-        return value
+    total_counts: Optional[TotalCountsOptionsTotalCounts] = None
+    __properties: ClassVar[List[str]] = ["total_counts"]
 
     model_config = {
         "populate_by_name": True,
@@ -68,7 +58,7 @@ class ExternalKeyModifiable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ExternalKeyModifiable from a JSON string"""
+        """Create an instance of TotalCountsOptions from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,11 +76,14 @@ class ExternalKeyModifiable(BaseModel):
             exclude={},
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of total_counts
+        if self.total_counts:
+            _dict['total_counts'] = self.total_counts.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ExternalKeyModifiable from a dict"""
+        """Create an instance of TotalCountsOptions from a dict"""
         if obj is None:
             return None
 
@@ -99,9 +92,11 @@ class ExternalKeyModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "state": obj.get("state"),
+                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
+                    obj.get("total_counts")
+                )
+                if obj.get("total_counts") is not None
+                else None
             }
         )
         return _obj

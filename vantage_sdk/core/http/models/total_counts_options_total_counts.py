@@ -18,9 +18,9 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel, StrictFloat, StrictInt
 
 
 try:
@@ -29,27 +29,17 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ExternalKeyModifiable(BaseModel):
+class TotalCountsOptionsTotalCounts(BaseModel):
     """
-    ExternalKeyModifiable
+    TotalCountsOptionsTotalCounts
     """  # noqa: E501
 
-    llm_provider: Optional[StrictStr] = None
-    llm_secret: Optional[StrictStr] = None
-    state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["llm_provider", "llm_secret", "state"]
-
-    @field_validator('llm_provider')
-    def llm_provider_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('OpenAI', 'Hugging', 'Anthropic'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging', 'Anthropic')"
-            )
-        return value
+    min_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None
+    max_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = [
+        "min_score_threshold",
+        "max_score_threshold",
+    ]
 
     model_config = {
         "populate_by_name": True,
@@ -68,7 +58,7 @@ class ExternalKeyModifiable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ExternalKeyModifiable from a JSON string"""
+        """Create an instance of TotalCountsOptionsTotalCounts from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -90,7 +80,7 @@ class ExternalKeyModifiable(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ExternalKeyModifiable from a dict"""
+        """Create an instance of TotalCountsOptionsTotalCounts from a dict"""
         if obj is None:
             return None
 
@@ -99,9 +89,8 @@ class ExternalKeyModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "state": obj.get("state"),
+                "min_score_threshold": obj.get("min_score_threshold"),
+                "max_score_threshold": obj.get("max_score_threshold"),
             }
         )
         return _obj
