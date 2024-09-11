@@ -131,9 +131,7 @@ from vantage_sdk.core.http.models.shopping_assistant_read_only import (
 from vantage_sdk.core.http.models.shopping_assistant_result import (
     ShoppingAssistantResult,
 )
-from vantage_sdk.core.http.models.total_count_response import (
-    TotalCountResponse,
-)
+from vantage_sdk.core.http.models.total_count_result import TotalCountResult
 from vantage_sdk.core.http.models.total_counts_options import (
     TotalCountsOptions,
 )

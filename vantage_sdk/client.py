@@ -50,6 +50,7 @@ from vantage_sdk.core.http.models import (
     ShoppingAssistantModifiable,
     ShoppingAssistantQuery,
     ShoppingAssistantResult,
+    TotalCountResult,
     VantageVibe,
     VantageVibeImage,
     VantageVibeModifiable,
@@ -83,6 +84,7 @@ from vantage_sdk.model.keys import (
     VantageAPIKey,
 )
 from vantage_sdk.model.search import (
+    ApproximateResultsCountResult,
     Facet,
     FieldValueWeighting,
     Filter,
@@ -91,6 +93,7 @@ from vantage_sdk.model.search import (
     SearchOptions,
     SearchResult,
     Sort,
+    TotalCountsOptions,
     VantageVibeImageBase64,
     VantageVibeImageUrl,
 )
@@ -1549,6 +1552,7 @@ class VantageClient:
         facets: Optional[List[Facet]] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
+        total_counts: Optional[TotalCountsOptions] = None,
     ) -> SearchResult:
         """
         Performs a search within a specified collection using a text query,
@@ -1587,6 +1591,8 @@ class VantageClient:
             The account ID associated with the search.
             If not provided, the instance's account ID is used.
             Defaults to None.
+        total_counts: Optional[TotalCountsOptions], optional
+            Threshold value of documents similarity score.
 
         Returns
         -------
@@ -1617,6 +1623,9 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            total_counts=(
+                None if total_counts is None else total_counts.model_dump()
+            ),
         )
 
         result = self.search_api.api.semantic_search(
@@ -2118,6 +2127,101 @@ class VantageClient:
         )
 
         return ShoppingAssistantResult.model_validate(result.model_dump())
+
+    def approximate_results_count_search(
+        self,
+        text: str,
+        collection_id: str,
+        total_counts: TotalCountsOptions,
+        accuracy: Optional[float] = None,
+        pagination: Optional[Pagination] = None,
+        filter: Optional[Filter] = None,
+        sort: Optional[Sort] = None,
+        field_value_weighting: Optional[FieldValueWeighting] = None,
+        facets: Optional[List[Facet]] = None,
+        vantage_api_key: Optional[str] = None,
+        account_id: Optional[str] = None,
+    ) -> ApproximateResultsCountResult:
+        """
+        Performs a search within a specified collection using a text query,
+        with optional parameters for accuracy, pagination, and a boolean filter for refined
+        search criteria.
+
+        Parameters
+        ----------
+        text : str
+            The text query for the semantic search.
+        collection_id : str
+            The ID of the collection to search within.
+        accuracy : Optional[float], optional
+            The accuracy threshold for the search.
+            Defaults to None.
+        pagination: Optional[Pagination], optional
+            Pagination settings for the search results.
+            Defaults to None,
+        filter: Optional[Filter], optional
+            Filter settings to narrow down the search results.
+            Defaults to None,
+        sort: Optional[Sort], optional
+            Sorting settings for the search results.
+            Defaults to None,
+        field_value_weighting: Optional[FieldValueWeighting], optional
+            Weighting settings for specific field values in the search.
+            Defaults to None,
+        facets: Optional[List[Facet]], optional
+            Array of objects defining specific attributes of the data.
+            Defaults to None.,
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+        total_counts: Optional[TotalCountsOptions], optional
+            Threshold value of documents similarity score.
+
+        Returns
+        -------
+        SearchResult
+            An object containing the search results.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
+        """
+
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        search_properties = self._prepare_search_query(
+            accuracy=accuracy,
+            pagination=pagination,
+            filter=filter,
+            sort=sort,
+            field_value_weighting=field_value_weighting,
+            facets=facets,
+        )
+
+        query = SemanticSearchQuery(
+            text=text,
+            collection=search_properties.collection,
+            filter=search_properties.filter,
+            pagination=search_properties.pagination,
+            sort=search_properties.sort,
+            field_value_weighting=search_properties.field_value_weighting,
+            facets=search_properties.facets,
+            total_counts=total_counts.model_dump(),
+        )
+
+        result = self.search_api.api.approximate_results_count_search(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            semantic_search_query=query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+        return TotalCountResult.model_validate(result.model_dump())
 
     # endregion
 

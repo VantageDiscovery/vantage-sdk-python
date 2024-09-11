@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage Management API
+    Vantage API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,11 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel
-
-from vantage_sdk.core.http.models.total_counts_options_total_counts import (
-    TotalCountsOptionsTotalCounts,
-)
+from pydantic import BaseModel, StrictInt
 
 
 try:
@@ -33,13 +29,13 @@ except ImportError:
     from typing_extensions import Self
 
 
-class TotalCountsOptions(BaseModel):
+class TotalCountResult(BaseModel):
     """
-    TotalCountsOptions
+    TotalCountResult
     """  # noqa: E501
 
-    total_counts: Optional[TotalCountsOptionsTotalCounts] = None
-    __properties: ClassVar[List[str]] = ["total_counts"]
+    total_count: Optional[StrictInt] = None
+    __properties: ClassVar[List[str]] = ["total_count"]
 
     model_config = {
         "populate_by_name": True,
@@ -58,7 +54,7 @@ class TotalCountsOptions(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TotalCountsOptions from a JSON string"""
+        """Create an instance of TotalCountResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,29 +72,16 @@ class TotalCountsOptions(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of total_counts
-        if self.total_counts:
-            _dict['total_counts'] = self.total_counts.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of TotalCountsOptions from a dict"""
+        """Create an instance of TotalCountResult from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "total_counts": (
-                    TotalCountsOptionsTotalCounts.from_dict(
-                        obj.get("total_counts")
-                    )
-                    if obj.get("total_counts") is not None
-                    else None
-                )
-            }
-        )
+        _obj = cls.model_validate({"total_count": obj.get("total_count")})
         return _obj
