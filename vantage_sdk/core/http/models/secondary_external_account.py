@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,34 +14,26 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import BaseModel, Field, StrictStr, field_validator
-
-
+from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import Field
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class SecondaryExternalAccount(BaseModel):
     """
     SecondaryExternalAccount
-    """  # noqa: E501
-
-    external_account_id: Optional[StrictStr] = Field(
-        default=None, description="The external key ID"
-    )
+    """ # noqa: E501
+    external_account_id: Optional[StrictStr] = Field(default=None, description="The external key ID")
     external_type: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "external_account_id",
-        "external_type",
-    ]
+    __properties: ClassVar[List[str]] = ["external_account_id", "external_type"]
 
     @field_validator('external_type')
     def external_type_validate_enum(cls, value):
@@ -50,9 +42,7 @@ class SecondaryExternalAccount(BaseModel):
             return value
 
         if value not in ('index', 'search', 'both'):
-            raise ValueError(
-                "must be one of enum values ('index', 'search', 'both')"
-            )
+            raise ValueError("must be one of enum values ('index', 'search', 'both')")
         return value
 
     model_config = {
@@ -60,6 +50,7 @@ class SecondaryExternalAccount(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -87,7 +78,8 @@ class SecondaryExternalAccount(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         return _dict
@@ -101,10 +93,10 @@ class SecondaryExternalAccount(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "external_account_id": obj.get("external_account_id"),
-                "external_type": obj.get("external_type"),
-            }
-        )
+        _obj = cls.model_validate({
+            "external_account_id": obj.get("external_account_id"),
+            "external_type": obj.get("external_type")
+        })
         return _obj
+
+

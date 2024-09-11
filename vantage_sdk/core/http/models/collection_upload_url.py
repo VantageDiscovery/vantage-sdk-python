@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,36 +14,27 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
 from pydantic import BaseModel, StrictStr, field_validator
-
-
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class CollectionUploadURL(BaseModel):
     """
     CollectionUploadURL
-    """  # noqa: E501
-
+    """ # noqa: E501
     collection_id: Optional[StrictStr] = None
     customer_batch_identifier: Optional[StrictStr] = None
     upload_url_type: Optional[StrictStr] = None
     upload_url: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "collection_id",
-        "customer_batch_identifier",
-        "upload_url_type",
-        "upload_url",
-    ]
+    __properties: ClassVar[List[str]] = ["collection_id", "customer_batch_identifier", "upload_url_type", "upload_url"]
 
     @field_validator('upload_url_type')
     def upload_url_type_validate_enum(cls, value):
@@ -60,6 +51,7 @@ class CollectionUploadURL(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -104,14 +96,12 @@ class CollectionUploadURL(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "collection_id": obj.get("collection_id"),
-                "customer_batch_identifier": obj.get(
-                    "customer_batch_identifier"
-                ),
-                "upload_url_type": obj.get("upload_url_type"),
-                "upload_url": obj.get("upload_url"),
-            }
-        )
+        _obj = cls.model_validate({
+            "collection_id": obj.get("collection_id"),
+            "customer_batch_identifier": obj.get("customer_batch_identifier"),
+            "upload_url_type": obj.get("upload_url_type"),
+            "upload_url": obj.get("upload_url")
+        })
         return _obj
+
+

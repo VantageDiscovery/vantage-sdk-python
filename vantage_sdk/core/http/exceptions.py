@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -16,16 +16,14 @@ from typing import Any, Optional
 
 from typing_extensions import Self
 
-
 class OpenApiException(Exception):
     """The base exception class for all OpenAPIExceptions"""
 
 
 class ApiTypeError(OpenApiException, TypeError):
-    def __init__(
-        self, msg, path_to_item=None, valid_classes=None, key_type=None
-    ) -> None:
-        """Raises an exception for TypeErrors
+    def __init__(self, msg, path_to_item=None, valid_classes=None,
+                 key_type=None) -> None:
+        """ Raises an exception for TypeErrors
 
         Args:
             msg (str): the exception message
@@ -106,10 +104,11 @@ class ApiKeyError(OpenApiException, KeyError):
 
 
 class ApiException(OpenApiException):
+
     def __init__(
-        self,
-        status=None,
-        reason=None,
+        self, 
+        status=None, 
+        reason=None, 
         http_resp=None,
         *,
         body: Optional[str] = None,
@@ -135,21 +134,17 @@ class ApiException(OpenApiException):
 
     @classmethod
     def from_response(
-        cls,
-        *,
-        http_resp,
-        body: Optional[str],
+        cls, 
+        *, 
+        http_resp, 
+        body: Optional[str], 
         data: Optional[Any],
     ) -> Self:
         if http_resp.status == 400:
-            raise BadRequestException(
-                http_resp=http_resp, body=body, data=data
-            )
+            raise BadRequestException(http_resp=http_resp, body=body, data=data)
 
         if http_resp.status == 401:
-            raise UnauthorizedException(
-                http_resp=http_resp, body=body, data=data
-            )
+            raise UnauthorizedException(http_resp=http_resp, body=body, data=data)
 
         if http_resp.status == 403:
             raise ForbiddenException(http_resp=http_resp, body=body, data=data)
@@ -163,18 +158,14 @@ class ApiException(OpenApiException):
 
     def __str__(self):
         """Custom error messages for exception"""
-        error_message = "({0})\n" "Reason: {1}\n".format(
-            self.status, self.reason
-        )
+        error_message = "({0})\n"\
+                        "Reason: {1}\n".format(self.status, self.reason)
         if self.headers:
             error_message += "HTTP response headers: {0}\n".format(
-                self.headers
-            )
+                self.headers)
 
         if self.data or self.body:
-            error_message += "HTTP response body: {0}\n".format(
-                self.data or self.body
-            )
+            error_message += "HTTP response body: {0}\n".format(self.data or self.body)
 
         return error_message
 

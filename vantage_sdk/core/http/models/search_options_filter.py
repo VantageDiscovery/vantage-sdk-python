@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,26 +14,22 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
 from pydantic import BaseModel, StrictStr
-
-
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class SearchOptionsFilter(BaseModel):
     """
     SearchOptionsFilter
-    """  # noqa: E501
-
+    """ # noqa: E501
     boolean_filter: Optional[StrictStr] = None
     variant_filter: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
@@ -43,6 +39,7 @@ class SearchOptionsFilter(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -70,7 +67,8 @@ class SearchOptionsFilter(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         return _dict
@@ -84,10 +82,10 @@ class SearchOptionsFilter(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "boolean_filter": obj.get("boolean_filter"),
-                "variant_filter": obj.get("variant_filter"),
-            }
-        )
+        _obj = cls.model_validate({
+            "boolean_filter": obj.get("boolean_filter"),
+            "variant_filter": obj.get("variant_filter")
+        })
         return _obj
+
+

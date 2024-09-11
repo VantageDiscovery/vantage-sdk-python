@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,26 +14,22 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
 from pydantic import BaseModel, StrictStr, field_validator
-
-
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class ExternalKeyModifiable(BaseModel):
     """
     ExternalKeyModifiable
-    """  # noqa: E501
-
+    """ # noqa: E501
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
@@ -46,9 +42,7 @@ class ExternalKeyModifiable(BaseModel):
             return value
 
         if value not in ('OpenAI', 'Hugging', 'Anthropic'):
-            raise ValueError(
-                "must be one of enum values ('OpenAI', 'Hugging', 'Anthropic')"
-            )
+            raise ValueError("must be one of enum values ('OpenAI', 'Hugging', 'Anthropic')")
         return value
 
     model_config = {
@@ -56,6 +50,7 @@ class ExternalKeyModifiable(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -83,7 +78,8 @@ class ExternalKeyModifiable(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         return _dict
@@ -97,11 +93,11 @@ class ExternalKeyModifiable(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "state": obj.get("state"),
-            }
-        )
+        _obj = cls.model_validate({
+            "llm_provider": obj.get("llm_provider"),
+            "llm_secret": obj.get("llm_secret"),
+            "state": obj.get("state")
+        })
         return _obj
+
+

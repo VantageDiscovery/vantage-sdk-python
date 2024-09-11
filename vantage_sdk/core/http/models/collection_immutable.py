@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,58 +14,31 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional
-
-from pydantic import (
-    BaseModel,
-    Field,
-    StrictBool,
-    StrictInt,
-    StrictStr,
-    field_validator,
-)
-
-
+from pydantic import BaseModel, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import Field
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class CollectionImmutable(BaseModel):
     """
     CollectionImmutable
-    """  # noqa: E501
-
-    collection_id: Optional[StrictStr] = Field(
-        default=None,
-        description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\"",
-    )
-    user_provided_embeddings: Optional[StrictBool] = Field(
-        default=False,
-        description="Ignore llm field will provide own embeddings for both ingest and search",
-    )
+    """ # noqa: E501
+    collection_id: Optional[StrictStr] = Field(default=None, description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\"")
+    user_provided_embeddings: Optional[StrictBool] = Field(default=False, description="Ignore llm field will provide own embeddings for both ingest and search")
     llm: Optional[StrictStr] = None
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     external_url: Optional[StrictStr] = None
-    embeddings_dimension: Optional[StrictInt] = Field(
-        default=None,
-        description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.",
-    )
-    __properties: ClassVar[List[str]] = [
-        "collection_id",
-        "user_provided_embeddings",
-        "llm",
-        "llm_provider",
-        "llm_secret",
-        "external_url",
-        "embeddings_dimension",
-    ]
+    embeddings_dimension: Optional[StrictInt] = Field(default=None, description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.")
+    __properties: ClassVar[List[str]] = ["collection_id", "user_provided_embeddings", "llm", "llm_provider", "llm_secret", "external_url", "embeddings_dimension"]
 
     @field_validator('llm_provider')
     def llm_provider_validate_enum(cls, value):
@@ -74,9 +47,7 @@ class CollectionImmutable(BaseModel):
             return value
 
         if value not in ('Hugging', 'OpenAI'):
-            raise ValueError(
-                "must be one of enum values ('Hugging', 'OpenAI')"
-            )
+            raise ValueError("must be one of enum values ('Hugging', 'OpenAI')")
         return value
 
     model_config = {
@@ -84,6 +55,7 @@ class CollectionImmutable(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -111,7 +83,8 @@ class CollectionImmutable(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         return _dict
@@ -125,17 +98,15 @@ class CollectionImmutable(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": obj.get("user_provided_embeddings")
-                if obj.get("user_provided_embeddings") is not None
-                else False,
-                "llm": obj.get("llm"),
-                "llm_provider": obj.get("llm_provider"),
-                "llm_secret": obj.get("llm_secret"),
-                "external_url": obj.get("external_url"),
-                "embeddings_dimension": obj.get("embeddings_dimension"),
-            }
-        )
+        _obj = cls.model_validate({
+            "collection_id": obj.get("collection_id"),
+            "user_provided_embeddings": obj.get("user_provided_embeddings") if obj.get("user_provided_embeddings") is not None else False,
+            "llm": obj.get("llm"),
+            "llm_provider": obj.get("llm_provider"),
+            "llm_secret": obj.get("llm_secret"),
+            "external_url": obj.get("external_url"),
+            "embeddings_dimension": obj.get("embeddings_dimension")
+        })
         return _obj
+
+

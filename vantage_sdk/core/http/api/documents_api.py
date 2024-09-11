@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -15,20 +15,21 @@
 
 import io
 import warnings
-from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
-
+from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
+from typing import Dict, List, Optional, Tuple, Union, Any
 
 try:
     from typing import Annotated
 except ImportError:
     from typing_extensions import Annotated
 
+from pydantic import Field
+from typing_extensions import Annotated
+from pydantic import StrictStr
+
 from typing import Optional
 
-from pydantic import Field, StrictStr
-from typing_extensions import Annotated
 
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
@@ -47,33 +48,21 @@ class DocumentsApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
+
     @validate_call
     def upload_documents(
         self,
         account_id: Annotated[StrictStr, Field(description="The account id")],
-        collection_id: Annotated[
-            StrictStr,
-            Field(description="The collection to upload these documents into"),
-        ],
-        body: Annotated[
-            StrictStr,
-            Field(
-                description="JSONL data, in vantage format, to upload to collection"
-            ),
-        ],
-        customer_batch_identifier: Annotated[
-            Optional[StrictStr],
-            Field(
-                description="If you have an identifier for this group of records in your system."
-            ),
-        ] = None,
+        collection_id: Annotated[StrictStr, Field(description="The collection to upload these documents into")],
+        body: Annotated[StrictStr, Field(description="JSONL data, in vantage format, to upload to collection")],
+        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="If you have an identifier for this group of records in your system.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)],
-            ],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -112,7 +101,7 @@ class DocumentsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """  # noqa: E501
+        """ # noqa: E501
 
         _param = self._upload_documents_serialize(
             account_id=account_id,
@@ -122,7 +111,7 @@ class DocumentsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index,
+            _host_index=_host_index
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -130,7 +119,8 @@ class DocumentsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param, _request_timeout=_request_timeout
+            *_param,
+            _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -138,33 +128,21 @@ class DocumentsApi:
             response_types_map=_response_types_map,
         ).data
 
+
     @validate_call
     def upload_documents_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="The account id")],
-        collection_id: Annotated[
-            StrictStr,
-            Field(description="The collection to upload these documents into"),
-        ],
-        body: Annotated[
-            StrictStr,
-            Field(
-                description="JSONL data, in vantage format, to upload to collection"
-            ),
-        ],
-        customer_batch_identifier: Annotated[
-            Optional[StrictStr],
-            Field(
-                description="If you have an identifier for this group of records in your system."
-            ),
-        ] = None,
+        collection_id: Annotated[StrictStr, Field(description="The collection to upload these documents into")],
+        body: Annotated[StrictStr, Field(description="JSONL data, in vantage format, to upload to collection")],
+        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="If you have an identifier for this group of records in your system.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)],
-            ],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -203,7 +181,7 @@ class DocumentsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """  # noqa: E501
+        """ # noqa: E501
 
         _param = self._upload_documents_serialize(
             account_id=account_id,
@@ -213,7 +191,7 @@ class DocumentsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index,
+            _host_index=_host_index
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -221,7 +199,8 @@ class DocumentsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param, _request_timeout=_request_timeout
+            *_param,
+            _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -229,33 +208,21 @@ class DocumentsApi:
             response_types_map=_response_types_map,
         )
 
+
     @validate_call
     def upload_documents_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="The account id")],
-        collection_id: Annotated[
-            StrictStr,
-            Field(description="The collection to upload these documents into"),
-        ],
-        body: Annotated[
-            StrictStr,
-            Field(
-                description="JSONL data, in vantage format, to upload to collection"
-            ),
-        ],
-        customer_batch_identifier: Annotated[
-            Optional[StrictStr],
-            Field(
-                description="If you have an identifier for this group of records in your system."
-            ),
-        ] = None,
+        collection_id: Annotated[StrictStr, Field(description="The collection to upload these documents into")],
+        body: Annotated[StrictStr, Field(description="JSONL data, in vantage format, to upload to collection")],
+        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="If you have an identifier for this group of records in your system.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)],
-            ],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -294,7 +261,7 @@ class DocumentsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """  # noqa: E501
+        """ # noqa: E501
 
         _param = self._upload_documents_serialize(
             account_id=account_id,
@@ -304,7 +271,7 @@ class DocumentsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index,
+            _host_index=_host_index
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -312,9 +279,11 @@ class DocumentsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param, _request_timeout=_request_timeout
+            *_param,
+            _request_timeout=_request_timeout
         )
         return response_data.response
+
 
     def _upload_documents_serialize(
         self,
@@ -327,9 +296,11 @@ class DocumentsApi:
         _headers,
         _host_index,
     ) -> Tuple:
+
         _host = None
 
-        _collection_formats: Dict[str, str] = {}
+        _collection_formats: Dict[str, str] = {
+        }
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -345,28 +316,35 @@ class DocumentsApi:
             _path_params['collection_id'] = collection_id
         # process the query parameters
         if customer_batch_identifier is not None:
-            _query_params.append(
-                ('customer_batch_identifier', customer_batch_identifier)
-            )
-
+            
+            _query_params.append(('customer_batch_identifier', customer_batch_identifier))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
         if body is not None:
             _body_params = body
 
+
+
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = self.api_client.select_header_content_type(
-                ['text/plain']
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'text/plain'
+                    ]
+                )
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = ['BearerAuth']
+        _auth_settings: List[str] = [
+            'BearerAuth'
+        ]
 
         return self.api_client.param_serialize(
             method='POST',
@@ -380,5 +358,7 @@ class DocumentsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth,
+            _request_auth=_request_auth
         )
+
+

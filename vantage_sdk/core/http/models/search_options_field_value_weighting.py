@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -14,46 +14,27 @@
 
 
 from __future__ import annotations
-
-import json
 import pprint
 import re  # noqa: F401
+import json
+
+
 from typing import Any, ClassVar, Dict, List, Optional, Union
-
-from pydantic import (
-    BaseModel,
-    StrictFloat,
-    StrictInt,
-    StrictStr,
-    field_validator,
-)
-
-from vantage_sdk.core.http.models.weighted_field_values import (
-    WeightedFieldValues,
-)
-
-
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr, field_validator
+from vantage_sdk.core.http.models.weighted_field_values import WeightedFieldValues
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
-
 class SearchOptionsFieldValueWeighting(BaseModel):
     """
     SearchOptionsFieldValueWeighting
-    """  # noqa: E501
-
-    query_key_word_max_overall_weight: Optional[
-        Union[StrictFloat, StrictInt]
-    ] = None
+    """ # noqa: E501
+    query_key_word_max_overall_weight: Optional[Union[StrictFloat, StrictInt]] = None
     query_key_word_weighting_mode: Optional[StrictStr] = None
     weighted_field_values: Optional[List[WeightedFieldValues]] = None
-    __properties: ClassVar[List[str]] = [
-        "query_key_word_max_overall_weight",
-        "query_key_word_weighting_mode",
-        "weighted_field_values",
-    ]
+    __properties: ClassVar[List[str]] = ["query_key_word_max_overall_weight", "query_key_word_weighting_mode", "weighted_field_values"]
 
     @field_validator('query_key_word_weighting_mode')
     def query_key_word_weighting_mode_validate_enum(cls, value):
@@ -62,9 +43,7 @@ class SearchOptionsFieldValueWeighting(BaseModel):
             return value
 
         if value not in ('none', 'uniform', 'weighted'):
-            raise ValueError(
-                "must be one of enum values ('none', 'uniform', 'weighted')"
-            )
+            raise ValueError("must be one of enum values ('none', 'uniform', 'weighted')")
         return value
 
     model_config = {
@@ -72,6 +51,7 @@ class SearchOptionsFieldValueWeighting(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
+
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -99,7 +79,8 @@ class SearchOptionsFieldValueWeighting(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+            },
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in weighted_field_values (list)
@@ -120,20 +101,11 @@ class SearchOptionsFieldValueWeighting(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "query_key_word_max_overall_weight": obj.get(
-                    "query_key_word_max_overall_weight"
-                ),
-                "query_key_word_weighting_mode": obj.get(
-                    "query_key_word_weighting_mode"
-                ),
-                "weighted_field_values": [
-                    WeightedFieldValues.from_dict(_item)
-                    for _item in obj.get("weighted_field_values")
-                ]
-                if obj.get("weighted_field_values") is not None
-                else None,
-            }
-        )
+        _obj = cls.model_validate({
+            "query_key_word_max_overall_weight": obj.get("query_key_word_max_overall_weight"),
+            "query_key_word_weighting_mode": obj.get("query_key_word_weighting_mode"),
+            "weighted_field_values": [WeightedFieldValues.from_dict(_item) for _item in obj.get("weighted_field_values")] if obj.get("weighted_field_values") is not None else None
+        })
         return _obj
+
+
