@@ -14,29 +14,44 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictInt
+
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
-from vantage_sdk.core.http.models.search_options_collection import SearchOptionsCollection
-from vantage_sdk.core.http.models.search_options_facets_inner import SearchOptionsFacetsInner
-from vantage_sdk.core.http.models.search_options_field_value_weighting import SearchOptionsFieldValueWeighting
-from vantage_sdk.core.http.models.search_options_filter import SearchOptionsFilter
-from vantage_sdk.core.http.models.search_options_pagination import SearchOptionsPagination
+from vantage_sdk.core.http.models.search_options_collection import (
+    SearchOptionsCollection,
+)
+from vantage_sdk.core.http.models.search_options_facets_inner import (
+    SearchOptionsFacetsInner,
+)
+from vantage_sdk.core.http.models.search_options_field_value_weighting import (
+    SearchOptionsFieldValueWeighting,
+)
+from vantage_sdk.core.http.models.search_options_filter import (
+    SearchOptionsFilter,
+)
+from vantage_sdk.core.http.models.search_options_pagination import (
+    SearchOptionsPagination,
+)
 from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class MoreLikeTheseQuery(BaseModel):
     """
     MoreLikeTheseQuery
-    """ # noqa: E501
+    """  # noqa: E501
+
     these: Optional[List[MLTheseTheseInner]] = None
     collection: Optional[SearchOptionsCollection] = None
     request_id: Optional[StrictInt] = None
@@ -45,14 +60,22 @@ class MoreLikeTheseQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
-    __properties: ClassVar[List[str]] = ["these", "collection", "request_id", "filter", "field_value_weighting", "pagination", "sort", "facets"]
+    __properties: ClassVar[List[str]] = [
+        "these",
+        "collection",
+        "request_id",
+        "filter",
+        "field_value_weighting",
+        "pagination",
+        "sort",
+        "facets",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -80,8 +103,7 @@ class MoreLikeTheseQuery(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in these (list)
@@ -99,7 +121,9 @@ class MoreLikeTheseQuery(BaseModel):
             _dict['filter'] = self.filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of field_value_weighting
         if self.field_value_weighting:
-            _dict['field_value_weighting'] = self.field_value_weighting.to_dict()
+            _dict[
+                'field_value_weighting'
+            ] = self.field_value_weighting.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
@@ -124,16 +148,42 @@ class MoreLikeTheseQuery(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "these": [MLTheseTheseInner.from_dict(_item) for _item in obj.get("these")] if obj.get("these") is not None else None,
-            "collection": SearchOptionsCollection.from_dict(obj.get("collection")) if obj.get("collection") is not None else None,
-            "request_id": obj.get("request_id"),
-            "filter": SearchOptionsFilter.from_dict(obj.get("filter")) if obj.get("filter") is not None else None,
-            "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(obj.get("field_value_weighting")) if obj.get("field_value_weighting") is not None else None,
-            "pagination": SearchOptionsPagination.from_dict(obj.get("pagination")) if obj.get("pagination") is not None else None,
-            "sort": SearchOptionsSort.from_dict(obj.get("sort")) if obj.get("sort") is not None else None,
-            "facets": [SearchOptionsFacetsInner.from_dict(_item) for _item in obj.get("facets")] if obj.get("facets") is not None else None
-        })
+        _obj = cls.model_validate(
+            {
+                "these": [
+                    MLTheseTheseInner.from_dict(_item)
+                    for _item in obj.get("these")
+                ]
+                if obj.get("these") is not None
+                else None,
+                "collection": SearchOptionsCollection.from_dict(
+                    obj.get("collection")
+                )
+                if obj.get("collection") is not None
+                else None,
+                "request_id": obj.get("request_id"),
+                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
+                if obj.get("filter") is not None
+                else None,
+                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
+                    obj.get("field_value_weighting")
+                )
+                if obj.get("field_value_weighting") is not None
+                else None,
+                "pagination": SearchOptionsPagination.from_dict(
+                    obj.get("pagination")
+                )
+                if obj.get("pagination") is not None
+                else None,
+                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
+                if obj.get("sort") is not None
+                else None,
+                "facets": [
+                    SearchOptionsFacetsInner.from_dict(_item)
+                    for _item in obj.get("facets")
+                ]
+                if obj.get("facets") is not None
+                else None,
+            }
+        )
         return _obj
-
-

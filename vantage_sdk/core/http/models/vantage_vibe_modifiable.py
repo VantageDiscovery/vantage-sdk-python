@@ -14,33 +14,40 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class VantageVibeModifiable(BaseModel):
     """
     VantageVibeModifiable
-    """ # noqa: E501
+    """  # noqa: E501
+
     llm_model_name: Optional[StrictStr] = None
     name: Optional[StrictStr] = None
     external_account_id: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["llm_model_name", "name", "external_account_id"]
+    __properties: ClassVar[List[str]] = [
+        "llm_model_name",
+        "name",
+        "external_account_id",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -68,8 +75,7 @@ class VantageVibeModifiable(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,11 +89,11 @@ class VantageVibeModifiable(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "llm_model_name": obj.get("llm_model_name"),
-            "name": obj.get("name"),
-            "external_account_id": obj.get("external_account_id")
-        })
+        _obj = cls.model_validate(
+            {
+                "llm_model_name": obj.get("llm_model_name"),
+                "name": obj.get("name"),
+                "external_account_id": obj.get("external_account_id"),
+            }
+        )
         return _obj
-
-

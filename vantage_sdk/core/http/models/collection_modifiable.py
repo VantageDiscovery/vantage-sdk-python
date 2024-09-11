@@ -14,35 +14,49 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
-from vantage_sdk.core.http.models.secondary_external_account import SecondaryExternalAccount
+
+from pydantic import BaseModel, Field, StrictStr
+
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
+)
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class CollectionModifiable(BaseModel):
     """
     CollectionModifiable
-    """ # noqa: E501
-    external_key_id: Optional[StrictStr] = Field(default=None, description="The external key, for the llm_provider to use for the collection")
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = None
+    """  # noqa: E501
+
+    external_key_id: Optional[StrictStr] = Field(
+        default=None,
+        description="The external key, for the llm_provider to use for the collection",
+    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
     collection_name: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["external_key_id", "secondary_external_accounts", "collection_name"]
+    __properties: ClassVar[List[str]] = [
+        "external_key_id",
+        "secondary_external_accounts",
+        "collection_name",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -70,8 +84,7 @@ class CollectionModifiable(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in secondary_external_accounts (list)
@@ -92,11 +105,16 @@ class CollectionModifiable(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "external_key_id": obj.get("external_key_id"),
-            "secondary_external_accounts": [SecondaryExternalAccount.from_dict(_item) for _item in obj.get("secondary_external_accounts")] if obj.get("secondary_external_accounts") is not None else None,
-            "collection_name": obj.get("collection_name")
-        })
+        _obj = cls.model_validate(
+            {
+                "external_key_id": obj.get("external_key_id"),
+                "secondary_external_accounts": [
+                    SecondaryExternalAccount.from_dict(_item)
+                    for _item in obj.get("secondary_external_accounts")
+                ]
+                if obj.get("secondary_external_accounts") is not None
+                else None,
+                "collection_name": obj.get("collection_name"),
+            }
+        )
         return _obj
-
-

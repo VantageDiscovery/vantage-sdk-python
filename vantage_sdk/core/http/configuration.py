@@ -14,18 +14,27 @@
 
 
 import copy
+import http.client as httplib
 import logging
 import multiprocessing
 import sys
+
 import urllib3
 
-import http.client as httplib
 
 JSON_SCHEMA_VALIDATION_KEYWORDS = {
-    'multipleOf', 'maximum', 'exclusiveMaximum',
-    'minimum', 'exclusiveMinimum', 'maxLength',
-    'minLength', 'pattern', 'maxItems', 'minItems'
+    'multipleOf',
+    'maximum',
+    'exclusiveMaximum',
+    'minimum',
+    'exclusiveMinimum',
+    'maxLength',
+    'minLength',
+    'pattern',
+    'maxItems',
+    'minItems',
 }
+
 
 class Configuration:
     """This class contains various settings of the API client.
@@ -59,20 +68,27 @@ class Configuration:
 
     _default = None
 
-    def __init__(self, host=None,
-                 api_key=None, api_key_prefix=None,
-                 username=None, password=None,
-                 access_token=None,
-                 server_index=None, server_variables=None,
-                 server_operation_index=None, server_operation_variables=None,
-                 ssl_ca_cert=None,
-                 ) -> None:
-        """Constructor
-        """
+    def __init__(
+        self,
+        host=None,
+        api_key=None,
+        api_key_prefix=None,
+        username=None,
+        password=None,
+        access_token=None,
+        server_index=None,
+        server_variables=None,
+        server_operation_index=None,
+        server_operation_variables=None,
+        ssl_ca_cert=None,
+    ) -> None:
+        """Constructor"""
         self._base_path = "https://api.vanta.ge/v1" if host is None else host
         """Default Base url
         """
-        self.server_index = 0 if server_index is None and host is None else server_index
+        self.server_index = (
+            0 if server_index is None and host is None else server_index
+        )
         self.server_operation_index = server_operation_index or {}
         """Default server index
         """
@@ -109,7 +125,9 @@ class Configuration:
         self.logger = {}
         """Logging Settings
         """
-        self.logger["package_logger"] = logging.getLogger("vantage_sdk.core.http")
+        self.logger["package_logger"] = logging.getLogger(
+            "vantage_sdk.core.http"
+        )
         self.logger["urllib3_logger"] = logging.getLogger("urllib3")
         self.logger_format = '%(asctime)s %(levelname)s %(message)s'
         """Log format
@@ -330,7 +348,9 @@ class Configuration:
         """
         if self.refresh_api_key_hook is not None:
             self.refresh_api_key_hook(self)
-        key = self.api_key.get(identifier, self.api_key.get(alias) if alias is not None else None)
+        key = self.api_key.get(
+            identifier, self.api_key.get(alias) if alias is not None else None
+        )
         if key:
             prefix = self.api_key_prefix.get(identifier)
             if prefix:
@@ -364,7 +384,7 @@ class Configuration:
                 'type': 'bearer',
                 'in': 'header',
                 'key': 'Authorization',
-                'value': 'Bearer ' + self.access_token
+                'value': 'Bearer ' + self.access_token,
             }
         return auth
 
@@ -373,12 +393,15 @@ class Configuration:
 
         :return: The report for debugging.
         """
-        return "Python SDK Debug Report:\n"\
-               "OS: {env}\n"\
-               "Python Version: {pyversion}\n"\
-               "Version of the API: v1.1.2\n"\
-               "SDK Package Version: 1.0.0".\
-               format(env=sys.platform, pyversion=sys.version)
+        return (
+            "Python SDK Debug Report:\n"
+            "OS: {env}\n"
+            "Python Version: {pyversion}\n"
+            "Version of the API: v1.1.2\n"
+            "SDK Package Version: 1.0.0".format(
+                env=sys.platform, pyversion=sys.version
+            )
+        )
 
     def get_host_settings(self):
         """Gets an array of host settings
@@ -397,7 +420,7 @@ class Configuration:
             {
                 'url': "https://api.demo-b.vantagediscovery.com/v1",
                 'description': "No description provided",
-            }
+            },
         ]
 
     def get_host_from_settings(self, index, variables=None, servers=None):
@@ -418,22 +441,29 @@ class Configuration:
         except IndexError:
             raise ValueError(
                 "Invalid index {0} when selecting the host settings. "
-                "Must be less than {1}".format(index, len(servers)))
+                "Must be less than {1}".format(index, len(servers))
+            )
 
         url = server['url']
 
         # go through variables and replace placeholders
         for variable_name, variable in server.get('variables', {}).items():
             used_value = variables.get(
-                variable_name, variable['default_value'])
+                variable_name, variable['default_value']
+            )
 
-            if 'enum_values' in variable \
-                    and used_value not in variable['enum_values']:
+            if (
+                'enum_values' in variable
+                and used_value not in variable['enum_values']
+            ):
                 raise ValueError(
                     "The variable `{0}` in the host URL has invalid value "
                     "{1}. Must be {2}.".format(
-                        variable_name, variables[variable_name],
-                        variable['enum_values']))
+                        variable_name,
+                        variables[variable_name],
+                        variable['enum_values'],
+                    )
+                )
 
             url = url.replace("{" + variable_name + "}", used_value)
 
@@ -442,7 +472,9 @@ class Configuration:
     @property
     def host(self):
         """Return generated host."""
-        return self.get_host_from_settings(self.server_index, variables=self.server_variables)
+        return self.get_host_from_settings(
+            self.server_index, variables=self.server_variables
+        )
 
     @host.setter
     def host(self, value):

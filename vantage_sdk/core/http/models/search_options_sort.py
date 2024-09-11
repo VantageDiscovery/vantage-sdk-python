@@ -14,22 +14,26 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictStr, field_validator
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class SearchOptionsSort(BaseModel):
     """
     SearchOptionsSort
-    """ # noqa: E501
+    """  # noqa: E501
+
     field: Optional[StrictStr] = None
     order: Optional[StrictStr] = None
     mode: Optional[StrictStr] = None
@@ -52,7 +56,9 @@ class SearchOptionsSort(BaseModel):
             return value
 
         if value not in ('semantic_threshold', 'field_selection'):
-            raise ValueError("must be one of enum values ('semantic_threshold', 'field_selection')")
+            raise ValueError(
+                "must be one of enum values ('semantic_threshold', 'field_selection')"
+            )
         return value
 
     model_config = {
@@ -60,7 +66,6 @@ class SearchOptionsSort(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -88,8 +93,7 @@ class SearchOptionsSort(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -103,11 +107,11 @@ class SearchOptionsSort(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "field": obj.get("field"),
-            "order": obj.get("order"),
-            "mode": obj.get("mode")
-        })
+        _obj = cls.model_validate(
+            {
+                "field": obj.get("field"),
+                "order": obj.get("order"),
+                "mode": obj.get("mode"),
+            }
+        )
         return _obj
-
-

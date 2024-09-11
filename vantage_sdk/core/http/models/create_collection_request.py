@@ -14,35 +14,71 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictBool, StrictInt, StrictStr, field_validator
-from pydantic import Field
-from vantage_sdk.core.http.models.secondary_external_account import SecondaryExternalAccount
+
+from pydantic import (
+    BaseModel,
+    Field,
+    StrictBool,
+    StrictInt,
+    StrictStr,
+    field_validator,
+)
+
+from vantage_sdk.core.http.models.secondary_external_account import (
+    SecondaryExternalAccount,
+)
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class CreateCollectionRequest(BaseModel):
     """
     CreateCollectionRequest
-    """ # noqa: E501
-    collection_id: StrictStr = Field(description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\"")
-    user_provided_embeddings: Optional[StrictBool] = Field(default=False, description="Ignore llm field will provide own embeddings for both ingest and search")
+    """  # noqa: E501
+
+    collection_id: StrictStr = Field(
+        description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\""
+    )
+    user_provided_embeddings: Optional[StrictBool] = Field(
+        default=False,
+        description="Ignore llm field will provide own embeddings for both ingest and search",
+    )
     llm: Optional[StrictStr] = None
     llm_provider: Optional[StrictStr] = None
     llm_secret: Optional[StrictStr] = None
     external_url: Optional[StrictStr] = None
-    embeddings_dimension: StrictInt = Field(description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings.")
-    external_key_id: Optional[StrictStr] = Field(default=None, description="The external key, for the llm_provider to use for the collection")
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = None
+    embeddings_dimension: StrictInt = Field(
+        description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings."
+    )
+    external_key_id: Optional[StrictStr] = Field(
+        default=None,
+        description="The external key, for the llm_provider to use for the collection",
+    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
     collection_name: StrictStr
-    __properties: ClassVar[List[str]] = ["collection_id", "user_provided_embeddings", "llm", "llm_provider", "llm_secret", "external_url", "embeddings_dimension", "external_key_id", "secondary_external_accounts", "collection_name"]
+    __properties: ClassVar[List[str]] = [
+        "collection_id",
+        "user_provided_embeddings",
+        "llm",
+        "llm_provider",
+        "llm_secret",
+        "external_url",
+        "embeddings_dimension",
+        "external_key_id",
+        "secondary_external_accounts",
+        "collection_name",
+    ]
 
     @field_validator('llm_provider')
     def llm_provider_validate_enum(cls, value):
@@ -51,7 +87,9 @@ class CreateCollectionRequest(BaseModel):
             return value
 
         if value not in ('Hugging', 'OpenAI'):
-            raise ValueError("must be one of enum values ('Hugging', 'OpenAI')")
+            raise ValueError(
+                "must be one of enum values ('Hugging', 'OpenAI')"
+            )
         return value
 
     model_config = {
@@ -59,7 +97,6 @@ class CreateCollectionRequest(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -87,8 +124,7 @@ class CreateCollectionRequest(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in secondary_external_accounts (list)
@@ -109,18 +145,25 @@ class CreateCollectionRequest(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "collection_id": obj.get("collection_id"),
-            "user_provided_embeddings": obj.get("user_provided_embeddings") if obj.get("user_provided_embeddings") is not None else False,
-            "llm": obj.get("llm"),
-            "llm_provider": obj.get("llm_provider"),
-            "llm_secret": obj.get("llm_secret"),
-            "external_url": obj.get("external_url"),
-            "embeddings_dimension": obj.get("embeddings_dimension"),
-            "external_key_id": obj.get("external_key_id"),
-            "secondary_external_accounts": [SecondaryExternalAccount.from_dict(_item) for _item in obj.get("secondary_external_accounts")] if obj.get("secondary_external_accounts") is not None else None,
-            "collection_name": obj.get("collection_name")
-        })
+        _obj = cls.model_validate(
+            {
+                "collection_id": obj.get("collection_id"),
+                "user_provided_embeddings": obj.get("user_provided_embeddings")
+                if obj.get("user_provided_embeddings") is not None
+                else False,
+                "llm": obj.get("llm"),
+                "llm_provider": obj.get("llm_provider"),
+                "llm_secret": obj.get("llm_secret"),
+                "external_url": obj.get("external_url"),
+                "embeddings_dimension": obj.get("embeddings_dimension"),
+                "external_key_id": obj.get("external_key_id"),
+                "secondary_external_accounts": [
+                    SecondaryExternalAccount.from_dict(_item)
+                    for _item in obj.get("secondary_external_accounts")
+                ]
+                if obj.get("secondary_external_accounts") is not None
+                else None,
+                "collection_name": obj.get("collection_name"),
+            }
+        )
         return _obj
-
-

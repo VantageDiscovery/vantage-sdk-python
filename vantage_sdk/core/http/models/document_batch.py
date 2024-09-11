@@ -14,24 +14,30 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
-from pydantic import BaseModel, StrictStr
-from pydantic import Field
+
+from pydantic import BaseModel, Field, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class DocumentBatch(BaseModel):
     """
     DocumentBatch
-    """ # noqa: E501
-    customer_batch_identifier: Optional[StrictStr] = Field(default=None, description="The customer provided batch or group identifier.  Could be a file identifier if uploaded via Vantage console")
+    """  # noqa: E501
+
+    customer_batch_identifier: Optional[StrictStr] = Field(
+        default=None,
+        description="The customer provided batch or group identifier.  Could be a file identifier if uploaded via Vantage console",
+    )
     __properties: ClassVar[List[str]] = ["customer_batch_identifier"]
 
     model_config = {
@@ -39,7 +45,6 @@ class DocumentBatch(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -67,8 +72,7 @@ class DocumentBatch(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,9 +86,7 @@ class DocumentBatch(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "customer_batch_identifier": obj.get("customer_batch_identifier")
-        })
+        _obj = cls.model_validate(
+            {"customer_batch_identifier": obj.get("customer_batch_identifier")}
+        )
         return _obj
-
-

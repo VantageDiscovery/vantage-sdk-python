@@ -15,28 +15,33 @@
 
 import io
 import warnings
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
-from typing import Dict, List, Optional, Tuple, Union, Any
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
+
 
 try:
     from typing import Annotated
 except ImportError:
     from typing_extensions import Annotated
 
-from pydantic import Field
-from typing_extensions import Annotated
-from pydantic import StrictInt, StrictStr
-
 from typing import List, Optional
 
-from vantage_sdk.core.http.models.collection import Collection
-from vantage_sdk.core.http.models.collection_modifiable import CollectionModifiable
-from vantage_sdk.core.http.models.collection_upload_url import CollectionUploadURL
-from vantage_sdk.core.http.models.create_collection_request import CreateCollectionRequest
+from pydantic import Field, StrictInt, StrictStr
+from typing_extensions import Annotated
 
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.collection import Collection
+from vantage_sdk.core.http.models.collection_modifiable import (
+    CollectionModifiable,
+)
+from vantage_sdk.core.http.models.collection_upload_url import (
+    CollectionUploadURL,
+)
+from vantage_sdk.core.http.models.create_collection_request import (
+    CreateCollectionRequest,
+)
 from vantage_sdk.core.http.rest import RESTResponseType
 
 
@@ -52,19 +57,26 @@ class CollectionManagementApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
-
     @validate_call
     def create_collection(
         self,
-        account_id: Annotated[StrictStr, Field(description="The account id to create this collection in")],
-        create_collection_request: Annotated[CreateCollectionRequest, Field(description="Configuration required to create Collection.  This is central to Vantage")],
+        account_id: Annotated[
+            StrictStr,
+            Field(description="The account id to create this collection in"),
+        ],
+        create_collection_request: Annotated[
+            CreateCollectionRequest,
+            Field(
+                description="Configuration required to create Collection.  This is central to Vantage"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -99,7 +111,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_collection_serialize(
             account_id=account_id,
@@ -107,7 +119,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -115,8 +127,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -124,19 +135,26 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def create_collection_with_http_info(
         self,
-        account_id: Annotated[StrictStr, Field(description="The account id to create this collection in")],
-        create_collection_request: Annotated[CreateCollectionRequest, Field(description="Configuration required to create Collection.  This is central to Vantage")],
+        account_id: Annotated[
+            StrictStr,
+            Field(description="The account id to create this collection in"),
+        ],
+        create_collection_request: Annotated[
+            CreateCollectionRequest,
+            Field(
+                description="Configuration required to create Collection.  This is central to Vantage"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -171,7 +189,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_collection_serialize(
             account_id=account_id,
@@ -179,7 +197,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -187,8 +205,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -196,19 +213,26 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def create_collection_without_preload_content(
         self,
-        account_id: Annotated[StrictStr, Field(description="The account id to create this collection in")],
-        create_collection_request: Annotated[CreateCollectionRequest, Field(description="Configuration required to create Collection.  This is central to Vantage")],
+        account_id: Annotated[
+            StrictStr,
+            Field(description="The account id to create this collection in"),
+        ],
+        create_collection_request: Annotated[
+            CreateCollectionRequest,
+            Field(
+                description="Configuration required to create Collection.  This is central to Vantage"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -243,7 +267,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_collection_serialize(
             account_id=account_id,
@@ -251,7 +275,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -259,11 +283,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _create_collection_serialize(
         self,
@@ -274,11 +296,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -297,32 +317,23 @@ class CollectionManagementApi:
         if create_collection_request is not None:
             _body_params = create_collection_request
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='POST',
@@ -336,24 +347,31 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def delete_collection(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to deactivate {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to deactivate {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -388,7 +406,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_collection_serialize(
             collection_id=collection_id,
@@ -396,7 +414,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -404,8 +422,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -413,19 +430,28 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def delete_collection_with_http_info(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to deactivate {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to deactivate {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -460,7 +486,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_collection_serialize(
             collection_id=collection_id,
@@ -468,7 +494,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -476,8 +502,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -485,19 +510,28 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def delete_collection_without_preload_content(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to deactivate {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to deactivate {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -532,7 +566,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_collection_serialize(
             collection_id=collection_id,
@@ -540,7 +574,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -548,11 +582,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _delete_collection_serialize(
         self,
@@ -563,11 +595,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -586,13 +616,8 @@ class CollectionManagementApi:
         # process the form parameters
         # process the body parameter
 
-
-
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='DELETE',
@@ -606,26 +631,43 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def get_browser_upload_url(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get an upload link for for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        file_size: Annotated[StrictInt, Field(description="The size of the file, in bytes, to be uploaded at url generated.")],
-        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl.")] = None,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get an upload link for for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        file_size: Annotated[
+            StrictInt,
+            Field(
+                description="The size of the file, in bytes, to be uploaded at url generated."
+            ),
+        ],
+        customer_batch_identifier: Annotated[
+            Optional[StrictStr],
+            Field(
+                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -664,7 +706,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_browser_upload_url_serialize(
             collection_id=collection_id,
@@ -674,7 +716,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -682,8 +724,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -691,21 +732,40 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def get_browser_upload_url_with_http_info(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get an upload link for for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        file_size: Annotated[StrictInt, Field(description="The size of the file, in bytes, to be uploaded at url generated.")],
-        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl.")] = None,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get an upload link for for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        file_size: Annotated[
+            StrictInt,
+            Field(
+                description="The size of the file, in bytes, to be uploaded at url generated."
+            ),
+        ],
+        customer_batch_identifier: Annotated[
+            Optional[StrictStr],
+            Field(
+                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -744,7 +804,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_browser_upload_url_serialize(
             collection_id=collection_id,
@@ -754,7 +814,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -762,8 +822,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -771,21 +830,40 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def get_browser_upload_url_without_preload_content(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get an upload link for for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        file_size: Annotated[StrictInt, Field(description="The size of the file, in bytes, to be uploaded at url generated.")],
-        customer_batch_identifier: Annotated[Optional[StrictStr], Field(description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl.")] = None,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get an upload link for for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        file_size: Annotated[
+            StrictInt,
+            Field(
+                description="The size of the file, in bytes, to be uploaded at url generated."
+            ),
+        ],
+        customer_batch_identifier: Annotated[
+            Optional[StrictStr],
+            Field(
+                description="The filename or batch identifier used to build the URL.  Typically will be the filename used in the browser upload.  If omitted, a guid is generated.  The GUID assumes a parquet format, all JSONL must be sent with customer_batch_identifier ending in .jsonl."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -824,7 +902,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_browser_upload_url_serialize(
             collection_id=collection_id,
@@ -834,7 +912,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -842,11 +920,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _get_browser_upload_url_serialize(
         self,
@@ -859,11 +935,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -879,30 +953,24 @@ class CollectionManagementApi:
             _path_params['account_id'] = account_id
         # process the query parameters
         if file_size is not None:
-            
             _query_params.append(('file_size', file_size))
-            
+
         if customer_batch_identifier is not None:
-            
-            _query_params.append(('customer_batch_identifier', customer_batch_identifier))
-            
+            _query_params.append(
+                ('customer_batch_identifier', customer_batch_identifier)
+            )
+
         # process the header parameters
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -916,24 +984,31 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def get_collection(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get details for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -968,7 +1043,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_collection_serialize(
             collection_id=collection_id,
@@ -976,7 +1051,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -984,8 +1059,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -993,19 +1067,28 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def get_collection_with_http_info(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get details for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1040,7 +1123,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_collection_serialize(
             collection_id=collection_id,
@@ -1048,7 +1131,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1056,8 +1139,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1065,19 +1147,28 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def get_collection_without_preload_content(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to get details for {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="The collection id to get details for {collection_id}"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1112,7 +1203,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_collection_serialize(
             collection_id=collection_id,
@@ -1120,7 +1211,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1128,11 +1219,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _get_collection_serialize(
         self,
@@ -1143,11 +1232,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1166,19 +1253,13 @@ class CollectionManagementApi:
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -1192,11 +1273,8 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def list_collections(
@@ -1207,8 +1285,8 @@ class CollectionManagementApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1241,14 +1319,14 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_collections_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1256,15 +1334,13 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
-
 
     @validate_call
     def list_collections_with_http_info(
@@ -1275,8 +1351,8 @@ class CollectionManagementApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1309,14 +1385,14 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_collections_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1324,15 +1400,13 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
 
     @validate_call
     def list_collections_without_preload_content(
@@ -1343,8 +1417,8 @@ class CollectionManagementApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1377,14 +1451,14 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_collections_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1392,11 +1466,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _list_collections_serialize(
         self,
@@ -1406,11 +1478,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1427,19 +1497,13 @@ class CollectionManagementApi:
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -1453,25 +1517,33 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def update_collection(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to update {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        collection_modifiable: Annotated[CollectionModifiable, Field(description="Configuration required to update Collection.")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(description="The collection id to update {collection_id}"),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        collection_modifiable: Annotated[
+            CollectionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1508,7 +1580,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_collection_serialize(
             collection_id=collection_id,
@@ -1517,7 +1589,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1525,8 +1597,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1534,20 +1605,30 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def update_collection_with_http_info(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to update {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        collection_modifiable: Annotated[CollectionModifiable, Field(description="Configuration required to update Collection.")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(description="The collection id to update {collection_id}"),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        collection_modifiable: Annotated[
+            CollectionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1584,7 +1665,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_collection_serialize(
             collection_id=collection_id,
@@ -1593,7 +1674,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1601,8 +1682,7 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1610,20 +1690,30 @@ class CollectionManagementApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def update_collection_without_preload_content(
         self,
-        collection_id: Annotated[StrictStr, Field(description="The collection id to update {collection_id}")],
-        account_id: Annotated[StrictStr, Field(description="The account id this collection id is located in")],
-        collection_modifiable: Annotated[CollectionModifiable, Field(description="Configuration required to update Collection.")],
+        collection_id: Annotated[
+            StrictStr,
+            Field(description="The collection id to update {collection_id}"),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="The account id this collection id is located in"
+            ),
+        ],
+        collection_modifiable: Annotated[
+            CollectionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1660,7 +1750,7 @@ class CollectionManagementApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_collection_serialize(
             collection_id=collection_id,
@@ -1669,7 +1759,7 @@ class CollectionManagementApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1677,11 +1767,9 @@ class CollectionManagementApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _update_collection_serialize(
         self,
@@ -1693,11 +1781,9 @@ class CollectionManagementApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1718,32 +1804,23 @@ class CollectionManagementApi:
         if collection_modifiable is not None:
             _body_params = collection_modifiable
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='PATCH',
@@ -1757,7 +1834,5 @@ class CollectionManagementApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-

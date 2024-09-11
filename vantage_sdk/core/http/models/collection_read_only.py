@@ -14,26 +14,34 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictStr, field_validator
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class CollectionReadOnly(BaseModel):
     """
     CollectionReadOnly
-    """ # noqa: E501
+    """  # noqa: E501
+
     collection_created_time: Optional[StrictStr] = None
     collection_status: Optional[StrictStr] = None
     collection_state: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["collection_created_time", "collection_status", "collection_state"]
+    __properties: ClassVar[List[str]] = [
+        "collection_created_time",
+        "collection_status",
+        "collection_state",
+    ]
 
     @field_validator('collection_status')
     def collection_status_validate_enum(cls, value):
@@ -41,8 +49,17 @@ class CollectionReadOnly(BaseModel):
         if value is None:
             return value
 
-        if value not in ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty'):
-            raise ValueError("must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')")
+        if value not in (
+            'Pending',
+            'Indexing',
+            'Online',
+            'Degraded',
+            'Offline',
+            'Empty',
+        ):
+            raise ValueError(
+                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')"
+            )
         return value
 
     @field_validator('collection_state')
@@ -52,7 +69,9 @@ class CollectionReadOnly(BaseModel):
             return value
 
         if value not in ('Active', 'Standby', 'Deleted'):
-            raise ValueError("must be one of enum values ('Active', 'Standby', 'Deleted')")
+            raise ValueError(
+                "must be one of enum values ('Active', 'Standby', 'Deleted')"
+            )
         return value
 
     model_config = {
@@ -60,7 +79,6 @@ class CollectionReadOnly(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -109,11 +127,11 @@ class CollectionReadOnly(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "collection_created_time": obj.get("collection_created_time"),
-            "collection_status": obj.get("collection_status"),
-            "collection_state": obj.get("collection_state")
-        })
+        _obj = cls.model_validate(
+            {
+                "collection_created_time": obj.get("collection_created_time"),
+                "collection_status": obj.get("collection_status"),
+                "collection_state": obj.get("collection_state"),
+            }
+        )
         return _obj
-
-

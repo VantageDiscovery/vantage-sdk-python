@@ -14,38 +14,51 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictInt, StrictStr
+
 from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.search_result_results_inner import SearchResultResultsInner
+from vantage_sdk.core.http.models.search_result_results_inner import (
+    SearchResultResultsInner,
+)
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class TotalCountResponse(BaseModel):
     """
     TotalCountResponse
-    """ # noqa: E501
+    """  # noqa: E501
+
     request_id: Optional[StrictInt] = None
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
     results: Optional[List[SearchResultResultsInner]] = None
     facets: Optional[List[FacetResult]] = None
     total_count: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["request_id", "status", "message", "results", "facets", "total_count"]
+    __properties: ClassVar[List[str]] = [
+        "request_id",
+        "status",
+        "message",
+        "results",
+        "facets",
+        "total_count",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -73,8 +86,7 @@ class TotalCountResponse(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in results (list)
@@ -102,14 +114,23 @@ class TotalCountResponse(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "request_id": obj.get("request_id"),
-            "status": obj.get("status"),
-            "message": obj.get("message"),
-            "results": [SearchResultResultsInner.from_dict(_item) for _item in obj.get("results")] if obj.get("results") is not None else None,
-            "facets": [FacetResult.from_dict(_item) for _item in obj.get("facets")] if obj.get("facets") is not None else None,
-            "total_count": obj.get("total_count")
-        })
+        _obj = cls.model_validate(
+            {
+                "request_id": obj.get("request_id"),
+                "status": obj.get("status"),
+                "message": obj.get("message"),
+                "results": [
+                    SearchResultResultsInner.from_dict(_item)
+                    for _item in obj.get("results")
+                ]
+                if obj.get("results") is not None
+                else None,
+                "facets": [
+                    FacetResult.from_dict(_item) for _item in obj.get("facets")
+                ]
+                if obj.get("facets") is not None
+                else None,
+                "total_count": obj.get("total_count"),
+            }
+        )
         return _obj
-
-

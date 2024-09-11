@@ -14,35 +14,44 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional, Union
+
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class MLTheseTheseInner(BaseModel):
     """
     MLTheseTheseInner
-    """ # noqa: E501
+    """  # noqa: E501
+
     weight: Union[StrictFloat, StrictInt]
     query_text: Optional[StrictStr] = None
     query_document_id: Optional[StrictStr] = None
     embedding: Optional[List[Union[StrictFloat, StrictInt]]] = None
     these: Optional[List[Dict[str, Any]]] = None
-    __properties: ClassVar[List[str]] = ["weight", "query_text", "query_document_id", "embedding", "these"]
+    __properties: ClassVar[List[str]] = [
+        "weight",
+        "query_text",
+        "query_document_id",
+        "embedding",
+        "these",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -70,8 +79,7 @@ class MLTheseTheseInner(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -85,13 +93,13 @@ class MLTheseTheseInner(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "weight": obj.get("weight"),
-            "query_text": obj.get("query_text"),
-            "query_document_id": obj.get("query_document_id"),
-            "embedding": obj.get("embedding"),
-            "these": obj.get("these")
-        })
+        _obj = cls.model_validate(
+            {
+                "weight": obj.get("weight"),
+                "query_text": obj.get("query_text"),
+                "query_document_id": obj.get("query_document_id"),
+                "embedding": obj.get("embedding"),
+                "these": obj.get("these"),
+            }
+        )
         return _obj
-
-

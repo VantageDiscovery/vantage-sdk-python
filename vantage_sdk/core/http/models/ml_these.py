@@ -14,23 +14,28 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel
+
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class MLThese(BaseModel):
     """
     MLThese
-    """ # noqa: E501
+    """  # noqa: E501
+
     these: Optional[List[MLTheseTheseInner]] = None
     __properties: ClassVar[List[str]] = ["these"]
 
@@ -39,7 +44,6 @@ class MLThese(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -67,8 +71,7 @@ class MLThese(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of each item in these (list)
@@ -89,9 +92,14 @@ class MLThese(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "these": [MLTheseTheseInner.from_dict(_item) for _item in obj.get("these")] if obj.get("these") is not None else None
-        })
+        _obj = cls.model_validate(
+            {
+                "these": [
+                    MLTheseTheseInner.from_dict(_item)
+                    for _item in obj.get("these")
+                ]
+                if obj.get("these") is not None
+                else None
+            }
+        )
         return _obj
-
-

@@ -14,22 +14,26 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional, Union
+
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class ShoppingAssistantGroupResultResultsInner(BaseModel):
     """
     ShoppingAssistantGroupResultResultsInner
-    """ # noqa: E501
+    """  # noqa: E501
+
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
     sort_score: Optional[Union[StrictFloat, StrictInt]] = None
@@ -40,7 +44,6 @@ class ShoppingAssistantGroupResultResultsInner(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -68,8 +71,7 @@ class ShoppingAssistantGroupResultResultsInner(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -83,11 +85,11 @@ class ShoppingAssistantGroupResultResultsInner(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "score": obj.get("score"),
-            "sort_score": obj.get("sort_score")
-        })
+        _obj = cls.model_validate(
+            {
+                "id": obj.get("id"),
+                "score": obj.get("score"),
+                "sort_score": obj.get("sort_score"),
+            }
+        )
         return _obj
-
-

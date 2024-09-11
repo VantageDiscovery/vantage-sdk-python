@@ -15,26 +15,27 @@
 
 import io
 import warnings
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
-from typing import Dict, List, Optional, Tuple, Union, Any
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
+
 
 try:
     from typing import Annotated
 except ImportError:
     from typing_extensions import Annotated
 
-from pydantic import Field
-from typing_extensions import Annotated
-from pydantic import StrictStr
-
 from typing import List
 
-from vantage_sdk.core.http.models.shopping_assistant import ShoppingAssistant
-from vantage_sdk.core.http.models.shopping_assistant_modifiable import ShoppingAssistantModifiable
+from pydantic import Field, StrictStr
+from typing_extensions import Annotated
 
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.shopping_assistant import ShoppingAssistant
+from vantage_sdk.core.http.models.shopping_assistant_modifiable import (
+    ShoppingAssistantModifiable,
+)
 from vantage_sdk.core.http.rest import RESTResponseType
 
 
@@ -50,19 +51,21 @@ class ShoppingAssistantApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
-
     @validate_call
     def create_shopping_assistant(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -97,7 +100,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_shopping_assistant_serialize(
             account_id=account_id,
@@ -105,7 +108,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -113,8 +116,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -122,19 +124,21 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def create_shopping_assistant_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -169,7 +173,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_shopping_assistant_serialize(
             account_id=account_id,
@@ -177,7 +181,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -185,8 +189,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -194,19 +197,21 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def create_shopping_assistant_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -241,7 +246,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_shopping_assistant_serialize(
             account_id=account_id,
@@ -249,7 +254,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -257,11 +262,9 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _create_shopping_assistant_serialize(
         self,
@@ -272,11 +275,9 @@ class ShoppingAssistantApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -295,32 +296,23 @@ class ShoppingAssistantApi:
         if shopping_assistant_modifiable is not None:
             _body_params = shopping_assistant_modifiable
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='POST',
@@ -334,24 +326,23 @@ class ShoppingAssistantApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def delete_shopping_assistant(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to delete")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to delete")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -386,7 +377,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_shopping_assistant_serialize(
             account_id=account_id,
@@ -394,7 +385,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -402,8 +393,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -411,19 +401,20 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def delete_shopping_assistant_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to delete")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to delete")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -458,7 +449,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_shopping_assistant_serialize(
             account_id=account_id,
@@ -466,7 +457,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -474,8 +465,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -483,19 +473,20 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def delete_shopping_assistant_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to delete")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to delete")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -530,7 +521,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._delete_shopping_assistant_serialize(
             account_id=account_id,
@@ -538,7 +529,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -546,11 +537,9 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _delete_shopping_assistant_serialize(
         self,
@@ -561,11 +550,9 @@ class ShoppingAssistantApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -584,13 +571,8 @@ class ShoppingAssistantApi:
         # process the form parameters
         # process the body parameter
 
-
-
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='DELETE',
@@ -604,24 +586,23 @@ class ShoppingAssistantApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def get_shopping_assistant(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to get")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to get")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -656,7 +637,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_shopping_assistant_serialize(
             account_id=account_id,
@@ -664,7 +645,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -672,8 +653,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -681,19 +661,20 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def get_shopping_assistant_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to get")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to get")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -728,7 +709,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_shopping_assistant_serialize(
             account_id=account_id,
@@ -736,7 +717,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -744,8 +725,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -753,19 +733,20 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def get_shopping_assistant_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to get")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to get")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -800,7 +781,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_shopping_assistant_serialize(
             account_id=account_id,
@@ -808,7 +789,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -816,11 +797,9 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _get_shopping_assistant_serialize(
         self,
@@ -831,11 +810,9 @@ class ShoppingAssistantApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -854,19 +831,13 @@ class ShoppingAssistantApi:
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -880,11 +851,8 @@ class ShoppingAssistantApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def list_shopping_assistants(
@@ -895,8 +863,8 @@ class ShoppingAssistantApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -929,14 +897,14 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_shopping_assistants_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -944,15 +912,13 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
         ).data
-
 
     @validate_call
     def list_shopping_assistants_with_http_info(
@@ -963,8 +929,8 @@ class ShoppingAssistantApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -997,14 +963,14 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_shopping_assistants_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1012,15 +978,13 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
         )
-
 
     @validate_call
     def list_shopping_assistants_without_preload_content(
@@ -1031,8 +995,8 @@ class ShoppingAssistantApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1065,14 +1029,14 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._list_shopping_assistants_serialize(
             account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1080,11 +1044,9 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _list_shopping_assistants_serialize(
         self,
@@ -1094,11 +1056,9 @@ class ShoppingAssistantApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1115,19 +1075,13 @@ class ShoppingAssistantApi:
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -1141,25 +1095,27 @@ class ShoppingAssistantApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def update_shopping_assistant(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to update")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to update")
+        ],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1196,7 +1152,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_shopping_assistant_serialize(
             account_id=account_id,
@@ -1205,7 +1161,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1213,8 +1169,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1222,20 +1177,24 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def update_shopping_assistant_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to update")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to update")
+        ],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1272,7 +1231,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_shopping_assistant_serialize(
             account_id=account_id,
@@ -1281,7 +1240,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1289,8 +1248,7 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1298,20 +1256,24 @@ class ShoppingAssistantApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def update_shopping_assistant_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        shopping_assistant_id: Annotated[StrictStr, Field(description="ID of shopping assistant to update")],
-        shopping_assistant_modifiable: Annotated[ShoppingAssistantModifiable, Field(description="Shopping assistant details")],
+        shopping_assistant_id: Annotated[
+            StrictStr, Field(description="ID of shopping assistant to update")
+        ],
+        shopping_assistant_modifiable: Annotated[
+            ShoppingAssistantModifiable,
+            Field(description="Shopping assistant details"),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1348,7 +1310,7 @@ class ShoppingAssistantApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_shopping_assistant_serialize(
             account_id=account_id,
@@ -1357,7 +1319,7 @@ class ShoppingAssistantApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1365,11 +1327,9 @@ class ShoppingAssistantApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _update_shopping_assistant_serialize(
         self,
@@ -1381,11 +1341,9 @@ class ShoppingAssistantApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1406,32 +1364,23 @@ class ShoppingAssistantApi:
         if shopping_assistant_modifiable is not None:
             _body_params = shopping_assistant_modifiable
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='PATCH',
@@ -1445,7 +1394,5 @@ class ShoppingAssistantApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-

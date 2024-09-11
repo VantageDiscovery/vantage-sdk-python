@@ -14,23 +14,30 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel
-from vantage_sdk.core.http.models.total_counts_options_total_counts import TotalCountsOptionsTotalCounts
+
+from vantage_sdk.core.http.models.total_counts_options_total_counts import (
+    TotalCountsOptionsTotalCounts,
+)
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class TotalCountsOptions(BaseModel):
     """
     TotalCountsOptions
-    """ # noqa: E501
+    """  # noqa: E501
+
     total_counts: Optional[TotalCountsOptionsTotalCounts] = None
     __properties: ClassVar[List[str]] = ["total_counts"]
 
@@ -39,7 +46,6 @@ class TotalCountsOptions(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -67,8 +73,7 @@ class TotalCountsOptions(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         # override the default output from pydantic by calling `to_dict()` of total_counts
@@ -85,9 +90,13 @@ class TotalCountsOptions(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "total_counts": TotalCountsOptionsTotalCounts.from_dict(obj.get("total_counts")) if obj.get("total_counts") is not None else None
-        })
+        _obj = cls.model_validate(
+            {
+                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
+                    obj.get("total_counts")
+                )
+                if obj.get("total_counts") is not None
+                else None
+            }
+        )
         return _obj
-
-
