@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -36,14 +36,8 @@ class SemanticQuerySuggestionsResult(BaseModel):
 
     request_id: Optional[StrictInt] = None
     status: Optional[StrictInt] = None
-    message: Optional[StrictStr] = None
     suggestions: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = [
-        "request_id",
-        "status",
-        "message",
-        "suggestions",
-    ]
+    __properties: ClassVar[List[str]] = ["request_id", "status", "suggestions"]
 
     model_config = {
         "populate_by_name": True,
@@ -95,7 +89,6 @@ class SemanticQuerySuggestionsResult(BaseModel):
             {
                 "request_id": obj.get("request_id"),
                 "status": obj.get("status"),
-                "message": obj.get("message"),
                 "suggestions": obj.get("suggestions"),
             }
         )

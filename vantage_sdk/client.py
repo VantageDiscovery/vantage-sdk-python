@@ -45,9 +45,9 @@ from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
 from vantage_sdk.core.http.models import (
-    SemanticSearchQuery,
-    SemanticQuerySuggestionsResult,
     SemanticQuerySuggestionsQuery,
+    SemanticQuerySuggestionsResult,
+    SemanticSearchQuery,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
     ShoppingAssistantQuery,

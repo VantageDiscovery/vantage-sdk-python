@@ -27,6 +27,9 @@ from vantage_sdk.core.http.api.collection_management_api import (
 from vantage_sdk.core.http.api.documents_api import DocumentsApi
 from vantage_sdk.core.http.api.external_keys_api import ExternalKeysApi
 from vantage_sdk.core.http.api.search_api import SearchApi
+from vantage_sdk.core.http.api.semantic_query_suggestions_api import (
+    SemanticQuerySuggestionsApi,
+)
 from vantage_sdk.core.http.api.shopping_assistant_api import (
     ShoppingAssistantApi,
 )
@@ -109,8 +112,20 @@ from vantage_sdk.core.http.models.search_result_results_inner import (
 from vantage_sdk.core.http.models.secondary_external_account import (
     SecondaryExternalAccount,
 )
+from vantage_sdk.core.http.models.semantic_query_suggestions import (
+    SemanticQuerySuggestions,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_patch import (
+    SemanticQuerySuggestionsModifiablePatch,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_post import (
+    SemanticQuerySuggestionsModifiablePost,
+)
 from vantage_sdk.core.http.models.semantic_query_suggestions_query import (
     SemanticQuerySuggestionsQuery,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_read_only import (
+    SemanticQuerySuggestionsReadOnly,
 )
 from vantage_sdk.core.http.models.semantic_query_suggestions_result import (
     SemanticQuerySuggestionsResult,
