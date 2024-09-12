@@ -9,11 +9,13 @@
       },
       "bodyPatterns": [
         {
+          "equalToJson": {
             "external_account_id": "test-external-account-id",
             "llm_model_name": "text-embeddings-ada-002",
             "system_prompt_id": "1234",
             "suggestions_per_document": 3
           }
+        }
       ]
     },
     "response": {
@@ -22,7 +24,7 @@
         "Content-Type": "application/json"
       },
       "jsonBody": {
-        "semantic_query_suggestion_id": "test-sqs-id",
+        "semantic_query_suggestions_id": "test-sqs-id",
         "account_id": "test",
         "collection_id": "sqs-collection",
         "external_account_id": "test-external-account-id",

@@ -54,11 +54,11 @@ class TestSemanticQuerySuggestions:
         collection_id = "sqs-collection"
         external_account_id = "test-external-account-id"
         llm_model_name = "text-embeddings-ada-002"
-        system_prompt_id = 1234
+        system_prompt_id = "1234"
         suggestions_per_document = 3
 
         # When
-        shopping_assistant = (
+        sqs_configuration = (
             client.create_semantic_query_suggestions_configuration(
                 external_account_id=external_account_id,
                 llm_model_name=llm_model_name,
@@ -69,15 +69,15 @@ class TestSemanticQuerySuggestions:
         )
 
         # Then
-        assert shopping_assistant.account_id == test_account_id
-        assert shopping_assistant.semantic_query_suggestions_id is not None
-        assert shopping_assistant.system_prompt_id == system_prompt_id
+        assert sqs_configuration.account_id == test_account_id
+        assert sqs_configuration.semantic_query_suggestions_id is not None
+        assert sqs_configuration.system_prompt_id == system_prompt_id
         assert (
-            shopping_assistant.suggestions_per_document
+            sqs_configuration.suggestions_per_document
             == suggestions_per_document
         )
-        assert shopping_assistant.external_account_id == external_account_id
-        assert shopping_assistant.llm_model_name == llm_model_name
+        assert sqs_configuration.external_account_id == external_account_id
+        assert sqs_configuration.llm_model_name == llm_model_name
 
     def test_delete_semantic_query_suggestions_configuration(
         self, client: VantageClient
