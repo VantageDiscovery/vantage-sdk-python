@@ -2026,7 +2026,7 @@ class VantageClient:
         self,
         collection_id: str,
         text: str,
-        max_results: Optional[int] = None,
+        max_suggestions: Optional[int] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SemanticQuerySuggestionsResult:
@@ -2039,7 +2039,7 @@ class VantageClient:
             The ID of the collection to search within.
         text : str
             The text input used to generate and return relevant suggestions
-        max_results : Optional[int], optional
+        max_suggestions : Optional[int], optional
             The maximum number of results to return. Defaults to 10.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -2064,7 +2064,7 @@ class VantageClient:
 
         semantic_query_suggestions_query = SemanticQuerySuggestionsQuery(
             text=text,
-            max_results=max_results,
+            max_suggestions=max_suggestions,
         )
 
         result = self.search_api.api.semantic_query_suggestions(

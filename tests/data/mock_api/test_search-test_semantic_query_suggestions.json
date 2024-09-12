@@ -10,7 +10,6 @@
       "bodyPatterns": [
         {
           "equalToJson": {
-            "request_id": 1718109280970,
             "text": "Test query text",
             "max_suggestions": 3
           }

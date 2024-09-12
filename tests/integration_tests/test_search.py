@@ -636,18 +636,18 @@ class TestSearch:
         # Given
         collection_id = test_collection_id
         text = "Test query text"
-        max_results = 3
+        max_suggestions = 3
 
         # When
         result = client.get_semantic_query_suggestions(
             collection_id,
             text,
-            max_results,
+            max_suggestions,
             account_id=account_params["id"],
         )
 
         # Then
         assert result.status == 200
-        assert len(result.suggestions) == max_results
+        assert len(result.suggestions) == max_suggestions
 
     # endregion
