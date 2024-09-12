@@ -11,7 +11,7 @@
         {
           "equalToJson": {
             "text": "Test query text",
-            "max_results": 3
+            "max_suggestions": 3
           }
         }
       ]
@@ -24,7 +24,6 @@
       "jsonBody": {
         "request_id": 1718109280970,
         "status": 200,
-        "message": "Success.",
         "suggestions": [
           "Test suggestion 1",
           "Test suggestion 2",
