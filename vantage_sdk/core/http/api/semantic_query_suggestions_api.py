@@ -15,27 +15,32 @@
 
 import io
 import warnings
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
-from typing import Dict, List, Optional, Tuple, Union, Any
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
+
 
 try:
     from typing import Annotated
 except ImportError:
     from typing_extensions import Annotated
 
-from pydantic import Field
-from typing_extensions import Annotated
-from pydantic import StrictStr
-
 from typing import List
 
-from vantage_sdk.core.http.models.semantic_query_suggestions import SemanticQuerySuggestions
-from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_patch import SemanticQuerySuggestionsModifiablePatch
-from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_post import SemanticQuerySuggestionsModifiablePost
+from pydantic import Field, StrictStr
+from typing_extensions import Annotated
 
 from vantage_sdk.core.http.api_client import ApiClient
 from vantage_sdk.core.http.api_response import ApiResponse
+from vantage_sdk.core.http.models.semantic_query_suggestions import (
+    SemanticQuerySuggestions,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_patch import (
+    SemanticQuerySuggestionsModifiablePatch,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_modifiable_post import (
+    SemanticQuerySuggestionsModifiablePost,
+)
 from vantage_sdk.core.http.rest import RESTResponseType
 
 
@@ -51,20 +56,26 @@ class SemanticQuerySuggestionsApi:
             api_client = ApiClient.get_default()
         self.api_client = api_client
 
-
     @validate_call
     def create_semantic_query_suggestions_configuration(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_modifiable_post: Annotated[SemanticQuerySuggestionsModifiablePost, Field(description="Semantic Query Suggestion Configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_modifiable_post: Annotated[
+            SemanticQuerySuggestionsModifiablePost,
+            Field(
+                description="Semantic Query Suggestion Configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -101,7 +112,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -110,7 +121,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -118,8 +129,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -127,20 +137,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def create_semantic_query_suggestions_configuration_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_modifiable_post: Annotated[SemanticQuerySuggestionsModifiablePost, Field(description="Semantic Query Suggestion Configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_modifiable_post: Annotated[
+            SemanticQuerySuggestionsModifiablePost,
+            Field(
+                description="Semantic Query Suggestion Configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -177,7 +193,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -186,7 +202,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -194,8 +210,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -203,20 +218,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def create_semantic_query_suggestions_configuration_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_modifiable_post: Annotated[SemanticQuerySuggestionsModifiablePost, Field(description="Semantic Query Suggestion Configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_modifiable_post: Annotated[
+            SemanticQuerySuggestionsModifiablePost,
+            Field(
+                description="Semantic Query Suggestion Configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -253,7 +274,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._create_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -262,7 +283,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -270,11 +291,9 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _create_semantic_query_suggestions_configuration_serialize(
         self,
@@ -286,11 +305,9 @@ class SemanticQuerySuggestionsApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -311,32 +328,23 @@ class SemanticQuerySuggestionsApi:
         if semantic_query_suggestions_modifiable_post is not None:
             _body_params = semantic_query_suggestions_modifiable_post
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='POST',
@@ -350,25 +358,29 @@ class SemanticQuerySuggestionsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def delete_semantic_query_suggestions_configuration(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -405,16 +417,18 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._delete_semantic_query_suggestions_configuration_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            semantic_query_suggestions_id=semantic_query_suggestions_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._delete_semantic_query_suggestions_configuration_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                semantic_query_suggestions_id=semantic_query_suggestions_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -422,8 +436,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -431,20 +444,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def delete_semantic_query_suggestions_configuration_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -481,16 +500,18 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._delete_semantic_query_suggestions_configuration_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            semantic_query_suggestions_id=semantic_query_suggestions_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._delete_semantic_query_suggestions_configuration_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                semantic_query_suggestions_id=semantic_query_suggestions_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -498,8 +519,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -507,20 +527,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def delete_semantic_query_suggestions_configuration_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -557,16 +583,18 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._delete_semantic_query_suggestions_configuration_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            semantic_query_suggestions_id=semantic_query_suggestions_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._delete_semantic_query_suggestions_configuration_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                semantic_query_suggestions_id=semantic_query_suggestions_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -574,11 +602,9 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _delete_semantic_query_suggestions_configuration_serialize(
         self,
@@ -590,11 +616,9 @@ class SemanticQuerySuggestionsApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -609,19 +633,16 @@ class SemanticQuerySuggestionsApi:
         if collection_id is not None:
             _path_params['collection_id'] = collection_id
         if semantic_query_suggestions_id is not None:
-            _path_params['semantic_query_suggestions_id'] = semantic_query_suggestions_id
+            _path_params[
+                'semantic_query_suggestions_id'
+            ] = semantic_query_suggestions_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
 
-
-
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='DELETE',
@@ -635,25 +656,29 @@ class SemanticQuerySuggestionsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def get_semantic_query_suggestions_configuration(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -690,7 +715,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -699,7 +724,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -707,8 +732,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -716,20 +740,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def get_semantic_query_suggestions_configuration_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -766,7 +796,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -775,7 +805,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -783,8 +813,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -792,20 +821,26 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def get_semantic_query_suggestions_configuration_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -842,7 +877,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._get_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -851,7 +886,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -859,11 +894,9 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _get_semantic_query_suggestions_configuration_serialize(
         self,
@@ -875,11 +908,9 @@ class SemanticQuerySuggestionsApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -894,25 +925,21 @@ class SemanticQuerySuggestionsApi:
         if collection_id is not None:
             _path_params['collection_id'] = collection_id
         if semantic_query_suggestions_id is not None:
-            _path_params['semantic_query_suggestions_id'] = semantic_query_suggestions_id
+            _path_params[
+                'semantic_query_suggestions_id'
+            ] = semantic_query_suggestions_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -926,24 +953,23 @@ class SemanticQuerySuggestionsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def list_semantic_query_suggestions_configurations(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -978,15 +1004,17 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._list_semantic_query_suggestions_configurations_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._list_semantic_query_suggestions_configurations_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -994,8 +1022,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1003,19 +1030,20 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def list_semantic_query_suggestions_configurations_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1050,15 +1078,17 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._list_semantic_query_suggestions_configurations_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._list_semantic_query_suggestions_configurations_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1066,8 +1096,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1075,19 +1104,20 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def list_semantic_query_suggestions_configurations_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1122,15 +1152,17 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
-        _param = self._list_semantic_query_suggestions_configurations_serialize(
-            account_id=account_id,
-            collection_id=collection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
+        _param = (
+            self._list_semantic_query_suggestions_configurations_serialize(
+                account_id=account_id,
+                collection_id=collection_id,
+                _request_auth=_request_auth,
+                _content_type=_content_type,
+                _headers=_headers,
+                _host_index=_host_index,
+            )
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1138,11 +1170,9 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _list_semantic_query_suggestions_configurations_serialize(
         self,
@@ -1153,11 +1183,9 @@ class SemanticQuerySuggestionsApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1176,19 +1204,13 @@ class SemanticQuerySuggestionsApi:
         # process the form parameters
         # process the body parameter
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
-
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='GET',
@@ -1202,26 +1224,35 @@ class SemanticQuerySuggestionsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-
-
 
     @validate_call
     def update_semantic_query_suggestions_configuration(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
-        semantic_query_suggestions_modifiable_patch: Annotated[SemanticQuerySuggestionsModifiablePatch, Field(description="Semantic query suggestions configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
+        semantic_query_suggestions_modifiable_patch: Annotated[
+            SemanticQuerySuggestionsModifiablePatch,
+            Field(
+                description="Semantic query suggestions configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1260,7 +1291,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -1270,7 +1301,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1278,8 +1309,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1287,21 +1317,32 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         ).data
 
-
     @validate_call
     def update_semantic_query_suggestions_configuration_with_http_info(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
-        semantic_query_suggestions_modifiable_patch: Annotated[SemanticQuerySuggestionsModifiablePatch, Field(description="Semantic query suggestions configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
+        semantic_query_suggestions_modifiable_patch: Annotated[
+            SemanticQuerySuggestionsModifiablePatch,
+            Field(
+                description="Semantic query suggestions configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1340,7 +1381,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -1350,7 +1391,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1358,8 +1399,7 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         response_data.read()
         return self.api_client.response_deserialize(
@@ -1367,21 +1407,32 @@ class SemanticQuerySuggestionsApi:
             response_types_map=_response_types_map,
         )
 
-
     @validate_call
     def update_semantic_query_suggestions_configuration_without_preload_content(
         self,
         account_id: Annotated[StrictStr, Field(description="User account ID")],
-        collection_id: Annotated[StrictStr, Field(description="The collection id")],
-        semantic_query_suggestions_id: Annotated[StrictStr, Field(description="ID of semantic query suggestions configuration to update")],
-        semantic_query_suggestions_modifiable_patch: Annotated[SemanticQuerySuggestionsModifiablePatch, Field(description="Semantic query suggestions configuration details")],
+        collection_id: Annotated[
+            StrictStr, Field(description="The collection id")
+        ],
+        semantic_query_suggestions_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of semantic query suggestions configuration to update"
+            ),
+        ],
+        semantic_query_suggestions_modifiable_patch: Annotated[
+            SemanticQuerySuggestionsModifiablePatch,
+            Field(
+                description="Semantic query suggestions configuration details"
+            ),
+        ],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[
                 Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
         ] = None,
         _request_auth: Optional[Dict[StrictStr, Any]] = None,
         _content_type: Optional[StrictStr] = None,
@@ -1420,7 +1471,7 @@ class SemanticQuerySuggestionsApi:
                             in the spec for a single request.
         :type _host_index: int, optional
         :return: Returns the result object.
-        """ # noqa: E501
+        """  # noqa: E501
 
         _param = self._update_semantic_query_suggestions_configuration_serialize(
             account_id=account_id,
@@ -1430,7 +1481,7 @@ class SemanticQuerySuggestionsApi:
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
-            _host_index=_host_index
+            _host_index=_host_index,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
@@ -1438,11 +1489,9 @@ class SemanticQuerySuggestionsApi:
             '405': None,
         }
         response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
+            *_param, _request_timeout=_request_timeout
         )
         return response_data.response
-
 
     def _update_semantic_query_suggestions_configuration_serialize(
         self,
@@ -1455,11 +1504,9 @@ class SemanticQuerySuggestionsApi:
         _headers,
         _host_index,
     ) -> Tuple:
-
         _host = None
 
-        _collection_formats: Dict[str, str] = {
-        }
+        _collection_formats: Dict[str, str] = {}
 
         _path_params: Dict[str, str] = {}
         _query_params: List[Tuple[str, str]] = []
@@ -1474,7 +1521,9 @@ class SemanticQuerySuggestionsApi:
         if collection_id is not None:
             _path_params['collection_id'] = collection_id
         if semantic_query_suggestions_id is not None:
-            _path_params['semantic_query_suggestions_id'] = semantic_query_suggestions_id
+            _path_params[
+                'semantic_query_suggestions_id'
+            ] = semantic_query_suggestions_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -1482,32 +1531,23 @@ class SemanticQuerySuggestionsApi:
         if semantic_query_suggestions_modifiable_patch is not None:
             _body_params = semantic_query_suggestions_modifiable_patch
 
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
-            [
-                'application/json'
-            ]
+            ['application/json']
         )
 
         # set the HTTP header `Content-Type`
         if _content_type:
             _header_params['Content-Type'] = _content_type
         else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
             )
             if _default_content_type is not None:
                 _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
-        _auth_settings: List[str] = [
-            'BearerAuth'
-        ]
+        _auth_settings: List[str] = ['BearerAuth']
 
         return self.api_client.param_serialize(
             method='PATCH',
@@ -1521,7 +1561,5 @@ class SemanticQuerySuggestionsApi:
             auth_settings=_auth_settings,
             collection_formats=_collection_formats,
             _host=_host,
-            _request_auth=_request_auth
+            _request_auth=_request_auth,
         )
-
-

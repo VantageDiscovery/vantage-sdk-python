@@ -14,32 +14,38 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional, Union
+
 from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class SemanticQuerySuggestionsModifiablePatch(BaseModel):
     """
     SemanticQuerySuggestionsModifiablePatch
-    """ # noqa: E501
+    """  # noqa: E501
+
     external_account_id: Optional[StrictStr] = None
     suggestions_per_document: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["external_account_id", "suggestions_per_document"]
+    __properties: ClassVar[List[str]] = [
+        "external_account_id",
+        "suggestions_per_document",
+    ]
 
     model_config = {
         "populate_by_name": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -67,8 +73,7 @@ class SemanticQuerySuggestionsModifiablePatch(BaseModel):
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
@@ -82,10 +87,12 @@ class SemanticQuerySuggestionsModifiablePatch(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "external_account_id": obj.get("external_account_id"),
-            "suggestions_per_document": obj.get("suggestions_per_document")
-        })
+        _obj = cls.model_validate(
+            {
+                "external_account_id": obj.get("external_account_id"),
+                "suggestions_per_document": obj.get(
+                    "suggestions_per_document"
+                ),
+            }
+        )
         return _obj
-
-

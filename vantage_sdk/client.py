@@ -1461,7 +1461,8 @@ class VantageClient:
         Parameters
         ----------
         collection_id : str
-            The unique identifier of the collection to which the semantic query suggestions configuration is to be linked.
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
         account_id : Optional[str], optional
             The unique identifier of the account for which the Semantic Query Suggestions are to be retrieved.
             If not provided, the instance's account ID is used.
@@ -1477,7 +1478,7 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        sqs_configurations = self.management_api.semantic_query_suggestions_api.list_semantic_query_suggestions_configurations(
+        sqs_configurations = self.management_api.semantic_query_suggestions_api.list_semantic_query_suggestions_configurations(  # noqa: E501
             collection_id=collection_id,
             account_id=account_id or self.account_id,
         )
@@ -1494,14 +1495,16 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> SemanticQuerySuggestions:
         """
-        Retrieves a specific semantic query suggestions configuration identified by its unique ID within a specified account.
+        Retrieves a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
 
         Parameters
         ----------
         sqs_configuration_id : str
             The unique identifier of the semantic query suggestions configuration to be retrieved.
         collection_id : str
-            The unique identifier of the collection to which the semantic query suggestions configuration is to be linked.
+            The unique identifier of the collection to which the semantic query suggestions
+            configuration is to be linked.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1517,7 +1520,7 @@ class VantageClient:
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
-        sqs_configuration = self.management_api.semantic_query_suggestions_api.get_semantic_query_suggestions_configuration(
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.get_semantic_query_suggestions_configuration(  # noqa: E501
             semantic_query_suggestions_id=sqs_configuration_id,
             collection_id=collection_id,
             account_id=account_id or self.account_id,
@@ -1551,7 +1554,8 @@ class VantageClient:
         suggestions_per_document : str
             The number of semantic query suggestions per document.
         collection_id : str
-            The unique identifier of the collection to which the semantic query suggestions configuration is to be linked.
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1573,7 +1577,7 @@ class VantageClient:
             suggestions_per_document=suggestions_per_document,
         )
 
-        sqs_configuration = self.management_api.semantic_query_suggestions_api.create_semantic_query_suggestions_configuration(
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.create_semantic_query_suggestions_configuration(  # noqa: E501
             semantic_query_suggestions_modifiable_post=sqs_modifiable,
             collection_id=collection_id,
             account_id=account_id or self.account_id,
@@ -1592,7 +1596,8 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> SemanticQuerySuggestions:
         """
-        Updates a specific semantic query suggestions configuration identified by its unique ID within a specified account.
+        Updates a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
 
         Parameters
         ----------
@@ -1604,7 +1609,8 @@ class VantageClient:
         suggestions_per_document : str
             The number of semantic query suggestions per document.
         collection_id : str
-            The unique identifier of the collection to which the semantic query suggestions configuration is to be linked.
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1625,12 +1631,12 @@ class VantageClient:
             suggestions_per_document=suggestions_per_document,
         )
 
-        sqs_configuration = self.management_api.semantic_query_suggestions_api.update_semantic_query_suggestions_configuration(
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.update_semantic_query_suggestions_configuration(  # noqa: E501
             semantic_query_suggestions_id=sqs_configuration_id,
             semantic_query_suggestions_modifiable_patch=sqs_modifiable,
             collection_id=collection_id,
             account_id=account_id or self.account_id,
-        )        
+        )
 
         return SemanticQuerySuggestions.model_validate(
             sqs_configuration.model_dump()
@@ -1643,14 +1649,16 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Deletes a specific semantic query suggestions configuration identified by its unique ID within a specified account.
+        Deletes a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
 
-        Parameters 
+        Parameters
         ----------
         sqs_configuration_id : str
             The unique identifier of the semantic query suggestions configuration to be deleted.
         collection_id : str
-            The unique identifier of the collection to which the semantic query suggestions configuration is to be linked.
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
         account_id : Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -2246,7 +2254,7 @@ class VantageClient:
 
         return SearchResult.model_validate(result.model_dump())
 
-    def get_semantic_query_suggestions(
+    def semantic_query_suggestions_search(
         self,
         collection_id: str,
         text: str,

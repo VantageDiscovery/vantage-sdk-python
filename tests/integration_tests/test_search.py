@@ -639,7 +639,7 @@ class TestSearch:
         max_suggestions = 3
 
         # When
-        result = client.get_semantic_query_suggestions(
+        result = client.semantic_query_suggestions_search(
             collection_id,
             text,
             max_suggestions,
