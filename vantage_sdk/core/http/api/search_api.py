@@ -49,9 +49,7 @@ from vantage_sdk.core.http.models.shopping_assistant_query import (
 from vantage_sdk.core.http.models.shopping_assistant_result import (
     ShoppingAssistantResult,
 )
-from vantage_sdk.core.http.models.total_count_response import (
-    TotalCountResponse,
-)
+from vantage_sdk.core.http.models.total_count_result import TotalCountResult
 from vantage_sdk.core.http.models.vantage_vibe_search_query import (
     VantageVibeSearchQuery,
 )
@@ -100,7 +98,7 @@ class SearchApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> TotalCountResponse:
+    ) -> TotalCountResult:
         """Approximate Results Count
 
         Approximate Results Count Search
@@ -144,7 +142,7 @@ class SearchApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TotalCountResponse",
+            '200': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -186,7 +184,7 @@ class SearchApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[TotalCountResponse]:
+    ) -> ApiResponse[TotalCountResult]:
         """Approximate Results Count
 
         Approximate Results Count Search
@@ -230,7 +228,7 @@ class SearchApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TotalCountResponse",
+            '200': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -316,7 +314,7 @@ class SearchApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "TotalCountResponse",
+            '200': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(

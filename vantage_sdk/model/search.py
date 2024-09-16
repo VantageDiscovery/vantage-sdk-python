@@ -80,6 +80,19 @@ class SearchResult(BaseModel):
     facets: Optional[List[FacetResultItem]] = None
 
 
+class ApproximateResultsCountResult(BaseModel):
+    """
+    Represents the result received from Approximate Result Search.
+
+    Attributes
+    ----------
+    total_count: Optional[StrictInt], optional
+        Total count of documents within the specified threshold.
+    """
+
+    total_count: Optional[StrictInt] = None
+
+
 class MoreLikeTheseItem(BaseModel):
     """
     Represents an item for "More Like These" queries.
@@ -225,3 +238,19 @@ class SearchOptions(BaseModel):
     sort: Optional[SearchOptionsSort] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+
+
+class TotalCountsOptions(BaseModel):
+    """
+    Represents threshold value for documents similarity score.
+
+    Attributes
+    ----------
+    min_score_threshold: Optional[Union[StrictFloat, StrictInt]]
+        Minimum score value in range 0.0 to 1.0. Both limits are inclusive.
+    max_score_threshold: Optional[Union[StrictFloat, StrictInt]]
+        Maximum score value in range 0.0 to 1.0. Both limits are inclusive.
+    """
+
+    min_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None
+    max_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None

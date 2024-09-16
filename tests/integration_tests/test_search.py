@@ -12,6 +12,7 @@ from vantage_sdk.model.search import (
     FacetType,
     Filter,
     MoreLikeTheseItem,
+    TotalCountsOptions,
     VantageVibeImageBase64,
     VantageVibeImageUrl,
 )
@@ -623,5 +624,68 @@ class TestSearch:
         assert response is not None
         assert response.status == 200
         assert len(response.results) == 3
+
+    # endregion
+
+    # region Approximate Results Count
+
+    def test_if_approximate_results_count_returns_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if approximate results count search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        accuracy = 0.2
+        search_text = "short legs and long body"
+        total_counts = TotalCountsOptions(
+            min_score_threshold=0.2, max_score_threshold=0.7
+        )
+
+        # When
+        result = client.approximate_results_count_search(
+            text=search_text,
+            collection_id=collection_id,
+            accuracy=accuracy,
+            account_id=account_params["id"],
+            total_counts=total_counts,
+        )
+
+        # Then
+        assert result.total_count == 3
+
+    def test_if_semantic_search_with_score_treshold_returns_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        accuracy = 0.2
+        search_text = "short legs and long body"
+        total_counts = TotalCountsOptions(
+            min_score_threshold=0.2, max_score_threshold=0.7
+        )
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            accuracy=accuracy,
+            account_id=account_params["id"],
+            total_counts=total_counts,
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
 
     # endregion
