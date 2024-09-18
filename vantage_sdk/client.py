@@ -45,6 +45,11 @@ from vantage_sdk.core.http.models import (
     SecondaryExternalAccount as OpenAPISecondaryExternalAccount,
 )
 from vantage_sdk.core.http.models import (
+    SemanticQuerySuggestions,
+    SemanticQuerySuggestionsModifiablePatch,
+    SemanticQuerySuggestionsModifiablePost,
+    SemanticQuerySuggestionsQuery,
+    SemanticQuerySuggestionsResult,
     SemanticSearchQuery,
     ShoppingAssistant,
     ShoppingAssistantModifiable,
@@ -1446,6 +1451,235 @@ class VantageClient:
 
     # endregion
 
+    # region Semantic Query Suggestions
+
+    def list_semantic_query_suggestions_configurations(
+        self,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> List[SemanticQuerySuggestions]:
+        """
+        Retrieves a list of semantic query suggestions configurations associated with a given account.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the Semantic Query Suggestions are to be retrieved.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[SemanticQuerySuggestions]
+            A list of VantageVibe objects.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        sqs_configurations = self.management_api.semantic_query_suggestions_api.list_semantic_query_suggestions_configurations(  # noqa: E501
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        return [
+            SemanticQuerySuggestions.model_validate(sqs_config.model_dump())
+            for sqs_config in sqs_configurations
+        ]
+
+    def get_semantic_query_suggestions_configuration(
+        self,
+        sqs_configuration_id: str,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestions:
+        """
+        Retrieves a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
+
+        Parameters
+        ----------
+        sqs_configuration_id : str
+            The unique identifier of the semantic query suggestions configuration to be retrieved.
+        collection_id : str
+            The unique identifier of the collection to which the semantic query suggestions
+            configuration is to be linked.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestions
+            The retrieved SemanticQuerySuggestions object.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.get_semantic_query_suggestions_configuration(  # noqa: E501
+            semantic_query_suggestions_id=sqs_configuration_id,
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        return SemanticQuerySuggestions.model_validate(
+            sqs_configuration.model_dump()
+        )
+
+    def create_semantic_query_suggestions_configuration(
+        self,
+        external_account_id: str,
+        llm_model_name: str,
+        system_prompt_id: str,
+        suggestions_per_document: str,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestions:
+        """
+        Creates a new semantic query suggestions configuration.
+
+        Parameters
+        ----------
+        external_account_id : str
+            The id of the valid external account which contains the LLM API key.
+            This can be OpenAI or Anthropic LLM key.
+        llm_model_name : str
+            The name of the LLM model used for the semantic query suggestions.
+        system_prompt_id : str
+            The id of the system prompt to be used for the semantic query suggestions.
+        suggestions_per_document : str
+            The number of semantic query suggestions per document.
+        collection_id : str
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestions
+            The created SemanticQuerySuggestions object.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        sqs_modifiable = SemanticQuerySuggestionsModifiablePost(
+            external_account_id=external_account_id,
+            llm_model_name=llm_model_name,
+            system_prompt_id=system_prompt_id,
+            suggestions_per_document=suggestions_per_document,
+        )
+
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.create_semantic_query_suggestions_configuration(  # noqa: E501
+            semantic_query_suggestions_modifiable_post=sqs_modifiable,
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        return SemanticQuerySuggestions.model_validate(
+            sqs_configuration.model_dump()
+        )
+
+    def update_semantic_query_suggestions_configuration(
+        self,
+        sqs_configuration_id: str,
+        external_account_id: str,
+        suggestions_per_document: str,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestions:
+        """
+        Updates a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
+
+        Parameters
+        ----------
+        sqs_configuration_id : str
+            The unique identifier of the semantic query suggestions configuration to be updated.
+        external_account_id : str
+            The id of the valid external account which contains the LLM API key.
+            This can be OpenAI or Anthropic LLM key.
+        suggestions_per_document : str
+            The number of semantic query suggestions per document.
+        collection_id : str
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestions
+            The updated SemanticQuerySuggestions object.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        sqs_modifiable = SemanticQuerySuggestionsModifiablePatch(
+            external_account_id=external_account_id,
+            suggestions_per_document=suggestions_per_document,
+        )
+
+        sqs_configuration = self.management_api.semantic_query_suggestions_api.update_semantic_query_suggestions_configuration(  # noqa: E501
+            semantic_query_suggestions_id=sqs_configuration_id,
+            semantic_query_suggestions_modifiable_patch=sqs_modifiable,
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+        return SemanticQuerySuggestions.model_validate(
+            sqs_configuration.model_dump()
+        )
+
+    def delete_semantic_query_suggestions_configuration(
+        self,
+        sqs_configuration_id: str,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes a specific semantic query suggestions configuration
+        identified by its unique ID within a specified account.
+
+        Parameters
+        ----------
+        sqs_configuration_id : str
+            The unique identifier of the semantic query suggestions configuration to be deleted.
+        collection_id : str
+            The unique identifier of the collection to which the semantic
+            query suggestions configuration is to be linked.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        self.management_api.semantic_query_suggestions_api.delete_semantic_query_suggestions_configuration(
+            semantic_query_suggestions_id=sqs_configuration_id,
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+        )
+
+    # endregion
+
     # region Search Helper Functions
 
     def _prepare_search_query(
@@ -2028,6 +2262,62 @@ class VantageClient:
         )
 
         return SearchResult.model_validate(result.model_dump())
+
+    def semantic_query_suggestions_search(
+        self,
+        collection_id: str,
+        text: str,
+        max_suggestions: Optional[int] = None,
+        account_id: Optional[str] = None,
+        vantage_api_key: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsResult:
+        """
+        Returns semantic suggestions based on the provided query.
+
+        Parameters
+        ----------
+        collection_id : str
+            The ID of the collection to search within.
+        text : str
+            The text input used to generate and return relevant suggestions
+        max_suggestions : Optional[int], optional
+            The maximum number of results to return. Defaults to 10.
+        vantage_api_key : Optional[str], optional
+            The Vantage API key used for authentication.
+            If not provided, the instance's API key is used.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID associated with the search.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestionsResult
+            An object containing the suggestions array.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/search-api) for more details and examples.
+        """
+
+        vantage_api_key = self._vantage_api_key_check(vantage_api_key)
+
+        semantic_query_suggestions_query = SemanticQuerySuggestionsQuery(
+            text=text,
+            max_suggestions=max_suggestions,
+        )
+
+        result = self.search_api.api.semantic_query_suggestions(
+            collection_id=collection_id,
+            account_id=account_id or self.account_id,
+            semantic_query_suggestions_query=semantic_query_suggestions_query,
+            _headers={"authorization": f"Bearer {vantage_api_key}"},
+        )
+
+        return SemanticQuerySuggestionsResult.model_validate(
+            result.model_dump()
+        )
 
     def shopping_assistant_search(
         self,

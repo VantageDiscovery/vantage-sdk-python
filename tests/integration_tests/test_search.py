@@ -625,6 +625,32 @@ class TestSearch:
         assert response.status == 200
         assert len(response.results) == 3
 
+    def test_semantic_query_suggestions(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests happy path for semantic query suggestions.
+        """
+        # Given
+        collection_id = test_collection_id
+        text = "Test query text"
+        max_suggestions = 3
+
+        # When
+        result = client.semantic_query_suggestions_search(
+            collection_id,
+            text,
+            max_suggestions,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.suggestions) == max_suggestions
+
     # endregion
 
     # region Approximate Results Count

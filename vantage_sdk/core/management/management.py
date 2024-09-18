@@ -10,6 +10,9 @@ from vantage_sdk.core.http.api.collection_management_api import (
 )
 from vantage_sdk.core.http.api.documents_api import DocumentsApi
 from vantage_sdk.core.http.api.external_keys_api import ExternalKeysApi
+from vantage_sdk.core.http.api.semantic_query_suggestions_api import (
+    SemanticQuerySuggestionsApi,
+)
 from vantage_sdk.core.http.api.shopping_assistant_api import (
     ShoppingAssistantApi,
 )
@@ -32,6 +35,8 @@ class ManagementAPI:
         External API keys management API component.
     vantage_api_keys_api: VantageAPIKeysApi
         Vantage API keys management API component.
+    semantic_query_suggestions_api: SemanticQuerySuggestionsApi
+        Semantic query suggestions management API component.
     shopping_assistant_api: ShoppingAssistantApi
         Shopping Assistant management API component.
     vantage_vibe_api: ShoppingAssistantApi
@@ -46,6 +51,7 @@ class ManagementAPI:
         collection_api: CollectionManagementApi,
         external_keys_api: ExternalKeysApi,
         vantage_api_keys_api: VantageAPIKeysApi,
+        semantic_query_suggestions_api: SemanticQuerySuggestionsApi,
         shopping_assistant_api: ShoppingAssistantApi,
         vantage_vibe_api: VantageVibeApi,
         documents_api: DocumentsApi,
@@ -63,6 +69,8 @@ class ManagementAPI:
             External API keys management API component.
         vantage_api_keys_api: VantageAPIKeysApi
             Vantage API keys management API component.
+        semantic_query_suggestions_api: SemanticQuerySuggestionsApi
+            Semantic query suggestions management API component.
         shopping_assistant_api: ShoppingAssistantApi
             Shopping Assistant management API component.
         vantage_vibe_api: ShoppingAssistantApi
@@ -74,6 +82,7 @@ class ManagementAPI:
         self.collection_api = collection_api
         self.external_keys_api = external_keys_api
         self.vantage_api_keys_api = vantage_api_keys_api
+        self.semantic_query_suggestions_api = semantic_query_suggestions_api
         self.shopping_assistant_api = shopping_assistant_api
         self.vantage_vibe_api = vantage_vibe_api
         self.documents_api = documents_api
@@ -99,6 +108,9 @@ class ManagementAPI:
         collection_api = CollectionManagementApi(api_client=api_client)
         external_keys_api = ExternalKeysApi(api_client=api_client)
         vantage_api_keys_api = VantageAPIKeysApi(api_client=api_client)
+        semantic_query_suggestions_api = SemanticQuerySuggestionsApi(
+            api_client=api_client
+        )
         shopping_assistant_api = ShoppingAssistantApi(api_client=api_client)
         vantage_vibe_api = VantageVibeApi(api_client=api_client)
         documents_api = DocumentsApi(api_client=api_client)
@@ -107,6 +119,7 @@ class ManagementAPI:
             collection_api=collection_api,
             external_keys_api=external_keys_api,
             vantage_api_keys_api=vantage_api_keys_api,
+            semantic_query_suggestions_api=semantic_query_suggestions_api,
             shopping_assistant_api=shopping_assistant_api,
             vantage_vibe_api=vantage_vibe_api,
             documents_api=documents_api,

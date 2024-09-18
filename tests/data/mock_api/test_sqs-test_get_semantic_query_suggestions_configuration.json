@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "GET",
-      "urlPath": "/v1/account/test/vibe/test-vibe-id",
+      "urlPath": "/v1/account/test/collection/sqs-collection/semantic_query_suggestions/test-sqs-id",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
@@ -14,11 +14,13 @@
         "Content-Type": "application/json"
       },
       "jsonBody": {
-        "id": "test-vibe-id",
+        "semantic_query_suggestions_id": "test-sqs-id",
         "account_id": "test",
-        "name": "test-vibe",
+        "collection_id": "sqs-collection",
         "external_account_id": "test-external-account-id",
-        "llm_model_name": "text-embeddings-ada-002"
+        "llm_model_name": "text-embeddings-ada-002",
+        "system_prompt_id": "1234",
+        "suggestions_per_document": 3
       }
     }
   }
