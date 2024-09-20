@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from vantage_sdk.client import VantageClient
-
+from vantage_sdk.model.keys import OpenAIKey
 
 """ Integration tests for shopping assistant endpoints."""
 
@@ -47,14 +47,14 @@ class TestShoppingAssistant:
         test_account_id = account_params["id"]
         name = "test-assistant"
         groups = ["group 1", "group 2", "group 3"]
-        external_account_id = "test-external-account-id"
         llm_model_name = "text-embeddings-ada-002"
+        external_key = OpenAIKey(external_key_id="test-external-account-id")
 
         # When
         shopping_assistant = client.create_shopping_assistant(
             name=name,
             groups=groups,
-            external_account_id=external_account_id,
+            external_key=external_key,
             llm_model_name=llm_model_name,
         )
 
@@ -63,7 +63,10 @@ class TestShoppingAssistant:
         assert shopping_assistant.shopping_assistant_id is not None
         assert shopping_assistant.name == name
         assert shopping_assistant.groups == groups
-        assert shopping_assistant.external_account_id == external_account_id
+        assert (
+            shopping_assistant.external_account_id
+            == external_key.external_key_id
+        )
         assert shopping_assistant.llm_model_name == llm_model_name
 
     def test_delete_shopping_assistant(self, client: VantageClient) -> None:
