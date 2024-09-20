@@ -13,7 +13,7 @@ from vantage_sdk.model.search import (
 
 __author__ = """Vantage"""
 __email__ = 'none@vantage.com'
-__version__ = '0.9.2'
+__version__ = '0.9.3'
 __all__ = [
     "VantageClient",
     "Collection",
