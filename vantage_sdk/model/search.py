@@ -103,7 +103,7 @@ class MoreLikeTheseItem(BaseModel):
     ----------
     weight : StrictFloat
         The weight/importance assigned to this item in the query.
-    query_text : StrictStr
+    query_text : Optional[StrictStr], optional
         The text used for the query.
     query_document_id : Optional[StrictStr], optional
         The document ID used for the query.
@@ -112,7 +112,7 @@ class MoreLikeTheseItem(BaseModel):
     """
 
     weight: StrictFloat
-    query_text: StrictStr
+    query_text: Optional[StrictStr] = None
     query_document_id: Optional[StrictStr] = None
     embedding: Optional[list[StrictInt | StrictFloat]] = None
     these: Optional[list[dict[StrictStr, Any]]] = None
