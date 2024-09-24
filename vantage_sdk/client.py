@@ -1,6 +1,4 @@
 """
-Contains VantageClient class.
-
 This module contains VantageClient class,
 which is a main entry point for users using the SDK.
 """
@@ -119,16 +117,16 @@ class VantageClient:
         host: Optional[str] = DEFAULT_API_HOST,
     ) -> None:
         """
-        Initializes a new instance of the 'VantageClient' class, the main
+        Initializes a new instance of the VantageClient class, the main
         entry point for interacting with Vantage Discovery via the Python SDK,
         setting up the necessary APIs for management and search operations.
 
         Parameters
         ----------
         management_api : ManagementAPI
-            An instance of the ManagementAPI class to manage accounts, collections and keys.
+            An instance of the ManagementAPI class.
         search_api : SearchAPI
-            An instance of the SearchAPI class to perform search operations.
+            An instance of the SearchAPI class.
         account_id : str
             The account ID to be used for all operations within the Vantage platform.
         vantage_api_key : Optional[str], optional
@@ -155,7 +153,7 @@ class VantageClient:
         api_host: Optional[str] = DEFAULT_API_HOST,
     ) -> VantageClient:
         """
-        Instantiates a `VantageClient` using a Vantage API key for authentication.
+        Instantiates a VantageClient using a Vantage API key for authentication.
 
         Parameters
         ----------
@@ -203,7 +201,7 @@ class VantageClient:
         api_host: Optional[str] = DEFAULT_API_HOST,
     ) -> VantageClient:
         """
-        Instantiates a `VantageClient` using a JWT token for authentication.
+        Instantiates a VantageClient using a JWT token for authentication.
 
         Parameters
         ----------
@@ -257,7 +255,7 @@ class VantageClient:
         auth_host: Optional[str] = DEFAULT_AUTH_HOST,
     ) -> VantageClient:
         """
-        Instantiates a `VantageClient` using OAuth client credentials for authentication.
+        Instantiates a VantageClient using OAuth client credentials for authentication.
 
         This class method simplifies the process of creating a `VantageClient` instance
         by handling OAuth authentication automatically, using the provided client ID and secret.
@@ -325,11 +323,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> Account:
         """
-        Retrieves the details of an Account.
-
-        This method fetches the details of an account identified by its account ID.
-        If the account ID is not specified, it defaults to the account ID of the current instance.
-        It uses the Management API to retrieve the account information and returns an Account object upon success.
+        Retrieves the details of an account.
 
         Parameters
         ----------
@@ -343,6 +337,8 @@ class VantageClient:
         Account
             An Account object containing the details of the requested account.
 
+        Notes
+        -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
 
@@ -357,11 +353,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> Account:
         """
-        Updates the Account.
-
-        This method allows for updating the name of an account identified by its account ID.
-        If the account ID is not specified, it defaults to the account ID of the current instance.
-        It uses the Management API to perform the update operation and returns an updated Account object upon success.
+        Updates the account.
 
         Parameters
         ----------
@@ -401,10 +393,6 @@ class VantageClient:
         """
         Retrieves a list of Vantage API keys for a specified account.
 
-        This method fetches all the Vantage API keys associated with an account identified by its account ID.
-        If the account ID is not specified, it defaults to the account ID of the current instance.
-        It uses the Management API to retrieve the keys and returns a list of VantageAPIKey objects upon success.
-
         Parameters
         ----------
         account_id : Optional[str], optional
@@ -435,11 +423,6 @@ class VantageClient:
     ) -> VantageAPIKey:
         """
         Retrieves a specific Vantage API key for a given account.
-
-        This method obtains the details of a specific Vantage API key identified
-        by `vantage_api_key_id` for the account specified by `account_id`.
-        If the account ID is not specified, it defaults to the account ID of the current instance.
-        It uses the Management API to retrieve the key and returns an VantageAPIKey object upon success.
 
         Parameters
         ----------
@@ -477,14 +460,10 @@ class VantageClient:
         """
         Retrieves a list of external keys associated with a given account.
 
-        This method fetches all external keys linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to obtain the keys and returns a list of ExternalAPIKey objects upon success.
-
         Parameters
         ----------
         account_id : Optional[str], optional
-            The unique identifier of the account for which the external API keys are to be retrieved.
+            The unique identifier of the account for which the external keys are to be retrieved.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -511,18 +490,12 @@ class VantageClient:
         """
         Retrieves a specific external key associated with a given account.
 
-        This method fetches the details of an external key identified
-        by `external_key_id` for the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to perform the retrieval and returns an ExternalAPIKey
-        object containing the details of the requested API key upon success.
-
         Parameters
         ----------
         external_key_id : str
-            The unique identifier of the external API key to be retrieved.
+            The unique identifier of the external key to be retrieved.
         account_id : Optional[str], optional
-            The unique identifier of the account to which the external API key is associated.
+            The unique identifier of the account to which the external key is associated.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -552,12 +525,6 @@ class VantageClient:
         """
         Creates a new external key associated with a given account.
 
-        This method generates a new external key for integrating with external services, specified by the
-        URL, LLM (Large Language Model) provider, and a secret for the LLM.
-        The key is associated with the account identified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API for the creation operation and returns an ExternalAPIKey object upon success.
-
         Parameters
         ----------
         llm_provider : LLMProvider
@@ -565,7 +532,7 @@ class VantageClient:
         llm_secret : str
             The secret key for accessing the LLM.
         account_id : Optional[str], optional
-            The unique identifier of the account for which the external API key is to be created.
+            The unique identifier of the account for which the external key is to be created.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -600,18 +567,12 @@ class VantageClient:
         """
         Updates the details of a specific external key associated with a given account.
 
-        This method allows for updating the URL, LLM (Large Language Model) provider, and LLM secret of an
-        external key identified by `external_key_id`.
-        If `account_id` is not specified, it defaults to using the account ID of the current instance.
-        It uses the Management API to perform the update and returns an updated ExternalKey object upon success.
-
         Parameters
         ----------
         external_key_id : str
             The unique identifier of the external key to be updated.
         llm_provider : LLMProvider
             The new provider of the Large Language Model (LLM).
-            Supported options are: OpenAI, HuggingFace (Hugging), and Anthropic
         llm_secret : str
             The new secret key for accessing the LLM.
         account_id : Optional[str], optional
@@ -649,17 +610,12 @@ class VantageClient:
         """
         Deletes a specific external key associated with a given account.
 
-        This method removes an external key identified by `external_key_id`
-        from the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to perform the deletion.
-
         Parameters
         ----------
         external_key_id : str
             The unique identifier of the external key to be deleted.
         account_id : Optional[str], optional
-            The unique identifier of the account to which the external API key is associated.
+            The unique identifier of the account to which the external key is associated.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -726,11 +682,6 @@ class VantageClient:
         """
         Retrieves a list of collections associated with a given account.
 
-        This method fetches all collections linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to obtain the list of collections and
-        returns a list of Collection objects upon success.
-
         Parameters
         ----------
         account_id : Optional[str], optional
@@ -764,13 +715,6 @@ class VantageClient:
     ) -> Collection:
         """
         Retrieves the details of a specified collection.
-
-        This method fetches the details of a collection identified
-        by its unique ID within a specified account.
-        It checks for the existence of the collection ID and raises
-        an exception if no collection with the given ID exists.
-        The method returns a Collection object containing
-        the collection's details upon successful retrieval.
 
         Parameters
         ----------
@@ -812,7 +756,7 @@ class VantageClient:
         HuggingFaceCollection,
     ]:
         """
-        Creates a new collection based on the provided collection object.
+        Creates a new collection based on the provided Collection object.
 
         Parameters
         ----------
@@ -879,9 +823,8 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> Collection:
         """
-        Updates an existing collection's details such as its name, associated external key ID, and secondary accounts.
-        It checks for the existence of the collection within the specified account and raises an exception if the
-        collection does not exist. Upon successful update, it returns an updated Collection object.
+        Updates an existing collection's details
+        identified by its collection_id within a specified account.
 
         Parameters
         ----------
@@ -953,9 +896,8 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> None:
         """
-        Deletes a specific collection identified by its collection ID within a specified account. It first verifies
-        the existence of the collection in the account and raises an exception if the collection does not exist. Upon
-        successful deletion, it returns the Collection object that was deleted.
+        Deletes a specific collection
+        identified by its collection_id within a specified account.
 
         Parameters
         ----------
@@ -992,11 +934,6 @@ class VantageClient:
         """
         Retrieves a list of shopping assistants associated with a given account.
 
-        This method fetches all shopping assistants linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to obtain the list of assistants and
-        returns a list of ShoppingAssistant objects upon success.
-
         Parameters
         ----------
         account_id : Optional[str], optional
@@ -1031,15 +968,12 @@ class VantageClient:
         """
         Retrieves the details of a specified shopping assistant.
 
-        This method fetches the details of a shopping assistent identified
-        by its unique ID within a specified account.
-
         Parameters
         ----------
         shopping_assistant_id : str
             The unique identifier of the shopping assistant to be retrieved.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the shopping assistant belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1073,7 +1007,7 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> ShoppingAssistant:
         """
-        Creates a new shopping assistant based on the provided parameters.
+        Creates a new shopping assistant based on the provided details.
 
         Parameters
         ----------
@@ -1089,7 +1023,7 @@ class VantageClient:
             A string representing the model name that the user wishes to use for the prompts.
             This has to be OpenAI model for now.
         account_id: Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the shopping assistant belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1144,7 +1078,7 @@ class VantageClient:
             A string representing the model name that the user wishes to use for the prompts.
             This has to be OpenAI model for now.
         account_id: Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the shopping assistant belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1185,7 +1119,7 @@ class VantageClient:
         shopping_assistant_id : str
             The unique identifier of the shopping assistant to be deleted.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the shopping assistant belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1214,15 +1148,10 @@ class VantageClient:
         """
         Retrieves a list of Vantage vibe configurations associated with a given account.
 
-        This method fetches all vibe configurations linked to the account specified by `account_id`.
-        If `account_id` is not provided, it defaults to the account ID of the current instance.
-        It uses the Management API to obtain the list of vibes and
-        returns a list of VantageVibe objects upon success.
-
         Parameters
         ----------
         account_id : Optional[str], optional
-            The unique identifier of the account for which the vibes are to be retrieved.
+            The unique identifier of the account for which the vibe configurations are to be retrieved.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1253,22 +1182,19 @@ class VantageClient:
         """
         Retrieves the details of a specified Vantage vibe configuration.
 
-        This method fetches the details of a Vantage vibe identified
-        by its unique ID within a specified account.
-
         Parameters
         ----------
         vibe_id : str
-            The unique identifier of the Vantage vibe to be retrieved.
+            The unique identifier of the Vantage vibe configuration to be retrieved.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the vibe configuration belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
         Returns
         -------
         VantageVibe
-            A VantageVibe object containing the details of the specified vibe.
+            A VantageVibe object containing the details of the specified vibe configuration.
 
         Notes
         -----
@@ -1304,7 +1230,7 @@ class VantageClient:
             Valid external key.
             This has to be OpenAI or Anthropic key for now.
         account_id: Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the vibe configuration belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1356,7 +1282,7 @@ class VantageClient:
             Valid external key.
             This has to be OpenAI or Anthropic key for now.
         account_id: Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the vibe configuration belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1395,9 +1321,9 @@ class VantageClient:
         Parameters
         ----------
         vibe_id : str
-            The unique identifier of the Vantage vibe to be deleted.
+            The unique identifier of the Vantage vibe configuration to be deleted.
         account_id : Optional[str], optional
-            The account ID to which the collection belongs.
+            The account ID to which the vibe configuration belongs.
             If not provided, the instance's account ID is used.
             Defaults to None.
 
@@ -1521,14 +1447,16 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        total_counts: Optional[TotalCountsOptions] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
-        total_counts: Optional[TotalCountsOptions] = None,
     ) -> SearchResult:
         """
-        Performs a search within a specified collection using a text query,
-        with optional parameters for accuracy, pagination, and a boolean filter for refined
-        search criteria.
+        Performs a search within a specified collection using a text query
+        and additional optional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options)
+        documentation page for more details.
 
         Parameters
         ----------
@@ -1541,19 +1469,22 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None.,
+            Defaults to None.
+        total_counts: Optional[TotalCountsOptions], optional
+            Similarity score range used to calculate the total
+            number of documents that match it.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1562,8 +1493,6 @@ class VantageClient:
             The account ID associated with the search.
             If not provided, the instance's account ID is used.
             Defaults to None.
-        total_counts: Optional[TotalCountsOptions], optional
-            Threshold value of documents similarity score.
 
         Returns
         -------
@@ -1622,9 +1551,11 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> SearchResult:
         """
-        Performs a search within a specified collection using an embedding vector,
-        with optional parameters for accuracy, pagination, and a boolean filter for refined
-        search criteria.
+        Performs a search within a specified collection using an embedding vector and
+        optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options)
+        documentation page for more details.
 
         Parameters
         ----------
@@ -1637,19 +1568,19 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None.,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1714,8 +1645,11 @@ class VantageClient:
     ) -> SearchResult:
         """
         Performs a "More Like This" search to find documents similar to a specified
-        document within a specified collection using optional parameters for
-        accuracy, pagination, and a boolean filter for refined search criteria.
+        document within a specified collection using optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options) and
+        [More Like This](https://docs.vantagediscovery.com/docs/search-more-like-this)
+        documentation pages for more details.
 
         Parameters
         ----------
@@ -1728,19 +1662,19 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None.,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1805,8 +1739,11 @@ class VantageClient:
     ) -> SearchResult:
         """
         Performs a "More Like These" search to find documents similar to a specified list
-        of MoreLikeTheseItem objects within a specified collection using optional parameters for
-        accuracy, pagination, and a boolean filter for refined search criteria.
+        of MoreLikeTheseItem objects within a specified collection using optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options)
+        and [More Like These](https://docs.vantagediscovery.com/docs/search-more-like-these-tm)
+        documentation pages for more details.
 
         Parameters
         ----------
@@ -1819,19 +1756,19 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None.,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1905,8 +1842,11 @@ class VantageClient:
     ) -> SearchResult:
         """
         Performs a Vantage Vibe search to find documents with the vibe similar to a specified list
-        of image objects and text within a specified collection using optional parameters for
-        accuracy, pagination, and a boolean filter for refined search criteria.
+        of image objects and text within a specified collection using optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options) and
+        [Vantage Vibe](https://docs.vantagediscovery.com/docs/search-vantage-vibe)
+        documentation pages for more details.
 
         Parameters
         ----------
@@ -1923,19 +1863,19 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2016,9 +1956,12 @@ class VantageClient:
         vantage_api_key: Optional[str] = None,
     ) -> ShoppingAssistantResult:
         """
-        Performs a Shopping Assistant search to find documents ...
-         objects within a specified collection using optional parameters for
-        accuracy, pagination, and a boolean filter for refined search criteria.
+        Performs a search using a help of shopping assistant to find documents
+        within a specified collection and optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options)
+        and [ShoppingAssistant](https://docs.vantagediscovery.com/docs/search-shopping-assistant)
+        documentation pages for more details.
 
         Parameters
         ----------
@@ -2036,19 +1979,19 @@ class VantageClient:
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2114,9 +2057,12 @@ class VantageClient:
         account_id: Optional[str] = None,
     ) -> ApproximateResultsCountResult:
         """
-        Performs a search within a specified collection using a text query,
-        with optional parameters for accuracy, pagination, and a boolean filter for refined
-        search criteria.
+        Performs a search within a specified collection using a text query and
+        optional additional parameters.
+
+        Check [Search Options](https://docs.vantagediscovery.com/docs/search-options) and
+        [Approximate Results Count Search](https://docs.vantagediscovery.com/docs/search-approximate-results-count)
+        documentation pages for more details.
 
         Parameters
         ----------
@@ -2124,24 +2070,27 @@ class VantageClient:
             The text query for the semantic search.
         collection_id : str
             The ID of the collection to search within.
+        total_counts: TotalCountsOptions
+            Similarity score range used to calculate the total
+            number of documents that match it.
         accuracy : Optional[float], optional
             The accuracy threshold for the search.
             Defaults to None.
         pagination: Optional[Pagination], optional
             Pagination settings for the search results.
-            Defaults to None,
+            Defaults to None.
         filter: Optional[Filter], optional
             Filter settings to narrow down the search results.
-            Defaults to None,
+            Defaults to None.
         sort: Optional[Sort], optional
             Sorting settings for the search results.
-            Defaults to None,
+            Defaults to None.
         field_value_weighting: Optional[FieldValueWeighting], optional
             Weighting settings for specific field values in the search.
-            Defaults to None,
+            Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
-            Defaults to None.,
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2150,13 +2099,12 @@ class VantageClient:
             The account ID associated with the search.
             If not provided, the instance's account ID is used.
             Defaults to None.
-        total_counts: Optional[TotalCountsOptions], optional
-            Threshold value of documents similarity score.
 
         Returns
         -------
-        SearchResult
-            An object containing the search results.
+        ApproximateResultsCountResult
+            An object containing the total count of documents that
+            match total_counts threshold range.
 
         Notes
         -----
