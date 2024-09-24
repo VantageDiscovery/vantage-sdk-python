@@ -82,6 +82,9 @@ from vantage_sdk.model.keys import (
     LLMProvider,
     SecondaryExternalAccount,
     VantageAPIKey,
+    OpenAIKey,
+    HuggingFaceKey,
+    AnthropicKey,
 )
 from vantage_sdk.model.search import (
     ApproximateResultsCountResult,
@@ -542,7 +545,7 @@ class VantageClient:
 
     def create_external_key(
         self,
-        llm_provider: str,
+        llm_provider: LLMProvider,
         llm_secret: str,
         account_id: Optional[str] = None,
     ) -> ExternalKey:
@@ -557,9 +560,8 @@ class VantageClient:
 
         Parameters
         ----------
-        llm_provider : str
+        llm_provider : LLMProvider
             The provider of the Large Language Model (LLM).
-            Supported options are: OpenAI, HuggingFace (Hugging), and Anthropic
         llm_secret : str
             The secret key for accessing the LLM.
         account_id : Optional[str], optional
@@ -578,7 +580,7 @@ class VantageClient:
         """
 
         external_key_modifiable = ExternalKeyModifiable(
-            llm_provider=llm_provider, llm_secret=llm_secret
+            llm_provider=llm_provider.value, llm_secret=llm_secret
         )
 
         key = self.management_api.external_keys_api.create_external_key(
@@ -591,7 +593,7 @@ class VantageClient:
     def update_external_key(
         self,
         external_key_id: str,
-        llm_provider: str,
+        llm_provider: LLMProvider,
         llm_secret: str,
         account_id: Optional[str] = None,
     ) -> ExternalKey:
@@ -607,7 +609,7 @@ class VantageClient:
         ----------
         external_key_id : str
             The unique identifier of the external key to be updated.
-        llm_provider : str
+        llm_provider : LLMProvider
             The new provider of the Large Language Model (LLM).
             Supported options are: OpenAI, HuggingFace (Hugging), and Anthropic
         llm_secret : str
@@ -628,7 +630,7 @@ class VantageClient:
         """
 
         external_key_modifiable = ExternalKeyModifiable(
-            llm_provider=llm_provider, llm_secret=llm_secret
+            llm_provider=llm_provider.value, llm_secret=llm_secret
         )
 
         key = self.management_api.external_keys_api.update_external_key(
@@ -712,37 +714,6 @@ class VantageClient:
         )
 
         return CollectionUploadURL.model_validate(url.model_dump())
-
-    def _validate_create_collection_parameters(
-        self,
-        llm_provider: str,
-        url: Optional[str] = None,
-        llm: Optional[str] = None,
-    ) -> None:
-        """
-        Validates the parameters required for creating a collection based on the specified LLM provider.
-
-        Parameters
-        ----------
-        llm_provider : str
-            The name of the LLM provider, which dictates the specific parameters required for the collection.
-        url : Optional[str], optional
-            Endpoint of the HuggingFace model.
-            Required if the LLM provider is HuggingFace and not provided otherwise.
-            Defaults to None.
-        llm : Optional[str], optional
-            OpenAI model identifier.
-            Required if the LLM provider is OpenAI and not provided otherwise.
-            Defaults to None.
-        """
-        if llm_provider == LLMProvider.HuggingFace.value and not url:
-            raise ValueError(
-                f"URL parameter is required if {llm_provider} is used as LLM provider."
-            )
-        elif llm_provider == LLMProvider.OpenAI.value and not llm:
-            raise ValueError(
-                f"LLM parameter is required if {llm_provider} is used as LLM provider."
-            )
 
     # endregion
 
@@ -1097,7 +1068,7 @@ class VantageClient:
         self,
         name: Optional[str] = None,
         groups: Optional[List[str]] = None,
-        external_account_id: Optional[str] = None,
+        external_key: Optional[OpenAIKey] = None,
         llm_model_name: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ShoppingAssistant:
@@ -1111,9 +1082,9 @@ class VantageClient:
             Must be unique based on account_id.
         groups: Optional[List[str]], optional
             A list of strings representing the product groups associated with the shopping assistant configuration.
-        external_account_id: Optional[str], optional
-            The id of the valid external account which contains the LLM API key.
-            This has to be OpenAI account for now.
+        external_key: Optional[OpenAIKey], optional
+            Valid external key.
+            This has to be OpenAI key for now.
         llm_model_name: Optional[str], optional
             A string representing the model name that the user wishes to use for the prompts.
             This has to be OpenAI model for now.
@@ -1134,7 +1105,7 @@ class VantageClient:
         shopping_assistant_modifiable = ShoppingAssistantModifiable(
             name=name,
             groups=groups,
-            external_account_id=external_account_id,
+            external_account_id=external_key.external_key_id,
             llm_model_name=llm_model_name,
         )
 
@@ -1150,7 +1121,7 @@ class VantageClient:
         shopping_assistant_id: str,
         name: Optional[str] = None,
         groups: Optional[List[str]] = None,
-        external_account_id: Optional[str] = None,
+        external_key: Optional[OpenAIKey] = None,
         llm_model_name: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ShoppingAssistant:
@@ -1166,9 +1137,9 @@ class VantageClient:
             Must be unique based on account_id.
         groups: Optional[List[str]], optional
             A list of strings representing the product groups associated with the shopping assistant configuration.
-        external_account_id: Optional[str], optional
-            The id of the valid external account which contains the LLM API key.
-            This has to be OpenAI account for now.
+        external_key: Optional[OpenAIKey], optional
+            Valid external key.
+            This has to be OpenAI key for now.
         llm_model_name: Optional[str], optional
             A string representing the model name that the user wishes to use for the prompts.
             This has to be OpenAI model for now.
@@ -1189,7 +1160,7 @@ class VantageClient:
         shopping_assistant_modifiable = ShoppingAssistantModifiable(
             name=name,
             groups=groups,
-            external_account_id=external_account_id,
+            external_account_id=external_key.external_key_id,
             llm_model_name=llm_model_name,
         )
 
@@ -1315,7 +1286,7 @@ class VantageClient:
         self,
         name: str,
         llm_model_name: str,
-        external_account_id: str,
+        external_key: Union[OpenAIKey, AnthropicKey],
         account_id: Optional[str] = None,
     ) -> VantageVibe:
         """
@@ -1328,10 +1299,10 @@ class VantageClient:
             Must be unique based on account_id.
         llm_model_name: Optional[str], optional
             A string representing the model name that the user wishes to use for the prompts.
-            This has to be OpenAI model for now.
-        external_account_id: Optional[str], optional
-            The id of the valid external account which contains the LLM API key.
-            This can be OpenAI or Anthropic LLM key.
+            This has to be OpenAI or Anthropic model for now.
+        external_key: Union[OpenAIKey, AnthropicKey]
+            Valid external key.
+            This has to be OpenAI or Anthropic key for now.
         account_id: Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1350,7 +1321,7 @@ class VantageClient:
         vibe_modifiable = VantageVibeModifiable(
             llm_model_name=llm_model_name,
             name=name,
-            external_account_id=external_account_id,
+            external_account_id=external_key.external_key_id,
         )
 
         result = self.management_api.vantage_vibe_api.create_vantage_vibe(
@@ -1365,7 +1336,7 @@ class VantageClient:
         vibe_id: str,
         name: Optional[str] = None,
         llm_model_name: Optional[str] = None,
-        external_account_id: Optional[str] = None,
+        external_key: Optional[Union[OpenAIKey, AnthropicKey]] = None,
         account_id: Optional[str] = None,
     ) -> VantageVibe:
         """
@@ -1381,9 +1352,9 @@ class VantageClient:
         llm_model_name: Optional[str], optional
             A string representing the model name that the user wishes to use for the prompts.
             This has to be OpenAI model for now.
-        external_account_id: Optional[str], optional
-            The id of the valid external account which contains the LLM API key.
-            This has to be OpenAI account for now.
+        external_key: Optional[Union[OpenAIKey, AnthropicKey]], optional
+            Valid external key.
+            This has to be OpenAI or Anthropic key for now.
         account_id: Optional[str], optional
             The account ID to which the collection belongs.
             If not provided, the instance's account ID is used.
@@ -1402,7 +1373,7 @@ class VantageClient:
         vibe_modifiable = VantageVibeModifiable(
             llm_model_name=llm_model_name,
             name=name,
-            external_account_id=external_account_id,
+            external_account_id=external_key.external_key_id,
         )
 
         result = self.management_api.vantage_vibe_api.update_vantage_vibe(

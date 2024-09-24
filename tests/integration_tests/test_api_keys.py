@@ -8,6 +8,7 @@ from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
+from vantage_sdk.model.keys import LLMProvider
 
 
 """Integration tests for API keys endpoints."""
@@ -126,7 +127,7 @@ class TestApiKeys:
         Tests fetching all external API keys from a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = random_string_generator(10)
         given_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -168,7 +169,7 @@ class TestApiKeys:
         Tests fetching a single external API key from a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = random_string_generator(10)
         given_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -232,7 +233,7 @@ class TestApiKeys:
         Tests creating an external API key on a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = external_key_llm_secret
 
         # When
@@ -266,7 +267,7 @@ class TestApiKeys:
         Tests updating an external API key present on a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = external_key_llm_secret
         test_api_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -318,7 +319,7 @@ class TestApiKeys:
         with pytest.raises(NotFoundException) as exception:
             client.update_external_key(
                 external_key_id=nonexisting_external_api_key_id,
-                llm_provider="OpenAI",
+                llm_provider=LLMProvider.OpenAI,
                 llm_secret=external_key_llm_secret,
                 account_id=account_params["id"],
             )

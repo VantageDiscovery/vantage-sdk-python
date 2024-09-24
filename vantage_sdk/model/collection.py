@@ -2,7 +2,8 @@
 Models for the Collection API.
 """
 
-from typing import List, Optional
+from enum import Enum
+from typing import List, Optional, Union
 
 from pydantic import (
     BaseModel,
@@ -12,7 +13,12 @@ from pydantic import (
     model_validator,
 )
 
-from vantage_sdk.model.keys import LLMProvider, SecondaryExternalAccount
+from vantage_sdk.model.keys import (
+    SecondaryExternalAccount,
+    OpenAIKey,
+    HuggingFaceKey,
+    LLMProvider,
+)
 
 
 class Collection(BaseModel):
@@ -86,14 +92,14 @@ class VantageManagedEmbeddingsCollection(Collection):
         The provider of the embedding model used to generate embeddings.
     llm_secret : Optional[StrictStr], optional
         The secret key used to authenticate with the model provider.
-    external_key_id : Optional[StrictStr], optional
-        The external key ID used to authenticate with the model provider.
+    external_key : Optional[Union[OpenAIExternalKey, HuggingFaceExternalKey]], optional
+        The external key used to authenticate with the model provider.
     """
 
     user_provided_embeddings: StrictBool = False
     llm_provider: StrictStr
     llm_secret: Optional[StrictStr] = None
-    external_key_id: Optional[StrictStr] = None
+    external_key: Optional[Union[OpenAIKey, HuggingFaceKey]] = None
 
     @model_validator(mode="after")
     def check_extrnal_authentication_method_exists(cls, values):
@@ -118,10 +124,11 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
     """
 
     llm_provider: StrictStr = LLMProvider.OpenAI.value
+    external_key: Optional[OpenAIKey] = None
     llm: StrictStr
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
@@ -137,6 +144,7 @@ class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
     """
 
     llm_provider: StrictStr = LLMProvider.HuggingFace.value
+    external_key: Optional[HuggingFaceKey] = None
     external_url: StrictStr = None
 
 
