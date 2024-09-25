@@ -36,19 +36,19 @@ class ShoppingAssistant(BaseModel):
 
     shopping_assistant_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
-    name: Optional[StrictStr] = None
     groups: Optional[List[StrictStr]] = None
+    system_prompt_id: Optional[StrictStr] = None
+    name: Optional[StrictStr] = None
     external_account_id: Optional[StrictStr] = None
     llm_model_name: Optional[StrictStr] = None
-    system_prompt_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "shopping_assistant_id",
         "account_id",
-        "name",
         "groups",
+        "system_prompt_id",
+        "name",
         "external_account_id",
         "llm_model_name",
-        "system_prompt_id",
     ]
 
     model_config = {
@@ -106,11 +106,11 @@ class ShoppingAssistant(BaseModel):
             {
                 "shopping_assistant_id": obj.get("shopping_assistant_id"),
                 "account_id": obj.get("account_id"),
-                "name": obj.get("name"),
                 "groups": obj.get("groups"),
+                "system_prompt_id": obj.get("system_prompt_id"),
+                "name": obj.get("name"),
                 "external_account_id": obj.get("external_account_id"),
                 "llm_model_name": obj.get("llm_model_name"),
-                "system_prompt_id": obj.get("system_prompt_id"),
             }
         )
         return _obj

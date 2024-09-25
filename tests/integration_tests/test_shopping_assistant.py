@@ -2,6 +2,7 @@
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.keys import OpenAIKey
 
+
 """ Integration tests for shopping assistant endpoints."""
 
 
