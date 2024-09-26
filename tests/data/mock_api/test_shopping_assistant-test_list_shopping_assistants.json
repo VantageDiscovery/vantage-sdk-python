@@ -24,7 +24,8 @@
               "group 3"
           ],
           "external_account_id": "test-external-account-id",
-          "llm_model_name": "text-embeddings-ada-002"
+          "llm_model_name": "text-embeddings-ada-002",
+          "system_prompt_id": "e-commerce-1"
         },
         {
           "shopping_assistant_id": "test-shopping-assistant-id2",
@@ -35,7 +36,8 @@
               "group B"
           ],
           "external_account_id": "test-external-account-id",
-          "llm_model_name": "text-embeddings-ada-002"
+          "llm_model_name": "text-embeddings-ada-002",
+          "system_prompt_id": "e-commerce-1"
         },
         {
           "shopping_assistant_id": "test-shopping-assistant-id3",
@@ -47,7 +49,8 @@
               "group z"
           ],
           "external_account_id": "test-external-account-id",
-          "llm_model_name": "text-embeddings-ada-002"
+          "llm_model_name": "text-embeddings-ada-002",
+          "system_prompt_id": "e-commerce-1"
         }
       ]
     }
