@@ -49,6 +49,7 @@ from vantage_sdk.core.http.models import (
     ShoppingAssistantQuery,
     ShoppingAssistantResult,
     TotalCountResult,
+    VantageAPIKeyModifiable,
     VantageVibe,
     VantageVibeImage,
     VantageVibeModifiable,
@@ -83,6 +84,7 @@ from vantage_sdk.model.keys import (
     OpenAIKey,
     SecondaryExternalAccount,
     VantageAPIKey,
+    VantageAPIKeyRole,
 )
 from vantage_sdk.model.search import (
     ApproximateResultsCountResult,
@@ -448,6 +450,73 @@ class VantageClient:
             vantage_api_key_id=vantage_api_key_id,
         )
         return VantageAPIKey.model_validate(key.model_dump())
+
+    def create_vantage_api_key(
+        self,
+        roles: List[VantageAPIKeyRole],
+        account_id: Optional[str] = None,
+    ) -> VantageAPIKey:
+        """
+        Created new Vantage API key for a given account.
+
+        Parameters
+        ----------
+        roles : List[VantageAPIKeyRole]
+            List of Vantage API key roles that determines usage of the specific key.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the Vantage API key is associated.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        VantageAPIKey
+            A VantageAPIKey object containing the details of the created API key.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+
+        vantage_api_key_modifiable = VantageAPIKeyModifiable(
+            roles=[role.value for role in roles]
+        )
+
+        key = self.management_api.vantage_api_keys_api.create_vantage_api_key(
+            account_id=account_id or self.account_id,
+            vantage_api_key_modifiable=vantage_api_key_modifiable,
+        )
+        return VantageAPIKey.model_validate(key.model_dump())
+
+    def deactivate_vantage_api_key(
+        self,
+        vantage_api_key_id: str,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deactivates a specific Vantage API key for a given account.
+
+        Parameters
+        ----------
+        vantage_api_key_id : str
+            The unique identifier of the Vantage API key to be deactivated.
+        account_id : Optional[str], optional
+            The unique identifier of the account for which the Vantage API key is associated.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        self.management_api.vantage_api_keys_api.deactivate_vantage_api_key(
+            account_id=account_id or self.account_id,
+            vantage_api_key_id=vantage_api_key_id,
+        )
 
     # endregion
 

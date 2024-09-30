@@ -3,9 +3,16 @@ Models for the Keys API.
 """
 
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, StrictStr
+
+
+class VantageAPIKeyRole(Enum):
+    """Supported Vantage API Key roles"""
+
+    Full = "Full"
+    ReadOnly = "ReadOnly"
 
 
 class VantageAPIKey(BaseModel):
@@ -22,6 +29,8 @@ class VantageAPIKey(BaseModel):
         Obfuscated value of the Vantage API key.
     status: Optional[StrictStr]
         Key status.
+    roles: Optional[List[StrictStr]]
+        List of Vantage API key roles that determines usage of the specific key.
     """
 
     vantage_api_key_id: Optional[StrictStr] = None
@@ -29,6 +38,7 @@ class VantageAPIKey(BaseModel):
     vantage_api_key_created_date: Optional[StrictStr] = None
     vantage_api_key_obfuscated: Optional[StrictStr] = None
     status: Optional[StrictStr] = None
+    roles: Optional[List[StrictStr]] = None
 
 
 class LLMProvider(Enum):

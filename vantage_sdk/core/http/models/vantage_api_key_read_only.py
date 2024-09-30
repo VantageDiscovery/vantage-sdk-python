@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -29,9 +29,9 @@ except ImportError:
     from typing_extensions import Self
 
 
-class VantageAPIKey(BaseModel):
+class VantageAPIKeyReadOnly(BaseModel):
     """
-    VantageAPIKey
+    VantageAPIKeyReadOnly
     """  # noqa: E501
 
     vantage_api_key_id: Optional[StrictStr] = Field(
@@ -51,7 +51,6 @@ class VantageAPIKey(BaseModel):
     last_used_date: Optional[StrictStr] = Field(
         default=None, description="Date this key was last used"
     )
-    roles: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = [
         "vantage_api_key_id",
         "account_id",
@@ -59,7 +58,6 @@ class VantageAPIKey(BaseModel):
         "vantage_api_key_obfuscated",
         "status",
         "last_used_date",
-        "roles",
     ]
 
     @field_validator('status')
@@ -72,19 +70,6 @@ class VantageAPIKey(BaseModel):
             raise ValueError(
                 "must be one of enum values ('Active', 'Deactivated')"
             )
-        return value
-
-    @field_validator('roles')
-    def roles_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in ('Full', 'ReadOnly'):
-                raise ValueError(
-                    "each list item must be one of ('Full', 'ReadOnly')"
-                )
         return value
 
     model_config = {
@@ -104,7 +89,7 @@ class VantageAPIKey(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of VantageAPIKey from a JSON string"""
+        """Create an instance of VantageAPIKeyReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -135,7 +120,7 @@ class VantageAPIKey(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of VantageAPIKey from a dict"""
+        """Create an instance of VantageAPIKeyReadOnly from a dict"""
         if obj is None:
             return None
 
@@ -154,7 +139,6 @@ class VantageAPIKey(BaseModel):
                 ),
                 "status": obj.get("status"),
                 "last_used_date": obj.get("last_used_date"),
-                "roles": obj.get("roles"),
             }
         )
         return _obj

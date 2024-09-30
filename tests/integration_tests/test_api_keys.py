@@ -8,7 +8,7 @@ from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
-from vantage_sdk.model.keys import LLMProvider
+from vantage_sdk.model.keys import LLMProvider, VantageAPIKeyRole
 
 
 """Integration tests for API keys endpoints."""
@@ -33,7 +33,7 @@ class TestApiKeys:
         keys = client.get_vantage_api_keys(account_id=account_params["id"])
 
         # Then
-        assert len(keys) == 1
+        assert len(keys) == 3
         api_key = keys[0]
         assert api_key.vantage_api_key_obfuscated is not None
         assert api_key.account_id == account_params["id"]
@@ -70,7 +70,55 @@ class TestApiKeys:
         # Then
         assert api_key.account_id == account_params["id"]
         assert api_key.vantage_api_key_obfuscated is not None
-        api_key.vantage_api_key_id == vantage_api_key_id
+        assert api_key.vantage_api_key_id == vantage_api_key_id
+
+    def test_create_full_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+    ):
+        # When
+        api_key = client.create_vantage_api_key(
+            roles=[VantageAPIKeyRole.Full],
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert api_key.account_id == account_params["id"]
+        assert api_key.roles[0] == VantageAPIKeyRole.Full.value
+        assert api_key.status == "Active"
+
+    def test_create_read_only_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+    ):
+        # When
+        api_key = client.create_vantage_api_key(
+            roles=[VantageAPIKeyRole.ReadOnly],
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert api_key.account_id == account_params["id"]
+        assert api_key.roles[0] == VantageAPIKeyRole.ReadOnly.value
+        assert api_key.status == "Active"
+
+    def test_deactivate_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        vantage_api_key_id: str,
+    ):
+        # When
+        client.deactivate_vantage_api_key(
+            vantage_api_key_id="del" + vantage_api_key_id,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert 1 == 1
+        # Nothing to check, if method call was successful everything is fine
 
     def test_get_vantage_api_key_using_nonexisting_account(
         self,
