@@ -76,13 +76,12 @@ from vantage_sdk.model.document import (
     VantageManagedEmbeddingsDocument,
 )
 from vantage_sdk.model.keys import (
+    AnthropicKey,
     ExternalKey,
     LLMProvider,
+    OpenAIKey,
     SecondaryExternalAccount,
     VantageAPIKey,
-    OpenAIKey,
-    HuggingFaceKey,
-    AnthropicKey,
 )
 from vantage_sdk.model.search import (
     ApproximateResultsCountResult,
