@@ -85,7 +85,7 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.role == VantageAPIKeyRole.Admin
+        assert api_key.role == VantageAPIKeyRole.Admin.value
         assert api_key.status == "Active"
 
     def test_create_query_only_vantage_api_key(
@@ -101,7 +101,7 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.role == VantageAPIKeyRole.QueryOnly
+        assert api_key.role == VantageAPIKeyRole.QueryOnly.value
         assert api_key.status == "Active"
 
     def test_deactivate_vantage_api_key(
@@ -112,7 +112,7 @@ class TestApiKeys:
     ):
         # When
         client.deactivate_vantage_api_key(
-            vantage_api_key_id=vantage_api_key_id,
+            vantage_api_key_id="del" + vantage_api_key_id,
             account_id=account_params["id"],
         )
 
