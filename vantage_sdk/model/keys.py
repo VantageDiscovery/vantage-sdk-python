@@ -29,6 +29,8 @@ class VantageAPIKey(BaseModel):
         Obfuscated value of the Vantage API key.
     status: Optional[StrictStr]
         Key status.
+    role: Optional[StrictStr]
+        Vantage API key role that determines usage of the specific key.
     """
 
     vantage_api_key_id: Optional[StrictStr] = None
@@ -36,6 +38,7 @@ class VantageAPIKey(BaseModel):
     vantage_api_key_created_date: Optional[StrictStr] = None
     vantage_api_key_obfuscated: Optional[StrictStr] = None
     status: Optional[StrictStr] = None
+    role: Optional[StrictStr] = None
 
 
 class LLMProvider(Enum):

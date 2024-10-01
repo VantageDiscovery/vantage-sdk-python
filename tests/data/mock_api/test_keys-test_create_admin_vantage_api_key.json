@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/vantage_api_key",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+        {
+          "equalToJson": {
+            "role": "Admin"
+          }
+        }
+      ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "vantage_api_key_id": "testkeyid",
+      "account_id": "test",
+      "vantage_api_key_created_date": "2024-03-06T10:52:53",
+      "status": "Active",
+      "role": "Admin"
+    }
+  }
+}
