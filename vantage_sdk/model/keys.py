@@ -8,6 +8,13 @@ from typing import Optional
 from pydantic import BaseModel, StrictStr
 
 
+class VantageAPIKeyRole(Enum):
+    """Supported Vantage API Key roles"""
+
+    Admin = "Admin"
+    QueryOnly = "QueryOnly"
+
+
 class VantageAPIKey(BaseModel):
     """
     Key for accessing Vantage API.
