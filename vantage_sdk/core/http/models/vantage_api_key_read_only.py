@@ -48,12 +48,16 @@ class VantageAPIKeyReadOnly(BaseModel):
         default=None, description="obfuscated key"
     )
     status: Optional[StrictStr] = None
+    last_used_date: Optional[StrictStr] = Field(
+        default=None, description="Date this key was last used"
+    )
     __properties: ClassVar[List[str]] = [
         "vantage_api_key_id",
         "account_id",
         "vantage_api_key_created_date",
         "vantage_api_key_obfuscated",
         "status",
+        "last_used_date",
     ]
 
     @field_validator('status')
@@ -100,6 +104,7 @@ class VantageAPIKeyReadOnly(BaseModel):
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
@@ -107,6 +112,7 @@ class VantageAPIKeyReadOnly(BaseModel):
                 "vantage_api_key_id",
                 "account_id",
                 "vantage_api_key_created_date",
+                "last_used_date",
             },
             exclude_none=True,
         )
@@ -132,6 +138,7 @@ class VantageAPIKeyReadOnly(BaseModel):
                     "vantage_api_key_obfuscated"
                 ),
                 "status": obj.get("status"),
+                "last_used_date": obj.get("last_used_date"),
             }
         )
         return _obj
