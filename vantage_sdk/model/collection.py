@@ -2,7 +2,6 @@
 Models for the Collection API.
 """
 
-from enum import Enum
 from typing import List, Optional, Union
 
 from pydantic import (
@@ -14,10 +13,10 @@ from pydantic import (
 )
 
 from vantage_sdk.model.keys import (
-    SecondaryExternalAccount,
-    OpenAIKey,
     HuggingFaceKey,
     LLMProvider,
+    OpenAIKey,
+    SecondaryExternalAccount,
 )
 
 
@@ -126,9 +125,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     external_key: Optional[OpenAIKey] = None
     llm: StrictStr
-    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
-        None
-    )
+    secondary_external_accounts: Optional[
+        List[SecondaryExternalAccount]
+    ] = None
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):

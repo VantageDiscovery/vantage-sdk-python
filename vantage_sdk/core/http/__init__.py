@@ -139,6 +139,12 @@ from vantage_sdk.core.http.models.total_counts_options_total_counts import (
     TotalCountsOptionsTotalCounts,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
+from vantage_sdk.core.http.models.vantage_api_key_modifiable import (
+    VantageAPIKeyModifiable,
+)
+from vantage_sdk.core.http.models.vantage_api_key_read_only import (
+    VantageAPIKeyReadOnly,
+)
 from vantage_sdk.core.http.models.vantage_vibe import VantageVibe
 from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage
 from vantage_sdk.core.http.models.vantage_vibe_modifiable import (
