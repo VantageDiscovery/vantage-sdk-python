@@ -1404,7 +1404,7 @@ class VantageClient:
         facets = (
             [
                 SearchOptionsFacetsInner(
-                    name=f.name, type=f.type.value, values=f.values
+                    name=f.name, type=f.type.value, values=f.values, ranges=f.ranges
                 )
                 for f in facets
             ]

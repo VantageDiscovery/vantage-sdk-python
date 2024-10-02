@@ -189,12 +189,33 @@ class FieldValueWeighting(BaseModel):
 
 class FacetType(Enum):
     COUNT = "count"
+    RANGE = "range"
+
+
+class FacetRange(BaseModel):
+    min: float
+    max: float
+    value: str
 
 
 class Facet(BaseModel):
     name: str
     type: FacetType
     values: Optional[List[str]] = []
+    ranges: Optional[List[FacetRange]] = []
+
+    @model_validator(mode="before")
+    def check_mutually_exclusive_fields(cls, values, ranges):
+        values = values.get('values')
+        ranges = values.get('ranges')
+
+        if values and ranges:
+            raise ValueError(
+                'Only `values` or `ranges` should be provided, but not both.'
+            )
+
+        if not any([values, ranges]):
+            raise ValueError('One of `values` or `ranges` must be provided.')
 
 
 class VantageVibeImageAllFields(BaseModel):
