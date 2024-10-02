@@ -33,7 +33,7 @@ class TestApiKeys:
         keys = client.get_vantage_api_keys(account_id=account_params["id"])
 
         # Then
-        assert len(keys) == 1
+        assert len(keys) == 3
         api_key = keys[0]
         assert api_key.vantage_api_key_obfuscated is not None
         assert api_key.account_id == account_params["id"]
