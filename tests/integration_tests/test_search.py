@@ -34,7 +34,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
-        search_embedding = [1, 1, 1, 1, 1]
+        search_embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
 
         # When
         result = client.embedding_search(
@@ -58,7 +58,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
-        search_embedding = [1, 1, 1, 1, 1]
+        search_embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
 
         # When
         with pytest.raises(UnauthorizedException) as exception:
@@ -107,7 +107,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
-        search_embedding = [1, 1, 1, 1, 1]
+        search_embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
         accuracy = 800
 
         # When
@@ -328,7 +328,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
-        embedding = [1, 1, 1, 1, 1]
+        embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
 
         filter = Filter(
             variant_filter="(color:\"black\" OR color:\"brown\")",
@@ -561,7 +561,7 @@ class TestSearch:
         """
         # Given
         collection_id = test_collection_id
-        embedding = [1, 1, 1, 1, 1]
+        embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
 
         facets = [
             Facet(
