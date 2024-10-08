@@ -217,6 +217,22 @@ class Facet(BaseModel):
         if not any([values, ranges]):
             raise ValueError('One of `values` or `ranges` must be provided.')
 
+    @model_validator(mode="before")
+    def check_field_compatibility(cls, values, ranges, type):
+        values = values.get('values')
+        ranges = values.get('ranges')
+        type = values.get('type')
+
+        if ranges and type != FacetType.RANGE:
+            raise ValueError(
+                f'If ranges are provided, facet type should be set to {FacetType.RANGE}.'
+            )
+
+        if values and type != FacetType.COUNT:
+            raise ValueError(
+                f'If values are provided, facet type should be set to {FacetType.COUNT}.'
+            )
+
 
 class VantageVibeImageAllFields(BaseModel):
     url: Optional[str] = None
