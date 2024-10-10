@@ -10,6 +10,7 @@ from vantage_sdk.core.http.exceptions import (
 from vantage_sdk.model.search import (
     Facet,
     FacetType,
+    FacetRange,
     Filter,
     MoreLikeTheseItem,
     TotalCountsOptions,
@@ -428,14 +429,14 @@ class TestSearch:
 
     # region Facets
 
-    def test_semantic_search_with_facets(
+    def test_semantic_search_with_count_facets(
         self,
         client: VantageClient,
         account_params: dict,
         test_collection_id: str,
     ):
         """
-        Tests if semantic search will return correct result with facets.
+        Tests if semantic search will return correct result with count facets.
         """
         # Given
         collection_id = test_collection_id
@@ -450,6 +451,89 @@ class TestSearch:
                 name="size",
                 type=FacetType.COUNT,
                 values=["sm", "md"],
+            ),
+        ]
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
+
+    def test_semantic_search_with_range_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result with range facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        facets = [
+            Facet(
+                name="price",
+                type=FacetType.RANGE,
+                ranges=[
+                    FacetRange(min=0, max=99, value="below_100"),
+                    FacetRange(min=100, max=1000, value="more_than_100"),
+                ],
+            ),
+        ]
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            facets=facets,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        assert len(result.facets) == len(facets)
+
+    def test_semantic_search_with_combined_facets(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result with combined facets.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        facets = [
+            Facet(
+                name="color",
+                type=FacetType.COUNT,
+            ),
+            Facet(
+                name="size",
+                type=FacetType.COUNT,
+                values=["sm", "md"],
+            ),
+            Facet(
+                name="price",
+                type=FacetType.RANGE,
+                ranges=[
+                    FacetRange(min=0, max=99, value="below_100"),
+                    FacetRange(min=100, max=1000, value="more_than_100"),
+                ],
             ),
         ]
 

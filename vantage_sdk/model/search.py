@@ -4,6 +4,7 @@ Models for the Search API.
 
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
+import re
 
 from pydantic import (
     BaseModel,
@@ -189,12 +190,51 @@ class FieldValueWeighting(BaseModel):
 
 class FacetType(Enum):
     COUNT = "count"
+    RANGE = "range"
+
+
+class FacetRange(BaseModel):
+    min: Union[float, int]
+    max: Union[float, int]
+    value: str
+
+    @model_validator(mode="before")
+    def check_value_characters(cls, cls_values):
+        value = cls_values.get('value')
+
+        pattern = re.compile("[0-9A-Za-z_]+")
+
+        if not pattern.match(value):
+            raise ValueError(
+                f'`value` must be a string that contains only letters, numbers and underscores.'
+            )
+
+        return cls_values
 
 
 class Facet(BaseModel):
     name: str
     type: FacetType
     values: Optional[List[str]] = []
+    ranges: Optional[List[FacetRange]] = []
+
+    @model_validator(mode="before")
+    def check_field_compatibility(cls, cls_values):
+        values = cls_values.get('values')
+        ranges = cls_values.get('ranges')
+        type = cls_values.get('type')
+
+        if ranges and type != FacetType.RANGE:
+            raise ValueError(
+                f'If facet type is set to {FacetType.RANGE}, only ranges should be provided.'
+            )
+
+        if values and type != FacetType.COUNT:
+            raise ValueError(
+                f'If facet type is set to {FacetType.COUNT}, only values should be provided'
+            )
+
+        return cls_values
 
 
 class VantageVibeImageAllFields(BaseModel):
