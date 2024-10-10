@@ -53,6 +53,7 @@ from vantage_sdk.core.http.models import (
     VantageVibeImage,
     VantageVibeModifiable,
     VantageVibeSearchQuery,
+    FacetRange as pydantic_FacetRange,
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
@@ -1404,7 +1405,15 @@ class VantageClient:
         facets = (
             [
                 SearchOptionsFacetsInner(
-                    name=f.name, type=f.type.value, values=f.values, ranges=f.ranges
+                    name=f.name,
+                    type=f.type.value,
+                    values=f.values,
+                    ranges=[
+                        pydantic_FacetRange(
+                            value=range.value, min=range.min, max=range.max
+                        )
+                        for range in f.ranges
+                    ],
                 )
                 for f in facets
             ]

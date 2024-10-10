@@ -436,7 +436,7 @@ class TestSearch:
         test_collection_id: str,
     ):
         """
-        Tests if semantic search will return correct result with facets.
+        Tests if semantic search will return correct result with count facets.
         """
         # Given
         collection_id = test_collection_id
@@ -474,7 +474,7 @@ class TestSearch:
         test_collection_id: str,
     ):
         """
-        Tests if semantic search will return correct result with facets.
+        Tests if semantic search will return correct result with range facets.
         """
         # Given
         collection_id = test_collection_id
@@ -505,12 +505,13 @@ class TestSearch:
         assert len(result.facets) == len(facets)
 
     def test_semantic_search_with_combined_facets(
+        self,
         client: VantageClient,
         account_params: dict,
         test_collection_id: str,
     ):
         """
-        Tests if semantic search will return correct result with facets.
+        Tests if semantic search will return correct result with combined facets.
         """
         # Given
         collection_id = test_collection_id

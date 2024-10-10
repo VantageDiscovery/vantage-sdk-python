@@ -194,13 +194,13 @@ class FacetType(Enum):
 
 
 class FacetRange(BaseModel):
-    min: float
-    max: float
+    min: Union[float, int]
+    max: Union[float, int]
     value: str
 
     @model_validator(mode="before")
-    def check_value_characters(cls, values):
-        value = values.get('value')
+    def check_value_characters(cls, cls_values):
+        value = cls_values.get('value')
 
         pattern = re.compile("[0-9A-Za-z_]+")
 
@@ -208,6 +208,8 @@ class FacetRange(BaseModel):
             raise ValueError(
                 f'`value` must be a string that contains only letters, numbers and underscores.'
             )
+
+        return cls_values
 
 
 class Facet(BaseModel):
@@ -217,33 +219,22 @@ class Facet(BaseModel):
     ranges: Optional[List[FacetRange]] = []
 
     @model_validator(mode="before")
-    def check_mutually_exclusive_fields(cls, values):
-        values = values.get('values')
-        ranges = values.get('ranges')
-
-        if values and ranges:
-            raise ValueError(
-                'Only `values` or `ranges` should be provided, but not both.'
-            )
-
-        if not any([values, ranges]):
-            raise ValueError('One of `values` or `ranges` must be provided.')
-
-    @model_validator(mode="before")
-    def check_field_compatibility(cls, values):
-        values = values.get('values')
-        ranges = values.get('ranges')
-        type = values.get('type')
+    def check_field_compatibility(cls, cls_values):
+        values = cls_values.get('values')
+        ranges = cls_values.get('ranges')
+        type = cls_values.get('type')
 
         if ranges and type != FacetType.RANGE:
             raise ValueError(
-                f'If facet type is set to {FacetType.RANGE}, ranges should be provided.'
+                f'If facet type is set to {FacetType.RANGE}, only ranges should be provided.'
             )
 
         if values and type != FacetType.COUNT:
             raise ValueError(
-                f'If facet type is set to {FacetType.COUNT}, values should be provided'
+                f'If facet type is set to {FacetType.COUNT}, only values should be provided'
             )
+
+        return cls_values
 
 
 class VantageVibeImageAllFields(BaseModel):

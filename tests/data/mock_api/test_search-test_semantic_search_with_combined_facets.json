@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/v1/search/test/test-collection-facets/morelikethese",
+      "urlPath": "/v1/search/test/test-collection/semantic",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
@@ -10,18 +10,18 @@
       "bodyPatterns": [
         {
           "equalToJson": {
+            "text": "Test search",
             "facets": [
               {"name": "color", "type": "count", "values": [], "ranges": []},
-              {"name": "size", "type": "count", "values": ["sm", "md"], "ranges": []}
-            ],
-            "these": [
+              {"name": "size", "type": "count", "values": ["sm", "md"], "ranges": []},
               {
-                "weight": 1.0,
-                "query_text": "some text"
-              },
-              {
-                "weight": 1.0,
-                "query_text": "other text"
+                "name": "price", 
+                "type": "range", 
+                "values": [], 
+                "ranges": [
+                  {"value": "below_100", "min": 0, "max": 99},
+                  {"value": "more_than_100", "min": 100, "max": 1000}
+                ]
               }
             ]
           }
@@ -59,7 +59,8 @@
       ],
       "facets": [
         {"facet": "color", "type": "count", "values": {"red": 2, "blue": 1}},
-        {"facet": "size", "type": "count", "values": {"sm": 1, "md": 2}}
+        {"facet": "size", "type": "count", "values": {"sm": 1, "md": 2}},
+        {"facet": "price", "type": "range", "values": {"below_100": 2, "more_than_100": 1}}
       ],
       "execution_time": 7
     }

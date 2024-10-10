@@ -12,8 +12,8 @@
           "equalToJson": {
             "text": "Test search",
             "facets": [
-              {"name": "color", "type": "count", "values": []},
-              {"name": "size", "type": "count", "values": ["sm", "md"]}
+              {"name": "color", "type": "count", "values": [], "ranges": []},
+              {"name": "size", "type": "count", "values": ["sm", "md"], "ranges": []}
             ]
           }
         }
