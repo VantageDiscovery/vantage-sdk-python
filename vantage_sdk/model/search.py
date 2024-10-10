@@ -4,6 +4,7 @@ Models for the Search API.
 
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
+import re
 
 from pydantic import (
     BaseModel,
@@ -197,6 +198,17 @@ class FacetRange(BaseModel):
     max: float
     value: str
 
+    @model_validator(mode="before")
+    def check_value_characters(cls, values):
+        value = values.get('value')
+
+        pattern = re.compile("[0-9A-Za-z_]+")
+
+        if not pattern.match(value):
+            raise ValueError(
+                f'`value` must be a string that contains only letters, numbers and underscores.'
+            )
+
 
 class Facet(BaseModel):
     name: str
@@ -205,7 +217,7 @@ class Facet(BaseModel):
     ranges: Optional[List[FacetRange]] = []
 
     @model_validator(mode="before")
-    def check_mutually_exclusive_fields(cls, values, ranges):
+    def check_mutually_exclusive_fields(cls, values):
         values = values.get('values')
         ranges = values.get('ranges')
 
@@ -218,19 +230,19 @@ class Facet(BaseModel):
             raise ValueError('One of `values` or `ranges` must be provided.')
 
     @model_validator(mode="before")
-    def check_field_compatibility(cls, values, ranges, type):
+    def check_field_compatibility(cls, values):
         values = values.get('values')
         ranges = values.get('ranges')
         type = values.get('type')
 
         if ranges and type != FacetType.RANGE:
             raise ValueError(
-                f'If ranges are provided, facet type should be set to {FacetType.RANGE}.'
+                f'If facet type is set to {FacetType.RANGE}, ranges should be provided.'
             )
 
         if values and type != FacetType.COUNT:
             raise ValueError(
-                f'If values are provided, facet type should be set to {FacetType.COUNT}.'
+                f'If facet type is set to {FacetType.COUNT}, values should be provided'
             )
 
 
