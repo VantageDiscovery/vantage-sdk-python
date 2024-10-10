@@ -77,13 +77,12 @@ from vantage_sdk.model.document import (
     VantageManagedEmbeddingsDocument,
 )
 from vantage_sdk.model.keys import (
+    AnthropicKey,
     ExternalKey,
     LLMProvider,
+    OpenAIKey,
     SecondaryExternalAccount,
     VantageAPIKey,
-    OpenAIKey,
-    HuggingFaceKey,
-    AnthropicKey,
 )
 from vantage_sdk.model.search import (
     ApproximateResultsCountResult,
@@ -1548,7 +1547,7 @@ class VantageClient:
 
     def embedding_search(
         self,
-        embedding: List[int],
+        embedding: List[float],
         collection_id: str,
         accuracy: Optional[float] = None,
         pagination: Optional[Pagination] = None,
