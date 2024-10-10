@@ -92,13 +92,11 @@ class TotalCountsOptions(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "total_counts": (
-                    TotalCountsOptionsTotalCounts.from_dict(
-                        obj.get("total_counts")
-                    )
-                    if obj.get("total_counts") is not None
-                    else None
+                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
+                    obj.get("total_counts")
                 )
+                if obj.get("total_counts") is not None
+                else None
             }
         )
         return _obj

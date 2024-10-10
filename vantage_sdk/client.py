@@ -1001,7 +1001,6 @@ class VantageClient:
     def create_shopping_assistant(
         self,
         name: Optional[str] = None,
-        groups: Optional[List[str]] = None,
         external_key: Optional[OpenAIKey] = None,
         llm_model_name: Optional[str] = None,
         account_id: Optional[str] = None,
@@ -1014,8 +1013,6 @@ class VantageClient:
         name: Optional[str], optional
             A string representing the name of the shopping assistant configuration.
             Must be unique based on account_id.
-        groups: Optional[List[str]], optional
-            A list of strings representing the product groups associated with the shopping assistant configuration.
         external_key: Optional[OpenAIKey], optional
             Valid external key.
             This has to be OpenAI key for now.
@@ -1038,7 +1035,6 @@ class VantageClient:
         """
         shopping_assistant_modifiable = ShoppingAssistantModifiable(
             name=name,
-            groups=groups,
             external_account_id=external_key.external_key_id,
             llm_model_name=llm_model_name,
         )
@@ -1054,7 +1050,6 @@ class VantageClient:
         self,
         shopping_assistant_id: str,
         name: Optional[str] = None,
-        groups: Optional[List[str]] = None,
         external_key: Optional[OpenAIKey] = None,
         llm_model_name: Optional[str] = None,
         account_id: Optional[str] = None,
@@ -1069,8 +1064,6 @@ class VantageClient:
         name: Optional[str], optional
             A string representing the name of the shopping assistant configuration.
             Must be unique based on account_id.
-        groups: Optional[List[str]], optional
-            A list of strings representing the product groups associated with the shopping assistant configuration.
         external_key: Optional[OpenAIKey], optional
             Valid external key.
             This has to be OpenAI key for now.
@@ -1093,7 +1086,6 @@ class VantageClient:
         """
         shopping_assistant_modifiable = ShoppingAssistantModifiable(
             name=name,
-            groups=groups,
             external_account_id=external_key.external_key_id,
             llm_model_name=llm_model_name,
         )

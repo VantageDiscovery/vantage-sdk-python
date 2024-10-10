@@ -36,7 +36,14 @@ class ShoppingAssistantReadOnly(BaseModel):
 
     shopping_assistant_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["shopping_assistant_id", "account_id"]
+    groups: Optional[List[StrictStr]] = None
+    system_prompt_id: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = [
+        "shopping_assistant_id",
+        "account_id",
+        "groups",
+        "system_prompt_id",
+    ]
 
     model_config = {
         "populate_by_name": True,
@@ -93,6 +100,8 @@ class ShoppingAssistantReadOnly(BaseModel):
             {
                 "shopping_assistant_id": obj.get("shopping_assistant_id"),
                 "account_id": obj.get("account_id"),
+                "groups": obj.get("groups"),
+                "system_prompt_id": obj.get("system_prompt_id"),
             }
         )
         return _obj
