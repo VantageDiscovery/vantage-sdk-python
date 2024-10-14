@@ -2,6 +2,7 @@
 
 from typing import List
 
+from pydantic import ValidationError
 import pytest
 
 from tests.integration_tests.utilities import create_temporary_upe_collection
@@ -192,3 +193,31 @@ class TestDocuments:
         )
 
         assert result == 200
+
+    def test_valid_embeddings_document_creation(
+        self,
+    ):
+        # Given
+        embedding_vector = [1.0, 0.0, 0.0]
+
+        # When
+        document = UserProvidedEmbeddingsDocument(
+            embeddings=embedding_vector,
+        )
+
+        assert 1 == 1
+
+    def test_invalid_embeddings_document_creation(
+        self,
+    ):
+        # Given
+        embedding_vector = [1.0, 1.0, 1.0]
+
+        # When
+        with pytest.raises(ValidationError) as exception:
+            document = UserProvidedEmbeddingsDocument(
+                embeddings=embedding_vector,
+            )
+
+        # Then
+        assert exception.type is ValidationError
