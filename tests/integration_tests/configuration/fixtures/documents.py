@@ -40,10 +40,10 @@ def vantage_upe_documents() -> List[UserProvidedEmbeddingsDocument]:
     ]
 
     embeddings = [
-        [0.123, 0.234, 0.345],
-        [0.456, 0.567, 0.678],
-        [0.789, 0.891, 0.912],
-        [0.257, 0.389, 0.468],
+        [1.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0],
+        [0.0, 0.0, 1.0],
+        [1.0, 0.0, 0.0],
     ]
     documents = [
         UserProvidedEmbeddingsDocument(text=text, id=id, embeddings=emb)
