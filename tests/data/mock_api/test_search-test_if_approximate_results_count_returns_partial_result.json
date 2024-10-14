@@ -1,0 +1,35 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/counts",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "text": "partial test",
+          "collection": {
+            "accuracy": 0.2
+          },
+          "total_counts": {
+            "min_score_threshold": 0.2,
+            "max_score_threshold": 0.7
+          }
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 206,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "total_count": 1,
+      "execution_time": 7
+    }
+  }
+}

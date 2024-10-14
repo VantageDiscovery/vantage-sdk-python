@@ -1,0 +1,55 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-search-vme-collection/semantic",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "collection": {
+            "accuracy": 0.2
+          },
+          "text": "partial results please"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 206,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109280970,
+      "status": 206,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "id_28",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_15",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_22",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_36",
+          "score": 0.6328691840171814,
+          "sort_score": 0.6328691840171814
+        }
+      ],
+      "execution_time": 7
+    }
+  }
+}
