@@ -1,0 +1,58 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-search-upe-collection/embedding",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "embedding": [
+            0.8,
+            0.9,
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 206,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109861157,
+      "status": 206,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "id_28",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_15",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_22",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469
+        },
+        {
+          "id": "id_36",
+          "score": 0.6328691840171814,
+          "sort_score": 0.6328691840171814
+        }
+      ],
+      "execution_time": 7
+    }
+  }
+}

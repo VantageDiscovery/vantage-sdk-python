@@ -1,0 +1,51 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/morelikethese",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "these": [
+            {
+              "weight": 0.8,
+              "query_text": "some text"
+            },
+            {
+              "weight": 0.9,
+              "query_text": "other text"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 206,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1234,
+      "status": 206,
+      "results": [
+        {
+          "id": "en_0022659",
+          "score": 0.891
+        },
+        {
+          "id": "en_0375881",
+          "score": 0.891
+        },
+        {
+          "id": "en_0266579",
+          "score": 0.891
+        }
+      ]
+    }
+  }
+}

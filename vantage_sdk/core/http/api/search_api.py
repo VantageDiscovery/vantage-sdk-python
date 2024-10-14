@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage Management API
+    Vantage API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -143,6 +143,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
+            '206': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -229,6 +230,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
+            '206': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -315,6 +317,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
+            '206': "TotalCountResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -463,6 +466,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -549,6 +553,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -635,6 +640,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -783,6 +789,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -869,6 +876,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -955,6 +963,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1103,6 +1112,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1189,6 +1199,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1275,6 +1286,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1423,6 +1435,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1509,6 +1522,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1595,6 +1609,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1743,6 +1758,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1829,6 +1845,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1915,6 +1932,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2063,6 +2081,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2149,6 +2168,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2235,6 +2255,7 @@ class SearchApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
+            '206': "SearchResult",
             '405': None,
         }
         response_data = self.api_client.call_api(
