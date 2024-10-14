@@ -2,7 +2,9 @@ name: PyPI Release
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'             # Match tags like v1.2.3
+      - 'v[0-9]+.[0-9]+.[0-9]+-dev[0-9]+'   # Match tags like v1.2.3-dev1
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+'    # Match tags like v1.2.3-rc1
 
 jobs:
   pypi_release:
@@ -19,6 +21,14 @@ jobs:
           virtualenvs-create: true
       - name: Install Package
         run: poetry install --all-extras
+      - name: Validate Version and Tag Match
+        run: |
+          TAG=${GITHUB_REF##*/}
+          VERSION=$(poetry version -s)
+          if [[ "$VERSION" != "${TAG#v}" ]]; then
+            echo "Error: Tag version ($TAG) does not match version in pyproject.toml ($VERSION)." >&2
+            exit 1
+          fi
       - name: Build Package
         run: poetry build
       - name: Configure PyPI token
