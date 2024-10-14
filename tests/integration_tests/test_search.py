@@ -46,6 +46,30 @@ class TestSearch:
         assert result.status == 200
         assert len(result.results) == 10
 
+    def test_embedding_search_with_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if embedding search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_embedding = [0.8, 0.9, 1.0, 1.0, 1.0]
+
+        # When
+        result = client.embedding_search(
+            embedding=search_embedding,
+            collection_id=collection_id,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 206
+        assert len(result.results) == 4
+
     def test_embedding_search_on_non_existing_collection(
         self,
         client: VantageClient,
@@ -147,6 +171,32 @@ class TestSearch:
         assert result.status == 200
         assert len(result.results) == 10
 
+    def test_semantic_search_with_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        accuracy = 0.2
+        search_text = "partial results please"
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            accuracy=accuracy,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 206
+        assert len(result.results) == 4
+
     def test_semantic_search_on_non_existing_collection(
         self,
         client: VantageClient,
@@ -235,6 +285,37 @@ class TestSearch:
                 result.score, 3
             )
 
+    def test_more_like_this_search_returns_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ) -> None:
+        """
+        Tests if MoreLikeThis search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        expected_results = {"en_0370917": {"score": 0.907}}
+
+        # When
+        response = client.more_like_this_search(
+            collection_id=collection_id,
+            document_id="en_0530927",
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert response is not None
+        assert response.status == 206
+        results = response.results
+        assert len(results) == len(expected_results)
+        for result in results:
+            assert result.id in expected_results.keys()
+            assert expected_results[result.id]["score"] == round(
+                result.score, 3
+            )
+
     def test_more_like_these_search(
         self,
         client: VantageClient,
@@ -273,6 +354,50 @@ class TestSearch:
         # Then
         assert response is not None
         assert response.status == 200
+        results = response.results
+        assert len(results) == len(expected_results)
+        for result in results:
+            assert result.id in expected_results.keys()
+            assert expected_results[result.id]["score"] == round(
+                result.score, 3
+            )
+
+    def test_more_like_these_search_returns_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ) -> None:
+        """
+        Tests if MoreLikeThese search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        more_like_these = [
+            MoreLikeTheseItem(
+                weight=0.8,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=0.9,
+                query_text="other text",
+            ),
+        ]
+        expected_results = {
+            "en_0022659": {"score": 0.891},
+            "en_0375881": {"score": 0.891},
+            "en_0266579": {"score": 0.891},
+        }
+
+        response = client.more_like_these_search(
+            collection_id=collection_id,
+            account_id=account_params["id"],
+            more_like_these=more_like_these,
+        )
+
+        # Then
+        assert response is not None
+        assert response.status == 206
         results = response.results
         assert len(results) == len(expected_results)
         for result in results:
@@ -625,6 +750,38 @@ class TestSearch:
         assert response.status == 200
         assert len(response.results) == 3
 
+    def test_vantage_vibe_search_returns_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if Vantage Vibe search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        vibe_id = "test-vibe-id"
+        test_images = [
+            VantageVibeImageUrl(url="https://www.someimageurl.com"),
+            VantageVibeImageBase64(base64="imagebase64"),
+        ]
+        test_text = "test search partial"
+
+        # When
+        response = client.vantage_vibe_search(
+            vibe_id=vibe_id,
+            collection_id=collection_id,
+            images=test_images,
+            text=test_text,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert response is not None
+        assert response.status == 206
+        assert len(response.results) == 1
+
     # endregion
 
     # region Approximate Results Count
@@ -657,6 +814,35 @@ class TestSearch:
 
         # Then
         assert result.total_count == 3
+
+    def test_if_approximate_results_count_returns_partial_result(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if approximate results count search will return correct result.
+        """
+        # Given
+        collection_id = test_collection_id
+        accuracy = 0.2
+        search_text = "partial test"
+        total_counts = TotalCountsOptions(
+            min_score_threshold=0.2, max_score_threshold=0.7
+        )
+
+        # When
+        result = client.approximate_results_count_search(
+            text=search_text,
+            collection_id=collection_id,
+            accuracy=accuracy,
+            account_id=account_params["id"],
+            total_counts=total_counts,
+        )
+
+        # Then
+        assert result.total_count == 1
 
     def test_if_semantic_search_with_score_treshold_returns_result(
         self,
