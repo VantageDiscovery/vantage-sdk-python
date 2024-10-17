@@ -1,0 +1,42 @@
+version: 0.1
+
+env:
+  shell: bash
+  AWS_SECRET_PYPI_API_KEY: "/vec2vantage/development/codebuild/vantage/pypi/acccess_token:pypi_api_key"
+  AWS_SECRET_TEST_PYPI_API_KEY: "/vec2vantage/development/codebuild/vantage/pypi/acccess_token:pypi_api_key_test"
+
+phases:
+  install:
+    on-failure: abort
+    commands:
+      - echo "Building wheel package of vantage-python-sdk"
+      - echo "Installing Poetry"
+      - curl -sSL https://install.python-poetry.org | python3 -
+      - export PATH="$HOME/.local/bin:$PATH"
+      - export PYPI_API_KEY=$AWS_SECRET_TEST_PYPI_API_KEY
+      - echo "Configuring Poetry"
+      - CI=true make configure
+      - echo "Install Python SDK dependencies"
+      - CI=true make install
+
+  build:
+    on-failure: abort
+    commands:
+      - |
+        echo "$CODEBUILD_WEBHOOK_TRIGGER"
+        if [[ "$CODEBUILD_WEBHOOK_TRIGGER" == *"tag/v"* ]]; then
+          export GIT_HASH=$(echo $CODEBUILD_WEBHOOK_TRIGGER |cut -d/ -f 2)
+          echo "$GIT_HASH"
+        else
+          echo "Could not extract commit hash, aborting"
+          exit 1
+        fi
+      - echo "Building Python SDK package"
+      - CI=true make build
+
+  post_build:
+    commands:
+      - echo "Publishing Python SDK package to PyPI"
+      - CI=true make publish
+      - echo "Success!"
+      - echo Build and publish completed on `date`
