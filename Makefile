@@ -34,7 +34,7 @@ configure:
 
 install: configure
 	@echo "git: checking out: ${COMMIT_HASH}"
-	git checkout ${COMMIT_HASH}"
+	git checkout ${COMMIT_HASH}
 	@echo "Installing Python SDK dependencies"
 	poetry lock --no-update
 	poetry install --without dev;
@@ -42,7 +42,7 @@ install: configure
 
 build:
 	@echo "git: checking out: ${COMMIT_HASH}"
-	git checkout ${COMMIT_HASH}"
+	git checkout ${COMMIT_HASH}
 	@echo "Buildig Python SDK"
 	python -m build
 	@echo "Verifying build"
