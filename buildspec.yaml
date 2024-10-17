@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.2
 
 env:
   shell: bash
@@ -10,6 +10,8 @@ phases:
   install:
     on-failure: abort
     commands:
+      - echo "Starting build..."
+      - `cat /proc/$$/cmdline` --help
       - echo "Building wheel package of vantage-python-sdk"
       - echo "Installing Poetry"
       - curl -sSL https://install.python-poetry.org | python3 -
