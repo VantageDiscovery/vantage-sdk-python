@@ -45,4 +45,4 @@ build:
 	poetry build
 
 publish:
-	poetry publish -r testpypi dist/*
+	poetry publish -r testpypi
