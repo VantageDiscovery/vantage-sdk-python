@@ -26,7 +26,7 @@ phases:
     commands:
       - echo "${CODEBUILD_WEBHOOK_TRIGGER}"
       - |
-        if [ "${CODEBUILD_WEBHOOK_TRIGGER}" == *"tag/v"* ]; then
+        if [[ "${CODEBUILD_WEBHOOK_TRIGGER}" == *"tag/v"* ]]; then
           export GIT_HASH=$(echo ${CODEBUILD_WEBHOOK_TRIGGER} |cut -d/ -f 2)
           echo "$GIT_HASH"
         else
