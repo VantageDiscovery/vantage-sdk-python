@@ -30,7 +30,7 @@ clean:
 configure:
 	API_KEY_PART=${PYPI_API_KEY:0:10}
 	@echo "Token key part: ${API_KEY_PART}"
-	poetry config pypi-token.pypi ${PYPI_API_KEY}
+	poetry config pypi-token.pypi "${PYPI_API_KEY}"
 
 install: configure
 	@echo "git: checking out: ${COMMIT_HASH}"
