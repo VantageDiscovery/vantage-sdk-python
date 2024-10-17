@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, Field, StrictStr, field_validator
+from pydantic import BaseModel, StrictStr, field_validator
 
 
 try:
@@ -29,50 +29,13 @@ except ImportError:
     from typing_extensions import Self
 
 
-class VantageAPIKey(BaseModel):
+class VantageAPIKeyModifiable(BaseModel):
     """
-    VantageAPIKey
+    VantageAPIKeyModifiable
     """  # noqa: E501
 
-    vantage_api_key_id: Optional[StrictStr] = Field(
-        default=None,
-        description="The unique id of the API key to access Vantage API endpoints",
-    )
-    account_id: Optional[StrictStr] = Field(
-        default=None, description="The account this key is contained within"
-    )
-    vantage_api_key_created_date: Optional[StrictStr] = Field(
-        default=None, description="date this key was created"
-    )
-    vantage_api_key_obfuscated: Optional[StrictStr] = Field(
-        default=None, description="obfuscated key"
-    )
-    status: Optional[StrictStr] = None
-    last_used_date: Optional[StrictStr] = Field(
-        default=None, description="Date this key was last used"
-    )
     roles: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = [
-        "vantage_api_key_id",
-        "account_id",
-        "vantage_api_key_created_date",
-        "vantage_api_key_obfuscated",
-        "status",
-        "last_used_date",
-        "roles",
-    ]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('Active', 'Deactivated'):
-            raise ValueError(
-                "must be one of enum values ('Active', 'Deactivated')"
-            )
-        return value
+    __properties: ClassVar[List[str]] = ["roles"]
 
     @field_validator('roles')
     def roles_validate_enum(cls, value):
@@ -104,7 +67,7 @@ class VantageAPIKey(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of VantageAPIKey from a JSON string"""
+        """Create an instance of VantageAPIKeyModifiable from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -116,45 +79,22 @@ class VantageAPIKey(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-                "vantage_api_key_id",
-                "account_id",
-                "vantage_api_key_created_date",
-                "last_used_date",
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of VantageAPIKey from a dict"""
+        """Create an instance of VantageAPIKeyModifiable from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "vantage_api_key_id": obj.get("vantage_api_key_id"),
-                "account_id": obj.get("account_id"),
-                "vantage_api_key_created_date": obj.get(
-                    "vantage_api_key_created_date"
-                ),
-                "vantage_api_key_obfuscated": obj.get(
-                    "vantage_api_key_obfuscated"
-                ),
-                "status": obj.get("status"),
-                "last_used_date": obj.get("last_used_date"),
-                "roles": obj.get("roles"),
-            }
-        )
+        _obj = cls.model_validate({"roles": obj.get("roles")})
         return _obj

@@ -342,7 +342,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -363,7 +363,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -416,7 +416,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -437,7 +437,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -490,7 +490,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -511,7 +511,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -608,7 +608,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -629,7 +629,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -682,7 +682,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -703,7 +703,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -756,7 +756,7 @@ class ExternalKeysApi:
             StrictStr, Field(description="The account these keys are within")
         ],
         external_key_id: Annotated[
-            StrictStr, Field(description="The external key id")
+            StrictStr, Field(description="The external key ID")
         ],
         _request_timeout: Union[
             None,
@@ -777,7 +777,7 @@ class ExternalKeysApi:
 
         :param account_id: The account these keys are within (required)
         :type account_id: str
-        :param external_key_id: The external key id (required)
+        :param external_key_id: The external key ID (required)
         :type external_key_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
