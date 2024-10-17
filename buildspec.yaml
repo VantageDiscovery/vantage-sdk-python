@@ -15,7 +15,7 @@ phases:
       - echo "Installing Poetry"
       - curl -sSL https://install.python-poetry.org | python3 -
       - export PATH="$HOME/.local/bin:$PATH"
-      - export PYPI_API_KEY=$AWS_SECRET_TEST_PYPI_API_KEY
+      - export PYPI_API_KEY=${AWS_SECRET_TEST_PYPI_API_KEY}
       - echo "Configuring Poetry"
       - CI=true make configure
       - echo "Install Python SDK dependencies"
@@ -24,10 +24,10 @@ phases:
   build:
     on-failure: abort
     commands:
+      - echo "${CODEBUILD_WEBHOOK_TRIGGER}"
       - |
-        echo "$CODEBUILD_WEBHOOK_TRIGGER"
-        if [ "$CODEBUILD_WEBHOOK_TRIGGER" == *"tag/v"* ]; then
-          export GIT_HASH=$(echo $CODEBUILD_WEBHOOK_TRIGGER |cut -d/ -f 2)
+        if [ "${CODEBUILD_WEBHOOK_TRIGGER}" == *"tag/v"* ]; then
+          export GIT_HASH=$(echo ${CODEBUILD_WEBHOOK_TRIGGER} |cut -d/ -f 2)
           echo "$GIT_HASH"
         else
           echo "Could not extract commit hash, aborting"
