@@ -11,7 +11,7 @@ phases:
     on-failure: abort
     commands:
       - echo "Starting build..."
-      - `cat /proc/$$/cmdline` --help
+      - $(cat /proc/$$/cmdline) --help
       - echo "Building wheel package of vantage-python-sdk"
       - echo "Installing Poetry"
       - curl -sSL https://install.python-poetry.org | python3 -
