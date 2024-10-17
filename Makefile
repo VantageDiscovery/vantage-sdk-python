@@ -28,7 +28,9 @@ clean:
 	rm -rf coverage.xml .coverage
 
 configure:
-	poetry config pypi-token.pypi "${PYPI_API_KEY}"
+	# poetry config pypi-token.pypi "${PYPI_API_KEY}"
+	poetry config repositories.testpypi https://test.pypi.org/legacy/
+	poetry config pypi-token.testpypi ${PYPI_API_KEY}
 
 install:
 	@echo "git: checking out: ${COMMIT_HASH}"
