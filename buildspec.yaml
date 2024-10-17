@@ -16,9 +16,9 @@ phases:
       - export PATH="$HOME/.local/bin:$PATH"
       - export PYPI_API_KEY=$AWS_SECRET_TEST_PYPI_API_KEY
       - echo "Configuring Poetry"
-      - CI=true make configure
+      - CI=true make PATH="$HOME/.local/bin:$PATH" PYPI_API_KEY=$AWS_SECRET_TEST_PYPI_API_KEY configure
       - echo "Install Python SDK dependencies"
-      - CI=true make install
+      - CI=true make PATH="$HOME/.local/bin:$PATH" install
 
   build:
     on-failure: abort
@@ -33,11 +33,11 @@ phases:
           exit 1
         fi
       - echo "Building Python SDK package"
-      - CI=true make build
+      - CI=true make PATH="$HOME/.local/bin:$PATH" build
 
   post_build:
     commands:
       - echo "Publishing Python SDK package to PyPI"
-      - CI=true make publish
+      - CI=true make PATH="$HOME/.local/bin:$PATH" publish
       - echo "Success!"
       - echo Build and publish completed on `date`
