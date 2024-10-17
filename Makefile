@@ -33,16 +33,16 @@ configure:
 	poetry config pypi-token.pypi ${PYPI_API_KEY}
 
 install: configure
-	@echo "git: checking out: $COMMIT_HASH"
-	git checkout $COMMIT_HASH
+	@echo "git: checking out: ${COMMIT_HASH}"
+	git checkout ${COMMIT_HASH}"
 	@echo "Installing Python SDK dependencies"
 	poetry lock --no-update
 	poetry install --without dev;
 	@echo "Python SDK dependencies installed"
 
 build:
-	@echo "git: checking out: $COMMIT_HASH"
-	git checkout $COMMIT_HASH
+	@echo "git: checking out: ${COMMIT_HASH}"
+	git checkout ${COMMIT_HASH}"
 	@echo "Buildig Python SDK"
 	python -m build
 	@echo "Verifying build"
