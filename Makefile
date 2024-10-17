@@ -28,11 +28,9 @@ clean:
 	rm -rf coverage.xml .coverage
 
 configure:
-	API_KEY_PART=${PYPI_API_KEY:0:10}
-	@echo "Token key part: ${API_KEY_PART}"
 	poetry config pypi-token.pypi "${PYPI_API_KEY}"
 
-install: configure
+install:
 	@echo "git: checking out: ${COMMIT_HASH}"
 	git checkout ${COMMIT_HASH}
 	@echo "Installing Python SDK dependencies"
@@ -47,5 +45,4 @@ build:
 	poetry build
 
 publish:
-	# poetry publish -r testpypi dist/*
-	@echo "Dummy publish"
+	poetry publish -r testpypi dist/*
