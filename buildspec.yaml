@@ -17,7 +17,7 @@ phases:
       - export PATH="$HOME/.local/bin:$PATH"
       - export PYPI_API_KEY=${AWS_SECRET_TEST_PYPI_API_KEY}
       - export API_KEY_PART=${PYPI_API_KEY:0:10}
-	    - echo "Token key part - ${API_KEY_PART}"
+      - echo "Token key part - ${API_KEY_PART}"
       - echo "Configuring Poetry"
       - CI=true make configure
       - echo "Install Python SDK dependencies"
