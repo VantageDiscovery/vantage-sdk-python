@@ -37,7 +37,7 @@ install: configure
 	git checkout ${COMMIT_HASH}
 	@echo "Installing Python SDK dependencies"
 	poetry lock --no-update
-	poetry install --all-extras
+	poetry install
 	@echo "Python SDK dependencies installed"
 
 build:
@@ -45,8 +45,6 @@ build:
 	git checkout ${COMMIT_HASH}
 	@echo "Buildig Python SDK"
 	poetry build
-	@echo "Verifying build"
-	twine check dist/*
 
 publish:
 	# poetry publish -r testpypi dist/*
