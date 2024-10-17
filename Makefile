@@ -1,6 +1,5 @@
 sources = vantage_sdk
 COMMIT_HASH=$(GIT_HASH)
-POETRY="$HOME/.local/bin/poetry"
 
 .PHONY: test format lint unittest coverage pre-commit clean
 test: format lint unittest
@@ -30,15 +29,15 @@ clean:
 
 configure:
 	API_KEY_PART=${PYPI_API_KEY:0:10}
-	@echo "Token key part: $API_KEY_PART"
-	$POETRY config pypi-token.pypi $(PYPI_API_KEY)
+	@echo "Token key part: ${API_KEY_PART}"
+	poetry config pypi-token.pypi ${PYPI_API_KEY}
 
 install: configure
 	@echo "git: checking out: $COMMIT_HASH"
 	git checkout $COMMIT_HASH
 	@echo "Installing Python SDK dependencies"
-	$POETRY lock --no-update
-	$POETRY install --without dev;
+	poetry lock --no-update
+	poetry install --without dev;
 	@echo "Python SDK dependencies installed"
 
 build:
@@ -50,5 +49,5 @@ build:
 	twine check dist/*
 
 publish:
-	# $POETRY publish -r testpypi dist/*
+	# poetry publish -r testpypi dist/*
 	@echo "Dummy publish"
