@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/v1/account/test/vantage_api_key/testkeyid",
+    "urlPath": "/v2/account/test/vantage_api_key/testkeyid",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"
@@ -14,12 +14,14 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "vantage_api_key_id": "testkeyid",
+      "id": "testkeyid",
       "account_id": "test",
-      "vantage_api_key_created_date": "2024-03-06T10:45:35",
+      "created_date": "2024-03-06T10:45:35",
+      "last_used_date": "2024-03-07T10:52:53",
       "status": "Active",
-      "vantage_api_key_obfuscated": "key value",
-      "role": "QueryOnly"
+      "value": "key value",
+      "roles": ["ReadOnly"],
+      "name": "Key name"
     }
   }
 }

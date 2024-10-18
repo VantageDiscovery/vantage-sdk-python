@@ -35,7 +35,7 @@ class TestApiKeys:
         # Then
         assert len(keys) == 3
         api_key = keys[0]
-        assert api_key.vantage_api_key_obfuscated is not None
+        assert api_key.value is not None
         assert api_key.account_id == account_params["id"]
 
     def test_get_vantage_api_keys_using_nonexisting_account(
@@ -69,8 +69,8 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.vantage_api_key_obfuscated is not None
-        assert api_key.vantage_api_key_id == vantage_api_key_id
+        assert api_key.value is not None
+        assert api_key.id == vantage_api_key_id
 
     def test_create_full_vantage_api_key(
         self,
@@ -79,6 +79,7 @@ class TestApiKeys:
     ):
         # When
         api_key = client.create_vantage_api_key(
+            name="Full Key Name",
             roles=[VantageAPIKeyRole.Full],
             account_id=account_params["id"],
         )
@@ -95,6 +96,7 @@ class TestApiKeys:
     ):
         # When
         api_key = client.create_vantage_api_key(
+            name="ReadOnly Key Name",
             roles=[VantageAPIKeyRole.ReadOnly],
             account_id=account_params["id"],
         )
@@ -104,14 +106,14 @@ class TestApiKeys:
         assert api_key.roles[0] == VantageAPIKeyRole.ReadOnly.value
         assert api_key.status == "Active"
 
-    def test_deactivate_vantage_api_key(
+    def test_revoke_vantage_api_key(
         self,
         client: VantageClient,
         account_params: dict,
         vantage_api_key_id: str,
     ):
         # When
-        client.deactivate_vantage_api_key(
+        client.revoke_vantage_api_key(
             vantage_api_key_id="del" + vantage_api_key_id,
             account_id=account_params["id"],
         )

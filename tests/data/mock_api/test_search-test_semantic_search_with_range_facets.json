@@ -13,9 +13,9 @@
             "text": "Test search",
             "facets": [
               {
-                "name": "price", 
-                "type": "range", 
-                "values": [], 
+                "name": "price",
+                "type": "range",
+                "values": [],
                 "ranges": [
                   {"value": "below_100", "min": 0, "max": 99},
                   {"value": "more_than_100", "min": 100, "max": 1000}

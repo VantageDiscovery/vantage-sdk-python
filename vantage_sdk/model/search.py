@@ -2,9 +2,9 @@
 Models for the Search API.
 """
 
+import re
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
-import re
 
 from pydantic import (
     BaseModel,
@@ -206,7 +206,7 @@ class FacetRange(BaseModel):
 
         if not pattern.match(value):
             raise ValueError(
-                f'`value` must be a string that contains only letters, numbers and underscores.'
+                '`value` must be a string that contains only letters, numbers and underscores.'
             )
 
         return cls_values

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -322,7 +322,7 @@ class ExternalKeysApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/account/{account_id}/external_keys',
+            resource_path='/v1/account/{account_id}/external_keys',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -588,7 +588,7 @@ class ExternalKeysApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/account/{account_id}/external_keys/{external_key_id}',
+            resource_path='/v1/account/{account_id}/external_keys/{external_key_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -859,7 +859,7 @@ class ExternalKeysApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/account/{account_id}/external_keys/{external_key_id}',
+            resource_path='/v1/account/{account_id}/external_keys/{external_key_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1109,7 +1109,7 @@ class ExternalKeysApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/account/{account_id}/external_keys',
+            resource_path='/v1/account/{account_id}/external_keys',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1414,7 +1414,7 @@ class ExternalKeysApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/account/{account_id}/external_keys/{external_key_id}',
+            resource_path='/v1/account/{account_id}/external_keys/{external_key_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

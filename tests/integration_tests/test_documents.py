@@ -2,8 +2,8 @@
 
 from typing import List
 
-from pydantic import ValidationError
 import pytest
+from pydantic import ValidationError
 
 from tests.integration_tests.utilities import create_temporary_upe_collection
 from vantage_sdk.client import VantageClient
@@ -201,7 +201,7 @@ class TestDocuments:
         embedding_vector = [1.0, 0.0, 0.0]
 
         # When
-        document = UserProvidedEmbeddingsDocument(
+        UserProvidedEmbeddingsDocument(
             embeddings=embedding_vector,
         )
 
@@ -215,7 +215,7 @@ class TestDocuments:
 
         # When
         with pytest.raises(ValidationError) as exception:
-            document = UserProvidedEmbeddingsDocument(
+            UserProvidedEmbeddingsDocument(
                 embeddings=embedding_vector,
             )
 

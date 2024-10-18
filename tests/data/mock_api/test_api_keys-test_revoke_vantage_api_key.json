@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "DELETE",
-    "urlPath": "/v1/account/test/vantage_api_key/deltestkeyid",
+    "urlPath": "/v2/account/test/vantage_api_key/deltestkeyid",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"
