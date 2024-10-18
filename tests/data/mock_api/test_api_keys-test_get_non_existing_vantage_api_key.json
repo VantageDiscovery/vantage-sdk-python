@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/v1/account/test/vantage_api_key/nokey",
+    "urlPath": "/v2/account/test/vantage_api_key/nokey",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"

@@ -35,7 +35,7 @@ class TestApiKeys:
         # Then
         assert len(keys) == 3
         api_key = keys[0]
-        assert api_key.vantage_api_key_obfuscated is not None
+        assert api_key.value is not None
         assert api_key.account_id == account_params["id"]
 
     def test_get_vantage_api_keys_using_nonexisting_account(
@@ -69,8 +69,8 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.vantage_api_key_obfuscated is not None
-        assert api_key.vantage_api_key_id == vantage_api_key_id
+        assert api_key.value is not None
+        assert api_key.id == vantage_api_key_id
 
     def test_create_full_vantage_api_key(
         self,

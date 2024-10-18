@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "POST",
-    "urlPath": "/v1/account/test/vantage_api_key",
+    "urlPath": "/v2/account/test/vantage_api_key",
     "headers": {
       "Authorization": {
         "contains": "Bearer testkey"

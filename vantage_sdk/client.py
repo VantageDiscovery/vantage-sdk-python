@@ -174,7 +174,7 @@ class VantageClient:
         VantageClient
             An instance of the VantageClient.
         """
-        host = f"{api_host}/{API_HOST_VERSION}"
+        host = f"{api_host}"
 
         auth_client = AuthorizationClient.using_provided_vantage_api_key(
             vantage_api_key=vantage_api_key
