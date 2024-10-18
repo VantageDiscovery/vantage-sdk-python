@@ -49,9 +49,6 @@ class VantageAPIKeyReadOnly(BaseModel):
     last_used_date: Optional[StrictStr] = Field(
         default=None, description="Date this key was last used"
     )
-    name: Optional[StrictStr] = Field(
-        default=None, description="The name of the key"
-    )
     __properties: ClassVar[List[str]] = [
         "id",
         "account_id",
@@ -59,7 +56,6 @@ class VantageAPIKeyReadOnly(BaseModel):
         "status",
         "value",
         "last_used_date",
-        "name",
     ]
 
     @field_validator('status')
@@ -137,7 +133,6 @@ class VantageAPIKeyReadOnly(BaseModel):
                 "status": obj.get("status"),
                 "value": obj.get("value"),
                 "last_used_date": obj.get("last_used_date"),
-                "name": obj.get("name"),
             }
         )
         return _obj

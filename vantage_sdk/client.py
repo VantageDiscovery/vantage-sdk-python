@@ -455,6 +455,7 @@ class VantageClient:
 
     def create_vantage_api_key(
         self,
+        name: str,
         roles: List[VantageAPIKeyRole],
         account_id: Optional[str] = None,
     ) -> VantageAPIKey:
@@ -463,6 +464,8 @@ class VantageClient:
 
         Parameters
         ----------
+        name : str
+            Name of the Vantage API key.
         roles : List[VantageAPIKeyRole]
             List of Vantage API key roles that determines usage of the specific key.
         account_id : Optional[str], optional
@@ -481,7 +484,7 @@ class VantageClient:
         """
 
         vantage_api_key_modifiable = VantageAPIKeyModifiable(
-            roles=[role.value for role in roles]
+            name=name, roles=[role.value for role in roles]
         )
 
         key = self.management_api.vantage_api_keys_api.create_vantage_api_key(
@@ -490,7 +493,7 @@ class VantageClient:
         )
         return VantageAPIKey.model_validate(key.model_dump())
 
-    def deactivate_vantage_api_key(
+    def revoke_vantage_api_key(
         self,
         vantage_api_key_id: str,
         account_id: Optional[str] = None,
@@ -515,7 +518,7 @@ class VantageClient:
         -----
         Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
         """
-        self.management_api.vantage_api_keys_api.deactivate_vantage_api_key(
+        self.management_api.vantage_api_keys_api.revoke_vantage_api_key(
             account_id=account_id or self.account_id,
             vantage_api_key_id=vantage_api_key_id,
         )

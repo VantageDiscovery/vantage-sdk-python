@@ -10,6 +10,7 @@
     "bodyPatterns": [
         {
           "equalToJson": {
+            "name": "ReadOnly Key Name",
             "roles": ["ReadOnly"]
           }
         }
@@ -21,11 +22,14 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "vantage_api_key_id": "testkeyid",
+      "id": "testkeyid",
       "account_id": "test",
-      "vantage_api_key_created_date": "2024-03-06T10:52:53",
+      "created_date": "2024-03-06T10:52:53",
+      "last_used_date": "2024-03-07T10:52:53",
       "status": "Active",
-      "roles": ["ReadOnly"]
+      "value": "key value",
+      "roles": ["ReadOnly"],
+      "name": "Key name"
     }
   }
 }

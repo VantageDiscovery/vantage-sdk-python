@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr, field_validator
+from pydantic import BaseModel, Field, StrictStr, field_validator
 
 
 try:
@@ -34,8 +34,11 @@ class VantageAPIKeyModifiable(BaseModel):
     VantageAPIKeyModifiable
     """  # noqa: E501
 
+    name: Optional[StrictStr] = Field(
+        default=None, description="The name of the key"
+    )
     roles: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["roles"]
+    __properties: ClassVar[List[str]] = ["name", "roles"]
 
     @field_validator('roles')
     def roles_validate_enum(cls, value):
@@ -96,5 +99,7 @@ class VantageAPIKeyModifiable(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({"roles": obj.get("roles")})
+        _obj = cls.model_validate(
+            {"name": obj.get("name"), "roles": obj.get("roles")}
+        )
         return _obj
