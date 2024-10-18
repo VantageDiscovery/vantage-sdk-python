@@ -29,6 +29,9 @@ from vantage_sdk.core.http.models import (
     CreateCollectionRequest,
     EmbeddingSearchQuery,
     ExternalKeyModifiable,
+)
+from vantage_sdk.core.http.models import FacetRange as pydantic_FacetRange
+from vantage_sdk.core.http.models import (
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
@@ -54,7 +57,6 @@ from vantage_sdk.core.http.models import (
     VantageVibeImage,
     VantageVibeModifiable,
     VantageVibeSearchQuery,
-    FacetRange as pydantic_FacetRange,
 )
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI

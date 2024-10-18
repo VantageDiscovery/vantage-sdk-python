@@ -9,8 +9,8 @@ from vantage_sdk.core.http.exceptions import (
 )
 from vantage_sdk.model.search import (
     Facet,
-    FacetType,
     FacetRange,
+    FacetType,
     Filter,
     MoreLikeTheseItem,
     TotalCountsOptions,

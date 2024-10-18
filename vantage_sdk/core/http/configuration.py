@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -83,7 +83,7 @@ class Configuration:
         ssl_ca_cert=None,
     ) -> None:
         """Constructor"""
-        self._base_path = "https://api.vanta.ge/v1" if host is None else host
+        self._base_path = "https://api.vanta.ge" if host is None else host
         """Default Base url
         """
         self.server_index = (
@@ -410,15 +410,15 @@ class Configuration:
         """
         return [
             {
-                'url': "https://api.vanta.ge/v1",
+                'url': "https://api.vanta.ge",
                 'description': "No description provided",
             },
             {
-                'url': "https://api.dev-a.dev.vantagediscovery.com/v1",
+                'url': "https://api.dev-a.dev.vantagediscovery.com",
                 'description': "No description provided",
             },
             {
-                'url': "https://api.demo-b.vantagediscovery.com/v1",
+                'url': "https://api.demo-b.vantagediscovery.com",
                 'description': "No description provided",
             },
         ]

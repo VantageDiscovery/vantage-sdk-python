@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -34,31 +34,33 @@ class VantageAPIKey(BaseModel):
     VantageAPIKey
     """  # noqa: E501
 
-    vantage_api_key_id: Optional[StrictStr] = Field(
+    id: Optional[StrictStr] = Field(
         default=None,
-        description="The unique id of the API key to access Vantage API endpoints",
+        description="The unique id of the key to access Vantage API endpoints",
     )
     account_id: Optional[StrictStr] = Field(
         default=None, description="The account this key is contained within"
     )
-    vantage_api_key_created_date: Optional[StrictStr] = Field(
-        default=None, description="date this key was created"
-    )
-    vantage_api_key_obfuscated: Optional[StrictStr] = Field(
-        default=None, description="obfuscated key"
+    created_date: Optional[StrictStr] = Field(
+        default=None, description="Date this key was created"
     )
     status: Optional[StrictStr] = None
+    value: Optional[StrictStr] = Field(default=None, description="Key value")
     last_used_date: Optional[StrictStr] = Field(
         default=None, description="Date this key was last used"
     )
+    name: Optional[StrictStr] = Field(
+        default=None, description="The name of the key"
+    )
     roles: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = [
-        "vantage_api_key_id",
+        "id",
         "account_id",
-        "vantage_api_key_created_date",
-        "vantage_api_key_obfuscated",
+        "created_date",
         "status",
+        "value",
         "last_used_date",
+        "name",
         "roles",
     ]
 
@@ -124,9 +126,9 @@ class VantageAPIKey(BaseModel):
         _dict = self.model_dump(
             by_alias=True,
             exclude={
-                "vantage_api_key_id",
+                "id",
                 "account_id",
-                "vantage_api_key_created_date",
+                "created_date",
                 "last_used_date",
             },
             exclude_none=True,
@@ -144,16 +146,13 @@ class VantageAPIKey(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "vantage_api_key_id": obj.get("vantage_api_key_id"),
+                "id": obj.get("id"),
                 "account_id": obj.get("account_id"),
-                "vantage_api_key_created_date": obj.get(
-                    "vantage_api_key_created_date"
-                ),
-                "vantage_api_key_obfuscated": obj.get(
-                    "vantage_api_key_obfuscated"
-                ),
+                "created_date": obj.get("created_date"),
                 "status": obj.get("status"),
+                "value": obj.get("value"),
                 "last_used_date": obj.get("last_used_date"),
+                "name": obj.get("name"),
                 "roles": obj.get("roles"),
             }
         )
