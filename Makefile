@@ -28,28 +28,17 @@ clean:
 	rm -rf coverage.xml .coverage
 
 configure:
-	# poetry config pypi-token.pypi "${PYPI_API_KEY}"
-	poetry config repositories.testpypi https://test.pypi.org/legacy/
-	poetry config pypi-token.testpypi ${PYPI_API_KEY}
+	poetry config pypi-token.pypi "${PYPI_API_KEY}"
 
 install:
-	# @echo "git: checking out: ${COMMIT_HASH}"
-	# git checkout ${COMMIT_HASH}
-	# @echo "Installing Python SDK dependencies"
-	# poetry lock --no-update
-	# poetry install
-	# @echo "Python SDK dependencies installed"
-	@echo "Dummy install"
+	@echo "Installing Python SDK dependencies"
+	poetry lock --no-update
+	poetry install
+	@echo "Python SDK dependencies installed"
 
 build:
-	@echo "Dummy build"
-	git status
-	git rev-parse HEAD
-	# @echo "git: checking out: ${COMMIT_HASH}"
-	# git checkout ${COMMIT_HASH}
-	# @echo "Buildig Python SDK"
-	# poetry build
+	@echo "Buildig Python SDK"
+	poetry build
 
 publish:
-	# poetry publish -r testpypi
-	@echo "Dummy publish"
+	poetry publish

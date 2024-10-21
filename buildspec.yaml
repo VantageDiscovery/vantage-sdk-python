@@ -16,7 +16,7 @@ phases:
       - curl -sSL https://install.python-poetry.org | python3 -
       - export PATH="$HOME/.local/bin:$PATH"
       - echo "Configuring Poetry"
-      - CI=true PYPI_API_KEY="${AWS_SECRET_TEST_PYPI_API_KEY}" make configure
+      - CI=true PYPI_API_KEY="${AWS_SECRET_PYPI_API_KEY}" make configure
       - echo "Install Python SDK dependencies"
       - CI=true make install
 
