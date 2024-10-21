@@ -74,13 +74,17 @@ dev = [
     "pre-commit",
     "virtualenv",
     "pip",
-    "twine",
     "toml",
     "bump2version",
     "python-dotenv",
     "bumpver",
     "pip-tools",
     ]
+
+
+publish = [
+    "twine",
+]
 
 
 doc = [
