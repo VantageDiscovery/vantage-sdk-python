@@ -60,6 +60,10 @@ from vantage_sdk.core.http.models.collection_modifiable import (
 from vantage_sdk.core.http.models.collection_read_only import (
     CollectionReadOnly,
 )
+from vantage_sdk.core.http.models.collection_status import CollectionStatus
+from vantage_sdk.core.http.models.collection_status_ingest_statuses_inner import (
+    CollectionStatusIngestStatusesInner,
+)
 from vantage_sdk.core.http.models.collection_upload_url import (
     CollectionUploadURL,
 )
