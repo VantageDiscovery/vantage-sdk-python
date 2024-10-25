@@ -26,6 +26,7 @@ from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
+    CollectionStatus,
     CreateCollectionRequest,
     EmbeddingSearchQuery,
     ExternalKeyModifiable,
@@ -815,6 +816,41 @@ class VantageClient:
         )
 
         return Collection.model_validate(collection.model_dump())
+
+    def get_collection_status(
+        self,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> CollectionStatus:
+        """
+        Retrieves the status of a specified collection.
+
+        Parameters
+        ----------
+        collection_id : str
+            The unique identifier of the collection to be retrieved.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        CollectionStatus
+            A CollectionStatus object containing the status of the specified collection.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        collection_status = (
+            self.management_api.collection_api.get_collection_status(
+                collection_id=collection_id,
+                account_id=account_id or self.account_id,
+            )
+        )
+
+        return CollectionStatus.model_validate(collection_status.model_dump())
 
     def create_collection(
         self,
