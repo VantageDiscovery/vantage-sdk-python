@@ -102,9 +102,9 @@ class VantageManagedEmbeddingsCollection(Collection):
 
     @model_validator(mode="after")
     def check_extrnal_authentication_method_exists(cls, values):
-        if not values.llm_secret and not values.external_key_id:
+        if not values.llm_secret and not values.external_key:
             raise ValueError(
-                "Please provide either `llm_secret` or `external_key_id` to authenticate with the LLM provider."
+                "Please provide either `llm_secret` or `external_key` to authenticate with the LLM provider."
             )
 
 
@@ -125,9 +125,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     external_key: Optional[OpenAIKey] = None
     llm: StrictStr
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
