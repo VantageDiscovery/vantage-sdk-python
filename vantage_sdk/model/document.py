@@ -73,10 +73,13 @@ class Variant(BaseModel):
 
     Attributes
     ----------
+    id:
+        Unique ID of variant for this document.
     items: List[VariantItem]
         List of variant items.
     """
 
+    id: StrictStr
     items: List[VariantItem]
 
 
@@ -107,7 +110,7 @@ class VantageDocument(BaseModel):
         if self.variants:
             variants_list: List = []
             for variant in self.variants:
-                variant_dict: Dict = {}
+                variant_dict: Dict = {"id": variant.id}
                 for variant_item in variant.items:
                     variant_dict[metadata_item.key] = metadata_item.value
                 variants_list.append(variant_dict)
