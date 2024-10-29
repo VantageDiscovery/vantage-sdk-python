@@ -14,28 +14,38 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictStr, field_validator
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class CollectionStatusIngestStatusesInner(BaseModel):
     """
     CollectionStatusIngestStatusesInner
-    """ # noqa: E501
+    """  # noqa: E501
+
     ingest_status_name: Optional[StrictStr] = None
     messages: Optional[List[StrictStr]] = None
     ingest_status_batch_ids: Optional[List[StrictStr]] = None
     processed_status_batch_ids: Optional[List[StrictStr]] = None
     timestamp: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["ingest_status_name", "messages", "ingest_status_batch_ids", "processed_status_batch_ids", "timestamp"]
+    __properties: ClassVar[List[str]] = [
+        "ingest_status_name",
+        "messages",
+        "ingest_status_batch_ids",
+        "processed_status_batch_ids",
+        "timestamp",
+    ]
 
     @field_validator('ingest_status_name')
     def ingest_status_name_validate_enum(cls, value):
@@ -44,7 +54,9 @@ class CollectionStatusIngestStatusesInner(BaseModel):
             return value
 
         if value not in ('processed', 'invalid', 'processing'):
-            raise ValueError("must be one of enum values ('processed', 'invalid', 'processing')")
+            raise ValueError(
+                "must be one of enum values ('processed', 'invalid', 'processing')"
+            )
         return value
 
     model_config = {
@@ -52,7 +64,6 @@ class CollectionStatusIngestStatusesInner(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -105,13 +116,15 @@ class CollectionStatusIngestStatusesInner(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "ingest_status_name": obj.get("ingest_status_name"),
-            "messages": obj.get("messages"),
-            "ingest_status_batch_ids": obj.get("ingest_status_batch_ids"),
-            "processed_status_batch_ids": obj.get("processed_status_batch_ids"),
-            "timestamp": obj.get("timestamp")
-        })
+        _obj = cls.model_validate(
+            {
+                "ingest_status_name": obj.get("ingest_status_name"),
+                "messages": obj.get("messages"),
+                "ingest_status_batch_ids": obj.get("ingest_status_batch_ids"),
+                "processed_status_batch_ids": obj.get(
+                    "processed_status_batch_ids"
+                ),
+                "timestamp": obj.get("timestamp"),
+            }
+        )
         return _obj
-
-

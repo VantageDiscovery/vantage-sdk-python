@@ -282,7 +282,6 @@ class TestCollections:
         """
         # Given
         collection_id = test_collection_id
-        collection_name = test_collection_id
 
         collection = UserProvidedEmbeddingsCollection(
             collection_id=collection_id,

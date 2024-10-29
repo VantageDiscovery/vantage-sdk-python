@@ -45,8 +45,8 @@ class FacetResult(BaseModel):
         if value is None:
             return value
 
-        if value not in ('count', 'range'):
-            raise ValueError("must be one of enum values ('count', 'range')")
+        if value not in ('COUNT', 'RANGE'):
+            raise ValueError("must be one of enum values ('COUNT', 'RANGE')")
         return value
 
     model_config = {
