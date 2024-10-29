@@ -58,9 +58,9 @@
         }
       ],
       "facets": [
-        {"facet": "color", "type": "count", "values": {"red": 2, "blue": 1}},
-        {"facet": "size", "type": "count", "values": {"sm": 1, "md": 2}},
-        {"facet": "price", "type": "range", "values": {"below_100": 2, "more_than_100": 1}}
+        {"facet": "color", "type": "COUNT", "values": {"red": 2, "blue": 1}},
+        {"facet": "size", "type": "COUNT", "values": {"sm": 1, "md": 2}},
+        {"facet": "price", "type": "RANGE", "values": {"below_100": 2, "more_than_100": 1}}
       ],
       "execution_time": 7
     }

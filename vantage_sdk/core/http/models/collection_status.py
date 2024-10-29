@@ -14,23 +14,30 @@
 
 
 from __future__ import annotations
+
+import json
 import pprint
 import re  # noqa: F401
-import json
-
-
 from typing import Any, ClassVar, Dict, List, Optional
+
 from pydantic import BaseModel, StrictStr, field_validator
-from vantage_sdk.core.http.models.collection_status_ingest_statuses_inner import CollectionStatusIngestStatusesInner
+
+from vantage_sdk.core.http.models.collection_status_ingest_statuses_inner import (
+    CollectionStatusIngestStatusesInner,
+)
+
+
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 
+
 class CollectionStatus(BaseModel):
     """
     CollectionStatus
-    """ # noqa: E501
+    """  # noqa: E501
+
     status: Optional[StrictStr] = None
     ingest_statuses: Optional[List[CollectionStatusIngestStatusesInner]] = None
     __properties: ClassVar[List[str]] = ["status", "ingest_statuses"]
@@ -41,8 +48,17 @@ class CollectionStatus(BaseModel):
         if value is None:
             return value
 
-        if value not in ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty'):
-            raise ValueError("must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')")
+        if value not in (
+            'Pending',
+            'Indexing',
+            'Online',
+            'Degraded',
+            'Offline',
+            'Empty',
+        ):
+            raise ValueError(
+                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')"
+            )
         return value
 
     model_config = {
@@ -50,7 +66,6 @@ class CollectionStatus(BaseModel):
         "validate_assignment": True,
         "protected_namespaces": (),
     }
-
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -104,10 +119,15 @@ class CollectionStatus(BaseModel):
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({
-            "status": obj.get("status"),
-            "ingest_statuses": [CollectionStatusIngestStatusesInner.from_dict(_item) for _item in obj.get("ingest_statuses")] if obj.get("ingest_statuses") is not None else None
-        })
+        _obj = cls.model_validate(
+            {
+                "status": obj.get("status"),
+                "ingest_statuses": [
+                    CollectionStatusIngestStatusesInner.from_dict(_item)
+                    for _item in obj.get("ingest_statuses")
+                ]
+                if obj.get("ingest_statuses") is not None
+                else None,
+            }
+        )
         return _obj
-
-

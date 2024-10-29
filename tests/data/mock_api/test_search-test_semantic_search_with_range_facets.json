@@ -56,7 +56,7 @@
         }
       ],
       "facets": [
-        {"facet": "price", "type": "range", "values": {"below_100": 2, "more_than_100": 1}}
+        {"facet": "price", "type": "RANGE", "values": {"below_100": 2, "more_than_100": 1}}
       ],
       "execution_time": 7
     }
