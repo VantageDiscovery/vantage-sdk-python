@@ -6,6 +6,7 @@ from vantage_sdk.model.document import (
     MetadataItem,
     UserProvidedEmbeddingsDocument,
     VantageManagedEmbeddingsDocument,
+    Variant,
     VariantItem,
 )
 
@@ -54,10 +55,10 @@ def vantage_upe_documents() -> List[UserProvidedEmbeddingsDocument]:
         [MetadataItem(key="test_4", value="4")],
     ]
     variants = [
-        [VariantItem(key="color", value="red")],
-        [VariantItem(key="color", value="green")],
-        [VariantItem(key="color", value="blue")],
-        [VariantItem(key="color", value="purple")],
+        [Variant(items=[VariantItem(key="color", value="red")])],
+        [Variant(items=[VariantItem(key="color", value="green")])],
+        [Variant(items=[VariantItem(key="color", value="blue")])],
+        [Variant(items=[VariantItem(key="color", value="purple")])],
     ]
     documents = [
         UserProvidedEmbeddingsDocument(
@@ -101,10 +102,10 @@ def vantage_vme_documents() -> List[VantageManagedEmbeddingsDocument]:
         [MetadataItem(key="test_4", value="4")],
     ]
     variants = [
-        [VariantItem(key="color", value="red")],
-        [VariantItem(key="color", value="green")],
-        [VariantItem(key="color", value="blue")],
-        [VariantItem(key="color", value="purple")],
+        [Variant(items=[VariantItem(key="color", value="red")])],
+        [Variant(items=[VariantItem(key="color", value="green")])],
+        [Variant(items=[VariantItem(key="color", value="blue")])],
+        [Variant(items=[VariantItem(key="color", value="purple")])],
     ]
 
     documents = [
