@@ -37,11 +37,20 @@ class MetadataItem(BaseModel):
 
     key: StrictStr
     value: Union[StrictStr, StrictInt, StrictFloat, StrictBool]
+    sortable: StrictBool = False
 
     @model_validator(mode="before")
     def add_prefix(cls, values: Dict):
-        key, value = values.get("key"), values.get("value")
-        if isinstance(value, float):
+        key, value, sortable = (
+            values.get("key"),
+            values.get("value"),
+            values.get("sortable"),
+        )
+        if sortable:
+            if not isinstance(value, float):
+                raise ValueError(
+                    f"Value must be a float if sortable is set to True. Got {value} of type {type(value)}"
+                )
             prefix = METADATA_ORDERED_PREFIX
         else:
             prefix = METADATA_PREFIX
