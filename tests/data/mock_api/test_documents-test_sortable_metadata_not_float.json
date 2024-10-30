@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/collection/test-collection/documents",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
