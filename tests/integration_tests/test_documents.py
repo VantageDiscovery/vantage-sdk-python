@@ -258,4 +258,4 @@ class TestDocuments:
             )
 
         # Then
-        assert exception.type is ValueError
+        assert exception.type is ValidationError
