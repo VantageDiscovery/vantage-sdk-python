@@ -250,4 +250,4 @@ class TestDocuments:
             MetadataItem(key="price", value=1, sortable=True)
 
         # Then
-        assert exception.type is ValidationError
+        assert exception.type is ValueError
