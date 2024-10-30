@@ -51,6 +51,38 @@ class MetadataItem(BaseModel):
         return values
 
 
+class VariantItem(BaseModel):
+    """
+    Represents a variant item of a document variant.
+
+    Attributes
+    ----------
+    key : StrictStr
+        The key for the variant item.
+    value : Union[StrictStr, StrictInt, StrictFloat, StrictBool]
+        The value for the variant item.
+    """
+
+    key: StrictStr
+    value: Union[StrictStr, StrictInt, StrictFloat, StrictBool]
+
+
+class Variant(BaseModel):
+    """
+    Represents a single variant of a document.
+
+    Attributes
+    ----------
+    id:
+        Unique ID of variant for this document.
+    items: List[VariantItem]
+        List of variant items.
+    """
+
+    id: StrictStr
+    items: List[VariantItem]
+
+
 class VantageDocument(BaseModel):
     """
     Vantage document class.
@@ -65,6 +97,7 @@ class VantageDocument(BaseModel):
 
     id: Optional[StrictStr] = Field(default_factory=lambda: uuid4().hex)
     metadata: Optional[List[MetadataItem]] = None
+    variants: Optional[List[Variant]] = None
 
     def to_vantage_dict(self):
         vantage_dict = {
@@ -74,6 +107,14 @@ class VantageDocument(BaseModel):
         if self.metadata:
             for metadata_item in self.metadata:
                 vantage_dict[metadata_item.key] = metadata_item.value
+        if self.variants:
+            variants_list: List = []
+            for variant in self.variants:
+                variant_dict: Dict = {"id": variant.id}
+                for variant_item in variant.items:
+                    variant_dict[metadata_item.key] = metadata_item.value
+                variants_list.append(variant_dict)
+            vantage_dict["variants"] = variants_list
 
         return vantage_dict
 
