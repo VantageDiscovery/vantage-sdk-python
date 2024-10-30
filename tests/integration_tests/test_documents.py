@@ -227,7 +227,7 @@ class TestDocuments:
         self,
     ):
         # Given
-        embedding_vector = [1.0, 1.0, 1.0]
+        embedding_vector = [1.0]
         metadata = [
             MetadataItem(key="price", value=1.0, sortable=True),
         ]
@@ -250,4 +250,4 @@ class TestDocuments:
             MetadataItem(key="price", value=1, sortable=True)
 
         # Then
-        assert exception.type is ValueError
+        assert exception.type is ValidationError
