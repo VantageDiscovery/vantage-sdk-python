@@ -246,8 +246,8 @@ class TestDocuments:
     ):
 
         # When
-        with pytest.raises(ValueError) as exception:
+        with pytest.raises(ValidationError) as exception:
             MetadataItem(key="price", value=1, sortable=True)
 
         # Then
-        assert exception.type is ValueError
+        assert exception.type is ValidationError
