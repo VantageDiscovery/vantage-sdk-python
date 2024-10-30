@@ -244,18 +244,10 @@ class TestDocuments:
     def test_sortable_metadata_not_float(
         self,
     ):
-        # Given
-        embedding_vector = [1.0, 1.0, 1.0]
-        metadata = [
-            MetadataItem(key="price", value=1, sortable=True),
-        ]
 
         # When
         with pytest.raises(ValueError) as exception:
-            UserProvidedEmbeddingsDocument(
-                embeddings=embedding_vector,
-                metadata=metadata,
-            )
+            MetadataItem(key="price", value=1, sortable=True)
 
         # Then
         assert exception.type is ValueError
