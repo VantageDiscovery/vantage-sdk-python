@@ -898,7 +898,10 @@ class VantageClient:
             ]
 
         external_key_id = None
-        if collection.external_key:
+        if (
+            hasattr(collection, "external_key")
+            and collection.external_key is not None
+        ):
             external_key_id = collection.external_key.external_key_id
 
         create_collection_request = CreateCollectionRequest(
