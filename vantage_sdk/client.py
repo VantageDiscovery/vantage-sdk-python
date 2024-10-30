@@ -897,12 +897,19 @@ class VantageClient:
                 for account in collection.secondary_external_accounts
             ]
 
+        external_key_id = None
+        if (
+            hasattr(collection, "external_key")
+            and collection.external_key is not None
+        ):
+            external_key_id = collection.external_key.external_key_id
+
         create_collection_request = CreateCollectionRequest(
             collection_id=collection.collection_id,
             collection_name=collection.collection_name,
             user_provided_embeddings=bool(collection.user_provided_embeddings),
             embeddings_dimension=int(collection.embeddings_dimension),
-            external_key_id=getattr(collection, 'external_key_id', None),
+            external_key_id=external_key_id,
             secondary_external_accounts=getattr(
                 collection, 'secondary_external_accounts', None
             ),
