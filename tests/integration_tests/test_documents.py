@@ -251,11 +251,11 @@ class TestDocuments:
         ]
 
         # When
-        with pytest.raises(ValidationError) as exception:
+        with pytest.raises(ValueError) as exception:
             UserProvidedEmbeddingsDocument(
                 embeddings=embedding_vector,
                 metadata=metadata,
             )
 
         # Then
-        assert exception.type is ValidationError
+        assert exception.type is ValueError
