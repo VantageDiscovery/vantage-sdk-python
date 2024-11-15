@@ -2331,7 +2331,7 @@ class VantageClient:
         collection_id: str,
         content: bytes,
         file_size: int,
-        batch_identifier: Optional[str],
+        batch_identifier: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> int:
         """
@@ -2359,7 +2359,7 @@ class VantageClient:
         """
 
         if batch_identifier is None:
-            batch_identifier = f"{uuid.uuid4}.parquet"
+            batch_identifier = f"{uuid.uuid4()}.parquet"
         elif not (
             batch_identifier.endswith(".parquet")
             or batch_identifier.endswith(".jsonl")
