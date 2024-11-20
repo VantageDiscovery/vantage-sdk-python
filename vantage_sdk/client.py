@@ -59,6 +59,15 @@ from vantage_sdk.core.http.models import (
     VantageVibeModifiable,
     VantageVibeSearchQuery,
 )
+from vantage_sdk.core.http.models.create_semantic_query_suggestion_modifiable import (
+    CreateSemanticQuerySuggestionModifiable,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_query import (
+    SemanticQuerySuggestionsQuery,
+)
+from vantage_sdk.core.http.models.update_semantic_query_suggestions_modifiable import (
+    UpdateSemanticQuerySuggestionsModifiable,
+)
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.core.text_util import (
@@ -74,6 +83,7 @@ from vantage_sdk.model.collection import (
     CollectionUploadURL,
     HuggingFaceCollection,
     OpenAICollection,
+    SemanticQuerySuggestionsConfiguration,
     UserProvidedEmbeddingsCollection,
 )
 from vantage_sdk.model.document import (
@@ -98,6 +108,7 @@ from vantage_sdk.model.search import (
     Pagination,
     SearchOptions,
     SearchResult,
+    SemanticQuerySuggestionsResult,
     Sort,
     TotalCountsOptions,
     VantageVibeImageBase64,
@@ -1452,6 +1463,297 @@ class VantageClient:
 
     # endregion
 
+    # region Semantic Query Suggestions management
+
+    def list_semantic_query_suggestions_configurations(
+        self,
+        collection_id: str,
+        account_id: Optional[str] = None,
+    ) -> List[SemanticQuerySuggestionsConfiguration]:
+        """
+        Lists currently available Semantic Query Suggestions configurations on a collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions configurations.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[SemanticQuerySuggestionsConfiguration]
+            List of available Semantic Query Suggestions configurations.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        return (
+            self.management_api.collection_api.get_semantic_query_suggestions(
+                collection_id=collection_id,
+                account_id=account_id or self.account_id,
+            )
+        )
+
+    def create_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        external_account_id: str,
+        llm_model_name: str,
+        suggestions_per_document: Optional[int] = None,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsConfiguration:
+        """
+        Creates new Semantic Query Suggestions configurations on a collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        external_account_id: str
+            ID of a LLM provider. Only OpenAI is supported for now.
+        llm_model_name: str
+            Name of the LLM model used. Only OpenAI models are supported
+            for now.
+        suggestions_per_document: Optional[int], optional
+            Number of suggestions per document.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestionsConfiguration
+            Newly created Semantic Query Suggestions configuration.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        query = CreateSemanticQuerySuggestionModifiable(
+            suggestions_per_document=suggestions_per_document,
+            external_account_id=external_account_id,
+            llm_model_name=llm_model_name,
+        )
+        return self.management_api.collection_api.create_semantic_query_suggestions(
+            account_id=account_id,
+            collection_id=collection_id,
+            create_semantic_query_suggestion_modifiable=query,
+        )
+
+    def get_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        semantic_query_suggestions_id: str,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsConfiguration:
+        """
+        Get Semantic Query Suggestions configuration defined on a collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        semantic_query_suggestions_id: str
+            ID of a Semantic Query Suggestions configuration to fetch.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        SemanticQuerySuggestionsConfiguration
+            Semantic Query Suggestions configuration.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        return (
+            self.management_api.collection_api.get_semantic_query_suggestion(
+                account_id=account_id,
+                collection_id=collection_id,
+                semantic_query_suggestion_id=semantic_query_suggestions_id,
+            )
+        )
+
+    def update_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        semantic_query_suggestions_id: str,
+        external_account_id: str,
+        suggestions_per_document: Optional[int] = None,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsConfiguration:
+        """
+        Updates existing Semantic Query Suggestions configurations on a
+        collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        external_account_id: str
+            ID of a LLM provider. Only OpenAI is supported for now.
+        semantic_query_suggestions_id: str
+            ID of a Semantic Query Suggestions configuration to update.
+        suggestions_per_document: Optional[int], optional
+            Number of suggestions per document.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        List[SemanticQuerySuggestionsConfiguration]
+            Updated Semantic Query Suggestions configuration.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        query = UpdateSemanticQuerySuggestionsModifiable(
+            suggestions_per_document=suggestions_per_document,
+            external_account_id=external_account_id,
+        )
+        return self.management_api.collection_api.update_semantic_query_suggestions(
+            account_id=account_id,
+            collection_id=collection_id,
+            semantic_query_suggestion_id=semantic_query_suggestions_id,
+            update_semantic_query_suggestions_modifiable=query,
+        )
+
+    def delete_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        semantic_query_suggestions_id: str,
+        account_id: Optional[str] = None,
+    ) -> None:
+        """
+        Deletes existing Semantic Query Suggestions configurations on a
+        collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        semantic_query_suggestions_id: str
+            ID of a Semantic Query Suggestions configuration to delete.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        self.management_api.collection_api.delete_semantic_query_suggestion(
+            account_id=account_id,
+            collection_id=collection_id,
+            semantic_query_suggestion_id=semantic_query_suggestions_id,
+        )
+
+    def disable_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        semantic_query_suggestions_id: str,
+        account_id: Optional[str] = None,
+    ) -> Collection:
+        """
+        Disables existing Semantic Query Suggestions configurations on a
+        collection.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        semantic_query_suggestions_id: str
+            ID of a Semantic Query Suggestions configuration to disable.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        Collection
+            Data of a collection for which Semantic Query Suggestions
+            configuration has been disabled.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        return self.management_api.collection_api.disable_semantic_query_suggestions(
+            account_id=account_id,
+            collection_id=collection_id,
+            semantic_query_suggestion_id=semantic_query_suggestions_id,
+        )
+
+    def rollback_semantic_query_suggestions_configuration(
+        self,
+        collection_id: str,
+        semantic_query_suggestions_id: str,
+        account_id: Optional[str] = None,
+    ) -> Collection:
+        """
+        Rolls back Semantic Query Suggestions configurations on a
+        collection to a previous version.
+
+        Parameters
+        ----------
+        collection_id: str
+            ID of a collection being queried for Semantic Query Suggestions
+            configurations.
+        semantic_query_suggestions_id: str
+            ID of a Semantic Query Suggestions configuration to roll back.
+        account_id : Optional[str], optional
+            The account ID to which the Semantic Query Suggestions
+            configurations belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+
+        Returns
+        -------
+        Collection
+            Data of a collection for which Semantic Query Suggestions
+            configuration has been rolled back.
+
+        Notes
+        -----
+        Visit our [documentation](https://docs.vantagediscovery.com/docs/management-api) for more details and examples.
+        """
+        return self.management_api.collection_api.rollback_semantic_query_suggestions(
+            account_id=account_id,
+            collection_id=collection_id,
+            semantic_query_suggestion_id=semantic_query_suggestions_id,
+        )
+
+    # endregion
+
     # region Search Helper Functions
 
     def _prepare_search_query(
@@ -2258,6 +2560,25 @@ class VantageClient:
         )
 
         return TotalCountResult.model_validate(result.model_dump())
+
+    def semantic_query_suggestions_search(
+        self,
+        collection_id: str,
+        text: str,
+        max_suggestions: Optional[int] = None,
+        request_id: Optional[int] = None,
+        account_id: Optional[str] = None,
+    ) -> SemanticQuerySuggestionsResult:
+        query = SemanticQuerySuggestionsQuery(
+            request_id=request_id,
+            text=text,
+            max_suggestions=max_suggestions,
+        )
+        return self.search_api.semantic_query_suggestions_search(
+            account_id=account_id,
+            collection_id=collection_id,
+            query=query,
+        )
 
     # endregion
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage Management API
+    Vantage API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -37,10 +37,12 @@ class CollectionReadOnly(BaseModel):
     collection_created_time: Optional[StrictStr] = None
     collection_status: Optional[StrictStr] = None
     collection_state: Optional[StrictStr] = None
+    semantic_query_suggestion_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection_created_time",
         "collection_status",
         "collection_state",
+        "semantic_query_suggestion_id",
     ]
 
     @field_validator('collection_status')
@@ -106,6 +108,7 @@ class CollectionReadOnly(BaseModel):
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
@@ -113,6 +116,7 @@ class CollectionReadOnly(BaseModel):
                 "collection_created_time",
                 "collection_status",
                 "collection_state",
+                "semantic_query_suggestion_id",
             },
             exclude_none=True,
         )
@@ -132,6 +136,9 @@ class CollectionReadOnly(BaseModel):
                 "collection_created_time": obj.get("collection_created_time"),
                 "collection_status": obj.get("collection_status"),
                 "collection_state": obj.get("collection_state"),
+                "semantic_query_suggestion_id": obj.get(
+                    "semantic_query_suggestion_id"
+                ),
             }
         )
         return _obj

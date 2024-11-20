@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictStr, field_validator
 
 
 try:
@@ -29,14 +29,35 @@ except ImportError:
     from typing_extensions import Self
 
 
-class VantageVibeReadOnly(BaseModel):
+class SemanticQuerySuggestionReadOnly(BaseModel):
     """
-    VantageVibeReadOnly
+    SemanticQuerySuggestionReadOnly
     """  # noqa: E501
 
-    id: Optional[StrictStr] = None
+    semantic_query_suggestion_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "account_id"]
+    collection_id: Optional[StrictStr] = None
+    system_prompt_id: Optional[StrictStr] = None
+    state: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = [
+        "semantic_query_suggestion_id",
+        "account_id",
+        "collection_id",
+        "system_prompt_id",
+        "state",
+    ]
+
+    @field_validator('state')
+    def state_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('Active', 'Inactive', 'Pending'):
+            raise ValueError(
+                "must be one of enum values ('Active', 'Inactive', 'Pending')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -55,7 +76,7 @@ class VantageVibeReadOnly(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of VantageVibeReadOnly from a JSON string"""
+        """Create an instance of SemanticQuerySuggestionReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -67,22 +88,17 @@ class VantageVibeReadOnly(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-                "id",
-                "account_id",
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of VantageVibeReadOnly from a dict"""
+        """Create an instance of SemanticQuerySuggestionReadOnly from a dict"""
         if obj is None:
             return None
 
@@ -90,6 +106,14 @@ class VantageVibeReadOnly(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {"id": obj.get("id"), "account_id": obj.get("account_id")}
+            {
+                "semantic_query_suggestion_id": obj.get(
+                    "semantic_query_suggestion_id"
+                ),
+                "account_id": obj.get("account_id"),
+                "collection_id": obj.get("collection_id"),
+                "system_prompt_id": obj.get("system_prompt_id"),
+                "state": obj.get("state"),
+            }
         )
         return _obj

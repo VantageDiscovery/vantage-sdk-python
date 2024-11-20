@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "PATCH",
+    "urlPath": "/v1/account/test/collection/test_collection/semantic_query_suggestions/suggestions1",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "suggestions_per_document": 10,
+          "external_account_id": "external1"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "semantic_query_suggestion_id": "suggestions1",
+      "account_id": "test",
+      "collection_id": "test_collection",
+      "external_account_id": "external1",
+      "llm_model_name": "openai-4o",
+      "suggestions_per_document": 10,
+      "state": "Active"
+    }
+  }
+}

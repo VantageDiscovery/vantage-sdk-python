@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage Management API
+    Vantage API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -42,6 +42,15 @@ from vantage_sdk.core.http.models.collection_upload_url import (
 )
 from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
+)
+from vantage_sdk.core.http.models.create_semantic_query_suggestion_modifiable import (
+    CreateSemanticQuerySuggestionModifiable,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestion import (
+    SemanticQuerySuggestion,
+)
+from vantage_sdk.core.http.models.update_semantic_query_suggestions_modifiable import (
+    UpdateSemanticQuerySuggestionsModifiable,
 )
 from vantage_sdk.core.http.rest import RESTResponseType
 
@@ -352,6 +361,329 @@ class CollectionManagementApi:
         )
 
     @validate_call
+    def create_semantic_query_suggestions(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to create Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        create_semantic_query_suggestion_modifiable: Annotated[
+            CreateSemanticQuerySuggestionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> SemanticQuerySuggestion:
+        """Create Semantic Query Suggestions
+
+        Create new Semantic Query Suggestions configuration for collection {collection_id}
+
+        :param collection_id: ID of the collection to create Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param create_semantic_query_suggestion_modifiable: Configuration required to update Collection. (required)
+        :type create_semantic_query_suggestion_modifiable: CreateSemanticQuerySuggestionModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._create_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            create_semantic_query_suggestion_modifiable=create_semantic_query_suggestion_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def create_semantic_query_suggestions_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to create Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        create_semantic_query_suggestion_modifiable: Annotated[
+            CreateSemanticQuerySuggestionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SemanticQuerySuggestion]:
+        """Create Semantic Query Suggestions
+
+        Create new Semantic Query Suggestions configuration for collection {collection_id}
+
+        :param collection_id: ID of the collection to create Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param create_semantic_query_suggestion_modifiable: Configuration required to update Collection. (required)
+        :type create_semantic_query_suggestion_modifiable: CreateSemanticQuerySuggestionModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._create_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            create_semantic_query_suggestion_modifiable=create_semantic_query_suggestion_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def create_semantic_query_suggestions_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to create Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        create_semantic_query_suggestion_modifiable: Annotated[
+            CreateSemanticQuerySuggestionModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Create Semantic Query Suggestions
+
+        Create new Semantic Query Suggestions configuration for collection {collection_id}
+
+        :param collection_id: ID of the collection to create Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param create_semantic_query_suggestion_modifiable: Configuration required to update Collection. (required)
+        :type create_semantic_query_suggestion_modifiable: CreateSemanticQuerySuggestionModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._create_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            create_semantic_query_suggestion_modifiable=create_semantic_query_suggestion_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _create_semantic_query_suggestions_serialize(
+        self,
+        collection_id,
+        account_id,
+        create_semantic_query_suggestion_modifiable,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if create_semantic_query_suggestion_modifiable is not None:
+            _body_params = create_semantic_query_suggestion_modifiable
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
     def delete_collection(
         self,
         collection_id: Annotated[
@@ -623,6 +955,646 @@ class CollectionManagementApi:
         return self.api_client.param_serialize(
             method='DELETE',
             resource_path='/v1/account/{account_id}/collection/{collection_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
+    def delete_semantic_query_suggestion(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to delete Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to delete"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Delete Semantic Query Suggestion
+
+        Delete Semantic Query Suggestiopn defined for a collection
+
+        :param collection_id: ID of the collection to delete Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to delete (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._delete_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def delete_semantic_query_suggestion_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to delete Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to delete"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Delete Semantic Query Suggestion
+
+        Delete Semantic Query Suggestiopn defined for a collection
+
+        :param collection_id: ID of the collection to delete Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to delete (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._delete_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def delete_semantic_query_suggestion_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to delete Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to delete"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Delete Semantic Query Suggestion
+
+        Delete Semantic Query Suggestiopn defined for a collection
+
+        :param collection_id: ID of the collection to delete Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to delete (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._delete_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _delete_semantic_query_suggestion_serialize(
+        self,
+        collection_id,
+        account_id,
+        semantic_query_suggestion_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if semantic_query_suggestion_id is not None:
+            _path_params[
+                'semantic_query_suggestion_id'
+            ] = semantic_query_suggestion_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions/{semantic_query_suggestion_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
+    def disable_semantic_query_suggestions(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to disable Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to disable"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> Collection:
+        """Disable Semantic Query Suggestion
+
+        Disables Semantic Search Suggestion for a collection
+
+        :param collection_id: ID of the collection to disable Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to disable (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._disable_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def disable_semantic_query_suggestions_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to disable Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to disable"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Collection]:
+        """Disable Semantic Query Suggestion
+
+        Disables Semantic Search Suggestion for a collection
+
+        :param collection_id: ID of the collection to disable Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to disable (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._disable_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def disable_semantic_query_suggestions_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to disable Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to disable"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Disable Semantic Query Suggestion
+
+        Disables Semantic Search Suggestion for a collection
+
+        :param collection_id: ID of the collection to disable Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to disable (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._disable_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _disable_semantic_query_suggestions_serialize(
+        self,
+        collection_id,
+        account_id,
+        semantic_query_suggestion_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if semantic_query_suggestion_id is not None:
+            _path_params[
+                'semantic_query_suggestion_id'
+            ] = semantic_query_suggestion_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions/{semantic_query_suggestion_id}/disable',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1567,6 +2539,616 @@ class CollectionManagementApi:
         )
 
     @validate_call
+    def get_semantic_query_suggestion(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to get"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> SemanticQuerySuggestion:
+        """List Semantic Query Suggestions
+
+        Get a specific Semantic Query Suggestion defined on a collection
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to get (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def get_semantic_query_suggestion_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to get"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SemanticQuerySuggestion]:
+        """List Semantic Query Suggestions
+
+        Get a specific Semantic Query Suggestion defined on a collection
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to get (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def get_semantic_query_suggestion_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to get"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """List Semantic Query Suggestions
+
+        Get a specific Semantic Query Suggestion defined on a collection
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to get (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestion_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _get_semantic_query_suggestion_serialize(
+        self,
+        collection_id,
+        account_id,
+        semantic_query_suggestion_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if semantic_query_suggestion_id is not None:
+            _path_params[
+                'semantic_query_suggestion_id'
+            ] = semantic_query_suggestion_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions/{semantic_query_suggestion_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
+    def get_semantic_query_suggestions(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> List[SemanticQuerySuggestion]:
+        """Get Semantic Query Suggestions
+
+        Get Semantic Query Suggestions for collection {collection_id}
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[SemanticQuerySuggestion]",
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def get_semantic_query_suggestions_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[List[SemanticQuerySuggestion]]:
+        """Get Semantic Query Suggestions
+
+        Get Semantic Query Suggestions for collection {collection_id}
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[SemanticQuerySuggestion]",
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def get_semantic_query_suggestions_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to get Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get Semantic Query Suggestions
+
+        Get Semantic Query Suggestions for collection {collection_id}
+
+        :param collection_id: ID of the collection to get Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._get_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "List[SemanticQuerySuggestion]",
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _get_semantic_query_suggestions_serialize(
+        self,
+        collection_id,
+        account_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
     def list_collections(
         self,
         account_id: Annotated[StrictStr, Field(description="The account id")],
@@ -1798,6 +3380,327 @@ class CollectionManagementApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/v1/account/{account_id}/collection',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
+    def rollback_semantic_query_suggestions(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to toggle Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to rollback"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> Collection:
+        """Rollback Semantic Query Suggestion configuration
+
+        Rollback Semantic Search Suggestion configuration for a collection to a previous version
+
+        :param collection_id: ID of the collection to toggle Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to rollback (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._rollback_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def rollback_semantic_query_suggestions_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to toggle Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to rollback"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[Collection]:
+        """Rollback Semantic Query Suggestion configuration
+
+        Rollback Semantic Search Suggestion configuration for a collection to a previous version
+
+        :param collection_id: ID of the collection to toggle Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to rollback (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._rollback_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def rollback_semantic_query_suggestions_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to toggle Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to rollback"
+            ),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Rollback Semantic Query Suggestion configuration
+
+        Rollback Semantic Search Suggestion configuration for a collection to a previous version
+
+        :param collection_id: ID of the collection to toggle Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to rollback (required)
+        :type semantic_query_suggestion_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._rollback_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "Collection",
+            '404': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _rollback_semantic_query_suggestions_serialize(
+        self,
+        collection_id,
+        account_id,
+        semantic_query_suggestion_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if semantic_query_suggestion_id is not None:
+            _path_params[
+                'semantic_query_suggestion_id'
+            ] = semantic_query_suggestion_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions/{semantic_query_suggestion_id}/rollback',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2115,6 +4018,364 @@ class CollectionManagementApi:
         return self.api_client.param_serialize(
             method='PATCH',
             resource_path='/v1/account/{account_id}/collection/{collection_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth,
+        )
+
+    @validate_call
+    def update_semantic_query_suggestions(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to update Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to update"
+            ),
+        ],
+        update_semantic_query_suggestions_modifiable: Annotated[
+            UpdateSemanticQuerySuggestionsModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> SemanticQuerySuggestion:
+        """Update Semantic Query Suggestions
+
+        Update Semantic Query Suggestions configuration
+
+        :param collection_id: ID of the collection to update Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to update (required)
+        :type semantic_query_suggestion_id: str
+        :param update_semantic_query_suggestions_modifiable: Configuration required to update Collection. (required)
+        :type update_semantic_query_suggestions_modifiable: UpdateSemanticQuerySuggestionsModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._update_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            update_semantic_query_suggestions_modifiable=update_semantic_query_suggestions_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    def update_semantic_query_suggestions_with_http_info(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to update Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to update"
+            ),
+        ],
+        update_semantic_query_suggestions_modifiable: Annotated[
+            UpdateSemanticQuerySuggestionsModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[SemanticQuerySuggestion]:
+        """Update Semantic Query Suggestions
+
+        Update Semantic Query Suggestions configuration
+
+        :param collection_id: ID of the collection to update Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to update (required)
+        :type semantic_query_suggestion_id: str
+        :param update_semantic_query_suggestions_modifiable: Configuration required to update Collection. (required)
+        :type update_semantic_query_suggestions_modifiable: UpdateSemanticQuerySuggestionsModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._update_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            update_semantic_query_suggestions_modifiable=update_semantic_query_suggestions_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    def update_semantic_query_suggestions_without_preload_content(
+        self,
+        collection_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of the collection to update Semantic Query Suggestions for"
+            ),
+        ],
+        account_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of an account which is the owner of the collection"
+            ),
+        ],
+        semantic_query_suggestion_id: Annotated[
+            StrictStr,
+            Field(
+                description="ID of a Semantic Query Suggestion configuration to update"
+            ),
+        ],
+        update_semantic_query_suggestions_modifiable: Annotated[
+            UpdateSemanticQuerySuggestionsModifiable,
+            Field(description="Configuration required to update Collection."),
+        ],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)],
+            ],
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Update Semantic Query Suggestions
+
+        Update Semantic Query Suggestions configuration
+
+        :param collection_id: ID of the collection to update Semantic Query Suggestions for (required)
+        :type collection_id: str
+        :param account_id: ID of an account which is the owner of the collection (required)
+        :type account_id: str
+        :param semantic_query_suggestion_id: ID of a Semantic Query Suggestion configuration to update (required)
+        :type semantic_query_suggestion_id: str
+        :param update_semantic_query_suggestions_modifiable: Configuration required to update Collection. (required)
+        :type update_semantic_query_suggestions_modifiable: UpdateSemanticQuerySuggestionsModifiable
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._update_semantic_query_suggestions_serialize(
+            collection_id=collection_id,
+            account_id=account_id,
+            semantic_query_suggestion_id=semantic_query_suggestion_id,
+            update_semantic_query_suggestions_modifiable=update_semantic_query_suggestions_modifiable,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "SemanticQuerySuggestion",
+            '404': None,
+            '405': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param, _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+    def _update_semantic_query_suggestions_serialize(
+        self,
+        collection_id,
+        account_id,
+        semantic_query_suggestion_id,
+        update_semantic_query_suggestions_modifiable,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> Tuple:
+        _host = None
+
+        _collection_formats: Dict[str, str] = {}
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, str] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if collection_id is not None:
+            _path_params['collection_id'] = collection_id
+        if account_id is not None:
+            _path_params['account_id'] = account_id
+        if semantic_query_suggestion_id is not None:
+            _path_params[
+                'semantic_query_suggestion_id'
+            ] = semantic_query_suggestion_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_semantic_query_suggestions_modifiable is not None:
+            _body_params = update_semantic_query_suggestions_modifiable
+
+        # set the HTTP header `Accept`
+        _header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json']
+        )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = self.api_client.select_header_content_type(
+                ['application/json']
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = ['BearerAuth']
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/v1/account/{account_id}/collection/{collection_id}/semantic_query_suggestions/{semantic_query_suggestion_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
