@@ -1,7 +1,7 @@
 [tool]
 [tool.poetry]
 name = "vantage-sdk"
-version = "0.9.5-dev8"
+version = "0.9.5"
 description = "Vantage Python SDK."
 authors = ["Vantage <none@vantage.com>"]
 readme = "README.md"
