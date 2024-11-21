@@ -8,6 +8,7 @@ from vantage_sdk.core.http.exceptions import (
     ForbiddenException,
     NotFoundException,
 )
+from vantage_sdk.model.keys import LLMProvider, VantageAPIKeyRole
 
 
 """Integration tests for API keys endpoints."""
@@ -32,9 +33,9 @@ class TestApiKeys:
         keys = client.get_vantage_api_keys(account_id=account_params["id"])
 
         # Then
-        assert len(keys) == 1
+        assert len(keys) == 3
         api_key = keys[0]
-        assert api_key.vantage_api_key_obfuscated is not None
+        assert api_key.value is not None
         assert api_key.account_id == account_params["id"]
 
     def test_get_vantage_api_keys_using_nonexisting_account(
@@ -68,8 +69,58 @@ class TestApiKeys:
 
         # Then
         assert api_key.account_id == account_params["id"]
-        assert api_key.vantage_api_key_obfuscated is not None
-        api_key.vantage_api_key_id == vantage_api_key_id
+        assert api_key.value is not None
+        assert api_key.id == vantage_api_key_id
+
+    def test_create_full_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+    ):
+        # When
+        api_key = client.create_vantage_api_key(
+            name="Full Key Name",
+            roles=[VantageAPIKeyRole.Full],
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert api_key.account_id == account_params["id"]
+        assert api_key.roles[0] == VantageAPIKeyRole.Full.value
+        assert api_key.status == "Active"
+
+    def test_create_read_only_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+    ):
+        # When
+        api_key = client.create_vantage_api_key(
+            name="ReadOnly Key Name",
+            roles=[VantageAPIKeyRole.ReadOnly],
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert api_key.account_id == account_params["id"]
+        assert api_key.roles[0] == VantageAPIKeyRole.ReadOnly.value
+        assert api_key.status == "Active"
+
+    def test_revoke_vantage_api_key(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        vantage_api_key_id: str,
+    ):
+        # When
+        client.revoke_vantage_api_key(
+            vantage_api_key_id="del" + vantage_api_key_id,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert 1 == 1
+        # Nothing to check, if method call was successful everything is fine
 
     def test_get_vantage_api_key_using_nonexisting_account(
         self,
@@ -126,7 +177,7 @@ class TestApiKeys:
         Tests fetching all external API keys from a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = random_string_generator(10)
         given_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -168,7 +219,7 @@ class TestApiKeys:
         Tests fetching a single external API key from a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = random_string_generator(10)
         given_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -232,7 +283,7 @@ class TestApiKeys:
         Tests creating an external API key on a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = external_key_llm_secret
 
         # When
@@ -266,7 +317,7 @@ class TestApiKeys:
         Tests updating an external API key present on a users' account.
         """
         # Given
-        llm_provider = "OpenAI"
+        llm_provider = LLMProvider.OpenAI
         llm_secret = external_key_llm_secret
         test_api_key = client.create_external_key(
             llm_provider=llm_provider,
@@ -318,7 +369,7 @@ class TestApiKeys:
         with pytest.raises(NotFoundException) as exception:
             client.update_external_key(
                 external_key_id=nonexisting_external_api_key_id,
-                llm_provider="OpenAI",
+                llm_provider=LLMProvider.OpenAI,
                 llm_secret=external_key_llm_secret,
                 account_id=account_params["id"],
             )

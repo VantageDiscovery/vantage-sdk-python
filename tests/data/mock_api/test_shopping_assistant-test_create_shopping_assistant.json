@@ -11,11 +11,6 @@
         {
           "equalToJson": {
             "name": "test-assistant",
-            "groups": [
-                "group 1",
-                "group 2",
-                "group 3"
-            ],
             "external_account_id": "test-external-account-id",
             "llm_model_name": "text-embeddings-ada-002"
           }
@@ -37,7 +32,8 @@
             "group 3"
         ],
         "external_account_id": "test-external-account-id",
-        "llm_model_name": "text-embeddings-ada-002"
+        "llm_model_name": "text-embeddings-ada-002",
+        "system_prompt_id": "e-commerce-1"
       }
     }
   }

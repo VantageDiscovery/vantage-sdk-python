@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, Field, StrictStr, field_validator
 
 
 try:
@@ -29,27 +29,46 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistant(BaseModel):
+class VantageAPIKeyReadOnly(BaseModel):
     """
-    ShoppingAssistant
+    VantageAPIKeyReadOnly
     """  # noqa: E501
 
-    shopping_assistant_id: Optional[StrictStr] = None
-    account_id: Optional[StrictStr] = None
-    groups: Optional[List[StrictStr]] = None
-    system_prompt_id: Optional[StrictStr] = None
-    name: Optional[StrictStr] = None
-    external_account_id: Optional[StrictStr] = None
-    llm_model_name: Optional[StrictStr] = None
+    id: Optional[StrictStr] = Field(
+        default=None,
+        description="The unique id of the key to access Vantage API endpoints",
+    )
+    account_id: Optional[StrictStr] = Field(
+        default=None, description="The account this key is contained within"
+    )
+    created_date: Optional[StrictStr] = Field(
+        default=None, description="Date this key was created"
+    )
+    status: Optional[StrictStr] = None
+    value: Optional[StrictStr] = Field(default=None, description="Key value")
+    last_used_date: Optional[StrictStr] = Field(
+        default=None, description="Date this key was last used"
+    )
     __properties: ClassVar[List[str]] = [
-        "shopping_assistant_id",
+        "id",
         "account_id",
-        "groups",
-        "system_prompt_id",
-        "name",
-        "external_account_id",
-        "llm_model_name",
+        "created_date",
+        "status",
+        "value",
+        "last_used_date",
     ]
+
+    @field_validator('status')
+    def status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('Active', 'Deactivated'):
+            raise ValueError(
+                "must be one of enum values ('Active', 'Deactivated')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -68,7 +87,7 @@ class ShoppingAssistant(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistant from a JSON string"""
+        """Create an instance of VantageAPIKeyReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,12 +101,16 @@ class ShoppingAssistant(BaseModel):
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
             exclude={
-                "shopping_assistant_id",
+                "id",
                 "account_id",
+                "created_date",
+                "last_used_date",
             },
             exclude_none=True,
         )
@@ -95,7 +118,7 @@ class ShoppingAssistant(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistant from a dict"""
+        """Create an instance of VantageAPIKeyReadOnly from a dict"""
         if obj is None:
             return None
 
@@ -104,13 +127,12 @@ class ShoppingAssistant(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "shopping_assistant_id": obj.get("shopping_assistant_id"),
+                "id": obj.get("id"),
                 "account_id": obj.get("account_id"),
-                "groups": obj.get("groups"),
-                "system_prompt_id": obj.get("system_prompt_id"),
-                "name": obj.get("name"),
-                "external_account_id": obj.get("external_account_id"),
-                "llm_model_name": obj.get("llm_model_name"),
+                "created_date": obj.get("created_date"),
+                "status": obj.get("status"),
+                "value": obj.get("value"),
+                "last_used_date": obj.get("last_used_date"),
             }
         )
         return _obj

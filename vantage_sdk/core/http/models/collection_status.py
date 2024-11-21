@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,7 +20,11 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, StrictStr, field_validator
+
+from vantage_sdk.core.http.models.collection_status_ingest_statuses_inner import (
+    CollectionStatusIngestStatusesInner,
+)
 
 
 try:
@@ -29,27 +33,33 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistant(BaseModel):
+class CollectionStatus(BaseModel):
     """
-    ShoppingAssistant
+    CollectionStatus
     """  # noqa: E501
 
-    shopping_assistant_id: Optional[StrictStr] = None
-    account_id: Optional[StrictStr] = None
-    groups: Optional[List[StrictStr]] = None
-    system_prompt_id: Optional[StrictStr] = None
-    name: Optional[StrictStr] = None
-    external_account_id: Optional[StrictStr] = None
-    llm_model_name: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "shopping_assistant_id",
-        "account_id",
-        "groups",
-        "system_prompt_id",
-        "name",
-        "external_account_id",
-        "llm_model_name",
-    ]
+    status: Optional[StrictStr] = None
+    ingest_statuses: Optional[List[CollectionStatusIngestStatusesInner]] = None
+    __properties: ClassVar[List[str]] = ["status", "ingest_statuses"]
+
+    @field_validator('status')
+    def status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in (
+            'Pending',
+            'Indexing',
+            'Online',
+            'Degraded',
+            'Offline',
+            'Empty',
+        ):
+            raise ValueError(
+                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -68,7 +78,7 @@ class ShoppingAssistant(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistant from a JSON string"""
+        """Create an instance of CollectionStatus from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,16 +96,23 @@ class ShoppingAssistant(BaseModel):
         _dict = self.model_dump(
             by_alias=True,
             exclude={
-                "shopping_assistant_id",
-                "account_id",
+                "status",
+                "ingest_statuses",
             },
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in ingest_statuses (list)
+        _items = []
+        if self.ingest_statuses:
+            for _item in self.ingest_statuses:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['ingest_statuses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistant from a dict"""
+        """Create an instance of CollectionStatus from a dict"""
         if obj is None:
             return None
 
@@ -104,13 +121,13 @@ class ShoppingAssistant(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "shopping_assistant_id": obj.get("shopping_assistant_id"),
-                "account_id": obj.get("account_id"),
-                "groups": obj.get("groups"),
-                "system_prompt_id": obj.get("system_prompt_id"),
-                "name": obj.get("name"),
-                "external_account_id": obj.get("external_account_id"),
-                "llm_model_name": obj.get("llm_model_name"),
+                "status": obj.get("status"),
+                "ingest_statuses": [
+                    CollectionStatusIngestStatusesInner.from_dict(_item)
+                    for _item in obj.get("ingest_statuses")
+                ]
+                if obj.get("ingest_statuses") is not None
+                else None,
             }
         )
         return _obj

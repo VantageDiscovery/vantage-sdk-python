@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from vantage_sdk.client import VantageClient
+from vantage_sdk.model.keys import OpenAIKey
 
 
 """ Integration tests for Vantage vibe endpoints."""
@@ -40,13 +41,13 @@ class TestVantageVibe:
         # Given
         test_account_id = account_params["id"]
         name = "test-vibe"
-        external_account_id = "test-external-account-id"
         llm_model_name = "text-embeddings-ada-002"
+        external_key = OpenAIKey(external_key_id="test-external-account-id")
 
         # When
         vibe = client.create_vibe_configuration(
             name=name,
-            external_account_id=external_account_id,
+            external_key=external_key,
             llm_model_name=llm_model_name,
         )
 
@@ -54,7 +55,7 @@ class TestVantageVibe:
         assert vibe.account_id == test_account_id
         assert vibe.id is not None
         assert vibe.name == name
-        assert vibe.external_account_id == external_account_id
+        assert vibe.external_account_id == external_key.external_key_id
         assert vibe.llm_model_name == llm_model_name
 
     def test_delete_vibe_configuration(self, client: VantageClient) -> None:

@@ -3,11 +3,13 @@
 from typing import List
 
 import pytest
+from pydantic import ValidationError
 
 from tests.integration_tests.utilities import create_temporary_upe_collection
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.collection import UserProvidedEmbeddingsCollection
 from vantage_sdk.model.document import (
+    MetadataItem,
     UserProvidedEmbeddingsDocument,
     VantageManagedEmbeddingsDocument,
 )
@@ -192,3 +194,60 @@ class TestDocuments:
         )
 
         assert result == 200
+
+    def test_valid_embeddings_document_creation(
+        self,
+    ):
+        # Given
+        embedding_vector = [1.0, 0.0, 0.0]
+
+        # When
+        UserProvidedEmbeddingsDocument(
+            embeddings=embedding_vector,
+        )
+
+        assert 1 == 1
+
+    def test_invalid_embeddings_document_creation(
+        self,
+    ):
+        # Given
+        embedding_vector = [1.0, 1.0, 1.0]
+
+        # When
+        with pytest.raises(ValidationError) as exception:
+            UserProvidedEmbeddingsDocument(
+                embeddings=embedding_vector,
+            )
+
+        # Then
+        assert exception.type is ValidationError
+
+    def test_sortable_metadata(
+        self,
+    ):
+        # Given
+        embedding_vector = [1.0]
+        metadata = [
+            MetadataItem(key="price", value=1.0, sortable=True),
+        ]
+
+        # When
+        document = UserProvidedEmbeddingsDocument(
+            embeddings=embedding_vector,
+            metadata=metadata,
+        )
+
+        # Then
+        assert document.metadata[0].key == "meta_ordered_price"
+
+    def test_sortable_metadata_not_float(
+        self,
+    ):
+
+        # When
+        with pytest.raises(ValidationError) as exception:
+            MetadataItem(key="price", value=1, sortable=True)
+
+        # Then
+        assert exception.type is ValidationError

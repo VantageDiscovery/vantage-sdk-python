@@ -2,6 +2,7 @@
 Models for the Search API.
 """
 
+import re
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
@@ -103,7 +104,7 @@ class MoreLikeTheseItem(BaseModel):
     ----------
     weight : StrictFloat
         The weight/importance assigned to this item in the query.
-    query_text : StrictStr
+    query_text : Optional[StrictStr], optional
         The text used for the query.
     query_document_id : Optional[StrictStr], optional
         The document ID used for the query.
@@ -112,7 +113,7 @@ class MoreLikeTheseItem(BaseModel):
     """
 
     weight: StrictFloat
-    query_text: StrictStr
+    query_text: Optional[StrictStr] = None
     query_document_id: Optional[StrictStr] = None
     embedding: Optional[list[StrictInt | StrictFloat]] = None
     these: Optional[list[dict[StrictStr, Any]]] = None
@@ -189,12 +190,51 @@ class FieldValueWeighting(BaseModel):
 
 class FacetType(Enum):
     COUNT = "count"
+    RANGE = "range"
+
+
+class FacetRange(BaseModel):
+    min: Union[float, int]
+    max: Union[float, int]
+    value: str
+
+    @model_validator(mode="before")
+    def check_value_characters(cls, cls_values):
+        value = cls_values.get('value')
+
+        pattern = re.compile("[0-9A-Za-z_]+")
+
+        if not pattern.match(value):
+            raise ValueError(
+                '`value` must be a string that contains only letters, numbers and underscores.'
+            )
+
+        return cls_values
 
 
 class Facet(BaseModel):
     name: str
     type: FacetType
     values: Optional[List[str]] = []
+    ranges: Optional[List[FacetRange]] = []
+
+    @model_validator(mode="before")
+    def check_field_compatibility(cls, cls_values):
+        values = cls_values.get('values')
+        ranges = cls_values.get('ranges')
+        type = cls_values.get('type')
+
+        if ranges and type != FacetType.RANGE:
+            raise ValueError(
+                f'If facet type is set to {FacetType.RANGE}, only ranges should be provided.'
+            )
+
+        if values and type != FacetType.COUNT:
+            raise ValueError(
+                f'If facet type is set to {FacetType.COUNT}, only values should be provided'
+            )
+
+        return cls_values
 
 
 class VantageVibeImageAllFields(BaseModel):

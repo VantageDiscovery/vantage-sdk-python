@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, Field, StrictStr, field_validator
 
 
 try:
@@ -29,27 +29,29 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistant(BaseModel):
+class VantageAPIKeyModifiable(BaseModel):
     """
-    ShoppingAssistant
+    VantageAPIKeyModifiable
     """  # noqa: E501
 
-    shopping_assistant_id: Optional[StrictStr] = None
-    account_id: Optional[StrictStr] = None
-    groups: Optional[List[StrictStr]] = None
-    system_prompt_id: Optional[StrictStr] = None
-    name: Optional[StrictStr] = None
-    external_account_id: Optional[StrictStr] = None
-    llm_model_name: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "shopping_assistant_id",
-        "account_id",
-        "groups",
-        "system_prompt_id",
-        "name",
-        "external_account_id",
-        "llm_model_name",
-    ]
+    name: Optional[StrictStr] = Field(
+        default=None, description="The name of the key"
+    )
+    roles: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["name", "roles"]
+
+    @field_validator('roles')
+    def roles_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in ('Full', 'ReadOnly'):
+                raise ValueError(
+                    "each list item must be one of ('Full', 'ReadOnly')"
+                )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -68,7 +70,7 @@ class ShoppingAssistant(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistant from a JSON string"""
+        """Create an instance of VantageAPIKeyModifiable from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,22 +82,17 @@ class ShoppingAssistant(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-                "shopping_assistant_id",
-                "account_id",
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistant from a dict"""
+        """Create an instance of VantageAPIKeyModifiable from a dict"""
         if obj is None:
             return None
 
@@ -103,14 +100,6 @@ class ShoppingAssistant(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {
-                "shopping_assistant_id": obj.get("shopping_assistant_id"),
-                "account_id": obj.get("account_id"),
-                "groups": obj.get("groups"),
-                "system_prompt_id": obj.get("system_prompt_id"),
-                "name": obj.get("name"),
-                "external_account_id": obj.get("external_account_id"),
-                "llm_model_name": obj.get("llm_model_name"),
-            }
+            {"name": obj.get("name"), "roles": obj.get("roles")}
         )
         return _obj

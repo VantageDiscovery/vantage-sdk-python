@@ -270,6 +270,49 @@ class TestCollections:
         assert collection.collection_status == "Online"
         assert collection.collection_state == "Active"
 
+    def test_get_collection_status(
+        self,
+        client: VantageClient,
+        api_params: dict,
+        account_params: dict,
+        test_collection_id: str,
+    ) -> None:
+        """
+        Tests if it can retrieve a collection status.
+        """
+        # Given
+        collection_id = test_collection_id
+
+        collection = UserProvidedEmbeddingsCollection(
+            collection_id=collection_id,
+            embeddings_dimension=1536,
+        )
+        create_temporary_upe_collection(
+            client=client,
+            collection=collection,
+            account_id=account_params["id"],
+        )
+
+        # When
+        collection = client.get_collection_status(
+            collection_id=collection_id,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert collection.status == "Online"
+        assert collection.ingest_statuses is not None
+        assert collection.ingest_statuses[0].ingest_status_name is not None
+        assert collection.ingest_statuses[0].messages is not None
+        assert (
+            collection.ingest_statuses[0].ingest_status_batch_ids is not None
+        )
+        assert (
+            collection.ingest_statuses[0].processed_status_batch_ids
+            is not None
+        )
+        assert collection.ingest_statuses[0].timestamp is not None
+
     def test_get_non_existing_collection(
         self,
         client: VantageClient,

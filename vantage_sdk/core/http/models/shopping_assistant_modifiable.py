@@ -35,16 +35,12 @@ class ShoppingAssistantModifiable(BaseModel):
     """  # noqa: E501
 
     name: Optional[StrictStr] = None
-    groups: Optional[List[StrictStr]] = None
     external_account_id: Optional[StrictStr] = None
     llm_model_name: Optional[StrictStr] = None
-    system_prompt_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "name",
-        "groups",
         "external_account_id",
         "llm_model_name",
-        "system_prompt_id",
     ]
 
     model_config = {
@@ -96,10 +92,8 @@ class ShoppingAssistantModifiable(BaseModel):
         _obj = cls.model_validate(
             {
                 "name": obj.get("name"),
-                "groups": obj.get("groups"),
                 "external_account_id": obj.get("external_account_id"),
                 "llm_model_name": obj.get("llm_model_name"),
-                "system_prompt_id": obj.get("system_prompt_id"),
             }
         )
         return _obj

@@ -11,8 +11,8 @@
         {
           "equalToJson": {
             "facets": [
-              {"name": "color", "type": "count", "values": []},
-              {"name": "size", "type": "count", "values": ["sm", "md"]}
+              {"name": "color", "type": "count", "values": [], "ranges": []},
+              {"name": "size", "type": "count", "values": ["sm", "md"], "ranges": []}
             ],
             "these": [
               {
@@ -58,8 +58,8 @@
         }
       ],
       "facets": [
-        {"facet": "color", "type": "count", "values": {"red": 2, "blue": 1}},
-        {"facet": "size", "type": "count", "values": {"sm": 1, "md": 2}}
+        {"facet": "color", "type": "COUNT", "values": {"red": 2, "blue": 1}},
+        {"facet": "size", "type": "COUNT", "values": {"sm": 1, "md": 2}}
       ],
       "execution_time": 7
     }

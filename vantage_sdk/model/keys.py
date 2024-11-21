@@ -3,9 +3,16 @@ Models for the Keys API.
 """
 
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel, StrictStr
+
+
+class VantageAPIKeyRole(Enum):
+    """Supported Vantage API Key roles"""
+
+    Full = "Full"
+    ReadOnly = "ReadOnly"
 
 
 class VantageAPIKey(BaseModel):
@@ -14,21 +21,32 @@ class VantageAPIKey(BaseModel):
 
     Attributes
     ----------
-    vantage_api_key_id: Optional[StrictStr]
+    id: Optional[StrictStr]
         The unique identifier of the Vantage API key.
     account_id : Optional[str], optional
         The unique identifier of the account for which the Vantage API key is associated.
-    vantage_api_key_obfuscated: Optional[StrictStr]
+    created_date: Optional[StrictStr]
+        Date when the key was created in the user account.
+    last_used_date: Optional[StrictStr]
+        Date when the key was last used in the user account.
+    value: Optional[StrictStr]
         Obfuscated value of the Vantage API key.
     status: Optional[StrictStr]
         Key status.
+    roles: Optional[List[StrictStr]]
+        List of Vantage API key roles that determines usage of the specific key.
+    name: Optional[StrictStr]
+        Name of the Vantage API key.
     """
 
-    vantage_api_key_id: Optional[StrictStr] = None
+    id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
-    vantage_api_key_created_date: Optional[StrictStr] = None
-    vantage_api_key_obfuscated: Optional[StrictStr] = None
+    created_date: Optional[StrictStr] = None
+    last_used_date: Optional[StrictStr] = None
+    value: Optional[StrictStr] = None
     status: Optional[StrictStr] = None
+    roles: Optional[List[StrictStr]] = None
+    name: Optional[StrictStr] = None
 
 
 class LLMProvider(Enum):
@@ -51,7 +69,7 @@ class ExternalKey(BaseModel):
         The unique identifier of the account for which the Vantage API key is associated.
     external_key_created_date: Optional[StrictStr]
         Date when the key was created in the user account.
-    llm_provider: Optional[StrictStr]
+    llm_provider: Optional[LLMProvider]
         For which LLM provider this key is intended.
     llm_secret: Optional[StrictStr]
         External key secret value.
@@ -62,9 +80,21 @@ class ExternalKey(BaseModel):
     external_key_id: Optional[StrictStr] = None
     account_id: Optional[StrictStr] = None
     external_key_created_date: Optional[StrictStr] = None
-    llm_provider: Optional[StrictStr] = None
+    llm_provider: Optional[LLMProvider] = None
     llm_secret: Optional[StrictStr] = None
     state: Optional[StrictStr] = None
+
+
+class OpenAIKey(ExternalKey):
+    llm_provider: LLMProvider = LLMProvider.OpenAI
+
+
+class HuggingFaceKey(ExternalKey):
+    llm_provider: LLMProvider = LLMProvider.HuggingFace
+
+
+class AnthropicKey(ExternalKey):
+    llm_provider: LLMProvider = LLMProvider.Anthropic
 
 
 class SecondaryExternalAccount(BaseModel):

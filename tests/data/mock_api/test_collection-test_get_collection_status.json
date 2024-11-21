@@ -1,0 +1,48 @@
+{
+    "request": {
+      "method": "GET",
+      "urlPath": "/v1/account/test/collection/test-collection/status",
+      "headers": {
+        "Authorization": {
+          "contains": "Bearer testkey"
+        }
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "jsonBody": {
+        "status":"Online",
+        "ingest_statuses":[
+            {
+                "ingest_status_name":"processed",
+                "messages":[
+                    "File has been processed"
+                ],
+                "ingest_status_batch_ids":[
+                    "test_facets (1).parquet"
+                ],
+                "processed_status_batch_ids":[
+                    "index.INCR.2024-08-22-12-43-53.1"
+                ],
+                "timestamp":"2024-08-22T12:44:13"
+            },
+            {
+                "ingest_status_name":"processing",
+                "messages":[
+                    "File passed validation, saving schema..."
+                ],
+                "ingest_status_batch_ids":[
+                    "test_facets (1).parquet"
+                ],
+                "processed_status_batch_ids":[
+                    "index.INCR.2024-08-22-12-43-53.1/1/source.parquet"
+                ],
+                "timestamp":"2024-08-22T12:44:01"
+            }
+        ]
+    }
+    }
+  }

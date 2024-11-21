@@ -20,12 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictInt, StrictStr
-
-from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.search_result_results_inner import (
-    SearchResultResultsInner,
-)
+from pydantic import BaseModel, StrictStr, field_validator
 
 
 try:
@@ -34,25 +29,35 @@ except ImportError:
     from typing_extensions import Self
 
 
-class TotalCountResponse(BaseModel):
+class CollectionStatusIngestStatusesInner(BaseModel):
     """
-    TotalCountResponse
+    CollectionStatusIngestStatusesInner
     """  # noqa: E501
 
-    request_id: Optional[StrictInt] = None
-    status: Optional[StrictInt] = None
-    message: Optional[StrictStr] = None
-    results: Optional[List[SearchResultResultsInner]] = None
-    facets: Optional[List[FacetResult]] = None
-    total_count: Optional[StrictInt] = None
+    ingest_status_name: Optional[StrictStr] = None
+    messages: Optional[List[StrictStr]] = None
+    ingest_status_batch_ids: Optional[List[StrictStr]] = None
+    processed_status_batch_ids: Optional[List[StrictStr]] = None
+    timestamp: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
-        "request_id",
-        "status",
-        "message",
-        "results",
-        "facets",
-        "total_count",
+        "ingest_status_name",
+        "messages",
+        "ingest_status_batch_ids",
+        "processed_status_batch_ids",
+        "timestamp",
     ]
+
+    @field_validator('ingest_status_name')
+    def ingest_status_name_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in ('processed', 'invalid', 'processing'):
+            raise ValueError(
+                "must be one of enum values ('processed', 'invalid', 'processing')"
+            )
+        return value
 
     model_config = {
         "populate_by_name": True,
@@ -71,7 +76,7 @@ class TotalCountResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TotalCountResponse from a JSON string"""
+        """Create an instance of CollectionStatusIngestStatusesInner from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,31 +88,28 @@ class TotalCountResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={},
+            exclude={
+                "ingest_status_name",
+                "messages",
+                "ingest_status_batch_ids",
+                "processed_status_batch_ids",
+                "timestamp",
+            },
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
-        _items = []
-        if self.results:
-            for _item in self.results:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['results'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
-        _items = []
-        if self.facets:
-            for _item in self.facets:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['facets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of TotalCountResponse from a dict"""
+        """Create an instance of CollectionStatusIngestStatusesInner from a dict"""
         if obj is None:
             return None
 
@@ -116,21 +118,13 @@ class TotalCountResponse(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "request_id": obj.get("request_id"),
-                "status": obj.get("status"),
-                "message": obj.get("message"),
-                "results": [
-                    SearchResultResultsInner.from_dict(_item)
-                    for _item in obj.get("results")
-                ]
-                if obj.get("results") is not None
-                else None,
-                "facets": [
-                    FacetResult.from_dict(_item) for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
-                else None,
-                "total_count": obj.get("total_count"),
+                "ingest_status_name": obj.get("ingest_status_name"),
+                "messages": obj.get("messages"),
+                "ingest_status_batch_ids": obj.get("ingest_status_batch_ids"),
+                "processed_status_batch_ids": obj.get(
+                    "processed_status_batch_ids"
+                ),
+                "timestamp": obj.get("timestamp"),
             }
         )
         return _obj
