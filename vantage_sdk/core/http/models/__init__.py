@@ -38,6 +38,9 @@ from vantage_sdk.core.http.models.collection_upload_url import (
 from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
+from vantage_sdk.core.http.models.create_semantic_query_suggestion_modifiable import (
+    CreateSemanticQuerySuggestionModifiable,
+)
 from vantage_sdk.core.http.models.document_batch import DocumentBatch
 from vantage_sdk.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
@@ -81,6 +84,18 @@ from vantage_sdk.core.http.models.search_result_results_inner import (
 from vantage_sdk.core.http.models.secondary_external_account import (
     SecondaryExternalAccount,
 )
+from vantage_sdk.core.http.models.semantic_query_suggestion import (
+    SemanticQuerySuggestion,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestion_read_only import (
+    SemanticQuerySuggestionReadOnly,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_query import (
+    SemanticQuerySuggestionsQuery,
+)
+from vantage_sdk.core.http.models.semantic_query_suggestions_result import (
+    SemanticQuerySuggestionsResult,
+)
 from vantage_sdk.core.http.models.semantic_search_query import (
     SemanticSearchQuery,
 )
@@ -109,6 +124,9 @@ from vantage_sdk.core.http.models.total_counts_options import (
 )
 from vantage_sdk.core.http.models.total_counts_options_total_counts import (
     TotalCountsOptionsTotalCounts,
+)
+from vantage_sdk.core.http.models.update_semantic_query_suggestions_modifiable import (
+    UpdateSemanticQuerySuggestionsModifiable,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
 from vantage_sdk.core.http.models.vantage_api_key_modifiable import (

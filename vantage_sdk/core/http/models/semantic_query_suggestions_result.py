@@ -18,9 +18,9 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictInt
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
 
 try:
@@ -29,13 +29,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class TotalCountResult(BaseModel):
+class SemanticQuerySuggestionsResult(BaseModel):
     """
-    TotalCountResult
+    SemanticQuerySuggestionsResult
     """  # noqa: E501
 
-    total_count: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["total_count"]
+    request_id: Optional[Union[StrictFloat, StrictInt]] = None
+    status: Optional[Union[StrictFloat, StrictInt]] = None
+    suggestions: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["request_id", "status", "suggestions"]
 
     model_config = {
         "populate_by_name": True,
@@ -54,7 +56,7 @@ class TotalCountResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of TotalCountResult from a JSON string"""
+        """Create an instance of SemanticQuerySuggestionsResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,12 +78,18 @@ class TotalCountResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of TotalCountResult from a dict"""
+        """Create an instance of SemanticQuerySuggestionsResult from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate({"total_count": obj.get("total_count")})
+        _obj = cls.model_validate(
+            {
+                "request_id": obj.get("request_id"),
+                "status": obj.get("status"),
+                "suggestions": obj.get("suggestions"),
+            }
+        )
         return _obj

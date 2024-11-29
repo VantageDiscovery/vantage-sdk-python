@@ -294,3 +294,22 @@ class TotalCountsOptions(BaseModel):
 
     min_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None
     max_score_threshold: Optional[Union[StrictFloat, StrictInt]] = None
+
+
+class SemanticQuerySuggestionsResult(BaseModel):
+    """
+    Represents Semantic Query Suggestions search result.
+
+    Attributes
+    ----------
+    request_id: int
+        Request ID.
+    status: int
+        Response status.
+    suggestions: List[StrictStr]
+        Semantic Query Suggestions.
+    """
+
+    request_id: int
+    status: int
+    suggestions: List[StrictStr]

@@ -29,50 +29,33 @@ except ImportError:
     from typing_extensions import Self
 
 
-class CollectionReadOnly(BaseModel):
+class SemanticQuerySuggestionReadOnly(BaseModel):
     """
-    CollectionReadOnly
+    SemanticQuerySuggestionReadOnly
     """  # noqa: E501
 
-    collection_created_time: Optional[StrictStr] = None
-    collection_status: Optional[StrictStr] = None
-    collection_state: Optional[StrictStr] = None
     semantic_query_suggestion_id: Optional[StrictStr] = None
+    account_id: Optional[StrictStr] = None
+    collection_id: Optional[StrictStr] = None
+    system_prompt_id: Optional[StrictStr] = None
+    state: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
-        "collection_created_time",
-        "collection_status",
-        "collection_state",
         "semantic_query_suggestion_id",
+        "account_id",
+        "collection_id",
+        "system_prompt_id",
+        "state",
     ]
 
-    @field_validator('collection_status')
-    def collection_status_validate_enum(cls, value):
+    @field_validator('state')
+    def state_validate_enum(cls, value):
         """Validates the enum"""
         if value is None:
             return value
 
-        if value not in (
-            'Pending',
-            'Indexing',
-            'Online',
-            'Degraded',
-            'Offline',
-            'Empty',
-        ):
+        if value not in ('Active', 'Inactive', 'Pending'):
             raise ValueError(
-                "must be one of enum values ('Pending', 'Indexing', 'Online', 'Degraded', 'Offline', 'Empty')"
-            )
-        return value
-
-    @field_validator('collection_state')
-    def collection_state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('Active', 'Standby', 'Deleted'):
-            raise ValueError(
-                "must be one of enum values ('Active', 'Standby', 'Deleted')"
+                "must be one of enum values ('Active', 'Inactive', 'Pending')"
             )
         return value
 
@@ -93,7 +76,7 @@ class CollectionReadOnly(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CollectionReadOnly from a JSON string"""
+        """Create an instance of SemanticQuerySuggestionReadOnly from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -105,26 +88,17 @@ class CollectionReadOnly(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-                "collection_created_time",
-                "collection_status",
-                "collection_state",
-                "semantic_query_suggestion_id",
-            },
+            exclude={},
             exclude_none=True,
         )
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of CollectionReadOnly from a dict"""
+        """Create an instance of SemanticQuerySuggestionReadOnly from a dict"""
         if obj is None:
             return None
 
@@ -133,12 +107,13 @@ class CollectionReadOnly(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection_created_time": obj.get("collection_created_time"),
-                "collection_status": obj.get("collection_status"),
-                "collection_state": obj.get("collection_state"),
                 "semantic_query_suggestion_id": obj.get(
                     "semantic_query_suggestion_id"
                 ),
+                "account_id": obj.get("account_id"),
+                "collection_id": obj.get("collection_id"),
+                "system_prompt_id": obj.get("system_prompt_id"),
+                "state": obj.get("state"),
             }
         )
         return _obj
