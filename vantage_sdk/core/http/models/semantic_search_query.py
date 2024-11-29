@@ -62,6 +62,7 @@ class SemanticSearchQuery(BaseModel):
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
     total_counts: Optional[TotalCountsOptionsTotalCounts] = None
+    fields: Optional[List[StrictStr]] = None
     text: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection",
@@ -72,6 +73,7 @@ class SemanticSearchQuery(BaseModel):
         "sort",
         "facets",
         "total_counts",
+        "fields",
         "text",
     ]
 
@@ -183,6 +185,7 @@ class SemanticSearchQuery(BaseModel):
                 )
                 if obj.get("total_counts") is not None
                 else None,
+                "fields": obj.get("fields"),
                 "text": obj.get("text"),
             }
         )

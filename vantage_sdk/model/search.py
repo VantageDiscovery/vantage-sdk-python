@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import (
     BaseModel,
+    StrictBool,
     StrictFloat,
     StrictInt,
     StrictStr,
@@ -23,6 +24,13 @@ from vantage_sdk.core.http.models import (
     SearchOptionsSort,
     WeightedFieldValues,
 )
+
+
+class Variant(BaseModel):
+    id: StrictStr
+    fields: Dict[
+        StrictStr, Union[StrictStr, StrictInt, StrictFloat, StrictBool]
+    ]
 
 
 class SearchResultItem(BaseModel):
@@ -46,8 +54,11 @@ class SearchResultItem(BaseModel):
     id: Optional[StrictStr] = None
     score: Optional[Union[StrictFloat, StrictInt]] = None
     sort_score: Optional[Union[StrictFloat, StrictInt]] = None
-    variants: Optional[List[StrictStr]] = None
-    variants_full_list: Optional[List[StrictStr]] = None
+    variants: Optional[List[Variant]] = None
+    variants_full_list: Optional[List[Variant]] = None
+    fields: Optional[
+        Dict[StrictStr, Union[StrictStr, StrictInt, StrictFloat, StrictBool]]
+    ] = None
 
 
 class FacetResultItem(BaseModel):

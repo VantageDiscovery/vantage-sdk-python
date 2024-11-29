@@ -71,6 +71,18 @@ from vantage_sdk.core.http.models.create_collection_request import (
     CreateCollectionRequest,
 )
 from vantage_sdk.core.http.models.document_batch import DocumentBatch
+from vantage_sdk.core.http.models.document_fields_description import (
+    DocumentFieldsDescription,
+)
+from vantage_sdk.core.http.models.document_fields_search_options import (
+    DocumentFieldsSearchOptions,
+)
+from vantage_sdk.core.http.models.documents_fields_query import (
+    DocumentsFieldsQuery,
+)
+from vantage_sdk.core.http.models.documents_fields_query_response import (
+    DocumentsFieldsQueryResponse,
+)
 from vantage_sdk.core.http.models.embedding_search_query import (
     EmbeddingSearchQuery,
 )
@@ -107,8 +119,11 @@ from vantage_sdk.core.http.models.search_options_pagination import (
 )
 from vantage_sdk.core.http.models.search_options_sort import SearchOptionsSort
 from vantage_sdk.core.http.models.search_result import SearchResult
-from vantage_sdk.core.http.models.search_result_results_inner import (
-    SearchResultResultsInner,
+from vantage_sdk.core.http.models.search_result_common_fields import (
+    SearchResultCommonFields,
+)
+from vantage_sdk.core.http.models.search_result_values import (
+    SearchResultValues,
 )
 from vantage_sdk.core.http.models.secondary_external_account import (
     SecondaryExternalAccount,
@@ -160,6 +175,7 @@ from vantage_sdk.core.http.models.vantage_vibe_read_only import (
 from vantage_sdk.core.http.models.vantage_vibe_search_query import (
     VantageVibeSearchQuery,
 )
+from vantage_sdk.core.http.models.variant_result import VariantResult
 from vantage_sdk.core.http.models.weighted_field_values import (
     WeightedFieldValues,
 )

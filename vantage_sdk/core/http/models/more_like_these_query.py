@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictInt
+from pydantic import BaseModel, StrictInt, StrictStr
 
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage_sdk.core.http.models.search_options_collection import (
@@ -60,6 +60,7 @@ class MoreLikeTheseQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    fields: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = [
         "these",
         "collection",
@@ -69,6 +70,7 @@ class MoreLikeTheseQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "fields",
     ]
 
     model_config = {
@@ -184,6 +186,7 @@ class MoreLikeTheseQuery(BaseModel):
                 ]
                 if obj.get("facets") is not None
                 else None,
+                "fields": obj.get("fields"),
             }
         )
         return _obj

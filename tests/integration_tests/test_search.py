@@ -346,6 +346,7 @@ class TestSearch:
             "en_0622322": {"score": 0.89},
         }
 
+        # When
         response = client.more_like_these_search(
             collection_id=collection_id,
             account_id=account_params["id"],
@@ -959,3 +960,226 @@ class TestSearch:
         assert len(result.results) == 3
 
     # endregion
+
+    # region Document Store
+
+    def test_embedding_search_with_document_store_fields(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if docstore search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_embedding = [1, 1, 1, 1, 1]
+        fields = ["title", "description", "price", "color"]
+        query_filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")"
+        )
+
+        # When
+        response = client.embedding_search(
+            embedding=search_embedding,
+            collection_id=collection_id,
+            fields=fields,
+            account_id=account_params["id"],
+            filter=query_filter,
+        )
+
+        # Then
+        assert response.status == 200
+        assert len(response.results) == 1
+        result = response.results[0]
+
+        fields = result.fields
+        assert fields is not None
+        field_title_value = fields.get("title")
+        field_description_value = fields.get("description")
+        field_price_value = fields.get("price")
+        assert field_title_value is not None
+        assert field_title_value == "Hasbro Car Toy"
+        assert field_description_value is not None
+        assert field_description_value == "A ready-made car toy."
+        assert field_price_value is not None
+        assert field_price_value == 10.0
+
+        for variant in result.variants:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+        for variant in result.variants_full_list:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+    def test_semantic_search_with_document_store_fields(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if docstore search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Docstore search"
+        fields = ["title", "description", "price", "color"]
+        query_filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")"
+        )
+
+        # When
+        response = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            account_id=account_params["id"],
+            filter=query_filter,
+            fields=fields,
+        )
+
+        # Then
+        assert response.status == 200
+        assert len(response.results) == 1
+        result = response.results[0]
+
+        fields = result.fields
+        assert fields is not None
+        field_title_value = fields.get("title")
+        field_description_value = fields.get("description")
+        field_price_value = fields.get("price")
+        assert field_title_value is not None
+        assert field_title_value == "Hasbro Car Toy"
+        assert field_description_value is not None
+        assert field_description_value == "A ready-made car toy."
+        assert field_price_value is not None
+        assert field_price_value == 10.0
+
+        for variant in result.variants:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+        for variant in result.variants_full_list:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+    def test_more_like_this_search_with_document_store_fields(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if docstore search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        document_id = "en_0530930"
+        fields = ["title", "description", "price", "color"]
+        variant_filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+
+        # When
+        response = client.more_like_this_search(
+            collection_id=collection_id,
+            document_id=document_id,
+            filter=variant_filter,
+            fields=fields,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert response.status == 200
+        assert len(response.results) == 1
+        result = response.results[0]
+
+        fields = result.fields
+        assert fields is not None
+        field_title_value = fields.get("title")
+        field_description_value = fields.get("description")
+        field_price_value = fields.get("price")
+        assert field_title_value is not None
+        assert field_title_value == "Hasbro Car Toy"
+        assert field_description_value is not None
+        assert field_description_value == "A ready-made car toy."
+        assert field_price_value is not None
+        assert field_price_value == 10.0
+
+        for variant in result.variants:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+        for variant in result.variants_full_list:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+    def test_more_like_these_search_with_document_store_fields(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if docstore search will return partial result.
+        """
+        # Given
+        collection_id = test_collection_id
+        fields = ["title", "description", "price", "color"]
+        variant_filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
+        more_like_these = [
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="other text",
+            ),
+        ]
+
+        # When
+        response = client.more_like_these_search(
+            collection_id=collection_id,
+            account_id=account_params["id"],
+            more_like_these=more_like_these,
+            filter=variant_filter,
+            fields=fields,
+        )
+
+        # Then
+        assert response.status == 200
+        assert len(response.results) == 1
+        result = response.results[0]
+
+        fields = result.fields
+        assert fields is not None
+        field_title_value = fields.get("title")
+        field_description_value = fields.get("description")
+        field_price_value = fields.get("price")
+        assert field_title_value is not None
+        assert field_title_value == "Hasbro Car Toy"
+        assert field_description_value is not None
+        assert field_description_value == "A ready-made car toy."
+        assert field_price_value is not None
+        assert field_price_value == 10.0
+
+        for variant in result.variants:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None
+
+        for variant in result.variants_full_list:
+            assert variant.id is not None
+            assert variant.fields is not None
+            assert variant.fields.get("color") is not None

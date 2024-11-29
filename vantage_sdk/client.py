@@ -1564,6 +1564,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         total_counts: Optional[TotalCountsOptions] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
@@ -1643,6 +1644,7 @@ class VantageClient:
             total_counts=(
                 None if total_counts is None else total_counts.model_dump()
             ),
+            fields=fields,
         )
 
         result = self.search_api.api.semantic_search(
@@ -1664,6 +1666,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1736,6 +1739,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1757,6 +1761,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1830,6 +1835,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1851,6 +1857,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1927,6 +1934,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.more_like_these_search(

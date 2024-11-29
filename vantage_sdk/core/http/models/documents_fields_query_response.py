@@ -20,14 +20,10 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictInt, StrictStr
+from pydantic import BaseModel, Field, StrictInt, StrictStr
 
-from vantage_sdk.core.http.models.facet_result import FacetResult
 from vantage_sdk.core.http.models.search_result_values import (
     SearchResultValues,
-)
-from vantage_sdk.core.http.models.shopping_assistant_group_result import (
-    ShoppingAssistantGroupResult,
 )
 
 
@@ -37,24 +33,20 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistantResult(BaseModel):
+class DocumentsFieldsQueryResponse(BaseModel):
     """
-    ShoppingAssistantResult
+    DocumentsFieldsQueryResponse
     """  # noqa: E501
 
-    results: Optional[List[SearchResultValues]] = None
-    facets: Optional[List[FacetResult]] = None
-    request_id: Optional[StrictInt] = None
+    request_id: Optional[StrictInt] = Field(default=None, alias="requestId")
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
-    groups: Optional[List[ShoppingAssistantGroupResult]] = None
+    results: Optional[List[SearchResultValues]] = None
     __properties: ClassVar[List[str]] = [
-        "results",
-        "facets",
-        "request_id",
+        "requestId",
         "status",
         "message",
-        "groups",
+        "results",
     ]
 
     model_config = {
@@ -74,7 +66,7 @@ class ShoppingAssistantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistantResult from a JSON string"""
+        """Create an instance of DocumentsFieldsQueryResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -99,25 +91,11 @@ class ShoppingAssistantResult(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['results'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
-        _items = []
-        if self.facets:
-            for _item in self.facets:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['facets'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in groups (list)
-        _items = []
-        if self.groups:
-            for _item in self.groups:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['groups'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistantResult from a dict"""
+        """Create an instance of DocumentsFieldsQueryResponse from a dict"""
         if obj is None:
             return None
 
@@ -126,25 +104,14 @@ class ShoppingAssistantResult(BaseModel):
 
         _obj = cls.model_validate(
             {
+                "requestId": obj.get("requestId"),
+                "status": obj.get("status"),
+                "message": obj.get("message"),
                 "results": [
                     SearchResultValues.from_dict(_item)
                     for _item in obj.get("results")
                 ]
                 if obj.get("results") is not None
-                else None,
-                "facets": [
-                    FacetResult.from_dict(_item) for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
-                else None,
-                "request_id": obj.get("request_id"),
-                "status": obj.get("status"),
-                "message": obj.get("message"),
-                "groups": [
-                    ShoppingAssistantGroupResult.from_dict(_item)
-                    for _item in obj.get("groups")
-                ]
-                if obj.get("groups") is not None
                 else None,
             }
         )

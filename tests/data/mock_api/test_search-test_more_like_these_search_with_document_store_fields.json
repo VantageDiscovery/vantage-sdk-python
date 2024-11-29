@@ -1,0 +1,106 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/morelikethese",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "filter": {
+            "variant_filter": "(color:\"black\" OR color:\"brown\")"
+          },
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "color"
+          ],
+          "these": [
+            {
+              "weight": 1.0,
+              "query_text": "some text"
+            },
+            {
+              "weight": 1.0,
+              "query_text": "other text"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109280970,
+      "status": 200,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "id_28",
+          "score": 0.6328849792480469,
+          "sort_score": 0.6328849792480469,
+          "variants": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            }
+          ],
+          "variants_full_list": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_17",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_20",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_24",
+              "fields": {
+                "color": "red"
+              }
+            }
+          ],
+          "fields": {
+            "title": "Hasbro Car Toy",
+            "description": "A ready-made car toy.",
+            "price": 10.0
+          }
+        }
+      ],
+      "execution_time": 7
+    }
+  }
+}
