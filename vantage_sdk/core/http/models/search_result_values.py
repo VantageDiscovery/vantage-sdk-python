@@ -18,17 +18,11 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictInt, StrictStr
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
-from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.search_result_values import (
-    SearchResultValues,
-)
-from vantage_sdk.core.http.models.shopping_assistant_group_result import (
-    ShoppingAssistantGroupResult,
-)
+from vantage_sdk.core.http.models.variant_result import VariantResult
 
 
 try:
@@ -37,24 +31,24 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistantResult(BaseModel):
+class SearchResultValues(BaseModel):
     """
-    ShoppingAssistantResult
+    SearchResultValues
     """  # noqa: E501
 
-    results: Optional[List[SearchResultValues]] = None
-    facets: Optional[List[FacetResult]] = None
-    request_id: Optional[StrictInt] = None
-    status: Optional[StrictInt] = None
-    message: Optional[StrictStr] = None
-    groups: Optional[List[ShoppingAssistantGroupResult]] = None
+    id: Optional[StrictStr] = None
+    score: Optional[Union[StrictFloat, StrictInt]] = None
+    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
+    variants: Optional[List[VariantResult]] = None
+    variants_full_list: Optional[List[VariantResult]] = None
+    fields: Optional[Dict[str, Any]] = None
     __properties: ClassVar[List[str]] = [
-        "results",
-        "facets",
-        "request_id",
-        "status",
-        "message",
-        "groups",
+        "id",
+        "score",
+        "sort_score",
+        "variants",
+        "variants_full_list",
+        "fields",
     ]
 
     model_config = {
@@ -74,7 +68,7 @@ class ShoppingAssistantResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistantResult from a JSON string"""
+        """Create an instance of SearchResultValues from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -92,32 +86,25 @@ class ShoppingAssistantResult(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in variants (list)
         _items = []
-        if self.results:
-            for _item in self.results:
+        if self.variants:
+            for _item in self.variants:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['results'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
+            _dict['variants'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in variants_full_list (list)
         _items = []
-        if self.facets:
-            for _item in self.facets:
+        if self.variants_full_list:
+            for _item in self.variants_full_list:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['facets'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in groups (list)
-        _items = []
-        if self.groups:
-            for _item in self.groups:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['groups'] = _items
+            _dict['variants_full_list'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistantResult from a dict"""
+        """Create an instance of SearchResultValues from a dict"""
         if obj is None:
             return None
 
@@ -126,26 +113,22 @@ class ShoppingAssistantResult(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "results": [
-                    SearchResultValues.from_dict(_item)
-                    for _item in obj.get("results")
+                "id": obj.get("id"),
+                "score": obj.get("score"),
+                "sort_score": obj.get("sort_score"),
+                "variants": [
+                    VariantResult.from_dict(_item)
+                    for _item in obj.get("variants")
                 ]
-                if obj.get("results") is not None
+                if obj.get("variants") is not None
                 else None,
-                "facets": [
-                    FacetResult.from_dict(_item) for _item in obj.get("facets")
+                "variants_full_list": [
+                    VariantResult.from_dict(_item)
+                    for _item in obj.get("variants_full_list")
                 ]
-                if obj.get("facets") is not None
+                if obj.get("variants_full_list") is not None
                 else None,
-                "request_id": obj.get("request_id"),
-                "status": obj.get("status"),
-                "message": obj.get("message"),
-                "groups": [
-                    ShoppingAssistantGroupResult.from_dict(_item)
-                    for _item in obj.get("groups")
-                ]
-                if obj.get("groups") is not None
-                else None,
+                "fields": obj.get("fields"),
             }
         )
         return _obj

@@ -58,6 +58,7 @@ class MoreLikeThisQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    fields: Optional[List[StrictStr]] = None
     document_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = [
         "collection",
@@ -67,6 +68,7 @@ class MoreLikeThisQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "fields",
         "document_id",
     ]
 
@@ -170,6 +172,7 @@ class MoreLikeThisQuery(BaseModel):
                 ]
                 if obj.get("facets") is not None
                 else None,
+                "fields": obj.get("fields"),
                 "document_id": obj.get("document_id"),
             }
         )

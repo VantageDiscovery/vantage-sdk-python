@@ -18,9 +18,9 @@ from __future__ import annotations
 import json
 import pprint
 import re  # noqa: F401
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, StrictInt, StrictStr
 
 
 try:
@@ -29,23 +29,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchResultResultsInner(BaseModel):
+class SearchResultCommonFields(BaseModel):
     """
-    SearchResultResultsInner
+    SearchResultCommonFields
     """  # noqa: E501
 
-    id: Optional[StrictStr] = None
-    score: Optional[Union[StrictFloat, StrictInt]] = None
-    sort_score: Optional[Union[StrictFloat, StrictInt]] = None
-    variants: Optional[List[StrictStr]] = None
-    variants_full_list: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = [
-        "id",
-        "score",
-        "sort_score",
-        "variants",
-        "variants_full_list",
-    ]
+    request_id: Optional[StrictInt] = None
+    status: Optional[StrictInt] = None
+    message: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["request_id", "status", "message"]
 
     model_config = {
         "populate_by_name": True,
@@ -64,7 +56,7 @@ class SearchResultResultsInner(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchResultResultsInner from a JSON string"""
+        """Create an instance of SearchResultCommonFields from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,7 +78,7 @@ class SearchResultResultsInner(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchResultResultsInner from a dict"""
+        """Create an instance of SearchResultCommonFields from a dict"""
         if obj is None:
             return None
 
@@ -95,11 +87,9 @@ class SearchResultResultsInner(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "id": obj.get("id"),
-                "score": obj.get("score"),
-                "sort_score": obj.get("sort_score"),
-                "variants": obj.get("variants"),
-                "variants_full_list": obj.get("variants_full_list"),
+                "request_id": obj.get("request_id"),
+                "status": obj.get("status"),
+                "message": obj.get("message"),
             }
         )
         return _obj

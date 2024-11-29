@@ -1,19 +1,19 @@
 {
-    "request": {
-      "method": "POST",
-      "urlPath": "/v1/search/test/test-collection/morelikethese",
-      "headers": {
-        "Authorization": {
-          "contains": "Bearer testkey"
-        }
-      },
-      "bodyPatterns": [
-        {
-          "equalToJson": {
-            "filter": {
-                "variant_filter": "(color:\"black\" OR color:\"brown\")"
-            },
-            "these": [
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/morelikethese",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "filter": {
+            "variant_filter": "(color:\"black\" OR color:\"brown\")"
+          },
+          "these": [
             {
               "weight": 1.0,
               "query_text": "some text"
@@ -23,11 +23,11 @@
               "query_text": "other text"
             }
           ]
-          }
         }
-      ]
-    },
-    "response": {
+      }
+    ]
+  },
+  "response": {
     "status": 200,
     "headers": {
       "Content-Type": "application/json"
@@ -41,25 +41,157 @@
           "id": "id_28",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_15", "id_18"],
-          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+          "variants": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            }
+          ],
+          "variants_full_list": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_17",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_20",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_24",
+              "fields": {
+                "color": "red"
+              }
+            }
+          ]
         },
         {
           "id": "id_15",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_17", "id_20"],
-          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+          "variants": [
+            {
+              "id": "id_17",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_20",
+              "fields": {
+                "color": "brown"
+              }
+            }
+          ],
+          "variants_full_list": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_17",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_20",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_24",
+              "fields": {
+                "color": "red"
+              }
+            }
+          ]
         },
         {
           "id": "id_22",
           "score": 0.6328849792480469,
           "sort_score": 0.6328849792480469,
-          "variants": ["id_24", "id_25"],
-          "variants_full_list": ["id_15", "id_17", "id_18", "id_20", "id_24"]
+          "variants": [
+            {
+              "id": "id_24",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_25",
+              "fields": {
+                "color": "brown"
+              }
+            }
+          ],
+          "variants_full_list": [
+            {
+              "id": "id_15",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_17",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "id_18",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_20",
+              "fields": {
+                "color": "brown"
+              }
+            },
+            {
+              "id": "id_24",
+              "fields": {
+                "color": "red"
+              }
+            }
+          ]
         }
       ],
       "execution_time": 7
     }
   }
-  }
+}
