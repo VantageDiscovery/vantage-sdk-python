@@ -3,7 +3,7 @@ Models for the Documents API.
 """
 
 import math
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from uuid import uuid4
 
 from pydantic import (
@@ -167,3 +167,103 @@ class UserProvidedEmbeddingsDocument(VantageDocument):
             raise ValueError('Provided embedding vector is not a unit vector.')
 
         return cls_values
+
+
+# Region Get Documents Models - Request
+
+
+class GetDocumentsRequestDocument(BaseModel):
+    """
+    Represents documents for which to get fields for.
+
+    Attributes
+    ----------
+    id: StrictStr
+        Unique document ID.
+    variant_ids: Optional[List[StrictStr]], optional
+        Document variant IDs.
+        Defaults to None.
+    """
+
+    id: StrictStr
+    variant_ids: Optional[List[StrictStr]] = None
+
+
+class GetDocumentsRequest(BaseModel):
+    """
+    Represents request for getting documents.
+
+    Attributes
+    ----------
+    fields: Optional[List[StrictStr]], optional
+        List of wanted fields.
+        Defaults to None.
+    ids: List[DocumentId]
+        List of wanted documents details.
+    """
+
+    fields: Optional[List[StrictStr]] = None
+    ids: List[GetDocumentsRequestDocument]
+
+
+# endregion
+
+
+# Region Get Documents Models - Response
+
+
+class IdentifiableVariant(BaseModel):
+    """
+    Contains variant ID and its fields.
+
+    Attributes
+    ----------
+    id:
+        Unique ID of variant for a document.
+    fields: Dict[StrictStr, Any]
+        Map of variant field names and their values.
+    """
+
+    id: StrictStr
+    fields: Dict[StrictStr, Any]
+
+
+class GetDocumentsDocumentItem(BaseModel):
+    """
+    Represents document item  in response returned by get documents endpoint.
+
+    Attributes
+    ----------
+    id:
+        Unique document ID.
+    fields: Dict[StrictStr, Any]
+        Map of document field names and their values.
+    variants: List[IdentifiableVariant]
+        List of document variants.
+    """
+
+    id: StrictStr
+    fields: Dict[StrictStr, Any]
+    variants: List[IdentifiableVariant]
+
+
+class GetDocumentsResponse(BaseModel):
+    """
+    Represents response returned by get documents endpoint.
+
+    Attributes
+    ----------
+    status: StrictInt
+        Response status code.
+    message: StrictStr
+        Response message.
+    documents: List[GetDocumentsDocumentItem]
+        List of documents.
+    """
+
+    status: StrictInt
+    message: StrictStr
+    documents: List[GetDocumentsDocumentItem]
+
+
+# endregion
