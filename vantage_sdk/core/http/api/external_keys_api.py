@@ -115,6 +115,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -190,6 +191,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -265,6 +267,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -398,6 +401,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -472,6 +476,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -546,6 +551,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -664,6 +670,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -738,6 +745,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -812,6 +820,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -929,6 +938,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[ExternalKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -997,6 +1007,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[ExternalKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1065,6 +1076,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[ExternalKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1192,6 +1204,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1273,6 +1286,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1354,6 +1368,7 @@ class ExternalKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ExternalKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(

@@ -125,6 +125,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -203,6 +204,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -281,6 +283,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -420,6 +423,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -500,6 +504,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -580,6 +585,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -722,6 +728,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionUploadURL",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -820,6 +827,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionUploadURL",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -918,6 +926,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionUploadURL",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1057,6 +1066,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1137,6 +1147,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1217,6 +1228,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1346,6 +1358,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionStatus",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1426,6 +1439,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionStatus",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1506,6 +1520,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "CollectionStatus",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1621,6 +1636,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[Collection]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1687,6 +1703,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[Collection]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1753,6 +1770,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[Collection]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1884,6 +1902,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1969,6 +1988,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2054,6 +2074,7 @@ class CollectionManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Collection",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(

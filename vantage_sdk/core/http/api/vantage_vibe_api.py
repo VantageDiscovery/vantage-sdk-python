@@ -113,6 +113,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -186,6 +187,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -259,6 +261,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -390,6 +393,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -462,6 +466,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -534,6 +539,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': None,
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -650,6 +656,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -722,6 +729,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -794,6 +802,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -909,6 +918,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageVibe]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -975,6 +985,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageVibe]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1041,6 +1052,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageVibe]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1166,6 +1178,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1245,6 +1258,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1324,6 +1338,7 @@ class VantageVibeApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageVibe",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(

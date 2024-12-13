@@ -104,6 +104,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -172,6 +173,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -240,6 +242,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -360,6 +363,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -434,6 +438,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -508,6 +513,7 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
