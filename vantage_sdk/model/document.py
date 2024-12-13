@@ -189,23 +189,6 @@ class GetDocumentsRequestDocument(BaseModel):
     variant_ids: Optional[List[StrictStr]] = None
 
 
-class GetDocumentsRequest(BaseModel):
-    """
-    Represents request for getting documents.
-
-    Attributes
-    ----------
-    fields: Optional[List[StrictStr]], optional
-        List of wanted fields.
-        Defaults to None.
-    ids: List[DocumentId]
-        List of wanted documents details.
-    """
-
-    fields: Optional[List[StrictStr]] = None
-    ids: List[GetDocumentsRequestDocument]
-
-
 # endregion
 
 
@@ -261,6 +244,7 @@ class GetDocumentsResponse(BaseModel):
         List of documents.
     """
 
+    request_id: StrictInt
     status: StrictInt
     message: StrictStr
     documents: List[GetDocumentsDocumentItem]

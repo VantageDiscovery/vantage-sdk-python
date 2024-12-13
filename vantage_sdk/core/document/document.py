@@ -1,17 +1,15 @@
-"""This module contains SearchAPI, a class for accessing search API."""
-
-from vantage_sdk.core.http.api.search_api import SearchApi
+from vantage_sdk.core.http.api.documents_api import DocumentsApi
 from vantage_sdk.core.http.api_client import ApiClient
 
 
-class SearchAPI:
+class DocumentsAPI:
     """
-    Component for accessing the search API.
+    Component for accessing documents part of search API.
 
     Attributes
     ----------
-    api: SearchApi
-        Component used to access the search API.
+    api: DocumentsApi
+        Component used to access the documents API.
     """
 
     def __init__(self, api_client: ApiClient):
@@ -23,4 +21,4 @@ class SearchAPI:
         api_client: ApiClient
             Component used to make HTTP calls to the API.
         """
-        self.api = SearchApi(api_client=api_client)
+        self.api = DocumentsApi(api_client=api_client)

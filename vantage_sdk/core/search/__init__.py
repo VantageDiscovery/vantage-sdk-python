@@ -1,4 +1,4 @@
-from vantage_sdk.core.search.search import DocumentsAPI, SearchAPI
+from vantage_sdk.core.search.search import SearchAPI
 
 
-__all__ = ["SearchAPI", "DocumentsAPI"]
+__all__ = ["SearchAPI"]

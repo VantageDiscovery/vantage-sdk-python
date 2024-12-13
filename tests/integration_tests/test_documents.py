@@ -9,6 +9,7 @@ from tests.integration_tests.utilities import create_temporary_upe_collection
 from vantage_sdk.client import VantageClient
 from vantage_sdk.model.collection import UserProvidedEmbeddingsCollection
 from vantage_sdk.model.document import (
+    GetDocumentsRequestDocument,
     MetadataItem,
     UserProvidedEmbeddingsDocument,
     VantageManagedEmbeddingsDocument,
@@ -244,10 +245,64 @@ class TestDocuments:
     def test_sortable_metadata_not_float(
         self,
     ):
-
         # When
         with pytest.raises(ValidationError) as exception:
             MetadataItem(key="price", value=1, sortable=True)
 
         # Then
         assert exception.type is ValidationError
+
+    def test_query_documents(
+        self,
+        client: VantageClient,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        fields = ["title", "description", "color"]
+        ids = [
+            GetDocumentsRequestDocument(
+                id="product|8072876490904",
+                variant_ids=[
+                    "43998558322840",
+                    "43998558716056",
+                ],
+            ),
+            GetDocumentsRequestDocument(
+                id="product|3122876490424",
+                variant_ids=[],
+            ),
+        ]
+
+        # When
+        response = client.query_documents(
+            collection_id=collection_id,
+            fields=fields,
+            ids=ids,
+        )
+
+        # Then
+        assert response is not None
+        assert response.status == 200
+        assert response.message == "Success"
+        documents = response.documents
+        assert documents is not None
+        assert len(documents) == 2
+        first_document = documents[0]
+        second_document = documents[1]
+
+        assert first_document.id == "product|8072876490904"
+        assert first_document.fields.get("title") == "Hasbro Car Toy"
+        assert first_document.fields.get("description").startswith(
+            "A ready-made car toy"
+        )
+        for variant in first_document.variants:
+            assert variant.id is not None
+            assert variant.fields is not None
+
+        assert second_document.id == "product|3122876490424"
+        assert second_document.fields.get("title") == "Hasbro Airplane Toy"
+        assert second_document.fields.get("description").startswith(
+            "A simple airplane toy"
+        )
+        assert len(second_document.variants) == 0

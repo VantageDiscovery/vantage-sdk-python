@@ -28,6 +28,9 @@ def _get_collection_id_for_mock_api(request) -> str:
     else:
         stub = get_request_stub_file_contents(request)
 
+    if test_name in ("test_query_documents"):
+        return stub["request"]["urlPath"].split("/")[4]
+
     if module_name == "test_search":
         return stub["request"]["urlPath"].split("/")[4]
 

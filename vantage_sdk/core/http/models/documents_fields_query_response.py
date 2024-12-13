@@ -41,12 +41,12 @@ class DocumentsFieldsQueryResponse(BaseModel):
     request_id: Optional[StrictInt] = Field(default=None, alias="requestId")
     status: Optional[StrictInt] = None
     message: Optional[StrictStr] = None
-    results: Optional[List[SearchResultValues]] = None
+    documents: Optional[List[SearchResultValues]] = None
     __properties: ClassVar[List[str]] = [
         "requestId",
         "status",
         "message",
-        "results",
+        "documents",
     ]
 
     model_config = {
@@ -84,13 +84,13 @@ class DocumentsFieldsQueryResponse(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in documents (list)
         _items = []
-        if self.results:
-            for _item in self.results:
+        if self.documents:
+            for _item in self.documents:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['results'] = _items
+            _dict['documents'] = _items
         return _dict
 
     @classmethod
@@ -107,11 +107,11 @@ class DocumentsFieldsQueryResponse(BaseModel):
                 "requestId": obj.get("requestId"),
                 "status": obj.get("status"),
                 "message": obj.get("message"),
-                "results": [
+                "documents": [
                     SearchResultValues.from_dict(_item)
-                    for _item in obj.get("results")
+                    for _item in obj.get("documents")
                 ]
-                if obj.get("results") is not None
+                if obj.get("documents") is not None
                 else None,
             }
         )

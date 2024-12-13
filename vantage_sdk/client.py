@@ -23,6 +23,7 @@ from vantage_sdk.config import (
     DEFAULT_ENCODING,
 )
 from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
+from vantage_sdk.core.document import DocumentsAPI
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -63,7 +64,7 @@ from vantage_sdk.core.http.models.documents_fields_query import (
     DocumentsFieldsQuery,
 )
 from vantage_sdk.core.management import ManagementAPI
-from vantage_sdk.core.search import DocumentsAPI, SearchAPI
+from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.core.text_util import (
     BatchTextFileReader,
     TextSplitter,
@@ -2851,22 +2852,43 @@ class VantageClient:
 
     # endregion
 
-    # region Documents - Get Documents
-    def get_documents(
+    # region Documents - Query Documents
+    def query_documents(
         self,
         collection_id: str,
         ids: List[GetDocumentsRequestDocument],
         fields: Optional[List[str]],
         account_id: Optional[str] = None,
     ) -> GetDocumentsResponse:
-        query = DocumentsFieldsQuery(fields=fields, ids=ids)
+        """
+        Queries documents using specified parameters.
+
+        Parameters
+        ----------
+        collection_id: str,
+            ID of the colleciton being queried.
+        ids: List[GetDocumentsRequestDocument]
+            List of documents to be queried.
+        fields: Optional[List[str]], optional
+            List of fields to query, if none is provided, returns all fields.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+        """
+        ids_as_dict = [
+            {"id": document_id.id, "variant_ids": document_id.variant_ids}
+            for document_id in ids
+        ]
+        query = DocumentsFieldsQuery(fields=fields, ids=ids_as_dict)
 
         response = self.documents_api.api.documents_fields_query(
-            account_id=account_id,
+            account_id=account_id or self.account_id,
             collection_id=collection_id,
             documents_fields_query=query,
         )
 
-        return GetDocumentsResponse.model_validate(response)
+        return GetDocumentsResponse.model_validate(response.model_dump())
 
     # endregion
