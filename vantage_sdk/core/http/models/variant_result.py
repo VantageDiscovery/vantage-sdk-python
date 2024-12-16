@@ -20,12 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictInt, StrictStr
-
-from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.search_result_values import (
-    SearchResultValues,
-)
+from pydantic import BaseModel, StrictStr
 
 
 try:
@@ -34,23 +29,14 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchResult(BaseModel):
+class VariantResult(BaseModel):
     """
-    SearchResult
+    VariantResult
     """  # noqa: E501
 
-    request_id: Optional[StrictInt] = None
-    status: Optional[StrictInt] = None
-    message: Optional[StrictStr] = None
-    results: Optional[List[SearchResultValues]] = None
-    facets: Optional[List[FacetResult]] = None
-    __properties: ClassVar[List[str]] = [
-        "request_id",
-        "status",
-        "message",
-        "results",
-        "facets",
-    ]
+    id: Optional[StrictStr] = None
+    fields: Optional[Dict[str, Any]] = None
+    __properties: ClassVar[List[str]] = ["id", "fields"]
 
     model_config = {
         "populate_by_name": True,
@@ -69,7 +55,7 @@ class SearchResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchResult from a JSON string"""
+        """Create an instance of VariantResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,25 +73,11 @@ class SearchResult(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
-        _items = []
-        if self.results:
-            for _item in self.results:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['results'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
-        _items = []
-        if self.facets:
-            for _item in self.facets:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['facets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchResult from a dict"""
+        """Create an instance of VariantResult from a dict"""
         if obj is None:
             return None
 
@@ -113,21 +85,6 @@ class SearchResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate(
-            {
-                "request_id": obj.get("request_id"),
-                "status": obj.get("status"),
-                "message": obj.get("message"),
-                "results": [
-                    SearchResultValues.from_dict(_item)
-                    for _item in obj.get("results")
-                ]
-                if obj.get("results") is not None
-                else None,
-                "facets": [
-                    FacetResult.from_dict(_item) for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
-                else None,
-            }
+            {"id": obj.get("id"), "fields": obj.get("fields")}
         )
         return _obj

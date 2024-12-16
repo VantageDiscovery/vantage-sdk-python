@@ -20,11 +20,10 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictInt, StrictStr
+from pydantic import BaseModel, Field, StrictInt, StrictStr
 
-from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.search_result_values import (
-    SearchResultValues,
+from vantage_sdk.core.http.models.document_fields_description import (
+    DocumentFieldsDescription,
 )
 
 
@@ -34,23 +33,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class SearchResult(BaseModel):
+class DocumentsFieldsQuery(BaseModel):
     """
-    SearchResult
+    DocumentsFieldsQuery
     """  # noqa: E501
 
-    request_id: Optional[StrictInt] = None
-    status: Optional[StrictInt] = None
-    message: Optional[StrictStr] = None
-    results: Optional[List[SearchResultValues]] = None
-    facets: Optional[List[FacetResult]] = None
-    __properties: ClassVar[List[str]] = [
-        "request_id",
-        "status",
-        "message",
-        "results",
-        "facets",
-    ]
+    request_id: Optional[StrictInt] = Field(default=None, alias="requestId")
+    fields: Optional[List[StrictStr]] = None
+    ids: Optional[List[DocumentFieldsDescription]] = None
+    __properties: ClassVar[List[str]] = ["requestId", "fields", "ids"]
 
     model_config = {
         "populate_by_name": True,
@@ -69,7 +60,7 @@ class SearchResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of SearchResult from a JSON string"""
+        """Create an instance of DocumentsFieldsQuery from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,25 +78,18 @@ class SearchResult(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in results (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in ids (list)
         _items = []
-        if self.results:
-            for _item in self.results:
+        if self.ids:
+            for _item in self.ids:
                 if _item:
                     _items.append(_item.to_dict())
-            _dict['results'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in facets (list)
-        _items = []
-        if self.facets:
-            for _item in self.facets:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['facets'] = _items
+            _dict['ids'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of SearchResult from a dict"""
+        """Create an instance of DocumentsFieldsQuery from a dict"""
         if obj is None:
             return None
 
@@ -114,19 +98,13 @@ class SearchResult(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "request_id": obj.get("request_id"),
-                "status": obj.get("status"),
-                "message": obj.get("message"),
-                "results": [
-                    SearchResultValues.from_dict(_item)
-                    for _item in obj.get("results")
+                "requestId": obj.get("requestId"),
+                "fields": obj.get("fields"),
+                "ids": [
+                    DocumentFieldsDescription.from_dict(_item)
+                    for _item in obj.get("ids")
                 ]
-                if obj.get("results") is not None
-                else None,
-                "facets": [
-                    FacetResult.from_dict(_item) for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
+                if obj.get("ids") is not None
                 else None,
             }
         )

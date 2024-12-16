@@ -1,0 +1,77 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/document/test/test-collection",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "fields": [
+            "title",
+            "description",
+            "color"
+          ],
+          "ids": [
+            {
+              "id": "product|8072876490904",
+              "variant_ids": [
+                "43998558322840",
+                "43998558716056"
+              ]
+            },
+            {
+              "id": "product|3122876490424",
+              "variant_ids": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "requestId": 123,
+      "status": 200,
+      "message": "Success",
+      "documents": [
+        {
+          "id": "product|8072876490904",
+          "fields": {
+            "title": "Hasbro Car Toy",
+            "description": "A ready-made car toy zooms around on its own, with flashing neon lights and a built-in mini-speaker that plays classical piano music as it races."
+          },
+          "variants": [
+            {
+              "id": "43998558716056",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "43998558322840",
+              "fields": {
+                "color": "green"
+              }
+            }
+          ]
+        },
+        {
+          "id": "product|3122876490424",
+          "fields": {
+            "title": "Hasbro Airplane Toy",
+            "description": "A simple airplane toy with smooth, rounded edges and vibrant colors, perfect for young children to enjoy imaginative flying adventures."
+          },
+          "variants": []
+        }
+      ]
+    }
+  }
+}

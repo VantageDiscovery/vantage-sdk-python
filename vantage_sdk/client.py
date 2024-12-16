@@ -23,6 +23,7 @@ from vantage_sdk.config import (
     DEFAULT_ENCODING,
 )
 from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
+from vantage_sdk.core.document import DocumentsAPI
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -59,6 +60,9 @@ from vantage_sdk.core.http.models import (
     VantageVibeModifiable,
     VantageVibeSearchQuery,
 )
+from vantage_sdk.core.http.models.documents_fields_query import (
+    DocumentsFieldsQuery,
+)
 from vantage_sdk.core.management import ManagementAPI
 from vantage_sdk.core.search import SearchAPI
 from vantage_sdk.core.text_util import (
@@ -77,6 +81,8 @@ from vantage_sdk.model.collection import (
     UserProvidedEmbeddingsCollection,
 )
 from vantage_sdk.model.document import (
+    GetDocumentsRequestDocument,
+    GetDocumentsResponse,
     UserProvidedEmbeddingsDocument,
     VantageManagedEmbeddingsDocument,
 )
@@ -117,6 +123,7 @@ class VantageClient:
         self,
         management_api: ManagementAPI,
         search_api: SearchAPI,
+        documents_api: DocumentsAPI,
         account_id: str,
         vantage_api_key: Optional[str] = None,
         host: Optional[str] = DEFAULT_API_HOST,
@@ -145,6 +152,7 @@ class VantageClient:
 
         self.management_api = management_api
         self.search_api = search_api
+        self.documents_api = documents_api
         self.account_id = account_id
         self.vantage_api_key = vantage_api_key
         self.host = host
@@ -188,10 +196,12 @@ class VantageClient:
 
         management_api = ManagementAPI.from_defaults(api_client=api_client)
         search_api = SearchAPI(api_client=api_client)
+        documents_api = DocumentsAPI(api_client=api_client)
 
         return cls(
             management_api=management_api,
             search_api=search_api,
+            documents_api=documents_api,
             account_id=account_id,
             vantage_api_key=vantage_api_key,
             host=host,
@@ -240,11 +250,13 @@ class VantageClient:
 
         management_api = ManagementAPI.from_defaults(api_client=api_client)
         search_api = SearchAPI(api_client=api_client)
+        documents_api = DocumentsAPI(api_client=api_client)
 
         return cls(
             management_api=management_api,
             search_api=search_api,
             account_id=account_id,
+            documents_api=documents_api,
             vantage_api_key=vantage_api_key,
             host=host,
         )
@@ -298,6 +310,7 @@ class VantageClient:
         auth_endpoint = f"{auth_host}{AUTH_ENDPOINT}"
 
         auth_client = AuthorizationClient.automatic_token_management(
+            vantage_api_key=vantage_api_key,
             vantage_client_id=vantage_client_id,
             vantage_client_secret=vantage_client_secret,
             sso_endpoint_url=auth_endpoint,
@@ -312,10 +325,12 @@ class VantageClient:
 
         management_api = ManagementAPI.from_defaults(api_client=api_client)
         search_api = SearchAPI(api_client=api_client)
+        documents_api = DocumentsAPI(api_client=api_client)
 
         return cls(
             management_api=management_api,
             search_api=search_api,
+            documents_api=documents_api,
             account_id=account_id,
             vantage_api_key=vantage_api_key,
             host=host,
@@ -1564,6 +1579,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         total_counts: Optional[TotalCountsOptions] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
@@ -1598,6 +1614,11 @@ class VantageClient:
             Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
+            Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
             Defaults to None.
         total_counts: Optional[TotalCountsOptions], optional
             Similarity score range used to calculate the total
@@ -1643,6 +1664,7 @@ class VantageClient:
             total_counts=(
                 None if total_counts is None else total_counts.model_dump()
             ),
+            fields=fields,
         )
 
         result = self.search_api.api.semantic_search(
@@ -1664,6 +1686,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1697,6 +1720,11 @@ class VantageClient:
             Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
+            Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
             Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1736,6 +1764,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1757,6 +1786,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1791,6 +1821,11 @@ class VantageClient:
             Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
+            Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
             Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1830,6 +1865,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1851,6 +1887,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1885,6 +1922,11 @@ class VantageClient:
             Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
+            Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
             Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -1927,6 +1969,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.more_like_these_search(
@@ -1954,6 +1997,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1992,6 +2036,11 @@ class VantageClient:
             Defaults to None.
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
+            Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
             Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
@@ -2046,6 +2095,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.vantage_vibe_search(
@@ -2069,6 +2119,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        fields: Optional[List[str]] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> ShoppingAssistantResult:
@@ -2109,6 +2160,11 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        fields: Optional[List[str]], optional
+            List of document fields that should be included in the response.
+            Fields represent both product and variant fields.
+            If non-existing field has been provided, it will be ignored.
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2148,6 +2204,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            fields=fields,
         )
 
         result = self.search_api.api.shopping_assistant(
@@ -2792,5 +2849,46 @@ class VantageClient:
             model=model,
             embeddings_dimension=embeddings_dimension,
         )
+
+    # endregion
+
+    # region Documents - Query Documents
+    def query_documents(
+        self,
+        collection_id: str,
+        ids: List[GetDocumentsRequestDocument],
+        fields: Optional[List[str]],
+        account_id: Optional[str] = None,
+    ) -> GetDocumentsResponse:
+        """
+        Queries documents using specified parameters.
+
+        Parameters
+        ----------
+        collection_id: str,
+            ID of the colleciton being queried.
+        ids: List[GetDocumentsRequestDocument]
+            List of documents to be queried.
+        fields: Optional[List[str]], optional
+            List of fields to query, if none is provided, returns all fields.
+            Defaults to None.
+        account_id : Optional[str], optional
+            The account ID to which the collection belongs.
+            If not provided, the instance's account ID is used.
+            Defaults to None.
+        """
+        ids_as_dict = [
+            {"id": document_id.id, "variant_ids": document_id.variant_ids}
+            for document_id in ids
+        ]
+        query = DocumentsFieldsQuery(fields=fields, ids=ids_as_dict)
+
+        response = self.documents_api.api.documents_fields_query(
+            account_id=account_id or self.account_id,
+            collection_id=collection_id,
+            documents_fields_query=query,
+        )
+
+        return GetDocumentsResponse.model_validate(response.model_dump())
 
     # endregion

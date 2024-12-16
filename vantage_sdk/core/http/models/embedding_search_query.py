@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Union
 
-from pydantic import BaseModel, StrictFloat, StrictInt
+from pydantic import BaseModel, StrictFloat, StrictInt, StrictStr
 
 from vantage_sdk.core.http.models.search_options_collection import (
     SearchOptionsCollection,
@@ -58,6 +58,7 @@ class EmbeddingSearchQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    fields: Optional[List[StrictStr]] = None
     embedding: Optional[List[Union[StrictFloat, StrictInt]]] = None
     __properties: ClassVar[List[str]] = [
         "collection",
@@ -67,6 +68,7 @@ class EmbeddingSearchQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "fields",
         "embedding",
     ]
 
@@ -170,6 +172,7 @@ class EmbeddingSearchQuery(BaseModel):
                 ]
                 if obj.get("facets") is not None
                 else None,
+                "fields": obj.get("fields"),
                 "embedding": obj.get("embedding"),
             }
         )

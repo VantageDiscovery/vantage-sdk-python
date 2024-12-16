@@ -58,6 +58,7 @@ class ShoppingAssistantQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    fields: Optional[List[StrictStr]] = None
     text: Optional[StrictStr] = None
     max_groups: Optional[StrictInt] = None
     shopping_assistant_id: Optional[StrictStr] = None
@@ -69,6 +70,7 @@ class ShoppingAssistantQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
+        "fields",
         "text",
         "max_groups",
         "shopping_assistant_id",
@@ -174,6 +176,7 @@ class ShoppingAssistantQuery(BaseModel):
                 ]
                 if obj.get("facets") is not None
                 else None,
+                "fields": obj.get("fields"),
                 "text": obj.get("text"),
                 "max_groups": obj.get("max_groups"),
                 "shopping_assistant_id": obj.get("shopping_assistant_id"),

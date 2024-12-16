@@ -1,0 +1,85 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/search/test/test-collection/embedding",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "filter": {
+            "variant_filter": "(color:\"black\" OR color:\"brown\")"
+          },
+          "embedding": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "fields": [
+            "title",
+            "description",
+            "price",
+            "color"
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "request_id": 1718109280970,
+      "status": 200,
+      "message": "Success.",
+      "results": [
+        {
+          "id": "product|8072876490904",
+          "score": 0.8207264542579651,
+          "sort_score": 0.8207264542579651,
+          "variants": [
+            {
+              "id": "43998558716056",
+              "fields": {
+                "color": "red"
+              }
+            }
+          ],
+          "variants_full_list": [
+            {
+              "id": "43998558716056",
+              "fields": {
+                "color": "red"
+              }
+            },
+            {
+              "id": "43998558421144",
+              "fields": {
+                "color": "blue"
+              }
+            },
+            {
+              "id": "43998558322840",
+              "fields": {
+                "color": "green"
+              }
+            }
+          ],
+          "fields": {
+            "title": "Hasbro Car Toy",
+            "description": "A ready-made car toy.",
+            "price": 10.0
+          }
+        }
+      ],
+      "execution_time": 7
+    }
+  }
+}
