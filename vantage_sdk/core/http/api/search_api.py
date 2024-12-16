@@ -144,6 +144,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -231,6 +232,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -318,6 +320,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -424,7 +427,7 @@ class SearchApi:
     ) -> SearchResult:
         """Search by embedding
 
-        Search by embedding
+        Search by embedding.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -467,6 +470,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -511,7 +515,7 @@ class SearchApi:
     ) -> ApiResponse[SearchResult]:
         """Search by embedding
 
-        Search by embedding
+        Search by embedding.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -554,6 +558,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -598,7 +603,7 @@ class SearchApi:
     ) -> RESTResponseType:
         """Search by embedding
 
-        Search by embedding
+        Search by embedding.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -641,6 +646,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -747,7 +753,7 @@ class SearchApi:
     ) -> SearchResult:
         """More-Like-These(tm)
 
-        Search for similar items, blending docs, text, and embeddings
+        Search for similar items, blending docs, text, and embeddings.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -790,6 +796,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -834,7 +841,7 @@ class SearchApi:
     ) -> ApiResponse[SearchResult]:
         """More-Like-These(tm)
 
-        Search for similar items, blending docs, text, and embeddings
+        Search for similar items, blending docs, text, and embeddings.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -877,6 +884,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -921,7 +929,7 @@ class SearchApi:
     ) -> RESTResponseType:
         """More-Like-These(tm)
 
-        Search for similar items, blending docs, text, and embeddings
+        Search for similar items, blending docs, text, and embeddings.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -964,6 +972,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1070,7 +1079,7 @@ class SearchApi:
     ) -> SearchResult:
         """More-Like-This
 
-        Search for similar items, based on existing item id
+        Search for similar items, based on existing item id.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1113,6 +1122,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1157,7 +1167,7 @@ class SearchApi:
     ) -> ApiResponse[SearchResult]:
         """More-Like-This
 
-        Search for similar items, based on existing item id
+        Search for similar items, based on existing item id.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1200,6 +1210,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1244,7 +1255,7 @@ class SearchApi:
     ) -> RESTResponseType:
         """More-Like-This
 
-        Search for similar items, based on existing item id
+        Search for similar items, based on existing item id.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1287,6 +1298,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1393,7 +1405,7 @@ class SearchApi:
     ) -> SearchResult:
         """Search by text
 
-        Search by text
+        Search by text.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1436,6 +1448,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1480,7 +1493,7 @@ class SearchApi:
     ) -> ApiResponse[SearchResult]:
         """Search by text
 
-        Search by text
+        Search by text.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1523,6 +1536,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1567,7 +1581,7 @@ class SearchApi:
     ) -> RESTResponseType:
         """Search by text
 
-        Search by text
+        Search by text.  For a complete list of search parameters and their descriptions, see [Search Options](https://docs.vantagediscovery.com/docs/search-options).
 
         :param account_id: The account to get information on (required)
         :type account_id: str
@@ -1610,6 +1624,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1759,6 +1774,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1846,6 +1862,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1933,6 +1950,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2082,6 +2100,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2169,6 +2188,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2256,6 +2276,7 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(

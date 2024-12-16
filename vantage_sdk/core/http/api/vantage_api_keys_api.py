@@ -115,6 +115,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -190,6 +191,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -265,6 +267,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '201': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -398,6 +401,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -472,6 +476,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -546,6 +551,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "VantageAPIKey",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -663,6 +669,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageAPIKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -731,6 +738,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageAPIKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -799,6 +807,7 @@ class VantageAPIKeysApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "List[VantageAPIKey]",
+            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
