@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/account/test/collection/test_collection/semantic_query_suggestions/suggestions1/disable",
+    "headers": {
+      "Authorization": {
+        "contains": "Bearer testkey"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "collection_id": "test_collection",
+      "collection_created_time": "2024-09-10T08:12:47.305Z",
+      "collection_state": "Active",
+      "collection_status": "Online",
+      "user_provided_embeddings": true,
+      "llm_provider": "OpenAI",
+      "llm": "openai-4o",
+      "sequence_length": 0,
+      "secondary_external_accounts": [],
+      "collection_name": "test_collection",
+      "external_url": "",
+      "embeddings_dimension": 1536,
+      "collection_preview_url_pattern": "",
+      "semantic_query_suggestion_id": "suggestions1",
+      "external_key_id": ""
+    }
+  }
+}

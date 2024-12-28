@@ -2,6 +2,7 @@
 Models for the Collection API.
 """
 
+from enum import Enum
 from typing import List, Optional, Union
 
 from pydantic import (
@@ -167,3 +168,45 @@ class CollectionUploadURL(BaseModel):
     customer_batch_identifier: Optional[StrictStr] = None
     upload_url_type: Optional[StrictStr] = None
     upload_url: Optional[StrictStr] = None
+
+
+class SemanticQuerySuggestionsState(Enum):
+    """
+    Represents state of Semantic Query Suggestions configuration.
+    """
+
+    Active = "Active"
+    Inactive = "Inactive"
+    Pending = "Pending"
+
+
+class SemanticQuerySuggestionsConfiguration(BaseModel):
+    """
+    Represents Semantic Query Suggestions configuration.
+
+    Attributes
+    ----------
+    semantic_query_suggestion_id: StrictStr
+        ID of Semantic Query Suggestions configuration.
+    account_id: StrictStr
+        ID of account that this configuration belongs.
+    collection_id: StrictStr
+        ID of a collection on which this configuration is defined.
+    suggestions_per_document: StrictInt
+        Number of suggestions per document.
+    state: SemanticQuerySuggestionsState
+        State of this configuration (Active/Inactive/Pending)
+    external_account_id: Optional[StrictStr] = None
+        ID of thje external account used.
+    llm_model_name: Optional[StrictStr] = None
+        Name of the LLM model used.
+    """
+
+    suggestions_per_document: StrictInt
+    external_account_id: StrictStr
+    llm_model_name: StrictStr
+    semantic_query_suggestion_id: StrictStr
+    account_id: StrictStr
+    collection_id: StrictStr
+    suggestions_per_document: StrictInt
+    state: SemanticQuerySuggestionsState

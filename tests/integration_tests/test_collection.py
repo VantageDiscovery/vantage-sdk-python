@@ -460,3 +460,219 @@ class TestCollections:
 
         # Then
         assert exception.type is NotFoundException
+
+    def test_list_semantic_query_suggestions_configurations(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+
+        # When
+        response = client.list_semantic_query_suggestions_configurations(
+            collection_id=collection_id,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert len(response) == 1
+        sqs_conf = response[0]
+        assert sqs_conf.semantic_query_suggestion_id == "suggestions1"
+        assert sqs_conf.account_id == "test"
+        assert sqs_conf.collection_id == collection_id
+        assert sqs_conf.external_account_id == "external1"
+        assert sqs_conf.llm_model_name == "openai-4o"
+        assert sqs_conf.suggestions_per_document == 7
+        assert sqs_conf.state == "Active"
+
+    def test_create_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        external_account_id = "external1"
+        llm_model_name = "openai-4o"
+        suggestions_count = 10
+        account_id = account_params["id"]
+        state = "Active"
+        semantic_query_suggestion_id = "suggestions1"
+
+        # When
+        response = client.create_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            external_account_id=external_account_id,
+            llm_model_name=llm_model_name,
+            suggestions_per_document=suggestions_count,
+            account_id=account_id,
+        )
+
+        # Then
+        assert response is not None
+        assert (
+            response.semantic_query_suggestion_id
+            == semantic_query_suggestion_id
+        )
+        assert response.account_id == account_id
+        assert response.collection_id == collection_id
+        assert response.external_account_id == external_account_id
+        assert response.llm_model_name == llm_model_name
+        assert response.suggestions_per_document == suggestions_count
+        assert response.state == state
+
+    def test_get_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        external_account_id = "external1"
+        llm_model_name = "openai-4o"
+        suggestions_count = 10
+        account_id = account_params["id"]
+        state = "Active"
+        semantic_query_suggestion_id = "suggestions1"
+
+        # When
+        response = client.get_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            semantic_query_suggestions_id=semantic_query_suggestion_id,
+            account_id=account_id,
+        )
+
+        # Then
+        assert response is not None
+        assert (
+            response.semantic_query_suggestion_id
+            == semantic_query_suggestion_id
+        )
+        assert response.account_id == account_id
+        assert response.collection_id == collection_id
+        assert response.external_account_id == external_account_id
+        assert response.llm_model_name == llm_model_name
+        assert response.suggestions_per_document == suggestions_count
+        assert response.state == state
+
+    def test_update_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        external_account_id = "external1"
+        llm_model_name = "openai-4o"
+        suggestions_count = 10
+        account_id = account_params["id"]
+        state = "Active"
+        semantic_query_suggestion_id = "suggestions1"
+
+        # When
+        response = client.update_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            semantic_query_suggestions_id=semantic_query_suggestion_id,
+            external_account_id=external_account_id,
+            suggestions_per_document=suggestions_count,
+            account_id=account_id,
+        )
+
+        # Then
+        assert response is not None
+        assert (
+            response.semantic_query_suggestion_id
+            == semantic_query_suggestion_id
+        )
+        assert response.account_id == account_id
+        assert response.collection_id == collection_id
+        assert response.external_account_id == external_account_id
+        assert response.llm_model_name == llm_model_name
+        assert response.suggestions_per_document == suggestions_count
+        assert response.state == state
+
+    def test_delete_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        account_id = account_params["id"]
+        semantic_query_suggestion_id = "suggestions1"
+
+        # When
+        response = client.delete_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            semantic_query_suggestions_id=semantic_query_suggestion_id,
+            account_id=account_id,
+        )
+
+        # Then
+        assert response is None
+
+    def test_disable_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        account_id = account_params["id"]
+        semantic_query_suggestion_id = "suggestions1"
+        collection_state = "Active"
+        collection_status = "Online"
+
+        # When
+        collection = client.disable_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            semantic_query_suggestions_id=semantic_query_suggestion_id,
+            account_id=account_id,
+        )
+
+        # Then
+        assert collection is not None
+        assert collection.collection_id == collection_id
+        assert (
+            collection.semantic_query_suggestion_id
+            == semantic_query_suggestion_id
+        )
+        assert collection.collection_state == collection_state
+        assert collection.collection_status == collection_status
+
+    def test_rollback_semantic_query_suggestions_configuration(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        # Given
+        collection_id = test_collection_id
+        account_id = account_params["id"]
+        semantic_query_suggestion_id = "suggestions1"
+        collection_state = "Active"
+        collection_status = "Online"
+
+        # When
+        collection = client.rollback_semantic_query_suggestions_configuration(
+            collection_id=collection_id,
+            semantic_query_suggestions_id=semantic_query_suggestion_id,
+            account_id=account_id,
+        )
+
+        # Then
+        assert collection is not None
+        assert collection.collection_id == collection_id
+        assert (
+            collection.semantic_query_suggestion_id
+            == semantic_query_suggestion_id
+        )
+        assert collection.collection_state == collection_state
+        assert collection.collection_status == collection_status

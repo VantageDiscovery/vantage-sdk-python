@@ -48,6 +48,7 @@ class Collection(BaseModel):
     collection_created_time: Optional[StrictStr] = None
     collection_status: Optional[StrictStr] = None
     collection_state: Optional[StrictStr] = None
+    semantic_query_suggestion_id: Optional[StrictStr] = None
     collection_id: Optional[StrictStr] = Field(
         default=None,
         description="Immutable.  Unique identifier within an account, 3 to 36 characters long with only lower case letters, numeric digits and \"-\"",
@@ -76,6 +77,7 @@ class Collection(BaseModel):
         "collection_created_time",
         "collection_status",
         "collection_state",
+        "semantic_query_suggestion_id",
         "collection_id",
         "user_provided_embeddings",
         "llm",
@@ -163,6 +165,7 @@ class Collection(BaseModel):
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
@@ -170,6 +173,7 @@ class Collection(BaseModel):
                 "collection_created_time",
                 "collection_status",
                 "collection_state",
+                "semantic_query_suggestion_id",
             },
             exclude_none=True,
         )
@@ -196,6 +200,9 @@ class Collection(BaseModel):
                 "collection_created_time": obj.get("collection_created_time"),
                 "collection_status": obj.get("collection_status"),
                 "collection_state": obj.get("collection_state"),
+                "semantic_query_suggestion_id": obj.get(
+                    "semantic_query_suggestion_id"
+                ),
                 "collection_id": obj.get("collection_id"),
                 "user_provided_embeddings": obj.get("user_provided_embeddings")
                 if obj.get("user_provided_embeddings") is not None
