@@ -23,6 +23,7 @@ from vantage_sdk.config import (
     DEFAULT_ENCODING,
 )
 from vantage_sdk.core.base import AuthorizationClient, AuthorizedApiClient
+from vantage_sdk.core.http import SearchOptionsOptions
 from vantage_sdk.core.http.models import (
     AccountModifiable,
     CollectionModifiable,
@@ -33,6 +34,11 @@ from vantage_sdk.core.http.models import (
 )
 from vantage_sdk.core.http.models import FacetRange as pydantic_FacetRange
 from vantage_sdk.core.http.models import (
+    FilterAndGroup,
+    FilterNotGroup,
+    FilterOptions,
+    FilterOrGroup,
+    FilterRangeValue,
     MLTheseTheseInner,
     MoreLikeTheseQuery,
     MoreLikeThisQuery,
@@ -40,6 +46,7 @@ from vantage_sdk.core.http.models import (
     SearchOptionsFacetsInner,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
+    SearchOptionsFilterBooleanFilter,
     SearchOptionsPagination,
     SearchOptionsSort,
 )
@@ -94,8 +101,12 @@ from vantage_sdk.model.search import (
     Facet,
     FieldValueWeighting,
     Filter,
+    FilterNode,
     MoreLikeTheseItem,
+    OperatorFilterType,
+    Options,
     Pagination,
+    RangeFilter,
     SearchOptions,
     SearchResult,
     Sort,
@@ -1454,6 +1465,86 @@ class VantageClient:
 
     # region Search Helper Functions
 
+    def _convert_filter_nodes(self, filter_node: FilterNode) -> FilterOptions:
+        if filter_node.operator_filter:
+            match filter_node.operator_filter.operator_type:
+                case OperatorFilterType.OR:
+                    return FilterOptions(
+                        FilterOrGroup(
+                            var_and=[
+                                self._convert_filter_nodes(filter)
+                                for filter in filter_node.operator_filter.filters
+                            ]
+                        )
+                    )
+                case OperatorFilterType.AND:
+                    return FilterOptions(
+                        FilterAndGroup(
+                            var_and=[
+                                self._convert_filter_nodes(filter)
+                                for filter in filter_node.operator_filter.filters
+                            ]
+                        )
+                    )
+                case OperatorFilterType.NOT:
+                    return FilterOptions(
+                        FilterNotGroup(
+                            var_and=[
+                                self._convert_filter_nodes(filter)
+                                for filter in filter_node.operator_filter.filters
+                            ]
+                        )
+                    )
+                case _:
+                    raise VantageValueError(
+                        "Filter operator group has invalid type (should be one of AND, OR, or NOT)."
+                    )
+
+        if type(filter_node) is RangeFilter:
+            return FilterOptions(
+                actual_instance={
+                    filter_node.field_name: FilterRangeValue(
+                        var_from=filter_node.filter_value.from_value,
+                        to=filter_node.filter_value.to_value,
+                    )
+                }
+            )
+        else:
+            return FilterOptions(
+                actual_instance={
+                    filter_node.field_name: filter_node.filter_value
+                }
+            )
+
+    def _convert_filters(self, filter: Filter) -> SearchOptionsFilter:
+        boolean_filter: Optional[SearchOptionsFilterBooleanFilter] = None
+        if type(filter.boolean_filter) is str:
+            boolean_filter = SearchOptionsFilterBooleanFilter(
+                actual_instance=filter.boolean_filter
+            )
+        elif filter.boolean_filter:
+            boolean_filter = SearchOptionsFilterBooleanFilter(
+                actual_instance=self._convert_filter_nodes(
+                    filter.boolean_filter
+                )
+            )
+
+        variant_filter: Optional[SearchOptionsFilterBooleanFilter] = None
+        if type(filter.variant_filter) is str:
+            variant_filter = SearchOptionsFilterBooleanFilter(
+                actual_instance=filter.variant_filter
+            )
+        elif filter.variant_filter:
+            variant_filter = SearchOptionsFilterBooleanFilter(
+                actual_instance=self._convert_filter_nodes(
+                    filter.variant_filter
+                )
+            )
+
+        return SearchOptionsFilter(
+            boolean_filter=boolean_filter, variant_filter=variant_filter
+        )
+
     def _prepare_search_query(
         self,
         accuracy: Optional[float] = None,
@@ -1462,6 +1553,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
     ) -> SearchOptions:
         collection = (
             SearchOptionsCollection(
@@ -1471,14 +1563,7 @@ class VantageClient:
             else None
         )
 
-        search_filter = (
-            SearchOptionsFilter(
-                boolean_filter=filter.boolean_filter,
-                variant_filter=filter.variant_filter,
-            )
-            if filter
-            else None
-        )
+        search_filter = self._convert_filters(filter) if filter else None
 
         pagination = (
             SearchOptionsPagination(
@@ -1529,6 +1614,14 @@ class VantageClient:
             else None
         )
 
+        options = (
+            SearchOptionsOptions(
+                embedding_thresholds=options.embedding_thresholds
+            )
+            if options
+            else None
+        )
+
         return SearchOptions(
             collection=collection,
             filter=search_filter,
@@ -1536,6 +1629,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
     def _vantage_api_key_check(self, vantage_api_key: str) -> str:
@@ -1564,6 +1658,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         total_counts: Optional[TotalCountsOptions] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
@@ -1599,6 +1694,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         total_counts: Optional[TotalCountsOptions], optional
             Similarity score range used to calculate the total
             number of documents that match it.
@@ -1630,6 +1728,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = SemanticSearchQuery(
@@ -1640,6 +1739,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
             total_counts=(
                 None if total_counts is None else total_counts.model_dump()
             ),
@@ -1664,6 +1764,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> SearchResult:
@@ -1698,6 +1799,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1726,6 +1830,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = EmbeddingSearchQuery(
@@ -1736,6 +1841,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
         )
 
         result = self.search_api.api.embedding_search(
@@ -1757,6 +1863,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1792,6 +1899,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1820,6 +1930,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = MoreLikeThisQuery(
@@ -1830,6 +1941,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
         )
 
         result = self.search_api.api.more_like_this_search(
@@ -1851,6 +1963,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1886,6 +1999,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -1914,6 +2030,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = MoreLikeTheseQuery(
@@ -1927,6 +2044,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
         )
 
         result = self.search_api.api.more_like_these_search(
@@ -1954,6 +2072,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> SearchResult:
@@ -1993,6 +2112,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2026,6 +2148,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         prepared_images = [
@@ -2046,6 +2169,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
         )
 
         result = self.search_api.api.vantage_vibe_search(
@@ -2069,6 +2193,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         account_id: Optional[str] = None,
         vantage_api_key: Optional[str] = None,
     ) -> ShoppingAssistantResult:
@@ -2109,6 +2234,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2136,6 +2264,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = ShoppingAssistantQuery(
@@ -2148,6 +2277,7 @@ class VantageClient:
             sort=search_properties.sort,
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
+            options=search_properties.options,
         )
 
         result = self.search_api.api.shopping_assistant(
@@ -2170,6 +2300,7 @@ class VantageClient:
         sort: Optional[Sort] = None,
         field_value_weighting: Optional[FieldValueWeighting] = None,
         facets: Optional[List[Facet]] = None,
+        options: Optional[Options] = None,
         vantage_api_key: Optional[str] = None,
         account_id: Optional[str] = None,
     ) -> ApproximateResultsCountResult:
@@ -2208,6 +2339,9 @@ class VantageClient:
         facets: Optional[List[Facet]], optional
             Array of objects defining specific attributes of the data.
             Defaults to None.
+        options: Optional[Optional], optional
+            Additional search options, currently only relevance thresholds
+            Defaults to None.
         vantage_api_key : Optional[str], optional
             The Vantage API key used for authentication.
             If not provided, the instance's API key is used.
@@ -2237,6 +2371,7 @@ class VantageClient:
             sort=sort,
             field_value_weighting=field_value_weighting,
             facets=facets,
+            options=options,
         )
 
         query = SemanticSearchQuery(
@@ -2248,6 +2383,7 @@ class VantageClient:
             field_value_weighting=search_properties.field_value_weighting,
             facets=search_properties.facets,
             total_counts=total_counts.model_dump(),
+            options=search_properties.options,
         )
 
         result = self.search_api.api.approximate_results_count_search(

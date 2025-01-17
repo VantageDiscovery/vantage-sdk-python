@@ -1,7 +1,7 @@
 {
     "request": {
       "method": "POST",
-      "urlPath": "/v1/search/test/test-collection/morelikethese",
+      "urlPath": "/v1/search/test/test-collection/morelikethis",
       "headers": {
         "Authorization": {
           "contains": "Bearer testkey"
@@ -11,20 +11,9 @@
         {
           "equalToJson": {
             "filter": {
-              "variant_filter": {
-                "color": [ "black", "brown" ]
-              }
+                "variant_filter": "(color:\"black\" OR color:\"brown\")"
             },
-            "these": [
-            {
-              "weight": 1.0,
-              "query_text": "some text"
-            },
-            {
-              "weight": 1.0,
-              "query_text": "other text"
-            }
-          ]
+            "document_id": "en_0530926"
           }
         }
       ]

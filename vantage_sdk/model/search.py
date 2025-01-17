@@ -1,6 +1,7 @@
 """
 Models for the Search API.
 """
+from __future__ import annotations
 
 import re
 from enum import Enum
@@ -19,6 +20,7 @@ from vantage_sdk.core.http.models import (
     SearchOptionsFacetsInner,
     SearchOptionsFieldValueWeighting,
     SearchOptionsFilter,
+    SearchOptionsOptions,
     SearchOptionsPagination,
     SearchOptionsSort,
     WeightedFieldValues,
@@ -140,9 +142,59 @@ class MoreLikeTheseItem(BaseModel):
         return values
 
 
+class RangeFilter(BaseModel):
+    from_value: Optional[float | int] = None
+    to_value: Optional[float | int] = None
+
+
+class OperatorFilterType(Enum):
+    AND = "and"
+    OR = "or"
+    NOT = "not"
+
+
+class OperatorFilter(BaseModel):
+    operator_type: OperatorFilterType
+    filters: List[FilterNode]
+
+
+class FilterNode(BaseModel):
+    operator_filter: Optional[OperatorFilter] = None
+    field_name: Optional[str] = None
+    filter_value: Optional[
+        str | float | int | List[str] | List[float] | List[int] | RangeFilter
+    ] = None
+
+    @model_validator(mode="before")
+    def check_mutually_exclusive_fields(cls, values):
+        operator_filter = values.get('operator_filter')
+        field_name = values.get('field_name')
+        filter_value = values.get('filter_value')
+
+        if sum([bool(field_name), bool(filter_value)]) == 1:
+            raise ValueError('Missing either `field_name` or `filter_value`.')
+
+        if (
+            sum(
+                [bool(operator_filter), bool(field_name) or bool(filter_value)]
+            )
+            > 1
+        ):
+            raise ValueError(
+                'Only one of `operator_filter`, or `field_name + filter_value` should be provided.'
+            )
+
+        if not any([operator_filter, field_name, filter_value]):
+            raise ValueError(
+                'One of `query_text`, `query_document_id`, or `embedding` must be provided.'
+            )
+
+        return values
+
+
 class Filter(BaseModel):
-    boolean_filter: Optional[str] = None
-    variant_filter: Optional[str] = None
+    boolean_filter: Optional[str | FilterNode] = None
+    variant_filter: Optional[str | FilterNode] = None
 
 
 class Pagination(BaseModel):
@@ -252,6 +304,10 @@ class VantageVibeImageBase64(VantageVibeImageAllFields):
         super().__init__(base64=base64)
 
 
+class Options(BaseModel):
+    embedding_thresholds: dict[str, float]
+
+
 class SearchOptions(BaseModel):
     """
     Represents the global properties for all search methods.
@@ -270,6 +326,11 @@ class SearchOptions(BaseModel):
         The field value weighting properties.
     facets: Optional[List[SearchOptionsFacetsInner]], optional
         An array of objects that define the facets you want to use in your query.
+    options: Optional[SearchOptionsOptions], optional
+        Additional search options, currently only relevance thresholds.
+        Relevance thresholds are structured using a map, where the key represents
+        the vector space for the mapped threshold, Currently only the "default"
+        vector space is supported
     """
 
     collection: Optional[SearchOptionsCollection] = None
@@ -278,6 +339,7 @@ class SearchOptions(BaseModel):
     sort: Optional[SearchOptionsSort] = None
     field_value_weighting: Optional[SearchOptionsFieldValueWeighting] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
+    options: Optional[SearchOptionsOptions] = None
 
 
 class TotalCountsOptions(BaseModel):
