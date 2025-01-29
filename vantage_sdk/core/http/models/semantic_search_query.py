@@ -164,7 +164,6 @@ class SemanticSearchQuery(BaseModel):
                     else None
                 ),
                 "request_id": obj.get("request_id"),
-<<<<<<< HEAD
                 "filter": (
                     SearchOptionsFilter.from_dict(obj.get("filter"))
                     if obj.get("filter") is not None
@@ -207,38 +206,6 @@ class SemanticSearchQuery(BaseModel):
                     if obj.get("total_counts") is not None
                     else None
                 ),
-=======
-                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
-                if obj.get("filter") is not None
-                else None,
-                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
-                    obj.get("field_value_weighting")
-                )
-                if obj.get("field_value_weighting") is not None
-                else None,
-                "pagination": SearchOptionsPagination.from_dict(
-                    obj.get("pagination")
-                )
-                if obj.get("pagination") is not None
-                else None,
-                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
-                if obj.get("sort") is not None
-                else None,
-                "facets": [
-                    SearchOptionsFacetsInner.from_dict(_item)
-                    for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
-                else None,
-                "options": SearchOptionsOptions.from_dict(obj.get("options"))
-                if obj.get("options") is not None
-                else None,
-                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
-                    obj.get("total_counts")
-                )
-                if obj.get("total_counts") is not None
-                else None,
->>>>>>> ee75d36 (feat(van-4171) Added new filter syntax and relevance threshold option to all search queries)
                 "text": obj.get("text"),
             }
         )
