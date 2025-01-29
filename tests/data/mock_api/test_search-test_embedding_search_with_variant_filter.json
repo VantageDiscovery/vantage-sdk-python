@@ -11,7 +11,9 @@
         {
           "equalToJson": {
             "filter": {
-                "variant_filter": "(color:\"black\" OR color:\"brown\")"
+              "variant_filter": {
+                "color": [ "black", "brown" ]
+              }
             },
             "embedding": [
             1,

@@ -12,7 +12,9 @@ from vantage_sdk.model.search import (
     FacetRange,
     FacetType,
     Filter,
+    FilterNode,
     MoreLikeTheseItem,
+    Options,
     TotalCountsOptions,
     VantageVibeImageBase64,
     VantageVibeImageUrl,
@@ -409,146 +411,295 @@ class TestSearch:
 
     # region Variants
 
-    # def test_semantic_search_with_variant_filter(
-    #     self,
-    #     client: VantageClient,
-    #     account_params: dict,
-    #     test_collection_id: str,
-    # ):
-    #     """
-    #     Tests if semantic search will return correct result using variant filter option.
-    #     """
-    #     # Given
-    #     collection_id = test_collection_id
-    #     search_text = "Test search"
+    def test_semantic_search_with_old_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
 
-    #     filter = Filter(
-    #         variant_filter="(color:\"black\" OR color:\"brown\")",
-    #     )
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
 
-    #     # When
-    #     result = client.semantic_search(
-    #         text=search_text,
-    #         collection_id=collection_id,
-    #         filter=filter,
-    #         account_id=account_params["id"],
-    #     )
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
 
-    #     # Then
-    #     assert result.status == 200
-    #     assert len(result.results) == 3
-    #     for r in result.results:
-    #         assert "variants" in r.model_dump().keys()
-    #     for r in result.results:
-    #         assert "variants_full_list" in r.model_dump().keys()
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
-    # def test_embedding_search_with_variant_filter(
-    #     self,
-    #     client: VantageClient,
-    #     account_params: dict,
-    #     test_collection_id: str,
-    # ):
-    #     """
-    #     Tests if embedding search will return correct result using variant filter option.
-    #     """
-    #     # Given
-    #     collection_id = test_collection_id
-    #     embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
+    def test_embedding_search_with_old_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if embedding search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
 
-    #     filter = Filter(
-    #         variant_filter="(color:\"black\" OR color:\"brown\")",
-    #     )
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
 
-    #     # When
-    #     result = client.embedding_search(
-    #         embedding=embedding,
-    #         collection_id=collection_id,
-    #         filter=filter,
-    #         account_id=account_params["id"],
-    #     )
+        # When
+        result = client.embedding_search(
+            embedding=embedding,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
 
-    #     # Then
-    #     assert result.status == 200
-    #     assert len(result.results) == 3
-    #     for r in result.results:
-    #         assert "variants" in r.model_dump().keys()
-    #     for r in result.results:
-    #         assert "variants_full_list" in r.model_dump().keys()
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
-    # def test_more_like_this_search_with_variant_filter(
-    #     self,
-    #     client: VantageClient,
-    #     account_params: dict,
-    #     test_collection_id: str,
-    # ):
-    #     """
-    #     Tests if MoreLikeThis search will return correct result using variant filter option.
-    #     """
-    #     # Given
-    #     collection_id = test_collection_id
-    #     document_id = "en_0530926"
+    def test_more_like_this_search_with_old_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThis search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        document_id = "en_0530926"
 
-    #     filter = Filter(
-    #         variant_filter="(color:\"black\" OR color:\"brown\")",
-    #     )
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
 
-    #     # When
-    #     result = client.more_like_this_search(
-    #         document_id=document_id,
-    #         collection_id=collection_id,
-    #         filter=filter,
-    #         account_id=account_params["id"],
-    #     )
+        # When
+        result = client.more_like_this_search(
+            document_id=document_id,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
 
-    #     # Then
-    #     assert result.status == 200
-    #     assert len(result.results) == 3
-    #     for r in result.results:
-    #         assert "variants" in r.model_dump().keys()
-    #     for r in result.results:
-    #         assert "variants_full_list" in r.model_dump().keys()
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
-    # def test_more_like_these_search_with_variant_filter(
-    #     self,
-    #     client: VantageClient,
-    #     account_params: dict,
-    #     test_collection_id: str,
-    # ):
-    #     """
-    #     Tests if MoreLikeThese search will return correct result using variant filter option.
-    #     """
-    #     # Given
-    #     collection_id = test_collection_id
-    #     these = [
-    #         MoreLikeTheseItem(
-    #             weight=1.0,
-    #             query_text="some text",
-    #         ),
-    #         MoreLikeTheseItem(
-    #             weight=1.0,
-    #             query_text="other text",
-    #         ),
-    #     ]
+    def test_more_like_these_search_with_old_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThese search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        these = [
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="other text",
+            ),
+        ]
 
-    #     filter = Filter(
-    #         variant_filter="(color:\"black\" OR color:\"brown\")",
-    #     )
+        filter = Filter(
+            variant_filter="(color:\"black\" OR color:\"brown\")",
+        )
 
-    #     # When
-    #     result = client.more_like_these_search(
-    #         more_like_these=these,
-    #         collection_id=collection_id,
-    #         filter=filter,
-    #         account_id=account_params["id"],
-    #     )
+        # When
+        result = client.more_like_these_search(
+            more_like_these=these,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
 
-    #     # Then
-    #     assert result.status == 200
-    #     assert len(result.results) == 3
-    #     for r in result.results:
-    #         assert "variants" in r.model_dump().keys()
-    #     for r in result.results:
-    #         assert "variants_full_list" in r.model_dump().keys()
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
+
+    def test_semantic_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        filter = Filter(
+            variant_filter=FilterNode(
+                field_name="color", filter_value=["black", "brown"]
+            ),
+        )
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
+
+    def test_embedding_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if embedding search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        embedding = [1.0, 1.0, 1.0, 1.0, 1.0]
+
+        filter = Filter(
+            variant_filter=FilterNode(
+                field_name="color", filter_value=["black", "brown"]
+            ),
+        )
+
+        # When
+        result = client.embedding_search(
+            embedding=embedding,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
+
+    def test_more_like_this_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThis search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        document_id = "en_0530926"
+
+        filter = Filter(
+            variant_filter=FilterNode(
+                field_name="color", filter_value=["black", "brown"]
+            ),
+        )
+
+        # When
+        result = client.more_like_this_search(
+            document_id=document_id,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
+
+    def test_more_like_these_search_with_variant_filter(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if MoreLikeThese search will return correct result using variant filter option.
+        """
+        # Given
+        collection_id = test_collection_id
+        these = [
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="some text",
+            ),
+            MoreLikeTheseItem(
+                weight=1.0,
+                query_text="other text",
+            ),
+        ]
+
+        filter = Filter(
+            variant_filter=FilterNode(
+                field_name="color", filter_value=["black", "brown"]
+            ),
+        )
+
+        # When
+        result = client.more_like_these_search(
+            more_like_these=these,
+            collection_id=collection_id,
+            filter=filter,
+            account_id=account_params["id"],
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+        for r in result.results:
+            assert "variants" in r.model_dump().keys()
+        for r in result.results:
+            assert "variants_full_list" in r.model_dump().keys()
 
     # endregion
 
@@ -952,6 +1103,37 @@ class TestSearch:
             accuracy=accuracy,
             account_id=account_params["id"],
             total_counts=total_counts,
+        )
+
+        # Then
+        assert result.status == 200
+        assert len(result.results) == 3
+
+    # endregion
+
+    # region Options
+
+    def test_semantic_search_with_relevance_threshold(
+        self,
+        client: VantageClient,
+        account_params: dict,
+        test_collection_id: str,
+    ):
+        """
+        Tests if semantic search will return correct result with relevance threshold.
+        """
+        # Given
+        collection_id = test_collection_id
+        search_text = "Test search"
+
+        options = Options(embedding_thresholds={"default": 0.5})
+
+        # When
+        result = client.semantic_search(
+            text=search_text,
+            collection_id=collection_id,
+            options=options,
+            account_id=account_params["id"],
         )
 
         # Then

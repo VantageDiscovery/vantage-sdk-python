@@ -244,7 +244,6 @@ class TestDocuments:
     def test_sortable_metadata_not_float(
         self,
     ):
-
         # When
         with pytest.raises(ValidationError) as exception:
             MetadataItem(key="price", value=1, sortable=True)
