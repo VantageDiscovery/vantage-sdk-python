@@ -32,7 +32,7 @@ configure:
 
 install:
 	@echo "Installing Python SDK dependencies"
-	poetry lock --no-update
+	poetry lock
 	poetry install
 	@echo "Python SDK dependencies installed"
 
