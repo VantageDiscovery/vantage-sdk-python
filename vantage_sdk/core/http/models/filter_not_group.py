@@ -20,7 +20,8 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, StrictStr
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 
 try:
@@ -29,19 +30,15 @@ except ImportError:
     from typing_extensions import Self
 
 
-class ShoppingAssistantModifiable(BaseModel):
+class FilterNotGroup(BaseModel):
     """
-    ShoppingAssistantModifiable
+    FilterNotGroup
     """  # noqa: E501
 
-    name: Optional[StrictStr] = None
-    external_account_id: Optional[StrictStr] = None
-    llm_model_name: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = [
-        "name",
-        "external_account_id",
-        "llm_model_name",
-    ]
+    var_not: Optional[
+        Annotated[List[FilterOptions], Field(min_length=1, max_length=10)]
+    ] = Field(default=None, alias="not")
+    __properties: ClassVar[List[str]] = ["not"]
 
     model_config = {
         "populate_by_name": True,
@@ -60,7 +57,7 @@ class ShoppingAssistantModifiable(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of ShoppingAssistantModifiable from a JSON string"""
+        """Create an instance of FilterNotGroup from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +75,18 @@ class ShoppingAssistantModifiable(BaseModel):
             exclude={},
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in var_not (list)
+        _items = []
+        if self.var_not:
+            for _item in self.var_not:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['not'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of ShoppingAssistantModifiable from a dict"""
+        """Create an instance of FilterNotGroup from a dict"""
         if obj is None:
             return None
 
@@ -91,9 +95,21 @@ class ShoppingAssistantModifiable(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "name": obj.get("name"),
-                "external_account_id": obj.get("external_account_id"),
-                "llm_model_name": obj.get("llm_model_name"),
+                "not": (
+                    [
+                        FilterOptions.from_dict(_item)
+                        for _item in obj.get("not")
+                    ]
+                    if obj.get("not") is not None
+                    else None
+                )
             }
         )
         return _obj
+
+
+from vantage_sdk.core.http.models.filter_options import FilterOptions
+
+
+# TODO: Rewrite to not use raise_errors
+FilterNotGroup.model_rebuild(raise_errors=False)
