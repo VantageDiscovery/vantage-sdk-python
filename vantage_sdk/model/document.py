@@ -56,7 +56,8 @@ class MetadataItem(BaseModel):
             prefix = METADATA_PREFIX
 
         if key:
-            values["key"] = prefix + key
+            if not str(values["key"]).startswith(prefix):
+                values["key"] = prefix + key
         return values
 
 
