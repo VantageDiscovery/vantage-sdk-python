@@ -931,7 +931,7 @@ class VantageClient:
             collection_preview_url_pattern=getattr(
                 collection, 'collection_preview_url_pattern', None
             ),
-            schema=getattr(collection, 'schema', None),
+            var_schema=getattr(collection, 'schema', None),
         )
 
         collection = self.management_api.collection_api.create_collection(
@@ -1010,7 +1010,7 @@ class VantageClient:
             external_key_id=external_key_id,
             secondary_external_accounts=secondary_external_accounts,
             collection_name=collection_name,
-            schema=schema,
+            var_schema=schema,
         )
 
         collection = self.management_api.collection_api.update_collection(
