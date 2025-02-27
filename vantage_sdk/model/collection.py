@@ -2,7 +2,7 @@
 Models for the Collection API.
 """
 
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import (
     BaseModel,
@@ -42,6 +42,8 @@ class Collection(BaseModel):
         When the collection was created.
     collection_preview_url_pattern: Optional[StrictStr]
         Preview URL pattern of the collection.
+    schema: Optional[Dict[StrictStr, Any]]
+        Schema definition for the collection
     """
 
     collection_id: StrictStr
@@ -52,6 +54,7 @@ class Collection(BaseModel):
     collection_status: Optional[StrictStr] = None
     collection_created_time: Optional[StrictStr] = None
     collection_preview_url_pattern: Optional[StrictStr] = None
+    schema: Optional[Dict[StrictStr, Any]] = None
 
     @model_validator(mode="before")
     def set_default_collection_name(cls, values):
@@ -125,9 +128,9 @@ class OpenAICollection(VantageManagedEmbeddingsCollection):
     llm_provider: StrictStr = LLMProvider.OpenAI.value
     external_key: Optional[OpenAIKey] = None
     llm: StrictStr
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
 
 
 class HuggingFaceCollection(VantageManagedEmbeddingsCollection):
