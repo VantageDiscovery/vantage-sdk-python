@@ -95,11 +95,14 @@ class FilterNotGroup(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "not": [
-                    FilterOptions.from_dict(_item) for _item in obj.get("not")
-                ]
-                if obj.get("not") is not None
-                else None
+                "not": (
+                    [
+                        FilterOptions.from_dict(_item)
+                        for _item in obj.get("not")
+                    ]
+                    if obj.get("not") is not None
+                    else None
+                )
             }
         )
         return _obj

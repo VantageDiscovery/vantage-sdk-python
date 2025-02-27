@@ -95,11 +95,14 @@ class FilterAndGroup(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "and": [
-                    FilterOptions.from_dict(_item) for _item in obj.get("and")
-                ]
-                if obj.get("and") is not None
-                else None
+                "and": (
+                    [
+                        FilterOptions.from_dict(_item)
+                        for _item in obj.get("and")
+                    ]
+                    if obj.get("and") is not None
+                    else None
+                )
             }
         )
         return _obj

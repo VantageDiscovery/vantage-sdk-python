@@ -122,12 +122,14 @@ class CollectionStatus(BaseModel):
         _obj = cls.model_validate(
             {
                 "status": obj.get("status"),
-                "ingest_statuses": [
-                    CollectionStatusIngestStatusesInner.from_dict(_item)
-                    for _item in obj.get("ingest_statuses")
-                ]
-                if obj.get("ingest_statuses") is not None
-                else None,
+                "ingest_statuses": (
+                    [
+                        CollectionStatusIngestStatusesInner.from_dict(_item)
+                        for _item in obj.get("ingest_statuses")
+                    ]
+                    if obj.get("ingest_statuses") is not None
+                    else None
+                ),
             }
         )
         return _obj

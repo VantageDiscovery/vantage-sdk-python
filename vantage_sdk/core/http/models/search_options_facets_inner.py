@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -22,8 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 
 from pydantic import BaseModel, StrictStr, field_validator
 
-from vantage_sdk.core.http.models.facet_range import FacetRange
-
 
 try:
     from typing import Self
@@ -39,8 +37,7 @@ class SearchOptionsFacetsInner(BaseModel):
     name: Optional[StrictStr] = None
     type: Optional[StrictStr] = None
     values: Optional[List[StrictStr]] = None
-    ranges: Optional[List[FacetRange]] = None
-    __properties: ClassVar[List[str]] = ["name", "type", "values", "ranges"]
+    __properties: ClassVar[List[str]] = ["name", "type", "values"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -48,8 +45,8 @@ class SearchOptionsFacetsInner(BaseModel):
         if value is None:
             return value
 
-        if value not in ('count', 'range'):
-            raise ValueError("must be one of enum values ('count', 'range')")
+        if value not in ('count'):
+            raise ValueError("must be one of enum values ('count')")
         return value
 
     model_config = {
@@ -87,13 +84,6 @@ class SearchOptionsFacetsInner(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in ranges (list)
-        _items = []
-        if self.ranges:
-            for _item in self.ranges:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['ranges'] = _items
         return _dict
 
     @classmethod
@@ -110,11 +100,6 @@ class SearchOptionsFacetsInner(BaseModel):
                 "name": obj.get("name"),
                 "type": obj.get("type"),
                 "values": obj.get("values"),
-                "ranges": [
-                    FacetRange.from_dict(_item) for _item in obj.get("ranges")
-                ]
-                if obj.get("ranges") is not None
-                else None,
             }
         )
         return _obj

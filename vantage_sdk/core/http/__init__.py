@@ -3,7 +3,7 @@
 # flake8: noqa
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -60,10 +60,6 @@ from vantage_sdk.core.http.models.collection_modifiable import (
 from vantage_sdk.core.http.models.collection_read_only import (
     CollectionReadOnly,
 )
-from vantage_sdk.core.http.models.collection_status import CollectionStatus
-from vantage_sdk.core.http.models.collection_status_ingest_statuses_inner import (
-    CollectionStatusIngestStatusesInner,
-)
 from vantage_sdk.core.http.models.collection_upload_url import (
     CollectionUploadURL,
 )
@@ -83,11 +79,6 @@ from vantage_sdk.core.http.models.external_key_read_only import (
 )
 from vantage_sdk.core.http.models.facet_range import FacetRange
 from vantage_sdk.core.http.models.facet_result import FacetResult
-from vantage_sdk.core.http.models.filter_and_group import FilterAndGroup
-from vantage_sdk.core.http.models.filter_not_group import FilterNotGroup
-from vantage_sdk.core.http.models.filter_options import FilterOptions
-from vantage_sdk.core.http.models.filter_or_group import FilterOrGroup
-from vantage_sdk.core.http.models.filter_range_value import FilterRangeValue
 from vantage_sdk.core.http.models.ml_these import MLThese
 from vantage_sdk.core.http.models.ml_these_these_inner import MLTheseTheseInner
 from vantage_sdk.core.http.models.more_like_these_query import (
@@ -106,12 +97,6 @@ from vantage_sdk.core.http.models.search_options_field_value_weighting import (
 )
 from vantage_sdk.core.http.models.search_options_filter import (
     SearchOptionsFilter,
-)
-from vantage_sdk.core.http.models.search_options_filter_boolean_filter import (
-    SearchOptionsFilterBooleanFilter,
-)
-from vantage_sdk.core.http.models.search_options_options import (
-    SearchOptionsOptions,
 )
 from vantage_sdk.core.http.models.search_options_pagination import (
     SearchOptionsPagination,
@@ -154,12 +139,6 @@ from vantage_sdk.core.http.models.total_counts_options_total_counts import (
     TotalCountsOptionsTotalCounts,
 )
 from vantage_sdk.core.http.models.vantage_api_key import VantageAPIKey
-from vantage_sdk.core.http.models.vantage_api_key_modifiable import (
-    VantageAPIKeyModifiable,
-)
-from vantage_sdk.core.http.models.vantage_api_key_read_only import (
-    VantageAPIKeyReadOnly,
-)
 from vantage_sdk.core.http.models.vantage_vibe import VantageVibe
 from vantage_sdk.core.http.models.vantage_vibe_image import VantageVibeImage
 from vantage_sdk.core.http.models.vantage_vibe_modifiable import (

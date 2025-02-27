@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -34,9 +34,6 @@ from vantage_sdk.core.http.models.search_options_field_value_weighting import (
 from vantage_sdk.core.http.models.search_options_filter import (
     SearchOptionsFilter,
 )
-from vantage_sdk.core.http.models.search_options_options import (
-    SearchOptionsOptions,
-)
 from vantage_sdk.core.http.models.search_options_pagination import (
     SearchOptionsPagination,
 )
@@ -61,7 +58,6 @@ class ShoppingAssistantQuery(BaseModel):
     pagination: Optional[SearchOptionsPagination] = None
     sort: Optional[SearchOptionsSort] = None
     facets: Optional[List[SearchOptionsFacetsInner]] = None
-    options: Optional[SearchOptionsOptions] = None
     text: Optional[StrictStr] = None
     max_groups: Optional[StrictInt] = None
     shopping_assistant_id: Optional[StrictStr] = None
@@ -73,7 +69,6 @@ class ShoppingAssistantQuery(BaseModel):
         "pagination",
         "sort",
         "facets",
-        "options",
         "text",
         "max_groups",
         "shopping_assistant_id",
@@ -122,9 +117,9 @@ class ShoppingAssistantQuery(BaseModel):
             _dict['filter'] = self.filter.to_dict()
         # override the default output from pydantic by calling `to_dict()` of field_value_weighting
         if self.field_value_weighting:
-            _dict[
-                'field_value_weighting'
-            ] = self.field_value_weighting.to_dict()
+            _dict['field_value_weighting'] = (
+                self.field_value_weighting.to_dict()
+            )
         # override the default output from pydantic by calling `to_dict()` of pagination
         if self.pagination:
             _dict['pagination'] = self.pagination.to_dict()
@@ -138,9 +133,6 @@ class ShoppingAssistantQuery(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['facets'] = _items
-        # override the default output from pydantic by calling `to_dict()` of options
-        if self.options:
-            _dict['options'] = self.options.to_dict()
         return _dict
 
     @classmethod
@@ -154,37 +146,42 @@ class ShoppingAssistantQuery(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "collection": SearchOptionsCollection.from_dict(
-                    obj.get("collection")
-                )
-                if obj.get("collection") is not None
-                else None,
+                "collection": (
+                    SearchOptionsCollection.from_dict(obj.get("collection"))
+                    if obj.get("collection") is not None
+                    else None
+                ),
                 "request_id": obj.get("request_id"),
-                "filter": SearchOptionsFilter.from_dict(obj.get("filter"))
-                if obj.get("filter") is not None
-                else None,
-                "field_value_weighting": SearchOptionsFieldValueWeighting.from_dict(
-                    obj.get("field_value_weighting")
-                )
-                if obj.get("field_value_weighting") is not None
-                else None,
-                "pagination": SearchOptionsPagination.from_dict(
-                    obj.get("pagination")
-                )
-                if obj.get("pagination") is not None
-                else None,
-                "sort": SearchOptionsSort.from_dict(obj.get("sort"))
-                if obj.get("sort") is not None
-                else None,
-                "facets": [
-                    SearchOptionsFacetsInner.from_dict(_item)
-                    for _item in obj.get("facets")
-                ]
-                if obj.get("facets") is not None
-                else None,
-                "options": SearchOptionsOptions.from_dict(obj.get("options"))
-                if obj.get("options") is not None
-                else None,
+                "filter": (
+                    SearchOptionsFilter.from_dict(obj.get("filter"))
+                    if obj.get("filter") is not None
+                    else None
+                ),
+                "field_value_weighting": (
+                    SearchOptionsFieldValueWeighting.from_dict(
+                        obj.get("field_value_weighting")
+                    )
+                    if obj.get("field_value_weighting") is not None
+                    else None
+                ),
+                "pagination": (
+                    SearchOptionsPagination.from_dict(obj.get("pagination"))
+                    if obj.get("pagination") is not None
+                    else None
+                ),
+                "sort": (
+                    SearchOptionsSort.from_dict(obj.get("sort"))
+                    if obj.get("sort") is not None
+                    else None
+                ),
+                "facets": (
+                    [
+                        SearchOptionsFacetsInner.from_dict(_item)
+                        for _item in obj.get("facets")
+                    ]
+                    if obj.get("facets") is not None
+                    else None
+                ),
                 "text": obj.get("text"),
                 "max_groups": obj.get("max_groups"),
                 "shopping_assistant_id": obj.get("shopping_assistant_id"),

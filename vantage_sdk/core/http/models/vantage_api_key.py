@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,7 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel, Field, StrictStr, field_validator
+from pydantic import BaseModel, Field, StrictStr
 
 
 try:
@@ -34,60 +34,27 @@ class VantageAPIKey(BaseModel):
     VantageAPIKey
     """  # noqa: E501
 
-    id: Optional[StrictStr] = Field(
+    vantage_api_key_id: Optional[StrictStr] = Field(
         default=None,
-        description="The unique id of the key to access Vantage API endpoints",
+        description="The unique id of the API key to access Vantage API endpoints",
     )
     account_id: Optional[StrictStr] = Field(
         default=None, description="The account this key is contained within"
     )
-    created_date: Optional[StrictStr] = Field(
-        default=None, description="Date this key was created"
+    vantage_api_key_created_date: Optional[StrictStr] = Field(
+        default=None, description="date this key was created"
+    )
+    vantage_api_key_obfuscated: Optional[StrictStr] = Field(
+        default=None, description="obfuscated key"
     )
     status: Optional[StrictStr] = None
-    value: Optional[StrictStr] = Field(default=None, description="Key value")
-    last_used_date: Optional[StrictStr] = Field(
-        default=None, description="Date this key was last used"
-    )
-    name: Optional[StrictStr] = Field(
-        default=None, description="The name of the key"
-    )
-    roles: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = [
-        "id",
+        "vantage_api_key_id",
         "account_id",
-        "created_date",
+        "vantage_api_key_created_date",
+        "vantage_api_key_obfuscated",
         "status",
-        "value",
-        "last_used_date",
-        "name",
-        "roles",
     ]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in ('Active', 'Deactivated'):
-            raise ValueError(
-                "must be one of enum values ('Active', 'Deactivated')"
-            )
-        return value
-
-    @field_validator('roles')
-    def roles_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in ('Full', 'ReadOnly'):
-                raise ValueError(
-                    "each list item must be one of ('Full', 'ReadOnly')"
-                )
-        return value
 
     model_config = {
         "populate_by_name": True,
@@ -121,15 +88,13 @@ class VantageAPIKey(BaseModel):
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
         * OpenAPI `readOnly` fields are excluded.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
             exclude={
-                "id",
+                "vantage_api_key_id",
                 "account_id",
-                "created_date",
-                "last_used_date",
+                "vantage_api_key_created_date",
             },
             exclude_none=True,
         )
@@ -146,14 +111,15 @@ class VantageAPIKey(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "id": obj.get("id"),
+                "vantage_api_key_id": obj.get("vantage_api_key_id"),
                 "account_id": obj.get("account_id"),
-                "created_date": obj.get("created_date"),
+                "vantage_api_key_created_date": obj.get(
+                    "vantage_api_key_created_date"
+                ),
+                "vantage_api_key_obfuscated": obj.get(
+                    "vantage_api_key_obfuscated"
+                ),
                 "status": obj.get("status"),
-                "value": obj.get("value"),
-                "last_used_date": obj.get("last_used_date"),
-                "name": obj.get("name"),
-                "roles": obj.get("roles"),
             }
         )
         return _obj

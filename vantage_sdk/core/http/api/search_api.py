@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -144,7 +144,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -232,7 +231,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -320,7 +318,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "TotalCountResult",
             '206': "TotalCountResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -381,7 +378,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/counts',
+            resource_path='/search/{account_id}/{collection_id}/counts',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -470,7 +467,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -558,7 +554,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -646,7 +641,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -707,7 +701,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/embedding',
+            resource_path='/search/{account_id}/{collection_id}/embedding',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -796,7 +790,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -884,7 +877,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -972,7 +964,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1033,7 +1024,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/morelikethese',
+            resource_path='/search/{account_id}/{collection_id}/morelikethese',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1122,7 +1113,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1210,7 +1200,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1298,7 +1287,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1359,7 +1347,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/morelikethis',
+            resource_path='/search/{account_id}/{collection_id}/morelikethis',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1448,7 +1436,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1536,7 +1523,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1624,7 +1610,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1685,7 +1670,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/semantic',
+            resource_path='/search/{account_id}/{collection_id}/semantic',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1774,7 +1759,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1862,7 +1846,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -1950,7 +1933,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ShoppingAssistantResult",
             '206': "ShoppingAssistantResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2011,7 +1993,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/shopping_assistant',
+            resource_path='/search/{account_id}/{collection_id}/shopping_assistant',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2100,7 +2082,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2188,7 +2169,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2276,7 +2256,6 @@ class SearchApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "SearchResult",
             '206': "SearchResult",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -2337,7 +2316,7 @@ class SearchApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/v1/search/{account_id}/{collection_id}/vibe',
+            resource_path='/search/{account_id}/{collection_id}/vibe',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

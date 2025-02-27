@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -20,11 +20,7 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional
 
-from pydantic import BaseModel
-
-from vantage_sdk.core.http.models.search_options_filter_boolean_filter import (
-    SearchOptionsFilterBooleanFilter,
-)
+from pydantic import BaseModel, StrictStr
 
 
 try:
@@ -38,8 +34,8 @@ class SearchOptionsFilter(BaseModel):
     SearchOptionsFilter
     """  # noqa: E501
 
-    boolean_filter: Optional[SearchOptionsFilterBooleanFilter] = None
-    variant_filter: Optional[SearchOptionsFilterBooleanFilter] = None
+    boolean_filter: Optional[StrictStr] = None
+    variant_filter: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["boolean_filter", "variant_filter"]
 
     model_config = {
@@ -77,12 +73,6 @@ class SearchOptionsFilter(BaseModel):
             exclude={},
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of boolean_filter
-        if self.boolean_filter:
-            _dict['boolean_filter'] = self.boolean_filter.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of variant_filter
-        if self.variant_filter:
-            _dict['variant_filter'] = self.variant_filter.to_dict()
         return _dict
 
     @classmethod
@@ -96,16 +86,8 @@ class SearchOptionsFilter(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "boolean_filter": SearchOptionsFilterBooleanFilter.from_dict(
-                    obj.get("boolean_filter")
-                )
-                if obj.get("boolean_filter") is not None
-                else None,
-                "variant_filter": SearchOptionsFilterBooleanFilter.from_dict(
-                    obj.get("variant_filter")
-                )
-                if obj.get("variant_filter") is not None
-                else None,
+                "boolean_filter": obj.get("boolean_filter"),
+                "variant_filter": obj.get("variant_filter"),
             }
         )
         return _obj

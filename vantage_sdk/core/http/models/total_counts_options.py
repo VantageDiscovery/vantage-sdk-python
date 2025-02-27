@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -92,11 +92,13 @@ class TotalCountsOptions(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "total_counts": TotalCountsOptionsTotalCounts.from_dict(
-                    obj.get("total_counts")
+                "total_counts": (
+                    TotalCountsOptionsTotalCounts.from_dict(
+                        obj.get("total_counts")
+                    )
+                    if obj.get("total_counts") is not None
+                    else None
                 )
-                if obj.get("total_counts") is not None
-                else None
             }
         )
         return _obj

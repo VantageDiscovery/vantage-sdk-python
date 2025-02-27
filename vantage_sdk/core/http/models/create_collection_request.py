@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -59,13 +59,18 @@ class CreateCollectionRequest(BaseModel):
     embeddings_dimension: StrictInt = Field(
         description="The dimensionality or vector size of the embeddings.  Applies to both user provided embeddings and vantage managed embeddings."
     )
+    var_schema: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Collection schema to predefine your data and set which values should be facetable, sortable, etc.",
+        alias="schema",
+    )
     external_key_id: Optional[StrictStr] = Field(
         default=None,
         description="The external key, for the llm_provider to use for the collection",
     )
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
     collection_name: StrictStr
     __properties: ClassVar[List[str]] = [
         "collection_id",
@@ -75,6 +80,7 @@ class CreateCollectionRequest(BaseModel):
         "llm_secret",
         "external_url",
         "embeddings_dimension",
+        "schema",
         "external_key_id",
         "secondary_external_accounts",
         "collection_name",
@@ -148,21 +154,26 @@ class CreateCollectionRequest(BaseModel):
         _obj = cls.model_validate(
             {
                 "collection_id": obj.get("collection_id"),
-                "user_provided_embeddings": obj.get("user_provided_embeddings")
-                if obj.get("user_provided_embeddings") is not None
-                else False,
+                "user_provided_embeddings": (
+                    obj.get("user_provided_embeddings")
+                    if obj.get("user_provided_embeddings") is not None
+                    else False
+                ),
                 "llm": obj.get("llm"),
                 "llm_provider": obj.get("llm_provider"),
                 "llm_secret": obj.get("llm_secret"),
                 "external_url": obj.get("external_url"),
                 "embeddings_dimension": obj.get("embeddings_dimension"),
+                "schema": obj.get("schema"),
                 "external_key_id": obj.get("external_key_id"),
-                "secondary_external_accounts": [
-                    SecondaryExternalAccount.from_dict(_item)
-                    for _item in obj.get("secondary_external_accounts")
-                ]
-                if obj.get("secondary_external_accounts") is not None
-                else None,
+                "secondary_external_accounts": (
+                    [
+                        SecondaryExternalAccount.from_dict(_item)
+                        for _item in obj.get("secondary_external_accounts")
+                    ]
+                    if obj.get("secondary_external_accounts") is not None
+                    else None
+                ),
                 "collection_name": obj.get("collection_name"),
             }
         )

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -104,7 +104,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -173,7 +172,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -242,7 +240,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -287,7 +284,7 @@ class AccountManagementApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/v1/account/{account_id}',
+            resource_path='/account/{account_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -363,7 +360,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -438,7 +434,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -513,7 +508,6 @@ class AccountManagementApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Account",
-            '404': None,
             '405': None,
         }
         response_data = self.api_client.call_api(
@@ -571,7 +565,7 @@ class AccountManagementApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/v1/account/{account_id}',
+            resource_path='/account/{account_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

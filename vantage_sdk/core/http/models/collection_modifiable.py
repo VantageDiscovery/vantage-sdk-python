@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -42,14 +42,20 @@ class CollectionModifiable(BaseModel):
         default=None,
         description="The external key, for the llm_provider to use for the collection",
     )
-    secondary_external_accounts: Optional[
-        List[SecondaryExternalAccount]
-    ] = None
+    secondary_external_accounts: Optional[List[SecondaryExternalAccount]] = (
+        None
+    )
     collection_name: Optional[StrictStr] = None
+    var_schema: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Collection schema to predefine your data and set which values should be facetable, sortable, etc.",
+        alias="schema",
+    )
     __properties: ClassVar[List[str]] = [
         "external_key_id",
         "secondary_external_accounts",
         "collection_name",
+        "schema",
     ]
 
     model_config = {
@@ -108,13 +114,16 @@ class CollectionModifiable(BaseModel):
         _obj = cls.model_validate(
             {
                 "external_key_id": obj.get("external_key_id"),
-                "secondary_external_accounts": [
-                    SecondaryExternalAccount.from_dict(_item)
-                    for _item in obj.get("secondary_external_accounts")
-                ]
-                if obj.get("secondary_external_accounts") is not None
-                else None,
+                "secondary_external_accounts": (
+                    [
+                        SecondaryExternalAccount.from_dict(_item)
+                        for _item in obj.get("secondary_external_accounts")
+                    ]
+                    if obj.get("secondary_external_accounts") is not None
+                    else None
+                ),
                 "collection_name": obj.get("collection_name"),
+                "schema": obj.get("schema"),
             }
         )
         return _obj

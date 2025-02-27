@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -128,12 +128,14 @@ class SearchOptionsFieldValueWeighting(BaseModel):
                 "query_key_word_weighting_mode": obj.get(
                     "query_key_word_weighting_mode"
                 ),
-                "weighted_field_values": [
-                    WeightedFieldValues.from_dict(_item)
-                    for _item in obj.get("weighted_field_values")
-                ]
-                if obj.get("weighted_field_values") is not None
-                else None,
+                "weighted_field_values": (
+                    [
+                        WeightedFieldValues.from_dict(_item)
+                        for _item in obj.get("weighted_field_values")
+                    ]
+                    if obj.get("weighted_field_values") is not None
+                    else None
+                ),
             }
         )
         return _obj

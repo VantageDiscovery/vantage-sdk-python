@@ -95,11 +95,11 @@ class FilterOrGroup(BaseModel):
 
         _obj = cls.model_validate(
             {
-                "or": [
-                    FilterOptions.from_dict(_item) for _item in obj.get("or")
-                ]
-                if obj.get("or") is not None
-                else None
+                "or": (
+                    [FilterOptions.from_dict(_item) for _item in obj.get("or")]
+                    if obj.get("or") is not None
+                    else None
+                )
             }
         )
         return _obj

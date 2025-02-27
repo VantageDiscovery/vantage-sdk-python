@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-    Vantage API
+    Vantage Management API
 
     This is a the API to interact with Vantage Discovery, the amazing Semantic Search Platform in the world.  We enable developers to build magical discovery experiences into their products and websites.  Some useful links: - [TODO: Semantic Search Guide: What Is It And Why Does It Matter?](https://www.bloomreach.com/en/blog/2019/semantic-search-explained-in-5-minutes)
 
@@ -73,25 +73,25 @@ class RESTClientObject:
 
         addition_pool_args = {}
         if configuration.assert_hostname is not None:
-            addition_pool_args[
-                'assert_hostname'
-            ] = configuration.assert_hostname
+            addition_pool_args['assert_hostname'] = (
+                configuration.assert_hostname
+            )
 
         if configuration.retries is not None:
             addition_pool_args['retries'] = configuration.retries
 
         if configuration.tls_server_name:
-            addition_pool_args[
-                'server_hostname'
-            ] = configuration.tls_server_name
+            addition_pool_args['server_hostname'] = (
+                configuration.tls_server_name
+            )
 
         if configuration.socket_options is not None:
             addition_pool_args['socket_options'] = configuration.socket_options
 
         if configuration.connection_pool_maxsize is not None:
-            addition_pool_args[
-                'maxsize'
-            ] = configuration.connection_pool_maxsize
+            addition_pool_args['maxsize'] = (
+                configuration.connection_pool_maxsize
+            )
 
         # https pool manager
         if configuration.proxy:
