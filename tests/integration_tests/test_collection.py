@@ -39,7 +39,7 @@ class TestCollections:
             collection_id=collection_id,
             collection_name=collection_name,
             embeddings_dimension=1536,
-            schema={},
+            schema=None,
         )
 
         # When
@@ -175,7 +175,7 @@ class TestCollections:
             embeddings_dimension=1536,
             llm="text-embedding-ada-002",
             llm_secret="llmsecret",
-            schema={}
+            schema=None
         )
 
         # When
